@@ -32,6 +32,16 @@
       content: none !important;
     }
 
+    html body div#app[data-dpr-pending] {
+      display: none !important;
+      margin: 0 !important;
+      font-size: 0 !important;
+    }
+
+    html body div#app[data-dpr-pending]::before {
+      content: none !important;
+    }
+
     .dpr-initial-loading {
       position: fixed;
       inset: 0;
@@ -52,7 +62,8 @@
     }
 
     .dpr-initial-loading-card {
-      min-width: 220px;
+      width: min(420px, 92vw);
+      box-sizing: border-box;
       padding: 22px 26px;
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 18px;
@@ -307,7 +318,9 @@
       <div class="dpr-initial-loading-subtitle">正在加载资源...</div>
     </div>
   </div>
-  <div id="app"></div>
+  <div id="app" data-dpr-pending>
+    <span hidden data-dpr-docsify-placeholder></span>
+  </div>
 
   <script>
     window.DPR_RUNTIME_SOURCE_BACKENDS = Object.assign(
