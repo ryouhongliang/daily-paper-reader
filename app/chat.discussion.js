@@ -443,10 +443,22 @@ window.PrivateDiscussionChat = (function () {
     return r.querySelector('#chat-questions-panel');
   };
 
-  const closeQuestionsPanel = (root) => {
-    const panel = getQuestionsPanel(root);
+  const closeQuestionsPanelElement = (panel) => {
     if (!panel) return;
-    panel.style.display = 'none';
+    if (panel.style.display === 'none') return;
+    if (panel._closingTimer) {
+      clearTimeout(panel._closingTimer);
+    }
+    panel.classList.add('is-closing');
+    panel._closingTimer = setTimeout(() => {
+      panel.style.display = 'none';
+      panel.classList.remove('is-closing');
+      panel._closingTimer = null;
+    }, 170);
+  };
+
+  const closeQuestionsPanel = (root) => {
+    closeQuestionsPanelElement(getQuestionsPanel(root));
   };
 
   const isQuestionsPanelOpen = (root) => {
@@ -535,7 +547,12 @@ window.PrivateDiscussionChat = (function () {
   const openQuestionsPanel = (root) => {
     const panel = getQuestionsPanel(root);
     if (!panel) return;
+    if (panel._closingTimer) {
+      clearTimeout(panel._closingTimer);
+      panel._closingTimer = null;
+    }
     renderQuestionsPanel(root);
+    panel.classList.remove('is-closing');
     panel.style.display = 'block';
   };
 
@@ -633,7 +650,7 @@ window.PrivateDiscussionChat = (function () {
         if (!insideChat) {
           openPanels.forEach((p) => {
             try {
-              p.style.display = 'none';
+              closeQuestionsPanelElement(p);
             } catch {
               // ignore
             }
