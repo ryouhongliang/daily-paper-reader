@@ -1,0 +1,219 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-10T03:53:17.385110+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.07181v1",
+      "source": "arxiv",
+      "title": "RETROSPECT: RETROsynthesis via Sequential Prediction, and Chemically Transformed-ranking",
+      "abstract": "Single-step retrosynthesis needs both accurate first-ranked suggestions and candidate lists that are rich enough for downstream selection. We study this as a proposal-selection decomposition. Our system, RETROSPECT, combines a single Transformer proposal model, which we call the ChemAlign Transformer, with a LambdaMART reranker over structural, reaction-template, upstream-score, and optional DFT-derived descriptors. The generator is trained with hybrid root-aligned and random SMILES augmentation, Pre-LayerNorm, tied embeddings, exponential moving average weights, and a differentiable atom-balance auxiliary loss. On the full USPTO-50K test set of 5,007 reactions, the generator reaches 55.00% top-1 and 86.18% top-10 exact-match accuracy with 99.86% top-1 validity. On the merged candidate-pool benchmark used for reranking, which contains 5,007 test products and about 111 candidates per product, a LambdaMART model trained on the structural feature set reaches 59.4% top-1 with 0.7171 mean reciprocal rank. Feature ablations show that upstream proposal score and template-frequency statistics provide most of the reranking signal, while DFT and reaction-center DFT features provide smaller and less consistent gains. These results support a modular view of retrosynthesis: stronger single-model proposal and learned candidate selection are complementary, and the proposal model can serve as a drop-in component for ensemble systems such as RetroChimera (Maziarz et al., 2024)",
+      "authors": [
+        "Raja Sekhar Pappala",
+        "Shreyas Vinaya Sathyanarayana",
+        "Ronit Kumar Choudhary",
+        "Arjun Verma",
+        "Deepak Warrier"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "q-bio.MN"
+      ],
+      "published": "2026-06-05T11:45:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.07181v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "single-step retrosynthesis system with DFT-augmented ranking directly serves computational organic synthesis",
+      "llm_evidence_cn": "结合DFT增强排序的单步逆合成系统，直接服务于计算辅助有机合成",
+      "llm_evidence": "结合DFT增强排序的单步逆合成系统，直接服务于计算辅助有机合成",
+      "canonical_evidence": "结合DFT增强排序的单步逆合成系统，直接服务于计算辅助有机合成",
+      "llm_tldr_en": "The paper introduces RETROSPECT, a system for single-step retrosynthesis combining a ChemAlign Transformer generator with a LambdaMART reranker that uses structural, template, and DFT-derived features, achieving 55.00% top-1 and 86.18% top-10 accuracy on USPTO-50K.",
+      "llm_tldr_cn": "为解决单步逆合成中高精度首推建议与丰富候选列表的需求，该文提出RETROSPECT系统，将ChemAlign Transformer生成器与LambdaMART重排序器结合，利用结构、反应模板及可选DFT描述符，在USPTO-50K全测试集上达到55.00% top-1和86.18% top-10精确匹配准确率，显著提升逆合成预测的实用价值。",
+      "llm_tldr": "为解决单步逆合成中高精度首推建议与丰富候选列表的需求，该文提出RETROSPECT系统，将ChemAlign Transformer生成器与LambdaMART重排序器结合，利用结构、反应模板及可选DFT描述符，在USPTO-50K全测试集上达到55.00% top-1和86.18% top-10精确匹配准确率，显著提升逆合成预测的实用价值。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.05050v1",
+      "source": "arxiv",
+      "title": "Autonomous heterogeneous catalyst discovery with a self-evolving multi-agent digital twin",
+      "abstract": "Theoretical heterogeneous catalysis promises rapid catalyst discovery, yet computational and machine-learning predictions often deviate from experiment and stay confined to narrow material families, for want of a faithful, condition-aware catalytic simulator. We present CatDT (Catalysis Digital Twin), a self-evolving multi-agent system that builds an autonomous digital twin of a working catalyst, unifying gas-solid and liquid-solid modeling. From only a bulk crystal and a natural-language reaction description, eight specialized agents and 27 scientific tools predict stable facets, reconstruct working surfaces, enumerate and rank reaction pathways, locate transition states, and compute kinetics in 5-30 min on a single GPU. Two innovations address the hardest steps: UniMech finds dominant pathways for novel materials at over $10^3\\times$ lower cost than exhaustive enumeration by fusing agent-guided proposals with energy-cached graph search, and a memory-augmented reinforcement loop raises barrier-calculation success from 41\\% to 84\\% across 600 catalytic surfaces. Across seven gas-solid benchmarks -- stepped metals, single-atom catalysts, ordered intermetallics, vacancy-rich 2D sulfides and carbides, and a strong-metal--support-interaction (SMSI) interface -- every CatDT prediction lies within 0.5-2 times experiment over four orders of magnitude. For propane dehydrogenation, CatDT independently discovers non-precious candidates rivaling the Pt-based industrial benchmark, with a proposed Ni@ZrO$_2$ SMSI overlayer reaching a simulated TOF of $1.63~\\text{s}^{-1}$ at $\\sim$100\\% selectivity. More broadly, the decisive factor for a faithful catalyst digital twin -- or any multi-stage scientific simulator -- is not raw LLM capability but the engineered harness around it: deterministic tools, persistent memory, and verified self-improvement that compound across models, tools, and runs.",
+      "authors": [
+        "Zhilong Song",
+        "Zongmin Zhang",
+        "Lixue Cheng"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci",
+        "cs.AI",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-03T16:10:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.05050v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autonomous digital twin enables virtual catalyst discovery and reaction condition screening",
+      "llm_evidence_cn": "自主数字孪生实现催化剂虚拟筛选与反应条件探索",
+      "llm_evidence": "自主数字孪生实现催化剂虚拟筛选与反应条件探索",
+      "canonical_evidence": "自主数字孪生实现催化剂虚拟筛选与反应条件探索",
+      "llm_tldr_en": "The paper introduces CatDT, a self-evolving multi-agent digital twin that autonomously simulates heterogeneous catalyst behavior, enumerates reaction pathways, locates transition states, and computes kinetics, enabling rapid computational catalyst discovery.",
+      "llm_tldr_cn": "针对计算催化预测与实验偏差大、局限于窄材料家族的问题，该文提出CatDT，一个自演化多智能体数字孪生系统，仅从体相晶体和自然语言反应描述出发，预测稳定晶面、重构工作表面、枚举并排序反应路径、定位过渡态、计算动力学，在单GPU上5-30分钟内完成，显著加速催化剂虚拟筛选与发现。",
+      "llm_tldr": "针对计算催化预测与实验偏差大、局限于窄材料家族的问题，该文提出CatDT，一个自演化多智能体数字孪生系统，仅从体相晶体和自然语言反应描述出发，预测稳定晶面、重构工作表面、枚举并排序反应路径、定位过渡态、计算动力学，在单GPU上5-30分钟内完成，显著加速催化剂虚拟筛选与发现。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-01-729211-v1",
+      "source": "biorxiv",
+      "title": "Metal Coordination Dynamics Governs Selective Epoxidation in Hyoscyamine 6β-Hydroxylase: Integrated Experimental and Computational Insights",
+      "abstract": "Iron(II)- and 2-oxoglutarate-dependent (Fe(II)/2OG) enzymes catalyze a wide range of C-H bond activation and functionalization reactions and play essential roles in biosynthesis and metabolic regulation. Despite extensive mechanistic studies, the principles governing selectivity between canonical hydroxylation and alternative transformations remain incompletely understood. Here, we investigate the catalytic mechanism of hyoscyamine 6{beta}-hydroxylase (H6H), a Fe(II)/2OG-dependent oxygenase that sequentially catalyzes the 6{beta}-hydroxylation of hyoscyamine followed by 6,7-exo-epoxidation of 6{beta}-hydroxyhyoscyamine to generate scopolamine. Combined molecular dynamics and QM/MM calculations reveal that an inline Fe(IV)-oxo intermediate initiates hydrogen atom abstraction from the substrate C7 position. The resulting Fe(III)-OH species subsequently deprotonates the substrate hydroxyl group in a process coupled to substrate coordination to the iron center and an in-line-to-off-line rearrangement of the Fe(III)-OH moiety. This coordination dynamics machinery is further supported by the observed chlorination reactivity on the same substrate. Importantly, this coordination switch favors epoxide formation over hydroxyl rebound, thereby directing the reaction toward selective epoxidation. Further computational analysis of the L290F variant demonstrates that steric constraints imposed by L290 are essential for suppressing hydroxylation, revealing a bidirectional regulatory mechanism governing epoxidation/hydroxylation selectivity. Whereas iron coordination dynamics promote epoxidation reactivity, precise substrate positioning and protein-derived steric effects suppress the competing hydroxylation pathway. These findings are consistent with available experimental observations and establish metal coordination dynamics as a key determinant of selective C-H functionalization in Fe(II)/2OG enzymes.",
+      "authors": [
+        "Zhang, J.",
+        "Wu, L.",
+        "Wu, S.",
+        "Liu, X.",
+        "Dong, L.",
+        "Wenger, E. S.",
+        "Chen, R.",
+        "Krebs, C.",
+        "Silakov, A.",
+        "Bollinger, J. M.",
+        "Zhou, J.",
+        "Wang, B."
+      ],
+      "primary_category": "biochemistry",
+      "categories": [
+        "biochemistry"
+      ],
+      "published": "2026-06-03T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.01.729211v1.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "combined molecular dynamics and QM/MM calculations provide causal explanation for experimental selectivity observations",
+      "llm_evidence_cn": "分子动力学与QM/MM计算为实验选择性提供了因果解释",
+      "llm_evidence": "分子动力学与QM/MM计算为实验选择性提供了因果解释",
+      "canonical_evidence": "分子动力学与QM/MM计算为实验选择性提供了因果解释",
+      "llm_tldr_en": "The study addresses the unclear selectivity control between hydroxylation and epoxidation in Fe(II)/2OG enzymes. Using MD and QM/MM, it reveals how metal coordination dynamics govern the switch from hydroxylation to epoxidation in hyoscyamine 6β-hydroxylase, providing a causal mechanistic explanation for the biosynthesis of scopolamine. The findings inform rational design of selective oxidation catalysts and enzyme engineering.",
+      "llm_tldr_cn": "该研究针对Fe(II)/2OG酶催化中羟化与环氧化选择性调控不清的问题，采用分子动力学与QM/MM多尺度计算方法，系统研究了天仙子胺6β-羟化酶催化天仙子胺生成东莨菪碱的串联反应机制。计算揭示了活性位点金属配位动态变化如何决定后续环氧化而非二次羟化的选择性，为理解非血红素铁酶的功能多样性提供了关键因果解释。该工作展示了计算化学在阐明复杂生物合成机制中的强大作用，对理性设计选择性氧化催化剂具有指导价值。",
+      "llm_tldr": "该研究针对Fe(II)/2OG酶催化中羟化与环氧化选择性调控不清的问题，采用分子动力学与QM/MM多尺度计算方法，系统研究了天仙子胺6β-羟化酶催化天仙子胺生成东莨菪碱的串联反应机制。计算揭示了活性位点金属配位动态变化如何决定后续环氧化而非二次羟化的选择性，为理解非血红素铁酶的功能多样性提供了关键因果解释。该工作展示了计算化学在阐明复杂生物合成机制中的强大作用，对理性设计选择性氧化催化剂具有指导价值。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.06295v1",
+      "source": "arxiv",
+      "title": "Reactive Flux Matching: Mechanism Discovery and Adaptive Sampling of Rare Events",
+      "abstract": "Path sampling methods generate ensembles of reactive trajectories connecting metastable states, but extracting mechanistic insight from these data remains nontrivial. We introduce Flux Matching, a framework that learns two complementary objects directly from reactive trajectory data: a current velocity $u(z)$, whose streamlines trace the dominant reaction pathways, and a scalar potential $h(z)$, obtained from a weighted Helmholtz-Hodge decomposition of the reactive current, that serves as a data-driven reaction coordinate. Both minimize quadratic functionals over the reactive path ensemble, analogous to the flow matching loss in generative modeling, and require no knowledge of the underlying dynamics or stationary distribution. Unlike committor-based methods, $u$ and $h$ remain well-defined under projection onto non-Markovian collective variables, and their level sets in turn provide adaptive interfaces for improved sampling with enhanced sampling methods. Flux Matching is validated through the generation of current velocity trajectories and rate constant calculations on molecular systems.",
+      "authors": [
+        "Rishal Aggarwal",
+        "David Ryan Koes",
+        "Nicholas M. Boffi",
+        "Eric Vanden-Eijnden"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.bio-ph",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-04T15:31:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.06295v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "framework learns reaction pathways and data-driven reaction coordinate from trajectories, enabling mechanism discovery",
+      "llm_evidence_cn": "从反应轨迹学习反应路径和数据驱动反应坐标，可实现反应机理发现",
+      "llm_evidence": "从反应轨迹学习反应路径和数据驱动反应坐标，可实现反应机理发现",
+      "canonical_evidence": "从反应轨迹学习反应路径和数据驱动反应坐标，可实现反应机理发现",
+      "llm_tldr_en": "The paper introduces Flux Matching, a framework that learns dominant reaction pathways and a data-driven reaction coordinate from reactive trajectory ensembles without prior dynamics knowledge, enabling mechanism discovery and adaptive sampling of rare events.",
+      "llm_tldr_cn": "针对从路径采样数据中提取机理见解困难的挑战，该文提出通量匹配框架，直接从反应轨迹数据学习电流速度场和标量势作为反应坐标，无需先验动力学知识，可有效发现化学反应主路径并实现稀有事件的自适应采样，为DFT等机理研究提供了数据驱动工具。",
+      "llm_tldr": "针对从路径采样数据中提取机理见解困难的挑战，该文提出通量匹配框架，直接从反应轨迹数据学习电流速度场和标量势作为反应坐标，无需先验动力学知识，可有效发现化学反应主路径并实现稀有事件的自适应采样，为DFT等机理研究提供了数据驱动工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.07239v1",
+      "source": "arxiv",
+      "title": "Generative Molecular Morphing for Flexible-Size Design via Unbalanced Optimal Transport",
+      "abstract": "The success of generative molecular design hinges on a model's steerability toward high-reward samples. Because many molecular properties are intrinsically linked to molecular size, accurately capturing the joint distribution of properties and the number of atoms is essential. However, current diffusion and flow-based models fix the number of atoms, which ultimately limits their ability to navigate this complex relationship. To address this, we introduce Morph, a flexible-size generative model for conditional and unconditional 3D molecular design based on geometric graphs. By dynamically adapting size, Morph can seamlessly integrate existing structural priors, like scaffolds, and significantly enhances property steering. We show that Morph matches current fixed-size state-of-the-art models while offering the benefit of unparalleled sampling flexibility. We demonstrate out-of-distribution generation in regimes where previous models fail, paving the way for enhanced generative modeling for molecular design.",
+      "authors": [
+        "Malte Franke",
+        "Stefan P. Schmid",
+        "Zarko Ivkovic",
+        "Kjell Jorner",
+        "Andreas Krause"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-05T13:07:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.07239v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generative model integrates scaffolds and adapts molecular size, useful for designing catalyst structures",
+      "llm_evidence_cn": "生成模型结合骨架并自适应分子尺寸，可用于设计催化剂结构",
+      "llm_evidence": "生成模型结合骨架并自适应分子尺寸，可用于设计催化剂结构",
+      "canonical_evidence": "生成模型结合骨架并自适应分子尺寸，可用于设计催化剂结构",
+      "llm_tldr_en": "Morph is a flexible-size generative model for 3D molecular design that uses unbalanced optimal transport to dynamically adjust atom count while incorporating scaffolds; it enhances property steering, demonstrating a powerful approach for scaffold-based catalyst design.",
+      "llm_tldr_cn": "针对现有分子生成模型固定原子数的限制，提出Morph模型，基于几何图和非平衡最优传输实现可变尺寸的3D分子生成。该模型可无缝整合骨架先验，在多性质优化任务中显著提升引导性能，为催化剂骨架的定向生成提供了新范式。",
+      "llm_tldr": "针对现有分子生成模型固定原子数的限制，提出Morph模型，基于几何图和非平衡最优传输实现可变尺寸的3D分子生成。该模型可无缝整合骨架先验，在多性质优化任务中显著提升引导性能，为催化剂骨架的定向生成提供了新范式。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
