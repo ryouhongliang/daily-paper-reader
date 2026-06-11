@@ -1,0 +1,96 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-11T00:50:37.211792+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.06848v1",
+      "source": "arxiv",
+      "title": "Distilling first-principles accuracy into compact machine learning potentials for condensed-phase chemistry",
+      "abstract": "Accurate machine learning interatomic potentials (MLIPs) have made first-principles-quality potential energy surfaces increasingly accessible for condensed-phase chemistry, but their inference cost can still limit the sampling needed to compute experimentally relevant observables. In this work, we combine transfer learning and knowledge distillation to construct compact \"student\" models that retain the accuracy of much larger \"teacher\" models obtained by applying transfer learning to foundation models. The resulting students reduce production simulation cost by roughly an order of magnitude, making high-accuracy sampling practical for challenging condensed-phase problems. We demonstrate this across three problems of increasing sampling complexity: finite-temperature NPT simulations of ice Ih, classical and path-integral simulations of liquid water over 240-370 K, and path-integral umbrella-sampling simulations of water dissociation at the anatase TiO2(101)/water interface. In all cases, the distilled students reproduce the target observables of their teachers more reliably than models of the same size trained directly on the limited reference data. The liquid-water student, distilled from a Δ-learned CCSD(T)-quality teacher, reproduces thermodynamic, structural, transport, and nuclear quantum properties over the full temperature range studied. At the TiO2/water interface, distillation makes PIMD umbrella sampling practical and shows that nuclear quantum effects lower the dissociation barrier by roughly 2 kcal/mol and shift the molecular-dissociated free energy difference into quantitative agreement with recent solid-state 17O NMR measurements. Our work demonstrates how knowledge distillation can make accurate MLIPs practical for the sampling methods needed to connect condensed-phase reaction thermodynamics with experiment, notably for interfacial chemistry and catalysis.",
+      "authors": [
+        "Sijia Chen",
+        "Niamh O'Neill",
+        "Benjamin X. Shi",
+        "Venkat Kapil"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "cond-mat.mtrl-sci",
+        "physics.comp-ph"
+      ],
+      "published": "2026-06-05T02:46:46+00:00",
+      "link": "https://arxiv.org/pdf/2606.06848v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "compact MLIPs retain DFT accuracy for mechanistic simulations",
+      "llm_evidence_cn": "紧凑MLIP保持DFT精度以用于机理模拟",
+      "llm_evidence": "紧凑MLIP保持DFT精度以用于机理模拟",
+      "canonical_evidence": "紧凑MLIP保持DFT精度以用于机理模拟",
+      "llm_tldr_en": "Combines transfer learning and knowledge distillation to create compact MLIPs that retain first-principles accuracy, reducing simulation cost by an order of magnitude for condensed-phase chemistry, enabling mechanistic studies.",
+      "llm_tldr_cn": "高精度机器学习原子间势的推理成本限制了实验可观测量所需的采样。本文结合迁移学习和知识蒸馏，将大教师模型精度压缩到紧凑学生模型中，降低模拟成本约一个数量级，使高精度采样在凝聚相问题中成为可能，从而可辅助有机反应机理研究。",
+      "llm_tldr": "高精度机器学习原子间势的推理成本限制了实验可观测量所需的采样。本文结合迁移学习和知识蒸馏，将大教师模型精度压缩到紧凑学生模型中，降低模拟成本约一个数量级，使高精度采样在凝聚相问题中成为可能，从而可辅助有机反应机理研究。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.03660v1",
+      "source": "arxiv",
+      "title": "From Answers to States: Verifiable Process-Level Evaluation of Chemical Reasoning in Large Language Models",
+      "abstract": "Large language models are increasingly used as chemistry assistants, yet most chemistry benchmarks still score only final answers. This masks a critical failure mode: a model may output the correct molecule, product, or option while its reasoning violates chemical logic. Existing process-level evaluators are hard to scale because LLM judges and human step-level process annotation are costly, inconsistent, and vulnerable to hallucination. We introduce ChemCoTBench-V2, a rule-verifiable diagnostic benchmark for low-cost, auditable evaluation of structured, verifier-addressable chemical reasoning traces. It spans molecular understanding, molecule editing, molecular optimization, and reaction prediction, with 5,620 evaluation samples across 18 reporting tasks. Models must expose key intermediate steps in expert-designed templates, and those steps are checked with deterministic chemistry rules and, for closed-answer tasks, reference traces rather than another LLM judge. Open-ended molecular optimization is evaluated with oracle-verifiable state constraints rather than strict trace matching. The benchmark reports three separate signals: final-answer correctness, template adherence, and step-wise verifier correctness over expert-refined intermediate commitments. Experiments on frontier models reveal a persistent gap between final-answer success and structured-reasoning-state consistency: models often follow the requested format while failing chemical-step checks, or answer correctly with weak supporting reasoning. ChemCoTBench-V2 enables fine-grained model comparison and identifies the concrete step at which the trace first violates the verifier.",
+      "authors": [
+        "Hongyu Guo",
+        "Hao Li",
+        "He Cao",
+        "Gongbo Zhang",
+        "Li Yuan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-02T13:47:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.03660v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Benchmark for evaluating chemical reasoning traces, including reaction prediction, aiding computational organic synthesis",
+      "llm_evidence_cn": "评估化学推理过程的基准，涵盖反应预测，辅助计算有机合成",
+      "llm_evidence": "评估化学推理过程的基准，涵盖反应预测，辅助计算有机合成",
+      "canonical_evidence": "评估化学推理过程的基准，涵盖反应预测，辅助计算有机合成",
+      "llm_tldr_en": "Introduces ChemCoTBench-V2, a rule-verifiable benchmark for auditing chemical reasoning in LLMs, covering tasks like reaction prediction critical for synthesis assistance.",
+      "llm_tldr_cn": "针对当前化学基准只评最终答案忽略推理过程的问题，提出ChemCoTBench-V2，一个基于规则可验证的诊断基准，用于低代价审计结构化化学推理轨迹。覆盖分子理解、编辑、优化和反应预测等5620个评估案例，揭示了LLM在反应预测等任务中的推理缺陷，为开发可靠的计算有机合成助手提供了评估工具。",
+      "llm_tldr": "针对当前化学基准只评最终答案忽略推理过程的问题，提出ChemCoTBench-V2，一个基于规则可验证的诊断基准，用于低代价审计结构化化学推理轨迹。覆盖分子理解、编辑、优化和反应预测等5620个评估案例，揭示了LLM在反应预测等任务中的推理缺陷，为开发可靠的计算有机合成助手提供了评估工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
