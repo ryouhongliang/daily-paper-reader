@@ -1,0 +1,137 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-12T01:10:25.099413+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [
+    {
+      "id": "2606.11256v1",
+      "source": "arxiv",
+      "title": "My Chemical Harness: Evolutionary Molecular Design over Synthetic Pathways with Large Language Model Agents",
+      "abstract": "Designing molecules with target properties is most useful when candidate structures are accompanied by feasible synthetic routes. We introduce My Chemical Harness, a route-native evolutionary framework for goal-directed molecular design in which the search population consists of executable synthetic pathways rather than isolated molecular graphs. Each route is built from purchasable building blocks and reaction templates, executed by deterministic chemistry tools, and scored through task-specific molecular oracles. Large language models (LLMs) are used only as strategy controllers that select high-level preferences over route length, move type, reaction families, motifs, and exploration pressure, while local code performs route construction, validation, deduplication, scoring, selection, and memory updates. This separation lets the LLM guide exploration without allowing it to introduce hallucinated products or unsupported reaction steps. On a soluble epoxide hydrolase proxy task, our LLM agent improves over single pass LLM and deterministic controllers, reaching state-of-the-art performance across the sEH score, synthetic accessibility score, and AiZynthFinder success rate metrics. These results suggest that constrained LLM agents can play a significant role in molecular discovery without requiring training, fine-tuning, or dedicated generative models.",
+      "authors": [
+        "César Ojeda",
+        "Darius A. Faroughy",
+        "Maryam Karimi",
+        "Payam Zarrintaj",
+        "Mir Mehdi Seyedebrahimi",
+        "Martín Carballo-Pacheco"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "cs.LG",
+        "cs.NE"
+      ],
+      "published": "2026-06-08T23:52:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.11256v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Evolutionary molecular design over executable synthetic pathways using computational tools and LLMs",
+      "llm_evidence_cn": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
+      "llm_evidence": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
+      "canonical_evidence": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
+      "llm_tldr_en": "The paper presents a route-native evolutionary framework for molecular design that optimizes over executable synthetic pathways, using LLMs as strategy controllers, ensuring designed molecules are synthetically feasible.",
+      "llm_tldr_cn": "该框架解决了现有分子生成方法忽视合成可及性的问题，通过将搜索种群定义为完整的合成路径而非孤立分子图，结合LLM的策略调控和确定的化学工具执行，实现了目标属性与合成可行性的联合优化。实验表明，该方法能有效生成高价值且合成可行的分子，为计算驱动的分子设计提供了更实用的解决方案。",
+      "llm_tldr": "该框架解决了现有分子生成方法忽视合成可及性的问题，通过将搜索种群定义为完整的合成路径而非孤立分子图，结合LLM的策略调控和确定的化学工具执行，实现了目标属性与合成可行性的联合优化。实验表明，该方法能有效生成高价值且合成可行的分子，为计算驱动的分子设计提供了更实用的解决方案。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.12113v1",
+      "source": "arxiv",
+      "title": "Augmenting Molecular Language Models with Local $n$-gram Memory",
+      "abstract": "Transformer-based language models for SMILES strings suffer from a locality gap: standard character-level tokenization fragments chemically meaningful motifs, forcing models to repeatedly learn local syntax at the expense of long-range dependencies. To address this without disrupting standard tokenizers, we propose MolGram, which integrates a conditional $n$-gram memory module into molecular language models. MolGram maps local string patterns to learned embeddings via scalable hash lookups and dynamically injects this regional context into hidden states. Evaluations across three tasks, including unconditional molecule generation, forward reaction prediction, and single-step retrosynthesis, show that MolGram consistently improves performance. Crucially, our analyses demonstrate that MolGram outperforms baselines with 3$\\times$ more parameters, establishing explicit local pattern memory as a highly efficient inductive bias.",
+      "authors": [
+        "Xinni Zhang",
+        "Zijing Liu",
+        "He Cao",
+        "Yu Li",
+        "Irwin King"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-10T14:07:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.12113v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "improves forward reaction prediction and single-step retrosynthesis",
+      "llm_evidence_cn": "提升正向反应预测和单步逆合成",
+      "llm_evidence": "提升正向反应预测和单步逆合成",
+      "canonical_evidence": "提升正向反应预测和单步逆合成",
+      "llm_tldr_en": "MolGram integrates a conditional n-gram memory module into molecular language models to address the locality gap in SMILES tokenization, improving performance on molecule generation, forward reaction prediction, and retrosynthesis without altering tokenizers.",
+      "llm_tldr_cn": "SMILES tokenization碎片化化学基序，导致分子语言模型反复学习局部语法，长程依赖建模受限。MolGram提出条件n-gram记忆模块，将局部字符串模式映射为可学习嵌入并动态注入隐藏状态，在分子生成、正向反应预测和单步逆合成任务中一致提升性能，且无需修改分词器。该工作表明局部结构记忆可增强分子语言模型，为计算辅助有机合成提供更准确的反应预测工具。",
+      "llm_tldr": "SMILES tokenization碎片化化学基序，导致分子语言模型反复学习局部语法，长程依赖建模受限。MolGram提出条件n-gram记忆模块，将局部字符串模式映射为可学习嵌入并动态注入隐藏状态，在分子生成、正向反应预测和单步逆合成任务中一致提升性能，且无需修改分词器。该工作表明局部结构记忆可增强分子语言模型，为计算辅助有机合成提供更准确的反应预测工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.06015v1",
+      "source": "arxiv",
+      "title": "Quantum computing for accurate large-scale electronic-structure calculations: DFT-embedded, post-processed quantum-selected configuration interaction",
+      "abstract": "We present a multilevel embedding framework for quantum chemistry calculations on a quantum computer. In our framework, a quantum algorithm treats the strongly correlated active space, while a high-level wave-function method such as coupled cluster theory or multireference perturbation theory recovers the remaining correlation in the surrounding region. A sampling-based quantum algorithm, quantum-selected configuration interaction, bridges the quantum and classical treatments. The entire calculation is embedded in a low-cost density functional theory description of the surrounding environment using Manby's projection technique. We apply the framework to organic, metal-organic, and metallic systems, computing bond dissociation energies, adsorption energies, and reaction barriers using only the subset of qubits of a 144-qubit superconducting quantum computer at the University of Osaka and achieving $\\sim$1 kcal/mol agreement with classical references for a Menshutkin $\\mathrm{S_N2}$ reaction inside a carbon nanotube. Our results may open the way to quantitatively reliable quantum-classical hybrid calculations for large-scale chemical systems.",
+      "authors": [
+        "Tuan Minh Do",
+        "Yuichiro Yoshida",
+        "Tomoya Shiota",
+        "Wataru Mizukami"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "quant-ph"
+      ],
+      "published": "2026-06-04T11:04:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.06015v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "DFT-embedded quantum computing for accurate electronic structure of organic molecules",
+      "llm_evidence_cn": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
+      "llm_evidence": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
+      "canonical_evidence": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
+      "llm_tldr_en": "This work presents a multilevel embedding framework for quantum chemistry on quantum computers, using DFT to describe the environment and quantum-selected CI for strong correlation, applied to organic and metal-organic systems.",
+      "llm_tldr_cn": "量子计算机上的量子化学计算面临强相关电子处理的挑战。该框架通过Manby投影技术将DFT环境嵌入与量子选择组态相互作用结合，实现多层级电子结构计算。应用于有机和金属有机体系，展示了量子计算在精确电子结构预测中的潜力，为DFT辅助的机理研究提供了高精度工具。",
+      "llm_tldr": "量子计算机上的量子化学计算面临强相关电子处理的挑战。该框架通过Manby投影技术将DFT环境嵌入与量子选择组态相互作用结合，实现多层级电子结构计算。应用于有机和金属有机体系，展示了量子计算在精确电子结构预测中的潜力，为DFT辅助的机理研究提供了高精度工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

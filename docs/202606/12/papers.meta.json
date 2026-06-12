@@ -1,0 +1,54 @@
+{
+  "label": "2026-06-12",
+  "date": "2026-06-12",
+  "generated_at": "2026-06-12T01:13:57",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/12/2606.11256v1-my-chemical-harness-evolutionary-molecular-design-over-synthetic-pathways-with-large-language-model-agents",
+      "section": "deep",
+      "title_en": "My Chemical Harness: Evolutionary Molecular Design over Synthetic Pathways with Large Language Model Agents",
+      "authors": "César Ojeda, Darius A. Faroughy, Maryam Karimi, Payam Zarrintaj, Mir Mehdi Seyedebrahimi, Martín Carballo-Pacheco",
+      "date": "2026-06-08",
+      "pdf": "https://arxiv.org/pdf/2606.11256v1",
+      "score": "9.0",
+      "evidence": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
+      "tldr": "设计具有目标性质的分子亟需兼顾可行的合成路线，现有方法常忽略合成可行性或产生幻觉。My Chemical Harness提出一种基于可执行合成路径的进化框架，将种群定义为合成路线而非分子图，LLM仅作为策略控制器选择偏好，底层由确定性工具保证化学准确性。在sEH代理任务中，该方法超越单次LLM和确定性控制器，在sEH分数、合成可及性及AiZynthFinder成功率上达到最优。该工作表明约束LLM代理可在无训练条件下有效驱动分子发现。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Designing molecules with target properties is most useful when candidate structures are accompanied by feasible synthetic routes. We introduce My Chemical Harness, a route-native evolutionary framework for goal-directed molecular design in which the search population consists of executable synthetic pathways rather than isolated molecular graphs. Each route is built from purchasable building blocks and reaction templates, executed by deterministic chemistry tools, and scored through task-specific molecular oracles. Large language models (LLMs) are used only as strategy controllers that select high-level preferences over route length, move type, reaction families, motifs, and exploration pressure, while local code performs route construction, validation, deduplication, scoring, selection, and memory updates. This separation lets the LLM guide exploration without allowing it to introduce hallucinated products or unsupported reaction steps. On a soluble epoxide hydrolase proxy task, our LLM agent improves over single pass LLM and deterministic controllers, reaching state-of-the-art performance across the sEH score, synthetic accessibility score, and AiZynthFinder success rate metrics. These results suggest that constrained LLM agents can play a significant role in molecular discovery without requiring training, fine-tuning, or dedicated generative models.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/12/2606.12113v1-augmenting-molecular-language-models-with-local-n-gram-memory",
+      "section": "deep",
+      "title_en": "Augmenting Molecular Language Models with Local $n$-gram Memory",
+      "authors": "Xinni Zhang, Zijing Liu, He Cao, Yu Li, Irwin King",
+      "date": "2026-06-10",
+      "pdf": "https://arxiv.org/pdf/2606.12113v1",
+      "score": "8.0",
+      "evidence": "提升正向反应预测和单步逆合成",
+      "tldr": "针对基于SMILES字符串的分子语言模型中，字符级分词导致化学基序碎片化、模型难以捕获长程依赖的问题，本文提出MolGram，通过引入条件n-gram记忆模块，利用可扩展哈希将局部模式映射为嵌入并注入隐藏层，从而显式地记忆局部语法。在分子生成、反应预测和逆合成三项任务上，MolGram不仅持续提升性能，还以较少参数量超越了更大规模基线，证明了显式局部模式记忆是一种高效且通用的归纳偏置。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Transformer-based language models for SMILES strings suffer from a locality gap: standard character-level tokenization fragments chemically meaningful motifs, forcing models to repeatedly learn local syntax at the expense of long-range dependencies. To address this without disrupting standard tokenizers, we propose MolGram, which integrates a conditional $n$-gram memory module into molecular language models. MolGram maps local string patterns to learned embeddings via scalable hash lookups and dynamically injects this regional context into hidden states. Evaluations across three tasks, including unconditional molecule generation, forward reaction prediction, and single-step retrosynthesis, show that MolGram consistently improves performance. Crucially, our analyses demonstrate that MolGram outperforms baselines with 3$\\times$ more parameters, establishing explicit local pattern memory as a highly efficient inductive bias.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/12/2606.06015v1-quantum-computing-for-accurate-large-scale-electronic-structure-calculations-dft-embedded-post-processed-quantum-selected-configuration-interaction",
+      "section": "quick",
+      "title_en": "Quantum computing for accurate large-scale electronic-structure calculations: DFT-embedded, post-processed quantum-selected configuration interaction",
+      "authors": "Tuan Minh Do, Yuichiro Yoshida, Tomoya Shiota, Wataru Mizukami",
+      "date": "2026-06-04",
+      "pdf": "https://arxiv.org/pdf/2606.06015v1",
+      "score": "6.0",
+      "evidence": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
+      "tldr": "大规模电子结构计算中，强相关活性空间的高精度处理对量子计算构成挑战。本文提出密度泛函理论嵌入的多级框架，结合量子选择组态相互作用与经典波函数方法，仅用量子计算机处理活性空间。在144量子比特超导处理器上，对有机、金属有机及金属体系计算键解离能、吸附能和反应势垒，门舒特金SN2反应表现出~1 kcal/mol一致性。该成果展示了量子-经典混合计算在大规模化学系统中的定量可靠性。",
+      "tags": "query:caos-poly",
+      "abstract_en": "We present a multilevel embedding framework for quantum chemistry calculations on a quantum computer. In our framework, a quantum algorithm treats the strongly correlated active space, while a high-level wave-function method such as coupled cluster theory or multireference perturbation theory recovers the remaining correlation in the surrounding region. A sampling-based quantum algorithm, quantum-selected configuration interaction, bridges the quantum and classical treatments. The entire calculation is embedded in a low-cost density functional theory description of the surrounding environment using Manby's projection technique. We apply the framework to organic, metal-organic, and metallic systems, computing bond dissociation energies, adsorption energies, and reaction barriers using only the subset of qubits of a 144-qubit superconducting quantum computer at the University of Osaka and achieving $\\sim$1 kcal/mol agreement with classical references for a Menshutkin $\\mathrm{S_N2}$ reaction inside a carbon nanotube. Our results may open the way to quantitatively reliable quantum-classical hybrid calculations for large-scale chemical systems.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

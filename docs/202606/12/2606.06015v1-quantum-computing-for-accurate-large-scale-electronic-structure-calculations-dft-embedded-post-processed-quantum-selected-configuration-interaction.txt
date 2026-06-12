@@ -1,0 +1,387 @@
+Title: Quantum computing for accurate large-scale electronic-structure calculations: DFT-embedded, post-processed quantum-selected configuration interaction
+
+URL Source: https://arxiv.org/pdf/2606.06015v1
+
+Published Time: Fri, 05 Jun 2026 01:15:46 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+# Quantum computing for accurate large-scale electronic-structure calculations: DFT-embedded, post-processed quantum-selected configuration interaction 
+
+Tuan Minh Do, 1, ∗ Yuichiro Yoshida, 1, † Tomoya Shiota, 1 and Wataru Mizukami 1, 2, ‡ 
+
+> 1
+
+Center for Quantum Information and Quantum Biology, The University of Osaka, 1-2 Machikaneyama, Toyonaka, Osaka 560-8531, Japan. 
+
+> 2
+
+Graduate School of Engineering Science, The University of Osaka, 1-3 Machikaneyama, Toyonaka, Osaka 560-8531, Japan. 
+
+(Dated: June 5, 2026) We present a multilevel embedding framework for quantum chemistry calculations on a quantum computer. In our framework, a quantum algorithm treats the strongly correlated active space, while a high-level wave-function method such as coupled cluster theory or multireference perturbation theory recovers the remaining correlation in the surrounding region. A sampling-based quantum algorithm, quantum-selected configuration interaction, bridges the quantum and classical treatments. The entire calculation is embedded in a low-cost density functional theory description of the surrounding environment using Manby’s projection technique. We apply the framework to organic, metal-organic, and metallic systems, computing bond dissociation energies, adsorption energies, and reaction barriers using only the subset of qubits of a 144-qubit superconducting quan-tum computer at the University of Osaka and achieving ∼1 kcal /mol agreement with classical references for a Menshutkin S N2 reaction inside a carbon nanotube. Our results may open the way to quantitatively reliable quantum–classical hybrid calculations for large-scale chemical systems. 
+
+I. INTRODUCTION 
+
+Over the past decade, quantum computing for quantum chemistry has begun to transition from a largely conceptual idea toward a practical tool for electronic-structure calcula-tions. On the hardware side, this progress is reflected in the increasing availability of early devices with 10 2–10 3 phys-ical qubits, together with substantial improvements in de-vice fidelity and operational reliability [1–5]. On the soft-ware side, quantum algorithms have been integrated with clas-sical electronic-structure methods to form hybrid quantum– classical algorithms. In these methods, a quantum computer targets a relatively small yet chemically critical subsystem, while the remaining part of the system is handled on classi-cal hardware. Such hybrid approaches have moved beyond proof-of-concept demonstrations and have shown promising accuracy in increasingly realistic chemical settings [6–9]. Among current quantum–classical hybrid strategies, quantum-selected configuration interaction (QSCI) is one of the most practical approaches [10]. In QSCI, a quantum algorithm such as quantum phase estimation or the variational quantum eigensolver (VQE) [11, 12] first prepares a targeted quantum state on a quantum computer. The prepared state is then sampled in the computational basis to identify the dom-inant Slater determinants of the molecular electronic wave function. These determinants define a compact subspace for constructing an effective Hamiltonian and performing subsequent simulations on classical hardware. The efficient use of the measurement shots and the inherent noise resilience make QSCI a scalable and promising approach for practical quantum-chemical calculations. For example, Robledo-Moreno et al. used up to 77 physical qubits to perform QSCI    
+
+> ∗do.tuan.minh.qiqb@osaka-u.ac.jp
+> †yoshida.yuichiro.qiqb@osaka-u.ac.jp
+> ‡mizukami.wataru.qiqb@osaka-u.ac.jp
+
+calculations of N 2, [Fe 2−S2], and [Fe 4−S4] clusters [13]. The use of QSCI and its variants is becoming commonplace, supported by the emergence of QSCI packages such as 
+
+qiskit-addon-sqd and qiskit-addon-sqd-hpc [14, 15], which IBM and its collaborators are actively developing. In practice, however, QSCI is still restricted to an active space, i.e., a small subset of chemically relevant molecular orbitals and electrons. Consequently, electron correlation as-sociated with orbitals outside the active space is not captured by QSCI. To recover the missing correlation and enable quan-titative calculations, QSCI can be combined with classical post-processing methods. Examples include auxiliary-field quantum Monte Carlo (AFQMC) [16], tailored coupled clus-ter (TCC) [17], and quasi-degenerate perturbation theory with general multiconfiguration reference functions (GMC-QDPT) [18], leading to QSCI-AFQMC [9, 19], QSCI-TCC [8], and QSCI-PT [20], respectively. The success of this approach has been demonstrated for multi-bond dissociation in small molecules such as H 2O and N 2, with QSCI-AFQMC achiev-ing agreement with high-level benchmarks within 1 kcal /mol [9]. Recent developments further show that the efficiency and scalability of QSCI with classical post-processing can be improved by incorporating doubly occupied configuration in-teraction (DOCI), as exemplified with DOCI-QSCI-AFQMC [21]. Nevertheless, a major limitation of conventional classical post-processing methods is the steep growth in computational cost with system size. For example, TCC is based on coupled cluster with singles and doubles (CCSD) or on coupled clus-ter with singles, doubles, and perturbative triples (CCSD(T)) [22]. Since these methods scale as O(N6) or O(N7) with the number of basis functions N, respectively, direct canon-ical calculations are restricted to small system sizes even with steady increases in computational power. Consequently, applying high-level post-processing (i.e., a high-level wave-function method) directly to large systems with an explicit sur-rounding environment is often computationally prohibitive. 
+
+> arXiv:2606.06015v1 [physics.chem-ph] 4 Jun 2026
+
+2Such calculations are therefore commonly limited to gas-phase/implicit-solvent models or truncated fragments contain-ing the chemically critical region, even though environmen-tal effects can be essential in catalysis, materials science, and drug discovery. Reduced-scaling local-correlation vari-ants such as DLPNO-CCSD(T) extend the reach of coupled-cluster theory [23, 24]. Nonetheless, to our knowledge, no efficient open-source implementation is currently available for open-shell local-correlation coupled-cluster methods, and such methods still involve substantially higher computational cost than Kohn-Sham density functional theory (DFT). When the chemically demanding region is spatially lo-calized, embedding provides a natural route to combine the accuracy of wave-function methods with the scalability of DFT. In such approaches, the region of interest is treated at the wave-function level, while the surrounding environ-ment is described with a lower-cost method. Related em-bedding frameworks include density matrix embedding the-ory (DMET) [25, 26] and subsystem or frozen-density DFT approaches [27, 28]. In this work, we use projection-based wave-function-in-DFT (WF-in-DFT) embedding [29, 30]. A key advantage of this formulation is in its simplicity and that, in the DFT-in-DFT limit, it reproduces the corresponding full-system KS-DFT result when the same functional and a consis-tent orbital partition are used. Embedding is therefore well suited to the present problem: it can retain an explicit DFT description of the large sur-rounding environment while restricting the expensive QSCI and post-processing calculations to a chemically important subsystem. Although quantum algorithms have been already combined with embedding schemes in several recent stud-ies [31–36], most applications have remained at the level of proof-of-concept demonstrations or have not addressed the combined requirements of active-space quantum treatment, recovery of dynamical correlation, and explicit large-scale en-vironments. It therefore remains unclear whether quantum– classical embedding strategies can deliver quantitatively re-liable results for chemically realistic systems across diverse chemical environments. In this work, we address this gap by establishing a frame-work that integrates QSCI, classical post-processing, and projection-based WF-in-DFT embedding. QSCI targets the chemically relevant active space, classical post-processing re-covers electron correlation beyond that active space, and WF-in-DFT embedding accounts for the surrounding environment at the DFT level. We apply this framework to organic, metal-organic, and metallic systems, demonstrating its accuracy, scalability, and robustness across chemically diverse environ-ments.   
+
+> II. METHODS A. DFT-embedded QSCI with classical post-processing
+
+In this section, we describe our DFT-embedded, post-processed QSCI framework and its individual components. Fig. 1 provides an overview of the workflow, which comprises three main steps: projection-based WF-in-DFT embedding, QSCI, and classical post-processing. We first provide a brief outline of each step and how they connect before describing each component in more detail in the subsequent sections. In the DFT embedding step, a KS-DFT calculation on the full system is first performed to obtain the molecular orbitals. The resulting orbitals are then localized and partitioned into an active WF subsystem (light blue) and a DFT environment (gray) using projection-based WF-in-DFT embedding. This step defines an embedded Hamiltonian for the WF subsystem that incorporates the influence of the surrounding environment at the DFT level. The embedded Hamiltonian provides the starting point for accurate quantum–classical hybrid calcula-tions of large-scale systems on quantum hardware. In the subsequent step, a small subset of orbitals and elec-trons is selected from the embedded WF subsystem to de-fine an active space (dark blue), and the resulting active-space Hamiltonian is solved on a quantum computer. The quantum device is used to prepare a state that approximates a targeted quantum state of this active space Hamiltonian. This prepara-tion is not tied to any single algorithm. It may rely on quantum phase estimation (QPE) [37, 38], a quantum power method [39], or on a variational scheme such as the VQE. From the prepared state, QSCI reconstructs the wave function classi-cally by sampling in the computational basis to collect the most important electronic configurations and then diagonaliz-ing the Hamiltonian within this selected subspace. The result-ing compact wave function, together with the reduced density matrices derived from it, provides the reference that links the quantum solution to a quantitative wave-function method in the post-processing step on a classical computer. While a quantum algorithm may capture the main contri-butions to the static correlation, it misses electron correla-tion outside the active space. To approximately recover the missing electron correlation, classical post-processing is per-formed on the QSCI reference in the final step. In this work, we use three post-processing methods: TCC, second-order 
+
+N-electron valence state perturbation theory (NEVPT2) [40– 42], and the AC0 correction, derived within the adiabatic con-nection (AC) formalism from the linearized AC-integrand ap-proximation [43]. These methods are conceptually distinct and offer different trade-offs between accuracy and computa-tional cost. Other post-processing methods, such as AFQMC, are equally applicable but are not explored in this work. After completing these three steps, the final energy is ob-tained as the sum of the embedded QSCI energy and a post-processing correction. Following this overview, we now de-scribe the individual components in more detail. Note that the active-space contribution to the final energy need not be the QSCI energy. As in our earlier works [6–8], the energy from the state-preparation step, such as the QPE energy, can instead be combined with the post-processing correction in an ONIOM-like manner [44]. 3   
+
+> FIG. 1. Overview of the multilevel framework combining DFT embedding, quantum computing, and classical post-processing. Step 1: Projection-based WF-in-DFT embedding partitions the molecular orbitals of the full system into a WF subsystem (light blue) and a DFT environment (gray). Step 2: An active space is selected from the WF subsystem (dark blue), and a targeted active-space quantum state is prepared on a quantum computer and sampled in the computational basis. The QSCI method is then used to approximately reconstruct the quantum state on a classical computer by diagonalizing the Hamiltonian within the determinant subspace defined using the sampled bitstrings. Step 3: Missing electron correlation is approximately recovered via classical post-processing such as TCC, NEVPT2, or AC0, enabling quantitative electronic-structure calculations beyond the active space approximation.
+> 1. Projection-based WF-in-DFT embedding
+
+In DFT, the energy of a system is expressed as a functional of its total electron density ρtotal . When the electron density of the total system is divided into the density ρA of an active subsystem A and the density ρB of an environment B, 
+
+ρtotal = ρA + ρB , (1) the total energy E[ρtotal ] can be correspondingly partitioned as 
+
+E[ρtotal ] = E[ρA] + E[ρB] + δ E[ρA, ρB] . (2) 
+
+E[ρA] and E[ρB] denote the energies of the isolated sub-systems A and B, respectively, and δ E[ρA, ρB] accounts for the nonadditivity arising from the kinetic, Coulomb, and exchange-correlation terms. Among these, the contribution from the kinetic energy is the most challenging to compute. While various approximate methods have been developed, its explicit evaluation can be avoided using projection-based em-bedding, as outlined below [29, 30]. When a KS-DFT calculation is performed on the total sys-tem, it yields a set of orbitals and occupation numbers from which the one-particle density matrix γtotal is constructed. By assigning subsets of these orbitals to the active subsystem A and the environment B, the total one-particle density matrix is partitioned into the density matrices γA and γB of the two subsystems, 
+
+γtotal = γA + γB, (3) which likewise implies a decomposition of the electron den-sity. The energy of A embedded in B is then given by 
+
+E[γA, γB] = tr (γA + γB)h + J[γA + γB] + Exc [γA + γB] ,
+
+(4) where h is the core Hamiltonian in the atomic orbital (AO) ba-sis, accounting for the kinetic energy and external potentials, and the last two terms represent the Coulomb and exchange-correlation contributions, respectively. The contribution from the kinetic energy is eliminated in the projection-based embedding scheme by orthogonalizing the molecular orbitals of the subsystems. This is accom-plished by introducing a level-shift operator 
+
+μPB = μSγBS (5) with a positive real number μ and the overlap matrix S in the AO basis. If μ is chosen sufficiently large, the operator μPB
+
+shifts the energies of the orbitals in the environment B high enough that they no longer hybridize with those in the active subsystem A, and the two sets of orbitals become mutually orthogonal. By incorporating the level-shift operator into the core Hamiltonian of the embedded subsystem A, one obtains 
+
+hA in B = h + J[γA + γB] − J[γA] + vxc [γA + γB]
+
+− vxc [γA] + μPB . (6) Here, J and vxc denote the Coulomb and exchange-correlation potentials in the AO basis, respectively. Using hA in B as the effective one-electron Hamiltonian of the active subsystem A in the presence of the environment B, a self-consistent field (SCF) calculation is performed to obtain the reference orbitals for the subsequent QSCI and classical post-processing steps. The corresponding embedded Fock matrix is defined as 
+
+FA = hA in B + g[γA] , (7) where g[γA] contains the usual two-electron terms for the SCF calculation. Once the wave function ΨA for the embedded subsystem A has been obtained, the total energy of the resulting WF-in-4DFT system is given by 
+
+E[ΨA; γB] = ⟨ΨA| ˆHA in B |ΨA⟩− tr γA  vxc [γA + γB] − vxc [γA]
+
++ Exc [γA + γB] − Exc [γA] + E[0; γB] .
+
+(8) ˆHA in B denotes the corresponding embedded Hamiltonian, whose one-electron part is defined by hA in B .
+
+2. Quantum-selected configuration interaction (QSCI) 
+
+In the full configuration interaction (FCI) method, the wave function is written as a linear combination of all Slater deter-minants that can be formed from the chosen orbital space, 
+
+|ΨFCI ⟩ =
+
+> N
+
+# ∑
+
+> i=1
+
+ci |Φi⟩ , (9) where |Φi⟩ is the ith Slater determinant, ci the corresponding CI coefficient, and N the total number of determinants. FCI yields the exact ground state within the chosen orbital basis but is intractable for large systems due to its combinatorially increasing computational cost. For practical applications, it is therefore necessary to truncate the Fock space. The QSCI method addresses this by identifying the most important states and using them to construct the wave function. For this, a trial wave function that approximates the state of interest is pre-pared on a quantum computer. The state is sampled by per-forming Nshot projective measurements in the computational basis, which yields a distribution of bitstrings that reflects their probabilities in the wave function. The R most frequently observed bitstrings define the set of basis states {| Φi⟩} Ri=1,which is then used to construct the QSCI wave function 
+
+|ΨQSCI ⟩ =
+
+> R
+
+# ∑
+
+> i=1
+
+ci |Φi⟩ . (10) To obtain the corresponding set of coefficients {ci}, the R × R
+
+effective Hamiltonian Heff is defined in the subspace spanned by the R selected configurations, with matrix elements 
+
+Heff  
+
+> i j
+
+= ⟨Φi| ˆH|Φ j⟩ , (11) where ˆ H is the electronic Hamiltonian. Solving the subspace eigenvalue problem 
+
+Heff c = Ec (12) yields the energy eigenvalue E and the coefficient vector c of the ground state. In our workflow, ˆ H is taken as the embedded Hamiltonian ˆ HA in B obtained from the projection-based WF-in-DFT embedding. Finite-shot sampling can introduce an imbalance between 
+
+α and β spins in the sampled wave function. To preserve the target spin-projection sector specified by (Nα , Nβ ), each sampled state is first written as 
+
+|Φi⟩ = |Φ(α) 
+
+> i
+
+⟩| Φ(β ) 
+
+> i
+
+⟩ . (13) The determinant subspace used in QSCI is then formed by taking the Cartesian product of bitstrings for each spin, i.e., 
+
+ | ˜Φi⟩ =  |Φ(α) 
+
+> m
+
+⟩| Φ(β ) 
+
+> n
+
+⟩ 1 ≤ m ≤ R, 1 ≤ n ≤ R . (14) While the enlarged subspace spanned by  | ˜Φi⟩ increases the dimension of Heff , it also raises the likelihood of capturing relevant determinants, which has been shown to improve ac-curacy of QSCI [9, 13]. 
+
+3. Post-processing using TCC 
+
+In the conventional coupled-cluster (CC) method, the wave function is written as 
+
+|ΨCC ⟩ = e ˆT |Ψ0⟩ , (15) where |Ψ0⟩ is the reference Slater determinant and ˆ T the clus-ter operator. For single-reference systems near equilibrium, CCSD(T) is widely regarded as the gold standard because it provides a highly accurate treatment of dynamical electron correlation. However, CCSD(T) becomes unreliable when electron correlation is strong. This limitation can be mitigated by incorporating an active-space CI calculation through the TCC method [17]. In the TCC framework, the cluster oper-ator ˆ T is partitioned into two parts to approximately separate dynamical and static electron correlation: 
+
+|ΨTCC ⟩ = e ˆT external 
+
+e ˆT active 
+
+|Ψ0⟩ . (16) ˆT active acts solely within the active space and serves to capture most of the static correlation. ˆ T external contains all other exci-tations and accounts for the remaining dynamical correlation in the full system. In the TCCSD ansatz, ˆ T active and ˆ T external 
+
+are given by ˆT active = ˆT active 1 + ˆT active 2
+
+= ∑
+
+> i′,a′
+
+ta′ 
+
+> i′
+
+ˆa† 
+
+> a′
+
+ˆai′ + 14 ∑ 
+
+> i′,j′,a′,b′
+
+ta′b′  
+
+> i′j′
+
+ˆa† 
+
+> a′
+
+ˆa† 
+
+> b′
+
+ˆa j′ ˆai′ ,
+
+i′, j′, a′, b′ ∈ active space (17) and ˆT external = ˆT external 1 + ˆT external 2
+
+= ∑
+
+> i,a
+
+tai ˆa† 
+
+> a
+
+ˆai + 14 ∑ 
+
+> i,j,a,b
+
+tab i j ˆa† 
+
+> a
+
+ˆa† 
+
+> b
+
+ˆa j ˆai,
+
+{i, j, a, b}̸ ⊂ active space .
+
+(18) Here, tai , ta′ 
+
+> i′
+
+, tab i j , and ta′b′  
+
+> i′j′
+
+are the coupled-cluster single- and double-excitation amplitudes. ˆa† 
+
+> p
+
+and ˆ ap denote the creation and annihilation operators acting on spin-orbital p, respec-tively. Indices i, i′, j, and j′ run over occupied orbitals of the reference wave function, whereas a, a′, b, and b′ run over un-occupied orbitals. Note that in ˆ T active all indices are restricted to the active space, whereas in ˆ T external at least one index lies outside of it. 5To embed the static correlation recovered by the active-space CI calculation into the CC wave function, the cluster operator is “tailored” by constraining the amplitudes in ˆ T active 
+
+to reproduce the active-space CI expansion. For the TCCSD ansatz, this yields ˆT active 1 = ˆC1, (19) ˆT active 2 = ˆC2 − 12 ˆC21 , (20) where ˆ C1 and ˆ C2 denote the CI single- and double-excitation operators, respectively. In this work, ˆC1 and ˆC2 are recon-structed from the QSCI wave function eqn. (10), retaining only the most important excitations [8]. Dynamical correla-tion is then recovered by solving the standard coupled-cluster equations for ˆ T external while keeping ˆ T active fixed. The accuracy can be further improved by incorporating the perturbative triples correction, resulting in TCCSD(T). To prevent double-counting, all active single and double ampli-tudes are set to zero during the evaluation of the perturbative triples correction [45].  
+
+> 4. Post-processing using NEVPT2
+
+NEVPT2 is a multireference perturbation theory for recov-ering dynamical correlation from an active-space reference [40–42]. Here, it is applied as a post-processing step on top of the QSCI wave function, using the strongly contracted variant. As a perturbation theory, NEVPT2 is formulated by parti-tioning the Hamiltonian as ˆH = ˆH(0) + ˆV , (21) where ˆ H(0) is the zeroth-order Hamiltonian and ˆ V = ˆH − ˆH(0)
+
+is the perturbation. To ensure rapid convergence, ˆ H(0) is cho-sen to approximate ˆ H closely, making ˆ V small. A central aspect of NEVPT2 is choosing ˆ H(0) as the Dyall Hamiltonian [46], ˆH(0) = ˆHactive + ∑
+
+> i
+
+εia† 
+
+> i
+
+ai + ∑
+
+> a
+
+εaa†
+
+> a
+
+aa +C , (22) where ˆ Hactive contains all terms that involve the active space. The summations over i and a run over doubly occupied (core) and empty (virtual) orbitals, respectively. εi and εa are sem-icanonical orbital energies for the core and virtual orbitals, respectively. C is a constant obtained from contributions of the core orbitals. With this choice of ˆH(0) and the QSCI wave function (eqn. (10)) as the reference state, the NEVPT2 energy cor-rection is obtained from a second-order expansion in ˆ V :
+
+E(2) = ⟨ΨQSCI | ˆV ˆQ (E(0) 
+
+> 0
+
+− ˆH(0))−1 ˆQ ˆV |ΨQSCI ⟩. (23) Here, ˆ Q projects onto the space outside the QSCI active-space reference and E(0) 
+
+> 0
+
+is the zeroth-order energy obtained from ˆH(0). For the QSCI reference, the second-order correction involves intermediate configurations generated by one- and two-electron transfers between the active space and the core and virtual orbital spaces.  
+
+> 5. Post-processing using AC0
+
+AC0 is based on an adiabatic connection (AC) that interpo-lates between a chosen reference Hamiltonian and the fully in-teracting electronic Hamiltonian [47]. Compared to represen-tative multireference perturbation methods such as CASPT2 and NEVPT2, AC0 does not require reduced density matri-ces higher than second order, making it computationally less demanding for recovering dynamical correlation outside the active space [43]. The AC Hamiltonian is defined as ˆHα = ˆH(0) + α ˆH′ (24) with ˆH′ = ˆH − ˆH(0) , (25) where 0 ≤ α ≤ 1 is a coupling constant and ˆH(0) is chosen such that the active-space problem is described at α = 0. In our workflow, the QSCI wave function eqn. (10) is used as the active-space reference. When the correlation energy is defined as 
+
+Ecorr = Eexact − Ereference , (26) where Eexact is the exact energy and Ereference is the energy of the active-space reference, it can be shown that the exact AC expression for the correlation energy EAC corr is given by 
+
+EAC corr = 
+
+> Z10
+
+(W α + ∆α ) dα . (27) Here, W α comprises contributions from two-electron interac-tions evaluated with the α-dependent wave function and ∆α
+
+accounts for one-electron density changes along the path. For practical applications, eqn. (27) can be simplified by as-suming that the one-electron density matrix remains constant along the AC path, which causes ∆α to vanish, and by eval-uating W α within the extended random phase approximation (ERPA). In AC0, the integrand is further approximated by a first-order expansion around α = 0: 
+
+W α ≈ W α=0 + dW
+
+dα α=0
+
+α . (28) It can be shown that W α=0 = 0 for an active-space refer-ence wave function [43]. In this study, we use the QSCI wave function as an approximate active-space reference. With 
+
+W (1) = dW 
+
+> dαα=0
+
+, this yields 
+
+EAC corr ≈ 
+
+> Z10
+
+
+
+W α=0 +W (1)α
+
+
+
+dα = W (1)
+
+2 ≡ EAC0 corr (29) for the AC0 expression for the correlation energy.  
+
+> B. Computational details
+
+Projection-based WF-in-DFT embedding was performed using the commercial QSimulate-QM electronic-structure 6package licensed from QSimulate, which is built on the BAGEL program package [48]. Orbitals for the active WF subsystem were selected using Pipek–Mezey localization [49] followed by the atomic valence active space (AVAS) construc-tion [50]. The DFT functionals, basis sets, and sizes of the ac-tive WF subsystems used for each system are reported in the corresponding Results sections. Wave functions were prepared using quantum circuits via VQE simulations carried out classically in chemqulacs [51]. The hardware-efficient ansatz was used [52]. For the fermion-to-qubit mapping, the symmetry-conserving Bravyi–Kitaev (SCBK) mapping [53] was employed. The circuit parame-ters were optimized in the classical simulations of the VQE. The optimized active-space circuits were subsequently exe-cuted and measured using a shot budget of 10 000 on the quan-tum computer at the University of Osaka. The device features a 144-physical-qubit superconducting chip, but each calcu-lation used only the subset of qubits required by the corre-sponding active-space mapping. This chip is similar to that in Ref. [54], but operates at qubit frequencies in the 5 GHz band rather than the 8 GHz band. QURI Parts version 0.20 [55] and QURI Parts OQTOPUS [56, 57] were employed to interface the quantum and classical computations and access the quantum device via cloud-based services. To account for spin symmetry when constructing the effective Hamiltonian from the sampled determinants (eqn. (13)), the union of the 
+
+α- and β -spin configuration sets was formed by adding con-figurations that are present in one spin sector but absent from the other. Active space sizes for the QSCI simulations are given in the corresponding Results sections. SCF calculations as well as post-processing with strongly contracted NEVPT2 were conducted using PySCF version 2.2.1 [58, 59]. For AC0 calculations, we employed the CAS-AC0 module for PySCF developed by Quantinuum [60]. TCCSD(T) post-processing was performed using an in-house implementation built on PySCF [8]. The initial structure of ethanol was obtained via geom-etry optimization using ORCA version 6.1 [61–64] at the PBE/cc-pVTZ level. For propionitrile, the geometry provided in Ref. [65] was used. The geometries of the reactant, tran-sition, and product states for the Menshutkin S N2 reaction in gas phase and inside a carbon nanotube were taken from Ref. [66]. The geometry of the HKUST-1 cluster model, in-cluding the adsorbed water molecule, was generated from the periodic unit cell provided in Ref. [67]. A closed cage was cleaved from the unit cell, and terminal carbon atoms were capped with hydrogen using a C–H bond length of 1 .07 Å to minimize boundary effects. Geometry optimization on the water molecule was performed using the large model of the in-house trained machine learning interatomic potential MACE-Osaka24 [68]. The reaction path for CO hopping on the HEA nanoparti-cle was obtained using NEB [69, 70] calculations performed with CP2K [71]. The nanoparticle was constructed by ran-domly assigning Ir, Pd, Pt, Ru, and Rh atoms at equal ratios to a truncated octahedron structure, followed by geometry opti-mization. To define the initial and final states for the NEB cal-culation, a CO molecule was placed at the respective adsorp-tion sites, and the resulting structures were optimized while keeping the nanoparticle geometry fixed. All calculations employed the PBE exchange-correlation functional [72], the GTH-PBE pseudopotentials [73], and the DZVP-MOLOPT-PBE-GTH basis set [74].  
+
+> III. RESULTS AND DISCUSSION
+
+We first validate the accuracy of our DFT-embedded, post-processed QSCI framework on bond stretching for two small molecules of increasing difficulty. Such benchmarks are widely used because the electronic structure develops in-creasing multireference character upon stretching, making single-reference methods unreliable in the dissociation region. They are therefore well-suited for highlighting how a com-pact active space in QSCI captures the dominant contribu-tions to static correlation and how DFT embedding and post-processing recover dynamical correlation. Following these benchmarks, we demonstrate the scalability and versatility of our quantum–classical approach on three chemically distinct large-scale systems of practical relevance.  
+
+> A. O–H bond dissociation in ethanol
+
+For the first benchmark, we consider the dissociation of the O–H bond in ethanol. As a reference, multireference con-figuration interaction with single and double excitations in-cluding the Davidson (+Q) correction (MRCISD+Q) calcu-lations were carried out using ORCA version 6.1 [61–64]. Fig. 2 shows the relative potential energy curves (top panel) and the corresponding errors (bottom panel), defined as devi-ations from the MRCISD+Q reference calculated with an ac-tive space of (8e,6o). The active WF subsystem comprises the electrons and orbitals on the O and H atoms involved in the O–H bond, while the remainder of the molecule constitutes the DFT environment described at the PBE level. All methods reproduce the position of the minimum at 1.0 Å and follow the MRCISD+Q reference curve within 0.5 eV for distances up to ∼2.1 Å. For larger distances, PBE diverges from the reference and increasingly overestimates the relative energy. This reflects that PBE treats dynamical corre-lation near the equilibrium distance reasonably well, but strug-gles with static correlation as the multireference character of the electronic structure grows in the dissociation region. In contrast, plain QSCI follows the MRCISD+Q reference more closely than PBE in the dissociation region, but shows larger deviations for distances below 2 Å. The improved agreement at larger distances can be attributed to the multide-terminant ansatz of the QSCI wave function, which captures a large portion of the static correlation. At shorter distances, however, the restricted active space misses the dominant dy-namical correlation, which arises largely from excitations out-side the active space. Embedding QSCI into a PBE environment (QSCI-in-PBE) reduces the overestimation from the minimum up to ∼1.5 Å, while preserving the improved description at larger distances. 70246810 Relative energy (eV)        
+
+> 0.5 1.0 1.5 2.0 2.5 3.0 Distance d( ˚ A) 01Error (eV)
+> MRCISD+Q PBE QSCI QSCI-in-PBE QSCI-TCCSD(T)-in-PBE QSCI-NEVPT2-in-PBE QSCI-AC0-in-PBE
+
+FIG. 2. O–H bond dissociation in ethanol. Relative potential en-ergy curves (top) for O–H bond dissociation in ethanol using the cc-pVDZ basis set. Corresponding errors (bottom) are defined as devi-ations from the MRCISD+Q reference. QSCI calculations used an active space of (2e,2o). 
+
+Post-processing QSCI-in-PBE using TCCSD(T), NEVPT2, and AC0 further improves the description. Although the rel-ative energy between 1 .0 Å and 2 .5 Å is still underestimated by up to 0 .5 eV, the error decreases at larger distances and lies between 0 .05 eV and 0 .1 eV at 3 .0 Å. Note that AC0 achieves the most balanced description across the entire region by re-ducing the maximum deviation between 1 .0 Å and 2 .5 Å to 0.2 eV. 
+
+B. C≡N triple-bond stretching in propionitrile 
+
+We next examine the stretching of the C ≡N triple bond in propionitrile. The relative potential energy curves are pre-sented in Fig. 3 (top panel) and the corresponding errors (bot-tom panel) are given as deviations from the results obtained with frozen-core (FC) density matrix renormalization group (DMRG), denoted as DMRG(FC), reported by Beran et al. [65]. The active WF subsystem is defined by the electrons and orbitals localized on the C and N atoms of the nitrile group, while the remaining part of the molecule is assigned to the DFT environment treated at the B3LYP level. All methods reproduce the position of the minimum at 1.15 Å of the DMRG(FC) reference curve, but they system-atically over- and underestimate the energy at distances above and below 1 .15 Å, respectively. The largest deviations are ob-0.0 2.5 5.0 7.5 10.0 12.5 15.0 Relative energy (eV)       
+
+> 1.0 1.2 1.4 1.6 1.8 Distance d( ˚ A)
+> −202Error (eV)
+> DMRG(FC) †
+> B3LYP QSCI QSCI-in-B3LYP QSCI-TCCSD(T)-in-B3LYP QSCI-NEVPT2-in-B3LYP QSCI-AC0-in-B3LYP
+
+FIG. 3. C≡N triple-bond stretching in propionitrile. Relative po-tential energy curves (top) for C ≡N triple-bond stretching in propi-onitrile using the cc-pVDZ basis set. Corresponding errors (bottom) are defined as deviations from the DMRG(FC) reference. QSCI cal-culations used an active space of (6e,6o). †Values are taken from Ref. [65]. 
+
+served for B3LYP as the C ≡N triple bond is stretched, con-sistent with the strong multireference character in the dissoci-ation region. Plain QSCI shows better agreement with the DMRG(FC) reference above 1 .15 Å, but has the largest errors at shorter distances. While the active space captures static correlation at larger distances, its limited size misses much of the dy-namical correlation near the equilibrium geometry. Unlike for ethanol, embedding QSCI into a B3LYP environment (QSCI-in-B3LYP) improves the description not only in the stretched region but also at compressed bond lengths. By post-processing QSCI-in-B3LYP with TCCSD(T), NEVPT2, and AC0, the deviation from the DMRG(FC) ref-erence curve is further reduced below 1 .15 Å. The errors are comparable to QSCI-in-B3LYP up to ∼1.5 Å, but the post-processed variants show larger deviations toward disso-ciation. The better agreement of QSCI-in-B3LYP with the DMRG(FC) reference in this region indicates partial error cancellation between errors introduced by DFT embedding and by neglecting electron correlation outside the active space. The extent and benefit of error cancellation depend on the system and on the partitioning into the active WF subsys-tem and the DFT environment. Since the WF region can be systematically enlarged to reduce the DFT embedding error, recovering electron correlation through post-processing pro-8vides a more reliable route for obtaining accurate results. The following three large-scale applications demonstrate the scala-bility of DFT-embedded QSCI to realistic systems, while also showing the importance of post-processing for achieving sys-tematically improvable accuracy and robust performance.  
+
+> C. Menshutkin S N2 reaction in a CNT
+
+For our first demonstration on large-scale systems, we in-vestigate the Menshutkin S N2 reaction inside a CNT, in which ammonia and chloromethane react to form methylammonium and chloride ions [76, 77]. This reaction involves charge sepa-ration along the pathway, which makes the corresponding en-ergy profile highly sensitive to the surrounding dielectric en-vironment [78]. Computational studies suggest that confine-ment inside a CNT can lower the activation barrier relative to the gas phase (GP) [66, 75, 79, 80]. In the following, we show that our DFT-embedded, post-processed QSCI frame-work quantitatively captures this confinement effect. Fig. 4a shows the reactant, transition state, and product of    
+
+> FIG. 4. Results for the Menshutkin S N2 reaction in gas phase (GP) and inside a carbon nanotube (CNT). (a) Illustration of the reactant, transition state, and product geometries of the Menshutkin SN2 reaction inside a CNT. (b) Energy profiles along the reaction path relative to the reactant energy computed with the 6-31G* basis set. QSCI calculations used an active space of (4e,4o). †Values are taken from Refs. [66, 75].
+
+the Menshutkin S N2 reaction inside the CNT. The correspond-ing energies relative to the reactant are shown in Fig. 4b. The active WF subsystem comprises all 36 electrons of the react-ing molecules, while the entire CNT is treated as the DFT environment described at the B3LYP level. We compare our results with the CASPT2 calculations from Ref. [75], which employ a reduced-scaling formulation based on the support-ing subspace technique and tensor hyper-contraction (THC), denoted as THC-CASPT2, and use an active space of (4e,4o). For the GP calculations, B3LYP yields an incorrect energy profile, underestimating the transition-state energy and plac-ing it below the product, consistent with Ref. [66]. Plain QSCI reproduces the energy profile qualitatively, but may underesti-mate the reaction energy compared to the THC-CASPT2 ref-erence. Once QSCI is post-processed with TCC, NEVPT2, or AC0, the resulting energy profiles agree with the reference within 2 kcal /mol. When the reaction is confined inside the CNT, B3LYP reproduces the energy profile along the reaction coordi-nate qualitatively, but underestimates the barrier height by 7 kcal /mol compared to the THC-CASPT2 reference. By contrast, QSCI-in-B3LYP matches the reference barrier height within 1 kcal /mol but underestimates the relative en-ergy of the product by 5 kcal /mol. This trend mirrors the GP calculations, suggesting that the dominant correlation effects governing the barrier height can be captured with the compact active space, whereas the product requires additional correla-tion beyond the active space. By restoring dynamical correlation through the TCC post-processing step, the QSCI-TCCSD(T)-in-B3LYP energy pro-file is in quantitative agreement with the THC-CASPT2 ref-erence, with deviations of ∼1 kcal /mol at both the transition state and product. Post-processing with NEVPT2 and AC0, however, lowers the relative energies of the transition state and product by ∼4 kcal /mol and ∼3 kcal /mol, respectively, com-pared to the THC-CASPT2 reference. Still, both methods im-prove the barrier height relative to B3LYP and the reaction en-ergy relative to QSCI-in-B3LYP. Note that within each post-processing method, the relative energies of the transition state and product are shifted by roughly the same amount. In con-trast, the deviations in QSCI-in-B3LYP are state-dependent, suggesting that the apparent agreement of the barrier height may reflect a fortunate instance of error cancellation.  
+
+> D. Water adsorption on an HKUST-1 MOF cluster
+
+Next, we consider water adsorption on a cluster model of the HKUST-1 metal-organic framework (MOF). MOFs are porous materials built from inorganic nodes connected by or-ganic linker molecules. Their exceptionally high surface area, even compared to traditional porous materials such as zeo-lites, makes them highly attractive for applications in fuel stor-age, gas separation, and catalysis [81]. HKUST-1, Cu 3(BTC) 2
+
+(BTC = benzene-1,3,5-tricarboxylate) [82], is a prototypical MOF for such applications and has therefore been extensively studied. The adsorption of water on the Cu sites in HKUST-1 is of particular interest since it is closely linked to the stabil-9  
+
+> FIG. 5. Results for water adsorption on an HKUST-1 MOF clus-ter model. (a) Illustration of the HKUST-1 cluster model with a single water molecule adsorbed on a Cu site. Four different defini-tions for the active WF subsystem (Regions 1–4) were investigated. (b) Relative energy profiles along the reaction path computed with the SVP basis set. QSCI calculations used an active space of (2e,2o).
+
+ity of the framework and its performance in adsorption-based applications, such as gas separation and gas storage [67, 83– 85]. We demonstrate that our quantum–classical approach can treat this adsorption process with systematically improvable accuracy. Fig. 5a shows the HKUST-1 cluster model used in our sim-ulations with a water molecule adsorbed on a Cu site. This finite fragment is structurally equivalent to the metal-organic polyhedron synthesized by Eddaoudi et al. [86]. We as-sessed four definitions for the active WF subsystem. Region 1 comprises the electrons and orbitals localized on the water molecule and the Cu site. Region 2 extends the subsystem by adding the nearest coordinating O atoms. Region 3 further includes the Cu and O atoms beneath the adsorption site, and Region 4 also incorporates C atoms connecting the O atoms and the aromatic rings. The remaining part of the MOF cluster constitutes the DFT environment treated at the PBE level. Fig. 5b presents the adsorption energy curves obtained with Regions 1–4 as the active WF subsystem. While QSCI-in-PBE yields smooth energy curves, the dependence on the cho-sen subsystem shows no clear trend for Regions 1–3: extend-ing from Region 1 to Region 2 leads to a large decrease in the adsorption energy, whereas further extension to Region 3 raises it again above the Region 1 curve. Post-processing with TCCSD(T) or NEVPT2 restores a clear, systematic trend: go-ing from Region 1 to Region 2 now leads to a small change, whereas extending from Region 2 to Region 3 produces a pronounced shift. This is consistent with the different WF-subsystem sizes and the inclusion of the second Cu atom di-rectly beneath the adsorption site in Region 3, which may con-tribute strongly to the adsorption energy. QSCI-AC0-in-PBE, on the other hand, follows the behavior of QSCI-in-PBE, sug-gesting that AC0 post-processing is less effective at restoring the missing correlation in this case. In all methods, extending from Region 3 to Region 4 leads to a minor change, indicating convergence with respect to the WF-subsystem size. For Region 4, the resulting adsorption energies and equi-librium distances fall in a reasonable range. We define the adsorption energy as the difference between the energies at the minimum and at 8 Å, which is approximately the pore center of the cluster model. The adsorption energies from the post-processed QSCI-in-PBE calculations are −0.55 eV, 
+
+−0.62 eV, and −0.52 eV for TCC, NEVPT2, and AC0, re-spectively. These results are consistent with previously re-ported values for the periodic HKUST-1 MOF of −0.53 eV [87] from DFT calculations with the PW91-GGA exchange-correlation functional and −0.57 eV [84] from DFT/CC cal-culations [88]. The equilibrium distance is 2 .25 Å for all post-processed calculations, which is also in good agreement with the experimental value of 2 .17 Å [82]. Note that we chose a cluster model because our current implementation does not yet support periodic boundary conditions. A periodic for-mulation would avoid truncation artifacts and capture contri-butions from periodic images, which could further improve agreement with experiments.  
+
+> E. CO hopping on an IrPdPtRhRu HEA nanoparticle
+
+For the final application, we study CO hopping from a bridge site to an on-top site on an IrPdPtRhRu HEA nanopar-ticle. HEAs are multicomponent alloys with five or more prin-cipal elements. Their tunable electronic structure can lead to exceptional physical and chemical properties, which have at-tracted wide attention in catalysis and other areas of chemistry and materials science [89–97]. To assess the catalytic perfor-mance of HEAs, the adsorption properties of small molecules such as CO on HEA surfaces are often used as practical descriptors [95, 98]. We show that our quantum–classical method can be used to obtain systematically improvable en-ergy profiles with reaction barriers in a physically reasonable 10   
+
+> FIG. 6. Results for CO hopping on an IrPdPtRhRu HEA nanoparticle. (a) Illustration of CO hopping from a bridge to an on-top site on the IrPdPtRhRu HEA nanoparticle used in our simu-lations. (b) Geometries along the reaction path obtained from NEB-DFT calculations. (c) Relative energy profiles along the reaction path computed using the def2-SVP basis set with ECPs for the nanopar-ticle and the SVP basis set for the CO molecule. QSCI calculations used an active space of (4e,4o).
+
+range. Fig. 6a illustrates CO hopping on the 79-atom IrPdPtRhRu HEA nanoparticle simulated in this work, and Fig. 6b shows the positions of the CO molecule along the reaction coordi-nate. We consider a truncated octahedron in a face-centered-cubic (fcc) arrangement for the nanoparticle. The chosen shape and size are realistic, as HEA nanoparticles with an av-erage diameter of approximately 1 .32 nm have been synthe-sized [92, 99]. The active WF subsystem includes the elec-trons and orbitals on the C, O, and Ir atoms involved in the hopping, while the remainder forms the DFT environment de-scribed at the PBE level. The relative energy curves are shown in Fig. 6c. PBE pre-dicts the bridge site to be energetically higher than the on-top site. The maximum along the reaction coordinate occurs at the third geometry with a relative energy of 0 .4 eV. This is con-sistent with prior studies of CO adsorption on Ir(111), which report the on-top site as the most stable adsorption site and diffusion barriers of ∼0.4 eV [100–102]. Before turning to our QSCI-based results, we briefly dis-cuss a VQE calculation performed on a simulator with an active space of (4e,4o). While VQE is not the focus of this work, it serves as an instructive example for demonstrat-ing how challenging this barrier is to describe using quan-tum algorithms without DFT embedding and classical post-processing. The relative energy profile obtained with VQE gives the wrong relative stability of the adsorption sites, plac-ing the bridge site below the on-top site. Furthermore, while the position of the maximum is shifted only slightly to the fourth geometry, its value is almost an order of magnitude larger than PBE, reaching 3 .3 eV. We now show how DFT embedding and post-processing re-cover physically reasonable relative energy profiles. When se-lecting only p and d orbitals for the active WF subsystem via AVAS, QSCI-in-PBE reduces the maximum along the reaction coordinate to 0 .9 eV but predicts the wrong relative stability between the bridge and on-top sites. After post-processing with TCCSD(T), NEVPT2, or AC0, the bridge site correctly lies above the on-top site, and the value of the maximum is 0.8 eV. When s orbitals are included in the selection for the active WF subsystem, QSCI-in-PBE reduces the maximum further to 0 .6 eV but raises the relative energy of the on-top site. While all three post-processing methods recover the cor-rect relative stability between the bridge and on-top sites, only TCCSD(T) and NEVPT2 show a clear maximum along the reaction coordinate, amounting to 0 .5 eV and 0 .8 eV, respec-tively. Note that localizing orbitals in nanoparticles is itself a chal-lenge due to the presence of many near-degenerate, entangled states. Several approaches have been proposed to address this and improve robustness, including maximally localized Wan-nier functions [103] with disentanglement [104] and density-matrix-based approaches such as selected columns of the den-sity matrix [105] and its variants [106, 107].  
+
+> IV. CONCLUSIONS
+
+We introduced a quantum–classical framework that en-ables quantitative large-scale electronic-structure calculations where quantum computing is performed on the challenging, strongly correlated part of the system. In this framework, the sampling-based quantum algorithm QSCI connects the quantum treatment of the strongly correlated active space with the subsequent classical correlation treatments. By in-tegrating projection-based WF-in-DFT embedding, our work-flow addresses the scalability bottleneck of the classical post-processing step required to recover dynamical correlation be-yond the active space treated by a quantum algorithm. We performed numerical validations on O–H bond disso-ciation in ethanol and C ≡N bond stretching in propionitrile, 11 and applied our framework to the Menshutkin S N2 reaction inside a CNT, water adsorption on an HKUST-1 MOF cluster, and CO hopping on an IrPdPtRhRu HEA nanoparticle. Those calculations used a subset of qubits of a 144-qubit supercon-ducting quantum computer at the University of Osaka. Our results demonstrate that embedding QSCI in a DFT en-vironment improved agreement with reference energies from high-level methods for the small benchmark molecules com-pared with the vanilla QSCI. For the large-scale systems, QSCI-in-DFT yielded energy profiles that captured the main qualitative features. To recover dynamical correlation be-yond the active space, we evaluated TCC, NEVPT2, and AC0 as classical post-processing methods. All three meth-ods achieved comparable accuracy for the small benchmark molecules. For the large-scale systems, TCC yielded the most accurate and robust results, achieving ∼1 kcal /mol agreement with the classical reference for the Menshutkin S N2 reaction inside a CNT. While NEVPT2 and AC0 also generally im-proved the results, their performance was more system depen-dent. At the same time, our work shows that the reliability of the approach depends on the definition of the WF subsystem and that orbital localization can become challenging in electron-ically complex systems. Addressing these issues will be im-portant for improving the robustness and predictive accuracy of the framework and for further advancing practical applica-tions of quantum computing to problems in catalysis, materi-als science, and other areas where environmental effects are often essential. 
+
+V. ACKNOWLEDGMENTS 
+
+The authors are grateful to Toru Shiozaki at QSimulate for adding the QSimulate-QM functionality used in this work to construct the DFT-embedded Hamiltonians. The authors also thank Takafumi Miyanaga and Kosuke Miyaji for their con-tinued support in preparing the execution environment and enabling cloud-based access to the quantum computer, and Takuma Murokoshi for technical support. This work was sup-ported by MEXT Quantum Leap Flagship Program (MEX-TQLEAP) Grant No. JPMXS0120319794 and the JST COI-NEXT Program Grant No. JPMJPF2014, and the JST AS-PIRE Program Grant No. JPMJAP2319. This research was partially supported by the JSPS Grants-in-Aid for Scientific Research (KAKENHI) Grant No. JP23H03819. 
+
+[1] J. Wurtz, A. Bylinskii, B. Braverman, J. Amato-Grill, S. H. Cantu, F. Huber, A. Lukin, F. Liu, P. Weinberg, J. Long, S.-T. Wang, N. Gemelke, and A. Keesling, Aquila: QuEra’s 256-qubit neutral-atom quantum computer (2023), arXiv:2306.11727 [quant-ph]. [2] M. AbuGhanem, IBM quantum computers: Evolution, perfor-mance, and future directions, J. Supercomput. 81 , 687 (2025). [3] A. Ransford, M. S. Allman, J. Arkinstall, J. P. Campora, S. F. Cooper, R. D. Delaney, J. M. Dreiling, B. Estey, C. Fig-gatt, A. Hall, A. A. Husain, A. Isanaka, C. J. Kennedy, N. Kotibhaskar, I. S. Madjarov, K. Mayer, A. R. Milne, A. J. Park, A. P. Reed, R. Ancona, M. P. Andersen, P. Andres-Martinez, W. Angenent, L. Argueta, B. Arkin, L. Ascar-runz, W. Baker, C. Barnes, J. Bartolotta, J. Berg, R. Besand, B. Bjork, M. Blain, P. Blanchard, R. Blume-Kohout, M. Bohn, A. Borgna, D. Y. Botamanenko, R. Boutelle, N. Brown, G. T. Buckingham, N. Q. Burdick, W. C. Burton, V. Carey, C. J. Carron, J. Chambers, J. Children, V. E. Colussi, S. Crepin-sek, A. Cureton, J. Davies, D. Davis, M. DeCross, D. Deen, C. Delaney, D. DelVento, B. J. DeSalvo, J. Dominy, R. Dun-can, V. Eccles, A. Edgington, N. Erickson, S. Erickson, C. T. Ertsgaard, B. Evans, T. Evans, M. I. Fabrikant, A. Fischer, C. Foltz, M. Foss-Feig, D. Francois, B. Freyberg, C. Gao, R. Garay, J. Garvin, D. M. Gaudiosi, C. N. Gilbreth, J. Giles, E. Glynn, J. Graves, A. Hansen, D. Hayes, L. Heidemann, B. Higashi, T. Hilbun, J. Hines, A. Hlavaty, K. Hoffman, I. M. Hoffman, C. Holliman, I. Hooper, B. Horning, J. Hostetter, D. Hothem, J. Houlton, J. Hout, R. Hutson, R. T. Jacobs, T. Jacobs, M. Johannsen, J. Johansen, L. Jones, S. Julian, R. Jung, A. Keay, T. Klein, M. Koch, R. Kondo, C. Kong, A. Kosto, A. Lawrence, D. Liefer, M. Lollie, D. Lucchetti, N. K. Lysne, C. Lytle, C. MacPherson, A. Malm, S. Mather, B. Mathewson, D. Maxwell, L. McCaffrey, H. McDougall, R. Mendoza, M. Mills, R. Morrison, L. Narmour, N. Nguyen, L. Nugent, S. Olson, D. Ouellette, J. Parks, Z. Peters, J. Pet-ricka, J. M. Pino, F. Polito, M. Preidl, G. Price, T. Proctor, M. Pugh, N. Ratcliff, D. Raymondson, P. Rhodes, C. Ro-man, C. Roy, C. Ryan-Anderson, F. B. Sanchez, G. Sangiolo, T. Sawadski, A. Schaffer, P. Schow, J. Sedlacek, H. Seme-nenko, P. Shevchuk, S. Shore, P. Siegfried, K. Singhal, S. Sivarajah, T. Skripka, L. Sletten, B. Spaun, R. T. Spren-kle, P. Stoufer, M. Tader, S. F. Taylor, T. H. Thompson, R. Tobey, A. Tran, T. Tran, G. Vittorini, C. Volin, J. Walker, S. White, D. Wilson, Q. Wolf, C. Wringe, K. Young, J. Zheng, K. Zuraski, C. H. Baldwin, A. Chernoguzov, J. P. Gaebler, S. J. Sanders, B. Neyenhuis, R. Stutz, and J. G. Bohnet, Helios: A 98-qubit trapped-ion quantum computer (2025), arXiv:2511.05465 [quant-ph]. [4] K. Wintersperger, F. Dommert, T. Ehmer, A. Hoursanov, J. Klepsch, W. Mauerer, G. Reuber, T. Strohm, M. Yin, and S. Luber, Neutral atom quantum computing hardware: Perfor-mance and end-user perspective, EPJ Quantum Technol. 10 ,32 (2023). [5] H. T. Nguyen, P. Krishnan, D. Krishnaswamy, M. Usman, and R. Buyya, Quantum Cloud Computing: A Review, Open Prob-lems, and Future Directions (2024), arXiv:2404.11420 [cs]. [6] V. Khinevich and W. Mizukami, Enhancing quantum com-putations with the synergy of auxiliary field quantum Monte Carlo and computational basis tomography (2025), arXiv:2502.20066 [quant-ph]. [7] L. Erhart, Y. Yoshida, V. Khinevich, and W. Mizukami, Cou-pled cluster method tailored with quantum computing, Phys. Rev. Res. 6, 023230 (2024). [8] L. Erhart, Y. Yoshida, and W. Mizukami, Coupled cluster method tailored by quantum selected configuration interaction (2025), arXiv:2506.16911 [physics]. [9] Y. Yoshida, L. Erhart, T. Murokoshi, R. Nakagawa, C. Mori, T. Miyanaga, T. Mori, and W. Mizukami, Auxiliary-field 12 
+
+quantum Monte Carlo method with quantum selected config-uration interaction (2025), arXiv:2502.21081 [quant-ph]. [10] K. Kanno, M. Kohda, R. Imai, S. Koh, K. Mitarai, W. Mizukami, and Y. O. Nakagawa, Quantum-Selected Con-figuration Interaction: Classical diagonalization of Hamilto-nians in subspaces selected by quantum computers (2023), arXiv:2302.11320 [quant-ph]. [11] A. Peruzzo, J. McClean, P. Shadbolt, M.-H. Yung, X.-Q. Zhou, P. J. Love, A. Aspuru-Guzik, and J. L. O’Brien, A variational eigenvalue solver on a photonic quantum processor, Nat. Com-mun. 5, 4213 (2014). [12] J. Tilly, H. Chen, S. Cao, D. Picozzi, K. Setia, Y. Li, E. Grant, L. Wossnig, I. Rungger, G. H. Booth, and J. Tennyson, The Variational Quantum Eigensolver: A review of methods and best practices, Phys. Rep. 986 , 1 (2022). [13] J. Robledo-Moreno, M. Motta, H. Haas, A. Javadi-Abhari, P. Jurcevic, W. Kirby, S. Martiel, K. Sharma, S. Sharma, T. Shirakawa, I. Sitdikov, R.-Y. Sun, K. J. Sung, M. Takita, M. C. Tran, S. Yunoki, and A. Mezzacapo, Chemistry beyond the scale of exact diagonalization on a quantum-centric super-computer, Sci. Adv. 11 , eadu9991 (2025). [14] A. A. Saki, S. Barison, B. Fuller, J. R. Garrison, J. R. Glick, C. Johnson, A. Mezzacapo, J. Robledo-Moreno, M. Rossmannek, P. Schweigert, I. Sitdikov, and K. J. Sung, Qiskit addon: Sample-based quantum diagonalization, https://github.com/Qiskit/qiskit-addon-sqd (2024). [15] Qiskit contributors and collaborators, Qiskit-addon-sqd-hpc, https://github.com/Qiskit/qiskit-addon-sqd-hpc (2025). [16] S. Zhang and H. Krakauer, Quantum Monte Carlo Method using Phase-Free Random Walks with Slater Determinants, Phys. Rev. Lett. 90 , 136401 (2003). [17] T. Kinoshita, O. Hino, and R. J. Bartlett, Coupled-cluster method tailored by configuration interaction, J. Chem. Phys. 
+
+123 , 074106 (2005). [18] H. Nakano, R. Uchiyama, and K. Hirao, Quasi-degenerate perturbation theory with general multiconfiguration self-consistent field reference functions, J. Comput. Chem. 23 ,1166 (2002). [19] D. Danilov, J. Robledo-Moreno, K. J. Sung, M. Motta, and J. Shee, Enhancing the Accuracy and Efficiency of Sample-Based Quantum Diagonalization with Phaseless Auxiliary-Field Quantum Monte Carlo, J. Chem. Theory Comput. 21 ,11585 (2025). [20] S. Shirai, S.-Y. Tseng, H. Iwakiri, T. Horiba, H. Hirai, and S. Koh, Enhancing Accuracy of Quantum-Selected Configu-ration Interaction Calculations Using Multireference Perturba-tion Theory: Application to Aromatic Molecules, ACS Omega 
+
+10 , 39736 (2025). [21] Y. Yoshida, T. Murokoshi, R. Nakagawa, C. Mori, Y. Katayama, N. Kuroda, S. Furukawa, H. Tagami, and W. Mizukami, Doubling the size of quantum selected con-figuration interaction based on seniority-zero space and its application to QC-QSCI-AFQMC (2026), arXiv:2602.07912 [quant-ph]. [22] K. Raghavachari, G. W. Trucks, J. A. Pople, and M. Head-Gordon, A fifth-order perturbation comparison of electron cor-relation theories, Chem. Phys. Lett. 157 , 479 (1989). [23] C. Riplinger and F. Neese, An efficient and near linear scal-ing pair natural orbital based local coupled cluster method, J. Chem. Phys. 138 , 034106 (2013). [24] C. Riplinger, B. Sandhoefer, A. Hansen, and F. Neese, Natural triple excitations in local coupled cluster calculations with pair natural orbitals, J. Chem. Phys. 139 , 134101 (2013). [25] G. Knizia and G. K.-L. Chan, Density Matrix Embedding: A Simple Alternative to Dynamical Mean-Field Theory, Phys. Rev. Lett. 109 , 186404 (2012). [26] G. Knizia and G. K.-L. Chan, Density Matrix Embedding: A Strong-Coupling Quantum Embedding Theory, J. Chem. The-ory Comput. 9, 1428 (2013). [27] C. R. Jacob and J. Neugebauer, Subsystem density-functional theory, WIREs Comput. Mol. Sci. 4, 325 (2014). [28] T. A. Wesolowski, S. Shedge, and X. Zhou, Frozen-Density Embedding Strategy for Multilevel Simulations of Electronic Structure, Chem. Rev. 115 , 5891 (2015). [29] F. R. Manby, M. Stella, J. D. Goodpaster, and T. F. I. Miller, A Simple, Exact Density-Functional-Theory Embed-ding Scheme, J. Chem. Theory Comput. 8, 2564 (2012). [30] S. J. R. Lee, M. Welborn, F. R. Manby, and T. F. I. Miller, Projection-Based Wavefunction-in-DFT Embedding, Acc. Chem. Res. 52 , 1359 (2019). [31] C. Vorwerk, N. Sheng, M. Govoni, B. Huang, and G. Galli, Quantum embedding theories to simulate condensed systems on quantum computers, Nat. Comput. Sci. 2, 424 (2022). [32] A. Shajan, D. Kaliakin, A. Mitra, J. R. Moreno, Z. Li, M. Motta, C. Johnson, A. A. Saki, S. Das, I. Sitdikov, A. Mez-zacapo, and K. M. M. Jr, Towards quantum-centric simulations of extended molecules: Sample-based quantum diagonaliza-tion enhanced with density matrix embedding theory (2024), arXiv:2411.09861 [quant-ph]. [33] S. Battaglia, M. Rossmannek, V. V. Rybkin, I. Tavernelli, and J. Hutter, A general framework for active space embedding methods with applications in quantum computing, npj Com-put. Mater. 10 , 297 (2024). [34] T. M. Bickley, A. Mingare, T. Weaving, M. W. de la Bastida, S. Wan, M. Nibbi, P. Seitz, A. Ralli, P. J. Love, M. Chung, M. H. Vera, L. Schulz, and P. V. Coveney, Extending quantum computing through subspace, embedding and classical molec-ular dynamics techniques, Digit. Discov. 4, 3427 (2025). [35] K. Yamamoto, R. Masui, T. Nakajima, M. Tsuji, M. Sato, P. Schow, L. Heidemann, M. Burke, P. Seitz, O. J. Backhouse, J. W. Pedersen, J. Children, C. Holliman, N. Lysne, D. Okuno, S. Sivarajah, D. M. Ramo, A. Chernoguzov, and R. Duncan, Quantum-HPC hybrid computation of biomolecular excited-state energies (2026), arXiv:2601.15677 [quant-ph]. [36] J. Merz, A. Shajan, D. Kaliakin, F. Liang, Y. Otsuka, T. Shi-rakawa, L. Broers, H. Xu, M. Tsuji, M. Sato, S. Yunoki, R. Wakizaka, Y. Kawashima, J. Doi, T. Itoko, H. Horii, T. Pellegrini, J. R. Moreno, K. J. Sung, E. Fejer, R. Walkup, S. Seelam, and M. Motta, Crossing the 12,000-atom bar-rier with heterogeneous quantum-classical supercomputing: Quantum chemistry of protein-ligand complexes (2026), arXiv:2605.01138 [quant-ph]. [37] S. Lloyd, Universal Quantum Simulators, Science 273 , 1073 (1996). [38] A. Aspuru-Guzik, A. D. Dutoi, P. J. Love, and M. Head-Gordon, Simulated Quantum Computation of Molecular En-ergies, Science 309 , 1704 (2005). [39] V. Khinevich, Y. Lee, N. Yoshioka, and W. Mizukami, Quan-tum Power Iteration Unified Using Generalized Quantum Sig-nal Processing (2025), arXiv:2507.11142 [quant-ph]. [40] C. Angeli, R. Cimiraglia, S. Evangelisti, T. Leininger, and J.-P. Malrieu, Introduction of n-electron valence states for multiref-erence perturbation theory, J. Chem. Phys. 114 , 10252 (2001). [41] C. Angeli, R. Cimiraglia, and J.-P. Malrieu, N-electron va-lence state perturbation theory: A fast implementation of the strongly contracted variant, Chem. Phys. Lett. 350 , 297 (2001). 13 
+
+[42] C. Angeli, R. Cimiraglia, and J.-P. Malrieu, N-electron valence state perturbation theory: A spinless formulation and an effi-cient implementation of the strongly contracted and of the par-tially contracted variants, J. Chem. Phys. 117 , 9138 (2002). [43] E. Pastorczak and K. Pernal, Correlation Energy from the Adiabatic Connection Formalism for Complete Active Space Wave Functions, J. Chem. Theory Comput. 14 , 3493 (2018). [44] M. Svensson, S. Humbel, R. D. J. Froese, T. Matsubara, S. Sieber, and K. Morokuma, ONIOM: A Multilayered In-tegrated MO + MM Method for Geometry Optimizations and Single Point Energy Predictions. A Test for Diels-Alder Re-actions and Pt(P(t-Bu)3)2 + H2 Oxidative Addition, J. Phys. Chem. 100 , 19357 (1996). [45] D. I. Lyakh, V. F. Lotrich, and R. J. Bartlett, The ‘tailored’ CCSD(T) description of the automerization of cyclobutadiene, Chem. Phys. Lett. 501 , 166 (2011). [46] K. G. Dyall, The choice of a zeroth-order Hamiltonian for second-order perturbation theory with a complete active space self-consistent-field reference function, J. Chem. Phys. 102 ,4909 (1995). [47] K. Pernal, Electron Correlation from the Adiabatic Connec-tion for Multireference Wave Functions, Phys. Rev. Lett. 120 ,013001 (2018). [48] T. Shiozaki, BAGEL: Brilliantly Advanced General Electronic-structure Library, WIREs Comput. Mol. Sci. 
+
+8, e1331 (2018). [49] J. Pipek and P. G. Mezey, A fast intrinsic localization proce-dure applicable for ab initio and semiempirical linear combi-nation of atomic orbital wave functions, J. Chem. Phys. 90 ,4916 (1989). [50] E. R. Sayfutyarova, Q. Sun, G. K.-L. Chan, and G. Knizia, Automated Construction of Molecular Active Spaces from Atomic Valence Orbitals, J. Chem. Theory Comput. 13 , 4063 (2017). [51] Chemqulacs, https://wmizukami.github.io/chemqulacs/ (2023). [52] A. Kandala, A. Mezzacapo, K. Temme, M. Takita, M. Brink, J. M. Chow, and J. M. Gambetta, Hardware-efficient varia-tional quantum eigensolver for small molecules and quantum magnets, Nature 549 , 242 (2017). [53] S. Bravyi, J. M. Gambetta, A. Mezzacapo, and K. Temme, Ta-pering off qubits to simulate fermionic Hamiltonians (2017), arXiv:1701.08213 [quant-ph]. [54] P. A. Spring, L. Milanovic, Y. Sunada, S. Wang, A. F. van Loo, S. Tamate, and Y. Nakamura, Fast Multiplexed Superconducting-Qubit Readout with Intrinsic Purcell Filter-ing Using a Multiconductor Transmission Line, PRX Quan-tum 6, 020345 (2025). [55] QURI Parts, https://github.com/QunaSys/quri-sdk (2024). [56] OQTOPUS, https://github.com/oqtopus-team (2025). [57] N. Kakuko, S. Gokita, N. Masumoto, K. Matsumoto, K. Miyaji, T. Miyanaga, T. Mori, H. Nakayama, K. Sasada, Y. Takamiya, S. Tsukano, R. Uchida, and M. Yamaguchi, A Practical Open-Source Software Stack for a Cloud-Based Quantum Computing System (2025), arXiv:2507.23165 [quant-ph]. [58] Q. Sun, T. C. Berkelbach, N. S. Blunt, G. H. Booth, S. Guo, Z. Li, J. Liu, J. D. McClain, E. R. Sayfutyarova, S. Sharma, S. Wouters, and G. K.-L. Chan, PySCF: The Python-based simulations of chemistry framework, WIREs Comput. Mol. Sci. 8, e1340 (2018). [59] Q. Sun, X. Zhang, S. Banerjee, P. Bao, M. Barbry, N. S. Blunt, N. A. Bogdanov, G. H. Booth, J. Chen, Z.-H. Cui, J. J. Eriksen, Y. Gao, S. Guo, J. Hermann, M. R. Hermes, K. Koh, P. Ko-val, S. Lehtola, Z. Li, J. Liu, N. Mardirossian, J. D. McClain, M. Motta, B. Mussard, H. Q. Pham, A. Pulkin, W. Purwanto, P. J. Robinson, E. Ronca, E. R. Sayfutyarova, M. Scheurer, H. F. Schurkus, J. E. T. Smith, C. Sun, S.-N. Sun, S. Upad-hyay, L. K. Wagner, X. Wang, A. White, J. D. Whitfield, M. J. Williamson, S. Wouters, J. Yang, J. M. Yu, T. Zhu, T. C. Berkelbach, S. Sharma, A. Y. Sokolov, and G. K.-L. Chan, Re-cent developments in the PySCF program package, J. Chem. Phys. 153 , 024109 (2020). [60] PySCF-AC0, https://github.com/Quantinuum/pyscf-ac0 (2024). [61] F. Neese, The ORCA program system, WIREs Comput. Mol. Sci. 2, 73 (2012). [62] F. Neese, F. Wennmohs, U. Becker, and C. Riplinger, The ORCA quantum chemistry program package, J. Chem. Phys. 
+
+152 , 224108 (2020). [63] F. Neese, The SHARK integral generation and digestion sys-tem, J. Comput. Chem. 44 , 381 (2023). [64] F. Neese, Software Update: The ORCA Program System— Version 6.0, WIREs Comput. Mol. Sci. 15 , e70019 (2025). [65] P. Beran, K. Pernal, F. Pavoševi´ c, and L. Veis, Projection-Based Density Matrix Renormalization Group in Density Functional Theory Embedding, J. Phys. Chem. Lett. 14 , 716 (2023). [66] D. Claudino and N. J. Mayhall, Automatic Partition of Orbital Spaces Based on Singular Value Decomposition in the Context of Embedding Theories, J. Chem. Theory Comput. 15 , 1053 (2019). [67] W. Xue, Z. Zhang, H. Huang, C. Zhong, and D. Mei, Theoreti-cal Insights into the Initial Hydrolytic Breakdown of HKUST-1, J. Phys. Chem. C 124 , 1991 (2020). [68] T. Shiota, K. Ishihara, T. M. Do, T. Mori, and W. Mizukami, Taming Multi-Domain, -Fidelity Data: Towards Foun-dation Models for Atomistic Scale Simulations (2024), arXiv:2412.13088 [physics]. [69] H. Jónsson, G. Mills, and K. W. Jacobsen, Nudged elastic band method for finding minimum energy paths of transitions, in 
+
+Classical and Quantum Dynamics in Condensed Phase Simu-lations (WORLD SCIENTIFIC, 1998) pp. 385–404. [70] G. Henkelman and H. Jónsson, Improved tangent estimate in the nudged elastic band method for finding minimum energy paths and saddle points, J. Chem. Phys. 113 , 9978 (2000). [71] T. D. Kühne, M. Iannuzzi, M. Del Ben, V. V. Rybkin, P. Seewald, F. Stein, T. Laino, R. Z. Khaliullin, O. Schütt, F. Schiffmann, D. Golze, J. Wilhelm, S. Chulkov, M. H. Bani-Hashemian, V. Weber, U. Borštnik, M. Taillefumier, A. S. Jakobovits, A. Lazzaro, H. Pabst, T. Müller, R. Schade, M. Guidon, S. Andermatt, N. Holmberg, G. K. Schenter, A. Hehn, A. Bussy, F. Belleflamme, G. Tabacchi, A. Glöß, M. Lass, I. Bethune, C. J. Mundy, C. Plessl, M. Watkins, J. VandeVondele, M. Krack, and J. Hutter, CP2K: An elec-tronic structure and molecular dynamics software package -Quickstep: Efficient and accurate electronic structure calcula-tions, J. Chem. Phys. 152 , 194103 (2020). [72] J. P. Perdew, K. Burke, and M. Ernzerhof, Generalized Gra-dient Approximation Made Simple, Phys. Rev. Lett. 77 , 3865 (1996). [73] S. Goedecker, M. Teter, and J. Hutter, Separable dual-space Gaussian pseudopotentials, Phys. Rev. B 54 , 1703 (1996). [74] J. VandeVondele and J. Hutter, Gaussian basis sets for accu-rate calculations on molecular systems in gas and condensed phases, J. Chem. Phys. 127 , 114105 (2007). [75] C. Song and T. J. Martínez, Reduced scaling CASPT2 using supporting subspaces and tensor hyper-contraction, J. Chem. 14 
+
+Phys. 149 , 044108 (2018). [76] Nikolai Menschutkin, Beiträgen zur Kenntnis der Affinitätsko-effizienten der Alkylhaloide und der organischen Amine, Z. Phys. Chem. 5 (1890). [77] Nikolai Menschutkin, über die Affinitätskoeffizienten der Alkylhaloide und der Amine, Z. Phys. Chem. 6 (1890). [78] C. Amovilli, B. Mennucci, and F. M. Floris, MCSCF Study of the SN2 Menshutkin Reaction in Aqueous Solution within the Polarizable Continuum Model, J. Phys. Chem. B 102 , 3023 (1998). [79] M. D. Halls and H. B. Schlegel, Chemistry Inside Carbon Nan-otubes: the Menshutkin SN2 Reaction, J. Phys. Chem. B 106 ,1921 (2002). [80] P. Giacinto, F. Zerbetto, A. Bottoni, and M. Calvaresi, CNT-Confinement Effects on the Menshutkin SN2 Reaction: The Role of Nonbonded Interactions, J. Chem. Theory Comput. 
+
+12 , 4082 (2016). [81] H. Furukawa, K. E. Cordova, M. O’Keeffe, and O. M. Yaghi, The Chemistry and Applications of Metal-Organic Frame-works, Science 341 , 1230444 (2013). [82] S. S.-Y. Chui, S. M.-F. Lo, J. P. H. Charmant, A. G. Orpen, and I. D. Williams, A Chemically Functionalizable Nanoporous Material [Cu3(TMA)2(H2O)3]n, Science 283 , 1148 (1999). [83] M. Schlesinger, S. Schulze, M. Hietschold, and M. Mehring, Evaluation of synthetic methods for microporous metal– organic frameworks exemplified by the competitive forma-tion of [Cu2(btc)3(H2O)3] and [Cu2(btc)(OH)(H2O)], Micro-porous Mesoporous Mater. 132 , 121 (2010). [84] L. Grajciar, O. Bludský, and P. Nachtigall, Water Adsorption on Coordinatively Unsaturated Sites in CuBTC MOF, J. Phys. Chem. Lett. 1, 3354 (2010). [85] R. Giovine, F. Pourpoint, S. Duval, O. Lafon, J.-P. Amoureux, T. Loiseau, and C. Volkringer, The Surprising Stability of Cu3(btc)2 Metal–Organic Framework under Steam Flow at High Temperature, Cryst. Growth Des. 18 , 6681 (2018). [86] M. Eddaoudi, J. Kim, J. B. Wachter, H. K. Chae, M. O’Keeffe, and O. M. Yaghi, Porous Metal-Organic Polyhedra: 25 Å Cuboctahedron Constructed from 12 Cu2(CO2)4 Paddle-Wheel Building Blocks, J. Am. Chem. Soc. 123 , 4368 (2001). [87] T. Watanabe and D. S. Sholl, Molecular chemisorption on open metal sites in Cu3(benzenetricarboxylate)2: A spatially periodic density functional theory study, J. Chem. Phys. 133 ,094509 (2010). [88] O. Bludský, M. Rubeš, P. Soldán, and P. Nachtigall, In-vestigation of the benzene-dimer potential energy surface: DFT/CCSD(T) correction scheme, J. Chem. Phys. 128 ,114102 (2008). [89] J.-W. Yeh, S.-K. Chen, S.-J. Lin, J.-Y. Gan, T.-S. Chin, T.-T. Shun, C.-H. Tsau, and S.-Y. Chang, Nanostructured High-Entropy Alloys with Multiple Principal Elements: Novel Al-loy Design Concepts and Outcomes, Adv. Eng. Mater. 6, 299 (2004). [90] B. Cantor, I. T. H. Chang, P. Knight, and A. J. B. Vincent, Microstructural development in equiatomic multicomponent alloys, Mater. Sci. Eng. A 375–377 , 213 (2004). [91] E. P. George, D. Raabe, and R. O. Ritchie, High-entropy al-loys, Nat. Rev. Mater. 4, 515 (2019). [92] D. Wu, K. Kusada, T. Yamamoto, T. Toriyama, S. Matsumura, S. Kawaguchi, Y. Kubota, and H. Kitagawa, Platinum-Group-Metal High-Entropy-Alloy Nanoparticles, J. Am. Chem. Soc. 
+
+142 , 13833 (2020). [93] M. Du, X. Li, H. Pang, and Q. Xu, Alloy electrocatalysts, En-ergyChem 5, 100083 (2023). [94] B. Ouyang and Y. Zeng, The rise of high-entropy battery ma-terials, Nat. Commun. 15 , 973 (2024). [95] T. Shiota, K. Ishihara, and W. Mizukami, Lowering the expo-nential wall: Accelerating high-entropy alloy catalysts screen-ing using local surface energy descriptors from neural network potentials, Digit. Discov. 4, 738 (2025). [96] J. Cai and H. Zhu, Surface-engineered nanostructured high-entropy alloys for advanced electrocatalysis, Commun. Mater. 
+
+6, 118 (2025). [97] T. M. Do, T. Shiota, and W. Mizukami, Optimizing adsorption configurations on alloy surfaces using Tensor Train Optimizer (2025), arXiv:2507.20827 [physics.chem-ph]. [98] M. P. Salinas-Quezada, J. K. Pedersen, P. Sebastián-Pascual, I. Chorkendorff, K. Biswas, J. Rossmeisl, and M. Escudero-Escribano, Toward understanding CO oxidation on high-entropy alloy electrocatalysts, EES Catal. 2, 941 (2024). [99] H. Minamihara, K. Kusada, D. Wu, T. Yamamoto, T. Toriyama, S. Matsumura, L. S. R. Kumara, K. Ohara, O. Sakata, S. Kawaguchi, Y. Kubota, and H. Kitagawa, Continuous-Flow Reactor Synthesis for Homogeneous 1 nm-Sized Extremely Small High-Entropy Alloy Nanoparticles, J. Am. Chem. Soc. 144 , 11525 (2022). [100] W. P. Krekelberg, J. Greeley, and M. Mavrikakis, Atomic and Molecular Adsorption on Ir(111), J. Phys. Chem. B 108 , 987 (2004). [101] H. Noei, D. Franz, M. Creutzburg, P. Müller, K. Krausert, E. Grånäs, R. Taube, F. Mittendorfer, and A. Stierle, Monitor-ing the Interaction of CO with Graphene Supported Ir Clusters by Vibrational Spectroscopy and Density Functional Theory Calculations, J. Phys. Chem. C 122 , 4281 (2018). [102] X. Li, T. Haunold, S. Werkovits, L. D. Marks, P. Blaha, and G. Rupprechter, CO Adsorption and Disproportionation on Smooth and Defect-Rich Ir(111), J. Phys. Chem. C 126 , 6578 (2022). [103] N. Marzari and D. Vanderbilt, Maximally localized general-ized Wannier functions for composite energy bands, Phys. Rev. B 56 , 12847 (1997). [104] I. Souza, N. Marzari, and D. Vanderbilt, Maximally localized Wannier functions for entangled energy bands, Phys. Rev. B 
+
+65 , 035109 (2001). [105] A. Damle, L. Lin, and L. Ying, Compressed Representation of Kohn–Sham Orbitals via Selected Columns of the Density Matrix, J. Chem. Theory Comput. 11 , 1463 (2015). [106] A. Damle, L. Lin, and L. Ying, SCDM-k: Localized orbitals for solids via selected columns of the density matrix, J. Com-put. Phys. 334 , 1 (2017). [107] E. G. Fuemmeler, A. Damle, and R. A. J. DiStasio, Selected Columns of the Density Matrix in an Atomic Orbital Basis I: An Intrinsic and Non-iterative Orbital Localization Scheme for the Occupied Space, J. Chem. Theory Comput. 19 , 8572 (2023).
