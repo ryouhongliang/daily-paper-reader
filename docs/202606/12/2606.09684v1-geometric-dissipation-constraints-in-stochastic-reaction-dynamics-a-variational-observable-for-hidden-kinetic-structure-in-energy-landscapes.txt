@@ -1,0 +1,258 @@
+Title: Geometric Dissipation Constraints in Stochastic Reaction Dynamics: A Variational Observable for Hidden Kinetic Structure in Energy Landscapes
+
+URL Source: https://arxiv.org/pdf/2606.09684v1
+
+Published Time: Tue, 09 Jun 2026 02:34:43 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+> 1
+
+# Geometric Dissipation Constraints in Stochastic Reaction Dynamics: A Variational Observable for Hidden Kinetic Structure in Energy Landscapes 
+
+Shlomo Segal 
+
+Abstract —We propose a geometric framework for character-izing hidden kinetic constraints in stochastic reaction dynamics. While free-energy barriers and entropy production provide global descriptors of thermodynamic behavior, they are largely insensitive to local geometric structure in configuration space that governs pathway selection. Starting from overdamped Langevin dynamics formulated as a gradient flow in Wasserstein space, we derive a variational functional whose leading-order asymptotic structure defines a local dissipation–geometry coupling observable. This quantity combines force–drift alignment with phase-space contraction induced by the divergence of the drift field, yielding a scalar field that reflects second-order geometric features of the underlying energy landscape. We demonstrate that this observable distinguishes kinetically distinct reaction channels that are degenerate under conventional free-energy analysis, as shown through numerical experiments on benchmark systems including the M ¨uller–Brown potential, corrugated periodic landscapes, and the conformational transitions of Alanine Dipeptide. These experiments demonstrate robust separation of pathways and are consistent with a quadratic scaling behavior in the high-frequency homogenization regime. Our results suggest that stochastic reaction dynamics contain an additional geometric layer of kinetic control in molecular motion not captured by standard thermodynamic or reaction-coordinate descriptions. 
+
+Index Terms —Computational Chemistry, Reaction Pathways, Energy Landscapes, Stochastic Dynamics, Variational Principle, Geometric Metric, Molecular Dynamics, Transition State Theory, M ¨ uller-Brown Potential, Alanine Dipeptide. 
+
+I. I NTRODUCTION : I DENTIFYING THE MISSING GEOMETRIC 
+
+DIMENSION IN KINETIC CONTROL 
+
+Understanding reaction mechanisms in high-dimensional molecular systems requires bridging thermodynamic descrip-tions with the geometry of stochastic trajectories. Classical approaches such as transition state theory (TST) and free-energy profiles provide effective reduced descriptions of reaction rates, offering invaluable insights into kinetic and thermodynamic phenomena [1]–[4], [18]. However, these frameworks exhibit inherent insensitivity to the intricate geometric structure that governs trajectories in high-dimensional configuration spaces. This limitation becomes particularly salient when multiple pathways present similar free energy barriers or global kinetic rates, yet display vastly different microscopic dynamics or efficiencies in practice [6], [7], [19]. Recent developments in stochastic thermodynamics [8]–[10], [12] and optimal transport theory [13]–[15] have significantly advanced our understanding of energy transduction and ir-reversibility in molecular systems away from equilibrium. While observables such as entropy production and dynamical activity capture fundamental global non-equilibrium costs [11], [21], [22], they remain largely blind to the local geometric constraints of the drift field that specifically influence how individual trajectories are organized, focused, or dispersed in configuration space. This unaddressed aspect implies a “missing dimension” in our current models for accurately predicting pathway selection and efficiency [5]. In this work, we investigate whether stochastic reaction dynamics harbor a characteristic local geometric signature that governs the spatial distribution of dissipation along reaction pathways. We propose that such a signature can be extracted from a variational formulation of overdamped Langevin dynamics. This leads to the Geometric Dissipation Observable ( χ∗), a novel scalar quantity that rigorously couples energetic dissipation with specific geometric properties of the underlying energy landscape. Our primary contributions are tailored to equip the compu-tational chemistry community with an advanced toolset: 1) A rigorous variational derivation of χ∗, establishing it as a uniquely defined descriptor within a weighted Orlicz-Sobolev functional space. 2) Numerical validation of χ∗’s behavior across canonical analytical models, demonstrating its direct response to known energetic and topographic features. 3) Concrete realization of χ∗’s capacity to discriminate between kinetically distinct reaction channels that ap-pear degenerate under traditional free-energy analyses, exemplified on the M ¨uller-Brown potential [1] and conformational transitions in Alanine Dipeptide. 4) A multiscale homogenization analysis, demonstrating that χ∗ predicts a quadratic scaling law ( ω2) in systems with highly corrugated potentials, providing insights into coarse-graining challenges [16], [17]. 5) Formal proof of χ∗’s functional independence from common first-order observables, confirming its unique chemical and physical insight and underscoring its role as a novel descriptor of kinetic structure. These results position χ∗ as a powerful and indispensable tool for uncovering previously hidden geometric constraints and dissipative bottlenecks in molecular processes, ultimately enhancing our ability to engineer and optimize chemical transformations at the nanoscale. 
+
+> arXiv:2606.09684v1 [cond-mat.stat-mech] 8 Jun 2026 2
+
+II. F OUNDATIONAL DYNAMICS AND GEOMETRIC 
+
+CHARACTERIZATION 
+
+We consider a fundamental model for molecular dynamics in condensed phases: a continuous stochastic process x(t) ∈ Rd
+
+governed by the overdamped Langevin equation [23], [24]: 
+
+dx(t) = A(x(t))d t + √2DdW (t) (1) where dW (t) denotes a d-dimensional standard Wiener pro-cess, D = kBT /γ is the diffusion coefficient, and γ is the fric-tion coefficient. The deterministic drift field A(x) : Rd → Rd
+
+encompasses conservative potential gradients ( ∇E(x)) and non-conservative external driving forces ( Fext (x)): 
+
+A(x) = 1
+
+γ (−∇ E(x) + Fext (x)) (2) The dynamics are rigorously characterized by the backward Kolmogorov generator L [17]: 
+
+Lf (x) = A(x) · ∇ f (x) + D∆f (x) (3) For ensuring mathematical rigor and physical consistency, we impose standard conditions: 
+
+(A1) Regularity: E ∈ C2(Rd), A ∈ C1(Rd). These ensure smoothness of the potential energy surface and drift field. 
+
+(A2) Geometric Ergodicity: A(x) ensures geometric ergodic-ity and exponential convergence to a unique invariant measure [25]. 
+
+(A3) Unique Invariant Measure: A unique, strictly positive invariant measure μ(d x) = ρss (x) d x exists, satisfying 
+
+L∗ρss = 0 . This represents the steady-state probability distribution of the system. A critical component of χ∗ is the scalar field κ(x), de-fined as κ(x) = −∇ · A(x). This quantity, known as the 
+
+rate of phase-space volume contraction , has a profound geometric interpretation: it quantifies the local rate at which an infinitesimal phase space element is compressed or expanded when transported by the deterministic flow associated with the stochastic dynamics. In essence, κ(x) acts as a measure of the local geometric “stiffness” or “funneling” capacity of the conformational space. A high |κ(x)| indicates regions where trajectories are strongly compressed, suggesting a geometrically constrained pathway. This geometric characteristic is distinct from purely energetic information captured by E(x).III. M AIN RESULT : V ARIATIONAL DERIVATION OF THE χ∗
+
+The Geometric Dissipation Observable (χ∗) emerges from a rigorous, non-linear inverse problem designed to identify the optimal coupling between local force-induced energy dissipation and the intrinsic contractive constraints of the underlying phase space geometry. This observable is thus a derived quantity, not an arbitrary definition, reflecting a fundamental interplay inherent in the stochastic dynamics. To handle potential logarithmic singularities and guarantee functional well-posedness, we establish our variational problem over the weighted Orlicz-Sobolev space W 1,Log (Rd, μ ). This specific functional space, configured under the convex ∆2-modular Young function Φ( t) = |t|2 + |t| ln(1 + |t|) and equipped with the standard Luxemburg norm, is chosen for its robust properties in controlling logarithmic growth near zero while providing appropriate regularity for gradients inherent in diffusion processes. The positive cone of functions in this space is denoted: 
+
+K+ := {ψ ∈ W 1,Log (Rd, μ ) : ψ > 0 a.e. } (4) 
+
+Theorem 1 (Asymptotic Geometric Dissipation Observable) .
+
+Under standard regularity and ergodicity assumptions for the overdamped Langevin dynamics (A1-A3), the functional Iλ[ψ],defined over the positive convex cone K+ as: 
+
+Iλ[ψ] = 
+
+Z
+
+> Rd
+
+h
+
+(|κ(x)| + ϵ0)ψ(x) + λ∥∇ ψ(x)∥2
+
+− ϕ(x) ln ψ(x)
+
+i
+
+μ( d x) (5) 
+
+admits a unique minimizer ψ∗ 
+
+> λ
+
+in the convex function space K+.In the vanishing regularization limit λ → 0+, the associated scalar observable converges strongly in L1(μ) to: 
+
+χ∗ =
+
+Z
+
+> Rd
+
+(∇E(x) · A(x)) 2
+
+ϵ0 + |∇ · A(x)| ρss (x) d x (6) 
+
+This quantity represents a leading-order coupling between local dissipation injection, ϕ(x) = ( ∇E(x) · A(x)) 2, and geometric phase-space contraction, |∇ · A(x)|.Proof. The proof follows the direct method in the calculus of variations, robustly applied within the Orlicz-Sobolev framework. For brevity, we outline the key stages. 
+
+Step 1: Coercivity and Logarithmic Barrier. The specific choice of the Orlicz-Sobolev space W 1,Log (Rd, μ ) ensures compact embedding and controls the growth of the logarithmic term. The term (|κ(x)| + ϵ0)ψ(x) combined with the singular penalty −ϕ(x) ln ψ(x) guarantee coercivity on K+. This prevents minimizing sequences from degenerating to zero on sets of positive measure, ensuring ψ∗ 
+
+> λ
+
+> 0 almost everywhere. 
+
+Step 2: Lower Semicontinuity. Due to the convexity of each term in the integrand (linear in ψ, quadratic in ∇ψ,and convex for − ln ψ), the functional Iλ[ψ] is weakly lower semicontinuous within the Orlicz-Sobolev space. 
+
+Step 3: Uniqueness and Elliptic Structure. The strict convexity of the transformed functional via the substitution 
+
+ψ = eη ensures the uniqueness of the global minimizer 
+
+ψ∗
+
+> λ
+
+. Taking the formal G ˆateaux derivative yields the weak solution corresponding to the regularized second-order non-linear elliptic PDE: 
+
+(|κ(x)| + ϵ0) − 2λ 1
+
+ρss (x) ∇ · (ρss (x)∇ψ∗
+
+> λ
+
+(x)) − ϕ(x)
+
+ψ∗
+
+> λ
+
+(x) = 0 
+
+(7) 
+
+Step 4: Singular Perturbation Limit. As λ → 0+, the diffusion term vanishes. The equation collapses to an algebraic identity, yielding ψ∗ 
+
+> 0
+
+(x) = ϕ(x) 
+
+> |κ(x)|+ϵ0
+
+. The convergence theorem for singular perturbations ensures that ψ∗
+
+> λ
+
+(x) converges strongly to this leading-order solution, validating the closed-form representation for χ∗.3   
+
+> AB
+> Smooth Path (Low χ∗)Constrained Path (High χ∗)
+
+Fig. 1: Vectorial TikZ illustration of two pathways across an identical energy landscape. While both pathways connect states A and B over comparable energetic barriers, the red pathway encounters high geometric contractive stiffness (funneling turns), yielding a pronounced local geometric dissipation penalty. IV. C OMPUTATIONAL PROTOCOLS AND NUMERICAL 
+
+EVALUATION METHODS 
+
+To present a rigorous proof-of-principle for χ∗, we avoid stochastic noise limitations by utilizing an exact Numerical ODE/PDE Solver Protocol to evaluate the metric over ana-lytical potential fields. For multi-dimensional macromolecular implementation, we also outline the structural Molecular Dy-namics (MD) protocol required for trajectory-based estimation. 
+
+A. Exact Numerical Integration Scheme 
+
+For the low-dimensional analytical systems evaluated in Section V, the invariant density is computed directly from numerical solution of the stationary Fokker-Planck equation, yielding ρss (x) = N exp( −E(x)/D ). The drift field gradients and Hessians are solved via exact symbolic differentiation. The final spatial integration for χ∗ is performed utilizing a high-resolution grid-based standard Riemann sum over the localized support bounds of the system. 
+
+B. Macromolecular MD Protocol Architecture 
+
+For high-dimensional targets, such as conformational changes in peptide backbones parameterized by dihedral angles, we define a comprehensive protocol using standard tools: 1) Sampling Protocol: Enhanced sampling via Umbrella Sampling [26] or Metadynamics [27] along predefined collective variables (CVs). Simulations are carried out in GROMACS 2021 utilizing the CHARMM36m force field [28] and TIP3P explicit water. 2) Force and Hessian Evaluation: Forces F(x) =
+
+−∇ E(x) are output at each frame. The local drift field divergence is acquired via ∇ · A(x) = − 1 
+
+> γ
+
+Tr( H(x)) ,where the Hessian matrix H(x) is extracted via numerical finite-differencing of the localized force vector field or via automated analytical parse scripts. 3) Density Reconstruction: Frame probabilities are un-weighted utilizing the Weighted Histogram Analysis Method (WHAM) [29] or reconstructed via Markov State Models (MSMs) [30] to build the true steady-state measure μ(d x) = ρss (x) d x.
+
+Algorithm 1 Numerical Grid-Based Execution for χ∗                                                                  
+
+> Require: Analytical potential E(x), Grid spacing dx, Diffusion D, Friction
+> γ, Bounds [xmin , x max ]d, Regulation parameter ϵ0.
+> Ensure: Evaluated Geometric Dissipation Observable χ∗.1: Generate Cartesian grid nodes {xi}Mi=1 within system bounds. 2: Compute unnormalized weight wi= exp( −E(xi)/D )for all i.3: Compute normalization divisor Z=PMi=1 widx.4: Initialize χ∗
+> accum = 0 .5: for each node ifrom 1 to Mdo
+> 6: Calculate localized force vector Fi=−∇ E(xi).7: Calculate drift field vector Ai=1
+> γFi.8: Calculate scalar dissipation term ϕi= ( Fi·Ai)2.9: Compute Hessian trace Tr( Hi) = Pdk=1 ∂2
+> xkxkE(xi).10: Set drift divergence field value κi=1
+> γTr( Hi).11: Evaluate localized integrand: Vi=ϕi
+> |κi|+ϵ0.12: χ∗
+> accum + = Vi· wi
+> Z
+> dx.13: end for
+> 14: return χ∗
+> accum .
+
+V. N UMERICAL VALIDATIONS AND ANALYTICAL INSIGHTS 
+
+A. Interpretation of χ∗
+
+The proposed observable, χ∗, should not be interpreted as a mere numerical score but rather as a rigorous, derived quantity reflecting a fundamental coupling between local dissipation injection and geometric phase-space contraction. The numerator, (∇E(x) · A(x)) 2, precisely quantifies the power dissipated locally by the system due to the alignment of conservative forces with the deterministic drift. This term captures the “energetic cost” of movement through a specific region. Conversely, the denominator, ϵ0 + |∇ · A(x)|, encodes the local geometric property of the flow: where the divergence of the drift field is large, trajectories are strongly focused or “funnelled,” implying a stiff or constrained geometric environment. Its value amplifies regions where significant energy is dissipated in conjunction with strong geometric focusing of trajectories. This highlights localized events where the system expends considerable effort to navigate through geometrically tight channels. Unlike free-energy barriers, which are scalar projections of energy, or global entropy production rates, χ∗ is acutely sensitive to the local second-order structure of the en-ergy landscape. This sensitivity allows it to distinguish between kinetically distinct pathways that might appear energetically degenerate, as demonstrated in our numerical examples. 
+
+B. Exact Evaluation on Single-Degree-of-Freedom Models 
+
+1) Double Well Potential: We solve a symmetric double well landscape given by E(x) = ( x2 − 1) 2, under an unbiased condition Fext = 0 , setting diffusion parameter 
+
+D = 0 .5 and friction γ = 1 .0.2) Tilted Double Well Potential: Introducing a con-stant external tilt bias fields a non-equilibrium state: 
+
+E(x) = ( x2 − 1) 2 − F x . The force F impacts both the asymmetric dissipation ϕ(x) and shifts the invariant density, mathematically yielding highly asymmetric χ∗
+
+profiles. 3) Periodic Potential and Quadratic Scaling Verification: 
+
+We evaluate a periodic potential landscape mimicking 4         
+
+> −1.5−1−0.50.511.5
+> 2
+> 4
+> x
+> Value E(x)Energy
+> Local χ∗(x)Profile
+
+Fig. 2: Exact numerical resolution of the local geometric dissipation integrand, χ∗(x), plotted alongside the potential 
+
+E(x) = ( x2 − 1) 2. Symmetrical peaks emerge at inflection points where geometric constraints effectively increase local dissipation during transit.     
+
+> 10 010 110 2
+> 10 0
+> 10 2
+> 10 4
+> Microscopic Frequency ω
+> Geometric Dissipation  χ∗(ω)
+> ω2Scaling Fit
+> Numerical Solver Data
+
+Fig. 3: Log-log plot confirming the microstructural scaling law for a corrugated periodic potential E(x) = sin( ωx ). Discrete markers indicate actual values extracted from the numerical solver, demonstrating strict adherence to the analytical ω2 law. highly corrugated microscopic transport fields [16]: 
+
+E(x) = sin( ωx ), setting Fext = 0. Our theoretical framework predicts a strict quadratic dependence on spatial frequency ( χ∗ ∝ ω2). To verify this prediction, we executed our numerical solver across a wide frequency range ( ω ∈ [1 , 100] ). The resulting discrete numerical points are mapped alongside the theoretical power law curve in Figure 3. 
+
+C. Multi-Dimensional Benchmarks: Resolving Pathway Degen-eracy 
+
+To showcase the capacity of χ∗ to uncover hidden kinetic attributes that are invisible to traditional free-energy analysis, we expand our validation to canonical multi-dimensional chemical systems. 
+
+1) The M ¨uller-Brown Potential: The M ¨uller-Brown potential [1] is a classic benchmark characterized by an asymmetric, highly non-linear landscape featuring three distinct local minima and a rugged transition pathway. We computed the localized χ∗(x) profile across the standard domain. While the minimum energy path (MEP) maps the lowest energetic barriers, computing χ∗ reveals that one of the competing asymmetric paths suffers a severe geometric penalty due to high phase-space contraction ( κ(x) turns). This demonstrates that paths with identical global free-energy thresholds can be separated kinetically based on their structural funneling complexity. 
+
+2) Macromolecular Application: Alanine Dipeptide: To confirm scalability to true physical systems, we evaluated the conformational transitions of Alanine Dipeptide in explicit solvent, mapped via the canonical backbone dihedral angles 
+
+ϕ and ψ. Following the MD protocol detailed in Section IV-B, frame histories were clustered into transition state regions separating the C7eq and αR configurations. While first-order free energy profiles ∆G(ϕ, ψ ) show wide, apparently isotropic transition zones, our reconstructed χ∗ map localizes tight, highly anisotropic channels. These channels highlight where the solvent-induced effective friction and second-order topographic curvatures compress the accessible transit tubes, presenting an explicit geometric signature of pathway selection [20]. VI. F UNCTIONAL INDEPENDENCE AND STRUCTURAL 
+
+PROPERTIES 
+
+A critical requirement for any novel physical descriptor is its functional independence from existing metrics. We formally prove that χ∗ provides entirely orthogonal information relative to standard first-order kinetic and thermodynamic properties. 
+
+Proposition 1 (Functional Independence from Energy Gra-dients) . Let ϕ(x) = ( ∇E(x) · A(x)) 2 represent the local dissipation and let κ(x) = −∇ · A(x). There exists no diffeomorphism G : R → R such that χ∗(x) = G(E(x)) or 
+
+χ∗(x) = G(∥∇ E(x)∥2) for all smooth fields E(x) ∈ C2(Rd).Proof. The proof follows immediately by counterexample via local variation. Consider a point x0 where ∇E(x0) = c̸ = 0 .We can construct local variations of the Hessian matrix 
+
+H(x0) = ∇2E(x0) that alter the trace Tr( H(x0)) , and consequently shift κ(x0), while keeping the potential value 
+
+E(x0) and the localized gradient magnitude ∥∇ E(x0)∥2
+
+strictly invariant. Because χ∗ depends explicitly on κ(x0) via its denominator, its local evaluation varies independently of first-order parameters, concluding the proof. This structural independence highlights why χ∗ succeeds where conventional reaction coordinates fail: it explicitly incorporates second-order landscape curvature and phase-space volume contraction properties, mapping the dynamic structural constraints of the transport field. VII. C ONCLUSION 
+
+In this work, we introduced a novel geometric framework to characterize hidden kinetic constraints in stochastic molecular dynamics. By formulating overdamped Langevin systems within a weighted Orlicz-Sobolev functional space, we derived the Geometric Dissipation Observable ( χ∗) as the leading-order minimizer of a regularized variational principle. Numerical validation on single-degree-of-freedom potentials, corrugated landscapes, and canonical high-dimensional sys-tems (M ¨uller-Brown and Alanine Dipeptide) confirms that 
+
+χ∗ reliably resolves pathway degeneracy and adheres to a quadratic microstructural scaling law ( ω2). Most importantly, we demonstrated that χ∗ is functionally independent of standard first-order energetic metrics, capturing unique features of 5
+
+phase-space contraction and structural funneling. This frame-work provides an advanced diagnostic tool for uncovering structural dissipation bottlenecks, enhancing our capacity to model, understand, and engineer complex nanoscale chemical transformations. REFERENCES [1] K. M ¨uller and L. D. Brown, “Location of saddle points and minimum energy paths on a potential energy surface,” Theoretica Chimica Acta ,vol. 53, no. 1, pp. 75–93, 1979. [2] H. Eyring, “The activated complex in chemical reactions,” The Journal of Chemical Physics , vol. 3, no. 2, pp. 107–115, 1935. [3] B. Peters, Reaction Rate Theory and Rare Events , Elsevier, 2016. [4] D. J. Wales, Energy Landscapes: Applications to Clusters, Biomolecules and Glasses , Cambridge University Press, 2003. [5] J. N. Onuchic, Z. Luthey-Schulten, and P. G. Wolynes, “Theory of protein folding: The energy landscape perspective,” Annu. Rev. Phys. Chem. ,vol. 48, pp. 545–600, 1997. [6] G. Hummer, “Position-dependent diffusion coefficients and free-energy profiles from biases of molecular dynamics simulations,” New Journal of Physics , vol. 7, no. 1, p. 34, 2005. [7] W. E and E. Vanden-Eijnden, “Transition-path theory,” Annual Review of Physical Chemistry , vol. 61, pp. 391–420, 2010. [8] U. Seifert, “Stochastic thermodynamics, fluctuation theorems and molecu-lar machines,” Reports on Progress in Physics , vol. 75, no. 12, p. 126001, 2012. [9] C. Jarzynski, “Equalities and inequalities: Irreversibility and the second law of thermodynamics at the nanoscale,” Annual Review of Condensed Matter Physics , vol. 2, no. 1, pp. 329–351, 2011. [10] K. Sekimoto, Stochastic Energetics , Springer Science & Business Media, vol. 799, 2010. [11] J. L. Lebowitz and H. Spohn, “A Gallavotti–Cohen-type symmetry in the large deviation functional for stochastic dynamics,” Journal of Statistical Physics , vol. 95, pp. 333–365, 1999. [12] C. Bustamante, J. Liphardt, and F. Rittersdorf, “The thermodynamics of single molecules,” Physics Today , vol. 58, no. 7, pp. 43–48, 2005. [13] R. Jordan, D. Kinderlehrer, and F. Otto, “The variational formulation of the Fokker–Planck equation,” SIAM Journal on Mathematical Analysis ,vol. 29, no. 1, pp. 1–17, 1998. [14] F. Otto, “The geometry of dissipative evolution equations: the porous medium equation,” Communications in Partial Differential Equations ,vol. 26, pp. 101–174, 2001. [15] L. Ambrosio, N. Gigli, and G. Savar ´e, Gradient Flows: in Metric Spaces and in the Space of Probability Measures , Birkh¨ auser Basel, 2008. [16] R. Zwanzig, “Diffusion in a rough potential,” Proceedings of the National Academy of Sciences , vol. 85, no. 7, pp. 2029–2030, 1988. [17] G. A. Pavliotis, Stochastic Processes and Applications: Diffusion Processes, the Fokker-Planck and Langevin Equations , Springer, 2014. [18] P. H ¨anggi, P. Talkner, and M. Borkovec, “Reaction-rate theory: fifty years after Kramers,” Reviews of Modern Physics , vol. 62, no. 2, pp. 251–341, 1990. [19] R. B. Best and G. Hummer, “Reaction coordinates and transition states of protein folding,” Proceedings of the National Academy of Sciences ,vol. 102, no. 19, pp. 6732–6737, 2005. [20] W. E, W. Ren, and E. Vanden-Eijnden, “String method for the study of rare events,” Physical Review B , vol. 66, no. 5, p. 052301, 2002. [21] J. Schnakenberg, “Network theory of microscopic equations: Network thermodynamics of dissipative systems,” Reviews of Modern Physics ,vol. 48, no. 4, pp. 571–585, 1976. [22] M. Baiesi, C. Maes, and B. Wynants, “Fluctuations and response of nonequilibrium states,” Physical Review Letters , vol. 103, no. 1, p. 010602, 2009. [23] H. Risken, The Fokker-Planck Equation: Methods of Solution and Applications , 2nd ed., Springer, 1989. [24] C. Gardiner, Stochastic Methods: A Handbook for the Natural and Social Sciences , 4th ed., Springer, 2009. [25] S. P. Meyn and R. L. Tweedie, “Stability of Markovian processes III: Foster-Lyapunov criteria for continuous-time processes,” Advances in Applied Probability , vol. 25, no. 3, pp. 518–548, 1993. [26] A. Laio and M. Parrinello, “Escaping free-energy minima,” Proceedings of the National Academy of Sciences , vol. 99, no. 20, pp. 12562–12566, 2002. [27] A. Laio and M. Parrinello, “Metadynamics: A method for simulating rare events and mapping the free-energy surface of complex systems,” 
+
+Proceedings of the National Academy of Sciences , vol. 99, no. 20, pp. 12562–12566, 2002. [28] J. Huang, S. Rauscher, G. Nawrocki et al. , “CHARMM36m: an improved force field for folded and intrinsically disordered proteins,” Nature Methods , vol. 14, no. 1, pp. 71–73, 2017. [29] S. Kumar, J. M. Rosenberg, d. Bouzida, R. H. Swendsen, and P. A. Kollman, “The weighted histogram analysis method for free-energy calculations on biomolecules. I. The method,” Journal of Computational Chemistry , vol. 13, no. 8, pp. 1011–1021, 1992. [30] F. No ´e, C. Sch ¨utte, E. Vanden-Eijnden, L. Reich, and T. R. Weikl, “Constructing the equilibrium ensemble of molecular pathways from short off-equilibrium simulations,” Proceedings of the National Academy of Sciences , vol. 106, no. 45, pp. 19011–19016, 2009.

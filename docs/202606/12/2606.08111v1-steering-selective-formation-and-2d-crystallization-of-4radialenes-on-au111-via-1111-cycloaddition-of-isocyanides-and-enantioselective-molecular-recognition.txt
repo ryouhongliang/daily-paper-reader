@@ -1,0 +1,902 @@
+Title: Template for Electronic Submission to ACS Journals
+
+URL Source: https://arxiv.org/pdf/2606.08111v1
+
+Published Time: Tue, 09 Jun 2026 00:37:26 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+Steering Selective Formation and 2D Crystallization of [4]Radialenes on 
+
+# Au(111) via [1+1+1+ 1] Cycloaddition of Isocyanides and Enantioselective Mo-
+
+# lecular Recognition 
+
+Jian -Wei Liu, Ying Wang*, Cui -Ping Wu, Jia -Xin Li, Li -Xia Kang, Jian -Hui Fu, Wen -Wen 
+
+Gong, Pei -Nian Liu*, and Deng -Yuan Li *
+
+State Key Laboratory of Natural Medicines, School of Pharmacy, China Pharmaceutical University, Nanjing, 
+
+211198, China 
+
+School of Chemistry and Molecular Engineering, East China University of Science & Technology, Shanghai 
+
+200237, China 
+
+ChangXin Memory Technologies, Inc. (CXMT)No. 799, Qide Road, Economic and Technological Development 
+
+Area, Hefei, 230601, China 
+
+TOC graphic Abstract 
+
+Conjugated carbon rings are fundamental skeletons of organic functional materials, and their 
+
+selective formation is of paramount importance in molecular materials engineering. However, 
+
+steering the formation and 2D crystallization of conjugated c arbon rings on the surface with high 
+
+chemo - and stereoselectivities remains a great challenge. Here, we report a highly chemoselective 
+
+[1+1+1+1] cycloaddition of isocyanides on the Au(111) surface, which affords the stereospecific 
+
+tetraaza[4]radialene prod ucts and further enables their long -range -ordered 2D crystallization via 
+
+enantioselective molecular recognition. Using the progressive annealing method, we found that at 
+
+room temperature, isocyanides undergo a coordination reaction with Au adatoms to form two -fold 
+
+symmetric isocyanide -Au -isocyanide complexes. In contrast, gradually increasing the annealing 
+
+temperature induces the transformation of these complexes and subsequent covalent 
+
+polymerization, leading to the selective generation of tetraaza[4]radia lenes with homotactic 
+
+configurations. The tetraaza[4]radialenes further assemble into 2D homochiral molecular crystals 
+
+through enantioselective molecular recognition driven by multiple C –H· ··Cl hydrogen -bonding 
+
+interactions. By combining scanning tunneling microscopy/spectroscopy and non -contact atomic 
+
+force microscopy, we determined the atomic structure and molecular orbitals of 
+
+tetraaza[4]radialene, confirming that its four -membered ring adopts a planar geometry with a 
+
+localized lowest unoccupied molecula r orbital. Density functional theory calculations suggest that 
+
+the [1+1+1+1] cycloaddition process involves stepwise formation of C –C bonds and its high 
+
+selectivity arises from the spatial steric hindrance. Our findings provide new insights into the 
+
+select ive formation of conjugated rings on surfaces and have implications for engineering 2D 
+
+homochiral molecular crystallization. Introduction 
+
+Conjugated carbon rings are fundamental skeletons of organic functional materials . Their selective 
+
+formation is of paramount importan ce in modern synthetic chemistry and molecular materials 
+
+engineering , as the intrinsic stru cture parameters —includin g ring size and topology —directly 
+
+govern the electronic delocalization and a romatic conjugation , thereby critically determining the 
+
+physicochemical properties of the resulting molecular materials . Over the past two decades, on -
+
+surface synthesis has provided a unique pathw ay for the atomically precise fabrication of 
+
+conjugated carbon rings and their extended str uctures, 1–4 including graphene nanoribbons, 5–12 
+
+triangulene s,13 –15 cyclo carbon s,16 –18 and biphenylene sheets. 19 Moreover, a variety of conjugated 
+
+carbon rings at the single -molecule scale have been explo red and visualized through scanning 
+
+probe microscopy, 20 –37 providing valuable experimental insight for understanding molecular 
+
+aromatic /anti -aromatic 20 –24 and electrical/magnetic properties. 25 –37 Generally, the formation of 
+
+conjugated carbon rings on the surface mainly includes direct cyclization involving the 
+
+cycloaddition of unsaturated carbon –carbon 38 –43 or carbon –nitrogen bonds, 44 –47 and indirect 
+
+cyclization involving debromination ,48 –52 dehydrogenation ,53 –55 and dehydration cycloaddition 
+
+reactions. 56,57 Nevertheless, precisely steer ing the formation and two -dimensional (2D )
+
+crystallization of conjugated carbon rings with high chemo - and stereoselectivit ies on the surface 
+
+remains a formidable challenge. 
+
+[n]Radialenes (n = the number of  exocyclic  double bonds) are unique carbocyclic structures 
+
+possessing three or more  cross -conjugated  exocyclic  double bonds .58 [3]Radialene is a cross -
+
+conjugated six -center, six π -electron system, and [4]radialene is a cross -conjugated eight -center, 
+
+eight π-electron system, endowing them with different  physicochemical  properties. Recently, we 
+
+achieved the firs t synthesis of triaza[3]radialene and its 2D crystals on Ag(111) via selective 
+
+[1+1+1] cycloaddition of isocyanides (Figure 1a, Path I) .45,59 Li et al. reported the first synthesis 
+
+of t etraphenyl[4]radialene on Cu(100) via one -step cycloaddition of phenylacetylenes .60 However, 
+
+the heteroatom -doped [4]radialene s and their 2D crystals on the surface have not been reported 
+
+until now , owing to the lack of a suitable synthetic method. Figure 1.  Steering  selective  formation and 2D crystallization  of  radialenes from  isocyanide s on  metal surfaces. 
+
+(a)  Path  I: Transformation  from  isocyanide s to [3] radialene s to  trans -[3]cumulene s on  the  Ag(111)  surface  via 
+
+cascade  reaction of  [1+1+1] and retro -[2+1] cycloaddition s. Path  II : Transformation  from  isocyanide s to [4]radi-
+
+alene s on  the  Au(111)  surface  via [1+1+1+1] cycloaddition . (b)  Steering  the  enantioselective molecular  recogni-
+
+tion of  tetraaza [4]radialenes via  multiple Cl atoms -derived  C–H· ··Cl  hydrogen -bond ing interactions . The insets 
+
+show  the DFT -calculated electrostatic potential (ESP) map of  R-tetraaza[4]radialene  (R-T1) and  S-tetraaza[4]ra-
+
+dialene ( S-T2)  in the gas phase. The highest and lowest electron densities appear as  blue  and  red  regions, respec-
+
+tively. In this study, we developed a highly chemoselective [1+1+1+1] cycloaddition of isocyanides on 
+
+the Au(111) surface to give  stereospecific tetraaza[4]radialene products . We  further achieve d the ir 
+
+2D crystallization via enantioselective molecular recognition. A t room temperature , isocyanides 
+
+on Au(111) underwent a coordination reaction with Au adatoms to form two -fold  symmetric 
+
+isocyanide -Au -isocyanide complexes. In contrast, stepwise higher annealing temperatures induced 
+
+the transformation of these complexes and subse quent covalent polymerization , resulting in the 
+
+selective  generation  of tetraaza[4]radialenes with homotactic configurations (Figure 1a , Path II). 
+
+The tetraaza[4]radialenes further assembled into 2D homochiral molecular crystals through 
+
+enantioselective mo lecular recognition based on multiple C –H· ··Cl hydrogen -bonding interactions 
+
+(Figure 1b). Combining scanning tunne ling microscopy/ spectroscopy  (STM/STS), non -contact 
+
+atomic force microscopy (nc -AFM), and density functional theory (DFT) calculations, we 
+
+id entified the atomic structure and molecular orbitals of tetraaza[4]radialenes and demonstrated 
+
+that the [ 1+1+1 +1] cycloaddition process involves stepwise formation of C –C bonds and that its 
+
+high selectivity is attributed to the spatial steric hindrance und er surface confinement conditions .
+
+Results and Discussion 
+
+Design for the transformation of isocyanide s to [4]radialene s
+
+In our previous work , the precursor 3-chloro -4-isocyano -1,1' -biphenyl (Cl -ICBP) on the Ag(111) 
+
+surface can under go [1+1+1] and retro -[2+1] cycloaddition accompanied by dechlorination  as the 
+
+annealing temperature increased , resulting in the transformation from [3]radialenes to 
+
+[3]cumulenes (Figure 1a, Path I) .59 To control the cyclization of Cl -ICBP on the surface , the 
+
+slightly inert  Au(111) surface was selected as a substrate , which is expected to avoid dechlorination 
+
+before cyclization . After depositing the precursor Cl -ICBP on a pristine Au(111) surface held at 
+
+approximately 293 K under  ultra -high vacuum ( UHV)  conditions, STM measurements reveal the 
+
+formation of large -scale close -packed molecul ar  structures  with some regular phases (Figures 2a 
+
+and S 2a) . High -resolution STM image (Figure 2d) show s that these close -packed molecular 
+
+structures are composed of rod -like species containing two gourd -shaped Cl -ICBP molecules and 
+
+a central Au adatom. 61 Further DFT calculations show that the exper imental STM image is 
+
+consistent with the simulated STM image (Figure S2b-d). These results demonstrate that the precursors Cl -ICBP on Au(111) successfully underwent a coordination reaction with Au adatom s
+
+to form two -fold symmetric  isocyanide -Au -isocyanide  complexes with cis - and trans -
+
+configuration s; then the se complexes underwent random molecular recognition through C –H· ··Cl 
+
+hydrogen -bonding interactions, resulting in the disordered assembly structure s with partly ordered 
+
+phase s.                                                                    
+
+> Figure 2. Transformation of isocyanide sto tetraaza [4]radialene son Au(111) via selective [1+1+1+1] cycloaddi-
+> tion . ( a) High -resolution and (d) zoom -in STM images o fcoordination assembly of Cl -ICBP .(b) High -resolution
+> and (e)zoom -in STM images after annealing at 373 K. ( c)High -resolution and (f)zoom -in STM images of mixed
+> assembly of tetraaza [4]radialenes with two homotactic configurations ( Sand R). Scanning parameters: (a) U=-
+> 1.63 V, I= 0.5 5nA. (b) U=-1.03 V, I= 0. 11 nA. (cand f )U=0.49 V, I= 0. 03 nA. (d) U=-1.54 V, I= 0. 53 nA.
+> (e)U=-1.03 V, I= 0. 12 nA.
+
+Subsequently, the sample containing the coordination structures was annealed at 373 K, and the 
+
+STM image (Figure 2b) shows that most of the regular coordination structures disappear, 
+
+generating a disordered phase, in which some Y -shaped species with three leaves are frequently 
+
+observed. Zoom -in STM image shows that the Y -shaped species are composed of three Cl -ICBP 
+
+molec ules, which are different to the triaza[3]radialenes and similar to their ring -opening intermediates. 59 Upon further annealing to 393 K, a new regular domains appear (Figur e 2c), 
+
+composed of a mixture of two four -leafed species featuring homotactic configurations ( S and R)
+
+(Figure 2f). This result suggests that the four -leafed species are S- or R-tetraaza[4]radialene ( S-T1 
+
+or R-T1), formed via a [1+1+1+1] cycloaddition invol ving four Cl -ICBP molecules. Further 
+
+repeated annealing at the same temperature leads to an increase in the size of regular domains 
+
+(Figure S3a). Notably, one of the four leaves in the T1 species appears as a brighter dot; this feature 
+
+is attributed to the spatial steric hindrance caused by Au(111) surface -confined adsorption, which 
+
+is supported by DFT simulation (Figure S3b -d).                         
+
+> Figure 3. Structural characterization of tetraaza[4]radialene T1on Au(111). (a) High -resolution STM and (b ,e )
+> nc -AFM images of a n individual R-T1 ,(c,f )the corresponding zoom -in nc -AFM i mage of afour -membered
+> carbon rin g, and (d)structur al mode l.Scanning parameters: (a) U= 0. 1V, I=10 p A. (b , c, e, and f )Tip height:
+> z = 226 pm with respect to STM setpoint of 100 mV, 10 pA on Au(111).
+
+To further determine the chemical structure of T1 formed on the Au(111) surface, nc -AFM 
+
+measurements were performed (Figures 3 and S4). High -resolution STM image (Figure 3a) of an 
+
+individual T1 exhibits the four -leafed structure, and the corresponding nc -AFM image (Figure 3b,e) 
+
+demonstrates that each leaf is Cl -substituted biphenyl der ived from the precursor  Cl -ICBP .
+
+Moreover, bond -resolution nc -AFM images  (Figure S 4a-c) at different tip heights are consistent with the corresponding nc -AFM simulations  (Figure S4d -f) base d on  DFT -optimized model (Fig-
+
+ure 3d) , determining the chemical stru cture of T1. Most importantly, zoom -in nc -AFM image 
+
+(Figure 3c,f) characterizes the four -membered carbon ring structure of T1 , exhibiting a planar 
+
+geometry. In addition,  the molecular weight of tetraaza[4]radialene T1 was confirmed using time -
+
+of -flight sec ondary ion mass spectrometry (ToF -SIMS) — experimental results are in good agree-
+
+ment with theoretical predictions  (Figure S5). 45,61                          
+
+> Figure 4. Electronic structure of tetraaza[4]radialene T1 on Au(111) .(a) dI/dV spectra recorded on different
+> locations (marked in the inset STM image ,U= 1.0 V, I= 20 pA ) of an individual R-T1 .(b) Left column: constant -
+> current dI/dV maps conducted at the energies of -1. 6and 0. 5V states. Right column: calculated LDOS of LUMO
+> and HOMO of afree -standing tetraaza[4]radialene .
+
+Electronic structure of tetraaza[4]radialene on Au(111) 
+
+To characterize the electronic structure of tetraaza[4]radialene , differential conductance 
+
+spectroscopy (dI/dV) was performed. As shown in Figure 4a , t wo resonance states were identified 
+
+at -1.6 and 0.5 V on the backbone region. To avoid the topographic effect s, dI/dV mapping was 
+
+conducted in constant -current mode, en abling a rational comparison with the calculated local 
+
+density of states (LDOS). The state at -1.6 V was found to be distributed over the biphenyl skeleton, 
+
+whereas the state at 0.5 V was located at the four -membered ring (Figure 4b, left column). These 
+
+fe atures resemble the LDOS maps (Figure 4b, right column and S6) of the high est occupied molecular orbital (HOMO ) and lowest unoccupied molecular orbital ( LUMO ). Therefore, the two 
+
+states at -1.6 and 0.5 V can be assigned as the HOMO and LUMO of tetraaza[4]r adialene. 
+
+Reaction pathways from isocyanides to tetraaza[4]radialenes 
+
+To clarify the reaction mechanism from isocyanides to tetraaza[4]radialenes with homotactic 
+
+configuration s on Au(111), we conducted DFT calculations for the transformation process 
+
+invol ving the stepwise and  synergistic  formation of four C –C bonds (Figure 5 and S 7-9), in which 
+
+a simplified model molecule 1 -chloro -2-isocyanobenzene (Cl -ICB) was used. The initial states (IS) 
+
+of proposed reaction pathways have the same structure: four Cl -ICB molecules self -assembled in 
+
+a homotactic configuration. DFT calculations predict that the o-chlorobenzene moiety of each Cl -
+
+ICB molecule in the IS has a close -to -planar adsorption structure on Au(111), and each isocyano 
+
+group is tilted with the terminal c arbon atom closest to the Au atoms of the Au(111) surface (Figure 
+
+5, IS). Not ably, t he flat conformation and homotactic configuration can facilitate the C–C coupling 
+
+reactions between isocyano group of different isocyanides .             
+
+> Figure 5. Stepwise r eaction pathway from isocyanide sto [4]radialene son Au (111) involving the one -by -one
+> formation of four C–C bonds . The corresponding calculated molecular structure ,including top and side views of
+> the initial (IS), transition (TS), and intermediate (Int) states of the reactions are shown below the energy diagrams.
+> The red ,blue, and green ball indicate the carbon and nitrogen of isocyano and Cl atom.
+
+In the stepwise pathway for form ing tetraaza[4]radialenes from isocyanides (Figure 5), two 
+
+adjacent Cl -ICB molecules first undergo C –C coupling on Au(111) to form a surface -bound 
+
+cumulenic intermediate (Int1), where t he calculated barrier is 0.15 eV. Subsequently, Int1 reacts 
+
+with one of the adjacent Cl -ICB molecule s to form a surface -bound trimer ic intermediate (Int2) 
+
+with a similar reaction barrier. Int2 reacts with the last adjacent Cl -ICB molecule to form surface -
+
+bound ring -open ing tetramer ic intermediate (Int3) with a calculated reaction barrier of 0.43 eV. 
+
+Finally, Int3 undergoes spontaneous intramolecular ring -closing to generate the R-
+
+tetraaza[4]radialene (FS). It should be noted that the stepwise [1+1+1+1] cycloaddition is an 
+
+exothermic p rocess with an overall energy decrease of approximately 2.2 6 eV. The rate -
+
+determining step is the coupling reaction of Int2 with the adjacent Cl -ICB molecule to form Int3 ,
+
+which is consistent with the experimental result s — Y-shaped trimer intermediates we re frequently 
+
+observed, but open -ring tetramer intermediates were scarcely observed. 
+
+In addition , the  other possible reaction pathways were calculated and presented in Figures S7 -S9. 
+
+In the other stepwise reaction pathways shown in Figures S7 and S8, the highest energy barrier for 
+
+the formation of C –C bond is 0.47 eV. In contrast, the DFT -calculated synergistic reaction pathway 
+
+(Figure S9) shows that the barrier for the on e-step formatio n of four C –C bonds is 0.27 eV. 
+
+Therefore, the  calculated  barriers for the formation of C –C bonds are low, demonstrating that both 
+
+stepwise and synergistic pathways are plausible under the growth conditions. 
+
+Formation of 2D homochiral tetraaza[4]radialene crystals via enantioselective molecular 
+
+recognition 
+
+To control the chiral assembly of tetraaza[4]radialenes to form 2D homochiral crystals on the 
+
+Au(111) surface , we further design and synthesize the precursor 3,4' -dichloro -4-isocyano -1,1' -
+
+biphenyl (Cl 2-ICBP , Figure S1 ), which possesses two Cl groups at two different benzene rings .
+
+This precursor is expected to undergo the [1+1+1+1] cycloaddition on Au(111) to form 
+
+tetraaza[4]radialenes (T2) with homotactic configuration s because of the steric hindrance of Cl 
+
+groups at the ortho -position of isocyano group . Moreover, the DFT -calculated electrostatic 
+
+potential map of S-tetraaza[ 4]radialene (Figure 1b, inset) shows that the lowest electron density is 
+
+located at the C –Cl bond axis and nitrogen atoms , and the highest electron density is located at the 
+
+H atoms of C –H bonds, which may dominate the 2D molecular crystal formation on the confinement surfaces. As a result, S-tetraaza[4]rad ialenes may assemble into 2D homochiral 
+
+tetraaza[4]radialene crystals on Au(111) through enantioselective molecular recognition driven by 
+
+multiple C –H· ··Cl hydrogen -bonding interactions (Figure 1b).                                                                   
+
+> Figure 6. Formation of 2D homochiral tetraaza [4]radialene T2 crystals via a combination of [1+1+1+1] cyclo ad-
+> dition of isocyanide s and enantioselective molecular recognition driven by C–H· ··Cl hydrogen -bonding
+> interactions .(a and d)High -resolution and zoom -in STM images of coordination assembly of Cl 2-ICBP on
+> Au(111) at room temperature .(band e)High -resolution and zoom -in STM images after annealing at 393 K (c
+> and f)High -resolution and zoom -in STM images of 2D homochiral (S)-T2 crystal formed after annealing at 433
+> K.Scanning parameters: (a) U=0.47 V, I= 0. 09 nA. ( band e )U=-1.74 V, I= 0. 12 nA. (c and f )U=-0.81 V, I
+> = 0. 12 nA. (d)U=70 m V, I= 0. 09 nA.
+
+After depositing the Cl₂ -ICBP precursor onto the Au(111) surface held at approximately 293 K, 
+
+STM measurements reveal the formation of large -scale regular phases (Figure 6a). High -resolution 
+
+STM image (Figu re 6d) shows that these regular phases consist of two Cl₂ -ICBP molecules and 
+
+one central Au adatom. Subsequently, the sample was annealed at 393 K , and most of the regular 
+
+structures disappear (Figure 6b), generating an irregular phase composed of some new oligomers, 
+
+such as Y -shaped trimers and various tetramers. Zoom -in STM image (Figure 6e) shows a regular 
+
+tetramer, which can be assigned to the tetraaza[4]radialene (T2) with homotactic configuration. With prolonged annealing time and the increasing of annealing temperature up to 433 K, large -
+
+scale ordered assembly domains appear (Figures 6c and S10), which consist of the homochiral 
+
+tetraaza[4]radialenes ( S-T2 or R-T2). Zoom -in STM images show that the unit cell parameters are 
+
+a = b = 1.83 ± 0.05 nm and θ = 87 ± 5°(Figures 6f and S10c), which matches well with the 
+
+corresponding STM simulations based on DFT -calculated model (Figure S10d). These results 
+
+indicate that multiple intermolecular C –H· ··Cl hydrogen bonds can improve the intermolecular 
+
+interactio ns, thereby guiding the enantioselective molecular recognition of tetra aza[4]radialenes. 
+
+Conclusions 
+
+In summary, we reported the first [1+1+1+1] cyclo addition of isocyanide s on the Au(111) surface 
+
+to synthesize the tetraaza [4]radialenes with high chemo - and stereoselectivities . We further 
+
+achieved the 2D homochiral crystal lization of tetraaza[4]radialenes via multiple Cl group -directed 
+
+enantioselective  molecular recognition . By the combination of STM/STS and nc -AFM , we deter-
+
+mined the atomic structure and molecular orbitals of tetraaza[4]radialene , confirming that its four -
+
+membered rings adopt a planar geometry with a localized LUMO. DFT calculations suggest that 
+
+the [1+1+1+1] cycloaddition proceeds involving stepwise formation of C –C bonds and the high 
+
+selectivity ascribe s to the spatial steric hindrance  on the Au(111) surface . Our findings provide new 
+
+insights into the selective formation of conjugated rings on surfaces and have implications for 
+
+engineering 2 D homochiral molecular crystallization .
+
+Methods 
+
+Synthesis of precursors 
+
+Precursor Cl -ICBP was synthesized from N-(4 -bromo -2-chlorophenyl)formamide by previous 
+
+reported method 59 and Cl 2-ICBP was synthesized from N-(4 -bromo -2-chlorophenyl)formamide by 
+
+solution methods (the detailed synthetic procedure in Supporting Information and Figure S1). 
+
+Sa mple preparation and STM/nc -AFM measurement Single crystalline Au(111) surface was cleaned by cycles of Ar + sputtering and annealing under a
+
+UHV condition (base pressure 2 × 10 –10 mbar). Precursor Cl -ICBP was evaporated from a quartz 
+
+crucible onto the Au(1 11) surface held at the indicated temperature, and the sublimation 
+
+temperature was approximately 20 °C. Then, the progressive annealing at the evaluated 
+
+temperatures was performed. STM measurements were performed on a variable -temperature 
+
+scanning tunneling microscope (STM; SPECS, Aarhus 150) at approximately 120 K and a Scienta 
+
+Omicron Polar -STM/AFM combined system operated at approximately 4.5 K with an 
+
+electrochemically etched tungsten tip. The STM images were taken in the constant -current mode 
+
+using a tungsten tip and the voltages refer to the bias on the samples concerning the tip. nc -AFM 
+
+images were acquired with a low -temperature scanning tunneling microscope (Scient a Omicron 
+
+POLAR -STM/AFM combined system) operated at approximately 4.5 K. The qplus tip was 
+
+modified with a single CO molecule at the tip apex. The oscillation amplitudes of all nc -AFM 
+
+images are 30 pm. 
+
+TOF -SIMS measurement 
+
+The surface spectrometry was pe rformed on a TOF.SIMS 5 -100 instrument (ION -TOF GmbH, 
+
+Mü nster, Germany) using a 30 kV Bi 3++ as analysis beam with an incident angle of 45° . The beam 
+
+current was 0.7 pA, and the field of view was 500 × 500 μm 2 with raster size of 128 × 128 pixels. 
+
+DFT calc ulations 
+
+The calculations were carried out in the framework of DFT by using the Vienna ab initio Simulation 
+
+Package (VASP). 62,63 The projector augmented -wave method was used to describe the interaction 
+
+between ions and electrons .64,65 We used the generalized gradient approximation with Perdew –
+
+Burke –Ernzer hof formulism to treat exchange –correlation interaction, 66 and van der Waals (vdW )
+
+interactions were considered by using the DFT -D3 developed by Grimme. 67 The energy cutoff for 
+
+the plane wave basis sets is 400 eV, and the energy between two consecutiv e self -consistent steps 
+
+was set as 10 –5 eV, respectively. The Au(111) surface was modelled by two -layered slabs separated 
+
+by at least 15 Å of vacuum. For all adsorption configurations, we first performed calculations with 
+
+a Γ -point only k -point sampling, a nd for the most stable adsorption configurations, calculations 
+
+with a 1 × 3 k -point sampling were performed to ensure full convergence of adsorption energies. The simulations of the reaction barriers in the manuscript are performed with the climbing image 
+
+nudged elastic band (CI -NEB) method for finding saddle points and minimum energy paths 
+
+(http://theory.cm.utexas.edu/vtsttools/neb.html), which is at T = 0 without including entropy and 
+
+vibrations. 68 The STM simulation was performed with the Tersoff -Haman n method. 69 –71 
+
+References 
+
+(1) Clair, S.; de Oteyza, D. G. Controlling a Chemical Coupling Reaction on a Surface: Tools and Strategies 
+
+for On -Surface Synthesis. Chem. Rev. 2019 , 119 , 4717 –4776. 
+
+(2) Grill, L.; Hecht, S. Covalent On -Surface Polymerization. Nat. Chem. 2020 , 12 , 115 –130. 
+
+(3) Li, X.; Xu, Z.; Bu, D.; Cai, J.; Chen, H.; Chen, Q.; Chen, T.; Cheng, F.; Chi, L.; Dong, W.; Dong, Z.; Du, 
+
+S.; Fan, Q.; Fan, X.; Fu, Q.; Gao, S.; Guo, J.; Guo, W.; He, Y.; Hou, S.; Jiang, Y.; Kong, H.; Li, B.; Li, D.; 
+
+Li, J.; Li, Q.; Li, R. ; Li, S.; Lin, Y.; Liu, M.; Liu, P.; Liu, Y.; Lü, J.; Ma, C.; Pan, H.; Pan, J.; Pan, M.; Qiu, 
+
+X.; Shen, Z.; Tan, S.; Wang, B.; Wang, D.; Wang, L.; Wang, L.; Wang, T.; Wang, X.; Wang, X.; Wang, X.; 
+
+Wang, Y.; Wang, Y.; Wu, K.; Xu, W.; Xue, N.; Yan, L.; Yang, F.; Yang, Z.; Zhang, C.; Zhang, X.; Zhang, Y.; 
+
+Zhang, Y.; Zhou, X.; Zhu, J.; Zhang, Y.; Gao, F.; Wang, Y. Recent Progress on Surface Chemistry I: Assem-
+
+bly and Reaction. Chin. Chem. Lett. 2024 , 35 , 110055. 
+
+(4) Li, X.; Xu, Z.; Bu, D.; Cai, J.; Chen, H.; Ch en, Q.; Chen, T.; Cheng, F.; Chi, L.; Dong, W.; Dong, Z.; Du, 
+
+S.; Fan, Q.; Fan, X.; Fu, Q.; Gao, S.; Guo, J.; Guo, W.; He, Y.; Hou, S.; Jiang, Y.; Kong, H.; Li, B.; Li, D.; 
+
+Li, J.; Li, Q.; Li, R.; Li, S.; Lin, Y.; Liu, M.; Liu, P.; Liu, Y.; Lü, J.; Ma, C.; Pan, H.; Pan, J.; Pan, M.; Qiu, 
+
+X.; Shen, Z.; Sun, Q.; Tan, S.; Wang, B.; Wang, D.; Wang, L.; Wang, L.; Wang, T.; Wang, X.; Wang, X.; 
+
+Wang, X.; Wang, Y.; Wang, Y.; Wu, K.; Xu, W.; Xue, N.; Yan, L.; Yang, F.; Yang, Z.; Zhang, C.; Zhang, X.; 
+
+Zhang, Y.; Zhan g, Y.; Zhou, X.; Zhu, J.; Zhang, Y.; Gao, F.; Wang, Y. Recent Progress on Surface Chemistry 
+
+II: Property and Characterization. Chin. Chem. Lett. 2025 , 36 , 110100. 
+
+(5) Cai, J.; Ruffieux, P.; Jaafar, R.; Bieri, M.; Braun, T.; Blankenburg, S.; Muoth, M.; Sei tsonen, A. P.; Saleh, 
+
+M.; Feng, X.; Müllen, K.; Fasel, R. Atomically Precise Bottom -up Fabrication of Graphene Nanoribbons. 
+
+Nature 2010 , 466 , 470 –473. 
+
+(6) Ruffieux, P.; Wang, S.; Yang, B.; Sánchez -Sánchez, C.; Liu, J.; Dienel, T.; Talirz, L.; Shinde, P.; Pignedoli, 
+
+C. A.; Passerone, D.; Dumslaff, T.; Feng, X.; Müllen, K.; Fasel, R. On -Surface Synthesis of Graphene Na-
+
+noribbons with Zigzag Edge Topology. Nature 2016 , 531 , 489 –492. 
+
+(7) Gröning, O.; Wang, S.; Yao, X.; Pignedoli, C. A.; Borin Barin, G.; Daniel s, C.; Cupo, A.; Meunier, V.; Feng, 
+
+X.; Narita, A.; Müllen, K.; Ruffieux, P.; Fasel, R. Engineering of Robust Topological Quantum Phases in 
+
+Graphene Nanoribbons. Nature 2018 , 560 , 209 –213. 
+
+(8) Rizzo, D. J.; Veber, G.; Cao, T.; Bronner, C.; Chen, T.; Zhao, F.; Rodriguez, H.; Louie, S. G.; Crommie, M. F.; Fischer, F. R. Topological Band Engineering of Graphene Nanoribbons. Nature 2018 , 560 , 204 –208. 
+
+(9) Moreno, C.; Vilas -Varela, M.; Kretz, B.; Garcia -Lekue, A.; Costache, M. V.; Paradinas, M.; Panighel, M.; 
+
+Ceballos, G.; Valenzuela, S. O.; Peña, D.; Mugarza, A. Bottom -up Synthesis of Multifunctional Nanoporous 
+
+Graphene. Science 2018 , 360 , 199 –203. 
+
+(10) Ri zzo, D. J.; Veber, G.; Jiang, J.; McCurdy, R.; Cao, T.; Bronner, C.; Chen, T.; Louie, S. G.; Fischer, F. R.; 
+
+Crommie, M. F. Inducing Metallicity in Graphene Nanoribbons via Zero -Mode Superlattices. Science 2020 ,
+
+369 , 1597 –1603. 
+
+(11) Blackwell, R. E.; Zhao , F.; Brooks, E.; Zhu, J.; Piskun, I.; Wang, S.; Delgado, A.; Lee, Y. -L.; Louie, S. G.; 
+
+Fischer, F. R. Spin Splitting of Dopant Edge State in Magnetic Zigzag Graphene Nanoribbons. Nature 2021 ,
+
+600 , 647 –652. 
+
+(12) Song, S.; Teng, Y.; Tang, W.; Xu, Z.; He, Y .; Ruan, J.; Kojima, T.; Hu, W.; Giessibl, F. J.; Sakaguchi, H.; 
+
+Louie, S. G.; Lu, J. Janus Graphene Nanoribbons with Localized States on a Single Zigzag Edge. Nature 
+
+2025 , 637 , 580 –586. 
+
+(13) Pavliček, N.; Mistry, A.; Majzik, Z.; Moll, N.; Meyer, G.; Fox, D. J.; Gross, L. Synthesis and Characteriza-
+
+tion of Triangulene. Nat. Nanotechnol. 2017 , 12 , 308 –311. 
+
+(14) Mishra, S.; Beyer, D.; Eimre, K.; Liu, J.; Berger, R.; Gröning, O.; Pignedoli, C. A.; Müllen, K.; Fasel, R.; 
+
+Feng, X.; Ruffieux, P. Synthesis and Ch aracterization of π-Extended Triangulene. J. Am. Chem. Soc. 2019 ,
+
+141 , 10621 –10625. 
+
+(15) Su, J.; Telychko, M.; Song, S.; Lu, J. Triangulenes: From Precursor Design to On -Surface Synthesis and 
+
+Characterization. Angew. Chem. Int. Ed. 2020 , 59 , 7658 –7668. 
+
+(16) Kaiser, K.; Scriven, L. M.; Schulz, F.; Gawel, P.; Gross, L.; Anderson, H. L. An Sp -Hy bridized Molecular 
+
+Carbon Allotrope, Cyclo[18]Carbon. Science 2019 , 365 , 1299 –1301. 
+
+(17) Albrecht, F.; Ron čević, I.; Gao, Y.; Paschke, F.; Baiardi, A.; Tavernelli, I.; Mishra, S.; Anderson, H. L.; 
+
+Gross, L. The Odd -Number Cyclo[13]Carbon and Its Dimer, Cy clo[26]Carbon. Science 2024 , 384 , 677 –
+
+682. 
+
+(18) Rončević, I.; Paschke, F.; Gao, Y.; Lieske, L. -A.; Gödde, L. A.; Barison, S.; Piccinelli, S.; Baiardi, A.; Tav-
+
+ernelli, I.; Repp, J.; Albrecht, F.; Anderson, H. L.; Gross, L. A Molecule with Half -Möbius Topolo gy. Sci-
+
+ence 2026 , 392 , eaea3321. 
+
+(19) Fan, Q.; Yan, L.; Tripp, M. W.; Krejčí, O.; Dimosthenous, S.; Kachel, S. R.; Chen, M.; Foster, A. S.; Koert, 
+
+U.; Liljeroth, P.; Gottfried, J. M. Biphenylene Network: A Nonbenzenoid Carbon Allotrope. Science 2021 ,
+
+372 , 852 –856. 
+
+(20) Gao, Y.; Albrecht, F.; Rončević, I.; Ettedgui, I.; Kumar, P.; Scriven, L. M.; Christensen, K. E.; Mishra, S.; 
+
+Righetti, L.; Rossmannek, M.; Tavernelli, I.; Anderson, H. L.; Gross, L. On -Surface Synthesis of a Doubly 
+
+Anti -Aromatic Carbon All otrope. Nature 2023 , 623 , 977 –981. 
+
+(21) Sun, L.; Zheng, W.; Gao, W.; Kang, F.; Zhao, M.; Xu, W. On -Surface Synthesis of Aromatic Cyclo[10]Car-
+
+bon and Cyclo[14]Carbon. Nature 2023 , 623 , 972 –976. (22) Sun, L.; Zheng, W.; Kang, F.; Gao, W.; Wang, T.; Gao, G.; Xu, W. On -Surface Synthesis and Charact eriza-
+
+tion of Anti -Aromatic Cyclo[12]Carbon and Cyclo[20]Carbon. Nat. Commun. 2024 , 15 , 7649. 
+
+(23) Sun, L.; Guo, Y.; Sahalianov, I.; Zhou, Z.; Zheng, W.; Xiang, W.; Guo, Y.; Feng, Y.; Valiev, R.; Kuklin, A.; 
+
+Ågren, H.; Baryshnikov, G. V.; Xu, W. Tuning Aro maticity of Cyclocarbons by Heteroatom Doping: C 12 S
+
+and C 12 N. Natl. Sci. Rev. 2026 , 13 , nwaf472. 
+
+(24) Sellies, L.; Vitek, M.; Gao, Y.; Paschke, F.; Albrecht, F.; Eckrich, J.; Dempsey, B.; Barison, S.; Lieske, L. -
+
+A.; Piccinelli, S.; Baiardi, A.; Tavernel li, I.; Anderson, H. L.; Rončević, I.; Gross, L. On -Surface Synthesis 
+
+and Aromaticity of Large Cyclocarbons . https://doi.org/10.48550/arXiv.2603.02040 
+
+(25) Di Giovannantonio, M.; Yao, X.; Eimre, K.; Urgel, J. I.; Ruffieux, P.; Pignedoli, C. A.; Müllen, K.; Fasel, 
+
+R.; Narita, A. Large -Cavity Coronoids with Different Inner and Outer Edge Structures. J. Am. Chem. Soc. 
+
+2020 , 142 , 12046 –12050. 
+
+(26) Fan, Q.; Marti n-Jimenez, D.; Werner, S.; Ebeling, D.; Koehler, T.; Vollgraff, T.; Sundermeyer, J.; Hieringer, 
+
+W.; Schirmeisen, A.; Gottfried, J. M. On -Surface Synthesis and Characterization of a Cycloarene: C108 
+
+Graphene Ring. J. Am. Chem. Soc. 2020 , 142 , 894 –899. 
+
+(27) Hieulle, J.; Castro, S.; Friedrich, N.; Vegliante, A.; Lara, F. R.; Sanz, S.; Rey, D.; Corso, M.; Frederiksen, 
+
+T.; Pascual, J. I.; Peña, D. On -Surface Synthesis and Collective Spin Excitations of a Triangulene -Based 
+
+Nanostar. Angew. Chem. Int. Ed. 2021 , 60, 25224 –25229. 
+
+(28) Mishra, S.; Catarina, G.; Wu, F.; Ortiz, R.; Jacob, D.; Eimre, K.; Ma, J.; Pignedoli, C. A.; Feng, X.; Ruffieux, 
+
+P.; Fernández -Rossier, J.; Fasel, R. Observation of Fractional Edge Excitations in Nanographene Spin 
+
+Chains. Nature 2021 , 598 , 287 –292. 
+
+(29) Xiang, F.; Maisel, S.; Beniwal, S.; Akhmetov, V.; Ruppenstein, C.; Devarajulu, M.; Dörr, A.; Papaianina, 
+
+O.; Görling, A.; Amsharov, K. Y.; Maier, S. Planar π-Extended Cycloparaphenylenes Featuring an All -Arm-
+
+chair Edge Topology. Nat. Ch em. 2022 , 14 , 871 –876. 
+
+(30) Zhu, X.; Liu, Y.; Pu, W.; Liu, F. -Z.; Xue, Z.; Sun, Z.; Yan, K.; Yu, P. On -Surface Synthesis of C144 Hexag-
+
+onal Coronoid with Zigzag Edges. ACS Nano 2022 , 16 , 10600 –10607. 
+
+(31) Zhu, X.; Jiang, Y.; Wang, Z.; Huang, Y.; Luo, Z.; Yan, K.; Wang, S.; Yu, P. Col lective Magnetism of Spin 
+
+Coronoid via On -Surface Synthesis. J. Am. Chem. Soc. 2025 , 147 , 10045 –10051. 
+
+(32) Han, D.; Schramm, J.; Ruan, Z.; Naumann, T.; El Alaoui, N. -E.; Amsharov, K. Y.; Tonner -Zech, R.; Gott-
+
+fried, J. M. Quasi -Planar π-Extended Cyclopara phenylenes: On -Surface Synthesis, Characterization, and 
+
+Electronic Properties. J. Am. Chem. Soc. 2025 , 147 , 30030 –30041. 
+
+(33) Villalobos, F.; Berger, J.; Matěj, A.; Nieman, R.; Sánchez -Grande, A.; Soler, D.; Solé, A. P.; Lischka, H.; 
+
+Matoušek, M.; Brabec, J.; Veis, L.; Millan, A.; Sánchez -Sánchez, C.; Campaña, A. G.; Cuerva, J. M.; Jelínek, 
+
+P. Globally Aromatic Odd -Electron π-Magnetic Macrocycle. Chem 2025 , 11 , 102316. 
+
+(34) Li, C.; Kumar, M.; Wang, Y.; Polo, D. M. S.; Wang, Y. -J.; Qi, H.; Liu, L.; Liu, X.; Guan, D.; Li, Y.; Zheng, 
+
+H.; Liu, C.; Jia, J.; Liu, P. -N.; Jelinek, P.; Li, D. -Y. ; Wang, S. Quantum Spin -1/2 Rings Built from [2]Trian-
+
+gulene Molecular Units. https://doi.or g/10.48550/arXiv.2602.11593 (35) Kumar, M.; Li, D. -Y.; Yuan, Z.; Wang, Y.; Soler -Polo, D.; Monino, E.; Veis, L.; Wang, Y. -J.; Zhang, X. -Y.; 
+
+Li, C.; Jia, J.; Liu, P. -N.; Jelinek, P.; Wang, S. Strongly Entangled Quantum Spin Rings Driven by Hückel 
+
+Rule. http s://doi.org/10.48550/arXiv.2603.17854 
+
+(36) Peng, X.; E, W.; Teng, Y.; Zhang, H.; Li, E.; Wang, Y.; Wang, L.; Song, S.; Lu, J. Designer π-Magnetism in 
+
+Magnetic Graphene Nanostructures: Advances and Future Perspectives. Natl. Sci. Rev. 2026 , 13 , nwag157. 
+
+(37) Li, C.; Gong, C.; Weismann, A.; Song, F.; Wang, Y.; Berndt, R. Magnetic Properties of Molecules on Sur-
+
+faces Studied with Scanning Probe Methods. Natl. Sci. Rev. 2026 , 13 , nwag109. 
+
+(38) Bieri, M.; Treier, M.; Cai, J.; Aït -Mansour, K.; Ruff ieux, P.; Gröning, O.; Gröning, P.; Kastler, M.; Rieger, 
+
+R.; Feng, X.; Müllen, K.; Fasel, R. Porous Graphenes: Two -Dimensional Polymer Synthesis with Atomic 
+
+Precision. Chem. Commun. 2009 , 45 , 6919 –6921 .
+
+(39) Sun, Q.; Zhang, C.; Li, Z.; Kong, H.; Tan, Q.; Hu, A.; Xu, W. On -Surface Formation of One -Dimensional 
+
+Polyphenylene through Bergman Cyclization. J. Am. Chem. Soc. 2013 , 135 , 8448 –8451. 
+
+(40) Zhou, H.; Liu, J.; Du, S.; Zhang, L.; Li, G.; Zhang, Y.; Tang, B. Z.; Gao, H. -J. Direct Visualization of 
+
+Surface -Assisted Two -Dimensional Diyne Polycyclotrimerization. J. Am. Chem. Soc. 2014 , 136 , 5567 –
+
+5570. 
+
+(41) Riss, A.; Paz, A. P.; Wickenburg, S.; Tsai, H. -Z.; De Oteyza, D. G.; Bradley, A. J.; Ugeda, M. M.; Gorman, 
+
+P.; Jung, H. S.; Crommie, M. F.; Rubio, A.; Fis cher, F. R. Imaging Single -Molecule Reaction Intermediates 
+
+Stabilized by Surface Dissipation and Entropy. Nat. Chem. 2016 , 8, 678 –683. 
+
+(42) Shao, F.; Wang, W.; Yang, W.; Yang, Z.; Zhang, Y.; Lan, J.; Dieter Schlüter, A.; Zenobi, R. In -Situ Nano-
+
+spectroscop ic Imaging of Plasmon -Induced Two -Dimensional [4+4] -Cycloaddition Polymerization on 
+
+Au(111). Nat. Commun. 2021 , 12 , 4557. 
+
+(43) Grossmann, L.; King, B. T.; Reichlmaier, S.; Hartmann, N.; Rosen, J.; Heckl, W. M.; Björk, J.; Lackinger, 
+
+M. On -Surface Photopolymerization of Two -Dimensional Polymers Ordered on the Mesoscale. Nat. Chem. 
+
+2021 , 13 , 730 –736. 
+
+(44) Fan, Q.; Luy, J. -N.; Liebo ld, M.; Greulich, K.; Zugermeier, M.; Sundermeyer, J.; Tonner, R.; Gottfried, J. 
+
+M. Template -Controlled On -Surface Synthesis of a Lanthanide Supernaphthalocyanine and Its Open -Chain 
+
+Polycyanine Counterpart. Nat. Commun. 2019 , 10 , 5049. 
+
+(45) Li, D.; Wang, Y.; Hou, X.; Ren, Y.; Kang, L.; Xue, F.; Zhu, Y.; Liu, J.; Liu, M.; Shi, X.; Qiu, X.; Liu, P. 
+
+On ‐Surface Synthesis of [3]Radialenes via [1+1+1] Cycloaddition. Angew. Chem. Int. Ed. 2022 , 61 ,
+
+e202117714 .
+
+(46) Wang, Y.; Gong, W. -W.; Zhao, Y.; Xing, G. -Y.; Kang, L. -X.; Sha, F.; Huang, Z. -Y.; Liu, J. -W.; Han, Y. -J.; 
+
+Li, P.; Li, D. -Y.; Liu, P. -N. Two ‐Dimensional Nonbenzenoid Heteroacene Crystals Synthesized via In ‐
+
+Situ Embedding of Ladder Bipyrazinylenes on Au(111) . Angew. Chem. Int. Ed. 2024 , 63 , e202318142. 
+
+(47) Mateo, L. M.; Hung, T.; Rank, A.; Spachtholz, R.; Giselbrecht, F.; Schön, J.; Gross, L.; Repp, J.; Peña, D. 
+
+Combined In ‐Solution and On ‐Surface Synthesis of a Fully Fused Cross ‐Shaped Phthalocyanine Penta mer. Angew. Chem. Int. Ed. 2026 , 65 , e21922. 
+
+(48) Sánchez -Sánchez, C.; Nicolaï, A.; Rossel, F.; Cai, J.; Liu, J.; Feng, X.; Müllen, K.; Ruffieux, P.; Fasel, R.; 
+
+Meunier, V. On -Surface Cyclization of ortho -Dihalotetracenes to Four - and Six -Membered Rings. J. Am. 
+
+Chem. Soc. 2017 , 139 , 17617 –17623. 
+
+(49) Zhang, C.; Kazuma, E.; Kim, Y. Atomic ‐Scale Visualization of the Stepwise Metal ‐Mediated Dehalo-
+
+genative Cycloaddition Reaction Pathways: Competition between Radicals and Organometallic Intermedi-
+
+ates. Angew. Chem. Int. Ed. 2019 , 58 , 17736 –17744. 
+
+(50) Zhang , R.; Xia, B.; Xu, H.; Lin, N. Identifying Multinuclear Organometallic Intermediates in On ‐Surface 
+
+[2+2] Cycloaddition Reactions. Angew. Chem. Int. Ed. 2019 , 58 , 16485 –16489. 
+
+(51) Li, D. -Y.; Qiu, X.; Li, S. -W.; Ren, Y. -T.; Zhu, Y. -C.; Shu, C. -H.; Hou, X. -Y.; Liu, M.; Shi, X. -Q.; Qiu, X.; 
+
+Liu, P. -N. Ladder Phenylenes Synthesized on Au(111) Surface via Selective [2+2] Cycloaddition. J. Am. 
+
+Chem. Soc. 2021 , 143 , 12955 –12960. 
+
+(52) Besteiro ‐Sáez, J.; Mateo, L. M.; Salaverr ía, S.; Wang, T.; Angulo ‐Portugal, P.; Calupitan, J. P.; Rodr í
+
+guez ‐Fern ández, J.; Garc ía‐Fuente, A.; Ferrer, J.; P érez, D.; Corso, M.; De Oteyza, D. G.; Peña, D. 
+
+[19]Starphene: Combined In ‐Solution and On ‐Surface Synthesis Towards the Largest Starphene. Angew. 
+
+Chem. Int. Ed. 2024 , 63 , e2024118 61. 
+
+(53) Treier, M.; Pignedoli, C. A.; Laino, T.; Rieger, R.; Müllen, K.; Passerone, D.; Fasel, R. Surface -Assisted 
+
+Cyclodehydrogenation Provides a Synthetic Route towards Easily Processable and Chemically Tailored 
+
+Nanographenes. Nat. Chem. 2011 , 3, 61 –67. 
+
+(54) Kinikar, A.; Di Giovannantonio, M.; Urgel, J. I.; Eimre, K.; Qiu, Z.; Gu, Y.; Jin, E.; Narita, A.; Wang, X. -
+
+Y.; Müllen, K.; Ruffieux, P.; Pignedoli, C. A.; Fasel, R. On -Surface Polyarylene Synthesis by Cycloaroma-
+
+tization of Isopropyl Substit uents. Nat. Synth. 2022 , 1, 289 –296. 
+
+(55) Wang, L.; Liu, Y.; Xie, M.; Han, Y.; Chen, L.; Xue, R.; Li, H.; Zhang, X.; Zhang, D.; Zhong, Q.; Chen, Q.; 
+
+Zhang, H.; M üllen, K.; Chi, L. Highly Selective On ‐Surface Dehydrogenative Aromatization of n‐Hexyl 
+
+to Phe nyl Substituents. Angew. Chem. Int. Ed. 2025 , 137 , e202417070. 
+
+(56) Yang, B.; Björk, J.; Lin, H.; Zhang, X.; Zhang, H.; Li, Y.; Fan, J.; Li, Q.; Chi, L. Synthesis of Surface 
+
+Covalent Organic Frameworks via Dimerization and Cyclotrimerization of Acetyls. J. Am. Chem. Soc. 2015 ,
+
+137 , 4904 –4907. 
+
+(57) Cheng, S.; Xue, Z.; Li, C.; Liu, Y.; Xiang, L.; Ke, Y.; Yan, K.; Wang, S.; Yu, P. On -Surface Synthesis of 
+
+Triangulene Trimers via Dehydration Reaction. Nat. Commun. 2022 , 13 , 1705. 
+
+(58) Hopf, H.; Maas, G. Preparation and Properties, Reactions, and Applications of Radialenes. Angew. Chem. 
+
+Int. Ed. Engl. 1992 , 31 , 931 –954. 
+
+(59) Liu, J. -W.; Wang, Y.; Kang, L. -X.; Zhao, Y.; Xing, G. -Y.; Huang, Z. -Y.; Zhu, Y. -C.; Li, D. -Y.; Liu, P. -N. 
+
+Two -Dim ensional Crystal Transition from Radialene to Cumulene on Ag(111) via Retro -[2 + 1] Cycload-
+
+dition. J. Am. Chem. Soc. 2023 , 145 , 13048 –13058. (60) Li, Q.; Gao, J.; Li, Y.; Fuentes -Cabrera, M.; Liu, M.; Qiu, X.; Lin, H.; Chi, L.; Pan, M. Self -Assembly 
+
+Directed One -Step Synthesis of [4]Radialene on Cu(100) Surfaces. Nat. Commun. 2018 , 9, 3113. 
+
+(61) Li, D. -Y.; Li, S. -W.; Xie, Y. -L.; Hua, X.; Long, Y. -T.; Wang, A.; Liu, P. -N. On -Surface Synthesis of Planar 
+
+Dendrimers via Divergent Cross -Coupling Reaction. Nat. Commun. 2019 , 10 , 2414. 
+
+(62) Kresse, G.; Hafner, J. Ab Initio Molecular Dynamics for Open -Shell Transition Metals. Phys. Rev. B 1993 ,
+
+48 , 13115 –13118. 
+
+(63) Kresse, G.; Furthmüller, J. Efficient Iterative Schemes for Ab Initio Total -Energy Calculations Using a 
+
+Plane -Wave Basis Set. Phys. Rev. B 1996 , 54 , 11169 –11186. 
+
+(64) Blöchl, P. E. Projector Augmented -Wave Method. Phys Rev B 1994 , 50 , 17953 –17979. 
+
+(65) Kresse, G.; Joubert, D. From Ultrasoft Pseudopotentials to the Projector Augmented -Wave Method. Phys. 
+
+Rev. B 1999 , 59 , 1758 –1775. 
+
+(66) Perdew, J. P.; Burke, K.; Ernzerhof, M. Generalized Gradient Approximation Made Simple. Phys Rev Let t
+
+1996 , 77 , 3865 –3868. 
+
+(67) Grimme, S. Semiempirical GGA -Type Density Functional Constructed with a Long -Range Dispersion Cor-
+
+rection. J. Comput. Chem. 2006 , 27 , 1787 –1799. 
+
+(68) Henkelman, G.; Uberuaga, B. P.; Jónsson, H. A Climbing Image Nudged Elastic B and Method for Finding 
+
+Saddle Points and Minimum Energy Paths. J. Chem. Phys. 2000 , 113 , 9901 –9904. 
+
+(69) Tersoff, J.; Hamann, D. R. Theory and Application for the Scanning Tunneling Microscope. Phys. Rev. Lett. 
+
+1983 , 50 , 1998 –2001. 
+
+(70) Tersoff, J.; Hama nn, D. R. Theory of the Scanning Tunneling Microscope. Phys Rev B 1985 , 31 , 805 –813. 
+
+(71) Tersoff, J. Method for the Calculation of Scanning Tunneling Microscope Images and Spectra. Phys. Rev. 
+
+B 1989 , 40 , 11990 –11993. 
+
+Acknowledgements 
+
+This work was supported by the National Natural Science Foundation of China (Nos. 22272050 and 92580139), 
+
+the Shanghai Municipal Science and Technology Qi Ming Xing Project (No. 22QA1403000), the Shanghai Post -
+
+doctoral Excellence program (2025646), and the Fundamental Research Funds for the Central Universities. We 
+
+are grateful for the TOF -SIMS measurement support from Vacuum Interconnected Nanotech Workstation (Nano -
+
+X). 
+
+Author contributions 
+
+D. -Y.L. conceived the experiments ; J. -W.L. and W. -W.G. performed on -surface synthesis experiments with the 
+
+supervision of P. -N.L. and D. -Y. L.; Y.W. and J. -H. F. performed nc -AFM and STS characterizations with the supervision of P. -N.L. and D .-Y. L.; J. -W.L. and L. -X.K. conducted theoretical computations with the supervision 
+
+of P. -N.L. and D.-Y. L.; J.-W.L, Y.W. , and D.-Y.L. analyzed the data; J. -W. L., Y.W. , and D. -Y.L. wrote the man-
+
+uscript; All authors discussed the results and helped write the manuscript at all stages. 
+
+Competing interests 
+
+The authors declare no competing interests. 
+
+Additional information 
+
+Correspondence and requests for materials should be a ddressed to Ying Wang , Pei -Nian Liu, and Deng -Yuan Li.

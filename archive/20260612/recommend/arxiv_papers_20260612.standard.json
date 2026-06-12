@@ -1,17 +1,60 @@
 {
   "mode": "standard",
-  "generated_at": "2026-06-12T01:10:25.099413+00:00",
+  "generated_at": "2026-06-12T23:12:22.619999+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 2,
+    "deep_divecandidates": 3,
     "deep_cap": 6,
-    "deep_selected": 2,
-    "quick_candidates": 1,
+    "deep_selected": 3,
+    "quick_candidates": 4,
     "quick_skim_target": 11,
-    "quick_selected": 1
+    "quick_selected": 4
   },
   "deep_dive": [
+    {
+      "id": "2606.08111v1",
+      "source": "arxiv",
+      "title": "Steering Selective Formation and 2D Crystallization of [4]Radialenes on Au(111) via [1+1+1+1] Cycloaddition of Isocyanides and Enantioselective Molecular Recognition",
+      "abstract": "Conjugated carbon rings are fundamental skeletons of organic functional materials, and their selective formation is of paramount importance in molecular materials engineering. However, steering the formation and 2D crystallization of conjugated carbon rings on the surface with high chemo- and stereoselectivities remains a great challenge. Here, we report a highly chemoselective [1+1+1+1] cycloaddition of isocyanides on the Au(111) surface, which affords the stereospecific tetraaza[4]radialene products and further enables their long-range-ordered 2D crystallization via enantioselective molecular recognition. Using the progressive annealing method, we found that at room temperature, isocyanides undergo a coordination reaction with Au adatoms to form two-fold symmetric isocyanide-Au-isocyanide complexes. In contrast, gradually increasing the annealing temperature induces the transformation of these complexes and subsequent covalent polymerization, leading to the selective generation of tetraaza[4]radialenes with homotactic configurations. The tetraaza[4]radialenes further assemble into 2D homochiral molecular crystals through enantioselective molecular recognition driven by multiple C-H -- Cl hydrogen-bonding interactions. By combining scanning tunneling microscopy/spectroscopy and non-contact atomic force microscopy, we determined the atomic structure and molecular orbitals of tetraaza[4]radialene, confirming that its four-membered ring adopts a planar geometry with a localized lowest unoccupied molecular orbital. Density functional theory calculations suggest that the [1+1+1+1] cycloaddition process involves stepwise formation of C-C bonds and its high selectivity arises from the spatial steric hindrance. Our findings provide new insights into the selective formation of conjugated rings on surfaces and have implications for engineering 2D homochiral molecular crystallization.",
+      "authors": [
+        "Jian-Wei Liu",
+        "Ying Wang",
+        "Cui-Ping Wu",
+        "Jia-Xin Li",
+        "Li-Xia Kang",
+        "Jian-Hui Fu",
+        "Wen-Wen Gong",
+        "Pei-Nian Liu",
+        "Deng-Yuan Li"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-06T11:23:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.08111v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Experimental synthesis of [4]radialenes via chemoselective cycloaddition and enantioselective 2D crystallization on Au(111).",
+      "llm_evidence_cn": "通过化学选择性环加成与对映选择性二维结晶实验合成[4]radialene。",
+      "llm_evidence": "通过化学选择性环加成与对映选择性二维结晶实验合成[4]radialene。",
+      "canonical_evidence": "通过化学选择性环加成与对映选择性二维结晶实验合成[4]radialene。",
+      "llm_tldr_en": "Achieves highly chemoselective [1+1+1+1] cycloaddition of isocyanides on Au(111) forming stereospecific tetraaza[4]radialenes, which further self-assemble into long-range ordered 2D crystals via enantioselective molecular recognition.",
+      "llm_tldr_cn": "在金属表面高化学选择性与对映选择性形成共轭碳环并导向其二维结晶是分子材料工程的重大挑战。本文在Au(111)表面实现异腈的[1+1+1+1]环加成反应，高效构建立体专一的四氮杂[4]radialene，并通过对映选择性分子识别自组装成长程有序二维晶体。该表面合成策略将精准环化与超分子组装结合，为有机功能材料中碳纳米结构的可控制备提供了新平台。",
+      "llm_tldr": "在金属表面高化学选择性与对映选择性形成共轭碳环并导向其二维结晶是分子材料工程的重大挑战。本文在Au(111)表面实现异腈的[1+1+1+1]环加成反应，高效构建立体专一的四氮杂[4]radialene，并通过对映选择性分子识别自组装成长程有序二维晶体。该表面合成策略将精准环化与超分子组装结合，为有机功能材料中碳纳米结构的可控制备提供了新平台。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Organic Synthesis",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
     {
       "id": "2606.11256v1",
       "source": "arxiv",
@@ -38,13 +81,13 @@
         "query:CAOS-Poly"
       ],
       "llm_score": 9.0,
-      "llm_evidence_en": "Evolutionary molecular design over executable synthetic pathways using computational tools and LLMs",
-      "llm_evidence_cn": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
-      "llm_evidence": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
-      "canonical_evidence": "通过计算工具和LLMs在可执行合成路径上进行演化分子设计",
-      "llm_tldr_en": "The paper presents a route-native evolutionary framework for molecular design that optimizes over executable synthetic pathways, using LLMs as strategy controllers, ensuring designed molecules are synthetically feasible.",
-      "llm_tldr_cn": "该框架解决了现有分子生成方法忽视合成可及性的问题，通过将搜索种群定义为完整的合成路径而非孤立分子图，结合LLM的策略调控和确定的化学工具执行，实现了目标属性与合成可行性的联合优化。实验表明，该方法能有效生成高价值且合成可行的分子，为计算驱动的分子设计提供了更实用的解决方案。",
-      "llm_tldr": "该框架解决了现有分子生成方法忽视合成可及性的问题，通过将搜索种群定义为完整的合成路径而非孤立分子图，结合LLM的策略调控和确定的化学工具执行，实现了目标属性与合成可行性的联合优化。实验表明，该方法能有效生成高价值且合成可行的分子，为计算驱动的分子设计提供了更实用的解决方案。",
+      "llm_evidence_en": "Route-native evolutionary molecular design with LLMs as controllers, directly enabling computationally-assisted organic synthesis with synthetic pathway consideration.",
+      "llm_evidence_cn": "基于路线的进化分子设计，以LLM为控制器，直接实现考虑合成路线的计算机辅助有机合成",
+      "llm_evidence": "基于路线的进化分子设计，以LLM为控制器，直接实现考虑合成路线的计算机辅助有机合成",
+      "canonical_evidence": "基于路线的进化分子设计，以LLM为控制器，直接实现考虑合成路线的计算机辅助有机合成",
+      "llm_tldr_en": "Introduces My Chemical Harness, an evolutionary framework where the search population is executable synthetic pathways, built from purchasable building blocks and reaction templates. LLMs act as high-level strategy controllers. This tightly integrates molecular design with synthesis feasibility, a core goal of computationally-assisted organic synthesis.",
+      "llm_tldr_cn": "提出My Chemical Harness框架，将目标导向分子设计的搜索群体定义为可执行的合成路线而非孤立分子图，路线由可购买原料和反应模板构建。大语言模型作为高层策略控制器选择路径偏好。该工作将分子设计与合成可行性紧密结合，是计算辅助有机合成的重要进展。",
+      "llm_tldr": "提出My Chemical Harness框架，将目标导向分子设计的搜索群体定义为可执行的合成路线而非孤立分子图，路线由可购买原料和反应模板构建。大语言模型作为高层策略控制器选择路径偏好。该工作将分子设计与合成可行性紧密结合，是计算辅助有机合成的重要进展。",
       "llm_tags": [
         "query:caos-poly"
       ],
@@ -77,13 +120,13 @@
         "query:CAOS-Poly"
       ],
       "llm_score": 8.0,
-      "llm_evidence_en": "improves forward reaction prediction and single-step retrosynthesis",
-      "llm_evidence_cn": "提升正向反应预测和单步逆合成",
-      "llm_evidence": "提升正向反应预测和单步逆合成",
-      "canonical_evidence": "提升正向反应预测和单步逆合成",
-      "llm_tldr_en": "MolGram integrates a conditional n-gram memory module into molecular language models to address the locality gap in SMILES tokenization, improving performance on molecule generation, forward reaction prediction, and retrosynthesis without altering tokenizers.",
-      "llm_tldr_cn": "SMILES tokenization碎片化化学基序，导致分子语言模型反复学习局部语法，长程依赖建模受限。MolGram提出条件n-gram记忆模块，将局部字符串模式映射为可学习嵌入并动态注入隐藏状态，在分子生成、正向反应预测和单步逆合成任务中一致提升性能，且无需修改分词器。该工作表明局部结构记忆可增强分子语言模型，为计算辅助有机合成提供更准确的反应预测工具。",
-      "llm_tldr": "SMILES tokenization碎片化化学基序，导致分子语言模型反复学习局部语法，长程依赖建模受限。MolGram提出条件n-gram记忆模块，将局部字符串模式映射为可学习嵌入并动态注入隐藏状态，在分子生成、正向反应预测和单步逆合成任务中一致提升性能，且无需修改分词器。该工作表明局部结构记忆可增强分子语言模型，为计算辅助有机合成提供更准确的反应预测工具。",
+      "llm_evidence_en": "Improves molecular LMs with n-gram memory for retrosynthesis and reaction prediction, directly supporting computational organic synthesis.",
+      "llm_evidence_cn": "通过n-gram记忆增强分子语言模型用于逆合成和反应预测，直接支持计算有机合成",
+      "llm_evidence": "通过n-gram记忆增强分子语言模型用于逆合成和反应预测，直接支持计算有机合成",
+      "canonical_evidence": "通过n-gram记忆增强分子语言模型用于逆合成和反应预测，直接支持计算有机合成",
+      "llm_tldr_en": "Proposes MolGram, which augments molecular LMs with local n-gram memory to capture chemically meaningful motifs, improving performance on unconditional generation, forward reaction prediction, and retrosynthesis. It addresses the locality gap of tokenization without changing tokenizers. Strongly relevant to computer-aided synthesis planning.",
+      "llm_tldr_cn": "针对Transformer分子语言模型因字符级分词导致化学基元碎片化的问题，提出MolGram方法，通过条件n-gram记忆模块注入局部上下文。在无条件生成、正向反应预测和单步逆合成任务上均取得一致改进，为计算机辅助合成规划提供了更有效的分子表示学习方案。",
+      "llm_tldr": "针对Transformer分子语言模型因字符级分词导致化学基元碎片化的问题，提出MolGram方法，通过条件n-gram记忆模块注入局部上下文。在无条件生成、正向反应预测和单步逆合成任务上均取得一致改进，为计算机辅助合成规划提供了更有效的分子表示学习方案。",
       "llm_tags": [
         "query:caos-poly"
       ],
@@ -95,41 +138,156 @@
   ],
   "quick_skim": [
     {
-      "id": "2606.06015v1",
+      "id": "2606.06992v1",
       "source": "arxiv",
-      "title": "Quantum computing for accurate large-scale electronic-structure calculations: DFT-embedded, post-processed quantum-selected configuration interaction",
-      "abstract": "We present a multilevel embedding framework for quantum chemistry calculations on a quantum computer. In our framework, a quantum algorithm treats the strongly correlated active space, while a high-level wave-function method such as coupled cluster theory or multireference perturbation theory recovers the remaining correlation in the surrounding region. A sampling-based quantum algorithm, quantum-selected configuration interaction, bridges the quantum and classical treatments. The entire calculation is embedded in a low-cost density functional theory description of the surrounding environment using Manby's projection technique. We apply the framework to organic, metal-organic, and metallic systems, computing bond dissociation energies, adsorption energies, and reaction barriers using only the subset of qubits of a 144-qubit superconducting quantum computer at the University of Osaka and achieving $\\sim$1 kcal/mol agreement with classical references for a Menshutkin $\\mathrm{S_N2}$ reaction inside a carbon nanotube. Our results may open the way to quantitatively reliable quantum-classical hybrid calculations for large-scale chemical systems.",
+      "title": "Iron-catalysed on-surface synthesis of substrate-decoupled graphdiyne monolayers",
+      "abstract": "Graphdiynes constitute an emerging class of two-dimensional sp-sp2 carbon allotropes with tunable electronic properties not accessible by graphene. Although flawless monolayer growth of graphdiyne networks has been attempted by means of on-surface synthesis protocols, the experimental realization of fully covalent and structurally ordered graphdiyne networks remains challenging due to the persistence of metalated intermediates and reaction byproducts, limiting the structural self-organization required for long-range covalent order. Here, we demonstrate that adding minute amounts of Fe atoms on the surface during the growth can exceptionally improve the synthesis of a covalent 2D graphdiyne monolayer framework on Au(111). By means of low-temperature scanning tunneling microscopy and spectroscopy, combined with density functional theory, we unveil the atomic-scale surface dynamics of the reaction. We demonstrate the crucial role of Fe atoms that bond with Br by-products, thereby forming Fe-Br species that promote the removal of Au adatoms and drive the conversion from a metalated network to a purely covalent framework upon mild annealing conditions. Moreover, we show the covalent graphdiyne network to be structurally and electronically decoupled from the underlying metallic substrate, revealing a finite bandgap of about 1.6 eV defined by the position of p_z frontier orbitals. These results establish a viable route for the atomically precise on-surface synthesis of all-carbon graphdiynes, and open the way to semiconducting 2D carbon materials complementing graphene.",
       "authors": [
-        "Tuan Minh Do",
-        "Yuichiro Yoshida",
-        "Tomoya Shiota",
-        "Wataru Mizukami"
+        "Alice Cartoceti",
+        "Simona Achilli",
+        "Gianni Conti",
+        "Eliecer Pelaez-Sifonte",
+        "Alessio Orbelli Biroli",
+        "Francesco Sedona",
+        "Paolo D'Agosta",
+        "Francesco Tumino",
+        "Andrea Li Bassi",
+        "Jorge Lobo-Checa",
+        "Carlo S. Casari"
       ],
-      "primary_category": "physics.chem-ph",
+      "primary_category": "cond-mat.mtrl-sci",
       "categories": [
-        "physics.chem-ph",
-        "quant-ph"
+        "cond-mat.mtrl-sci"
       ],
-      "published": "2026-06-04T11:04:08+00:00",
-      "link": "https://arxiv.org/pdf/2606.06015v1",
+      "published": "2026-06-05T07:30:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.06992v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "novel on-surface organic synthesis method for covalent monolayer",
+      "llm_evidence_cn": "新型表面有机合成方法制备共价单层",
+      "llm_evidence": "新型表面有机合成方法制备共价单层",
+      "canonical_evidence": "新型表面有机合成方法制备共价单层",
+      "llm_tldr_en": "Adding Fe atoms during on-surface synthesis remarkably improves the covalent 2D graphdiyne monolayer framework on Au(111), overcoming metalated intermediates and byproducts, as shown by low-temperature microscopy.",
+      "llm_tldr_cn": "表面合成石墨双炔时常因金属化中间体残留和副反应导致长程有序性差。本文发现，在Au(111)基底上生长过程中添加微量铁原子作为催化剂，可显著提升二维石墨双炔单层网络的共价完整性和结构有序性。通过低温扫描隧道显微镜等表征证实，铁催化促进了中间体转化，减少了缺陷。该策略为高质量sp-sp2碳同素异形体单层的有机合成提供了新颖的人工催化路径，有望推动二维碳材料在电子器件中的应用。",
+      "llm_tldr": "表面合成石墨双炔时常因金属化中间体残留和副反应导致长程有序性差。本文发现，在Au(111)基底上生长过程中添加微量铁原子作为催化剂，可显著提升二维石墨双炔单层网络的共价完整性和结构有序性。通过低温扫描隧道显微镜等表征证实，铁催化促进了中间体转化，减少了缺陷。该策略为高质量sp-sp2碳同素异形体单层的有机合成提供了新颖的人工催化路径，有望推动二维碳材料在电子器件中的应用。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Organic Synthesis",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.09664v1",
+      "source": "arxiv",
+      "title": "In-Context Learning for Latent Space Bayesian Optimization",
+      "abstract": "Bayesian optimization (BO) is a central tool for sample-efficient design, and latent-space Bayesian optimization (LSBO) extends it to structured objects such as molecules and proteins. In parallel, tabular foundation models such as TabPFN and TabICL now achieve state-of-the-art regression performance and are increasingly used as BO surrogates. Because their Bayesian behavior is induced by large synthetic pretraining collections, the composition of this pretraining distribution is crucial. LSBO creates a distinctive mismatch: the induced map from latent code to objective value differs markedly from the regression tasks used to train current in-context models. We address this mismatch by complementing the pretraining stage of tabular foundation model surrogates with synthetic optimization tasks defined on the latent space of a molecular VAE. The continued-pretraining objective features a regularizer that anchors the model to the original checkpoint, preserving its broad regression prior while avoiding overspecialization to the adaptation tasks. On held-out molecular optimization benchmarks, the resulting model achieves strong performance, supporting the relevance of LSBO-specific adaptation for in-context surrogates.",
+      "authors": [
+        "Tuan A. Vu",
+        "Harri Lähdesmäki",
+        "Julien Martinelli"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2026-06-08T15:45:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.09664v1",
       "tags": [
         "keyword:CAOS-Poly",
         "query:CAOS-Poly"
       ],
       "llm_score": 6.0,
-      "llm_evidence_en": "DFT-embedded quantum computing for accurate electronic structure of organic molecules",
-      "llm_evidence_cn": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
-      "llm_evidence": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
-      "canonical_evidence": "DFT嵌入的量子计算方法用于有机分子的精确电子结构",
-      "llm_tldr_en": "This work presents a multilevel embedding framework for quantum chemistry on quantum computers, using DFT to describe the environment and quantum-selected CI for strong correlation, applied to organic and metal-organic systems.",
-      "llm_tldr_cn": "量子计算机上的量子化学计算面临强相关电子处理的挑战。该框架通过Manby投影技术将DFT环境嵌入与量子选择组态相互作用结合，实现多层级电子结构计算。应用于有机和金属有机体系，展示了量子计算在精确电子结构预测中的潜力，为DFT辅助的机理研究提供了高精度工具。",
-      "llm_tldr": "量子计算机上的量子化学计算面临强相关电子处理的挑战。该框架通过Manby投影技术将DFT环境嵌入与量子选择组态相互作用结合，实现多层级电子结构计算。应用于有机和金属有机体系，展示了量子计算在精确电子结构预测中的潜力，为DFT辅助的机理研究提供了高精度工具。",
+      "llm_evidence_en": "improves Bayesian optimization for molecular design, a key tool for virtual screening",
+      "llm_evidence_cn": "改进分子设计贝叶斯优化，虚拟筛选关键工具",
+      "llm_evidence": "改进分子设计贝叶斯优化，虚拟筛选关键工具",
+      "canonical_evidence": "改进分子设计贝叶斯优化，虚拟筛选关键工具",
+      "llm_tldr_en": "This paper proposes to pretrain tabular foundation model surrogates with synthetic tasks that match the LSBO mapping, improving Bayesian optimization for sample-efficient molecular and protein design.",
+      "llm_tldr_cn": "在面向分子设计的潜空间贝叶斯优化中，代理模型的预训练分布常与目标优化映射失配，导致性能下降。本文提出通过定制大量合成回归任务来补充预训练数据，使表格基础模型代理的上下文学习能力与LSBO目标分布对齐。实验表明，该方法显著提高了在分子和蛋白质等结构化对象上的优化样本效率，为催化剂反应条件虚拟筛选等应用提供了更强大的贝叶斯优化引擎。这一改进使得在有限实验预算下也能高效搜寻高性能候选物，推动了计算辅助设计的实用化。",
+      "llm_tldr": "在面向分子设计的潜空间贝叶斯优化中，代理模型的预训练分布常与目标优化映射失配，导致性能下降。本文提出通过定制大量合成回归任务来补充预训练数据，使表格基础模型代理的上下文学习能力与LSBO目标分布对齐。实验表明，该方法显著提高了在分子和蛋白质等结构化对象上的优化样本效率，为催化剂反应条件虚拟筛选等应用提供了更强大的贝叶斯优化引擎。这一改进使得在有限实验预算下也能高效搜寻高性能候选物，推动了计算辅助设计的实用化。",
       "llm_tags": [
         "query:caos-poly"
       ],
       "matched_query_tag": "query:caos-poly",
-      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
-      "matched_requirement_id": "req-2",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-02-15-706011-v2",
+      "source": "biorxiv",
+      "title": "MolDeBERTa: Foundational Model for Physicochemical and Substructure-Informed Molecular Representation Learning",
+      "abstract": "Foundational models that learn the language of molecules are essential for accelerating the material and drug discovery. These self-learning models can be trained on a large number of unlabelled molecules, enabling applications like property prediction, molecule de-sign (de novo generation, optimization), and screening for specific functions. However, existing molecular language models are built upon first-generation transformer architectures and are pretrained using masked language modeling, a generic token-level objective that is agnostic to physicochemical and structural molecular properties. Here we introduce MolDe-BERTa, a structure-informed self-supervised molecular encoder that leverages a byte-level Byte-Pair Encoding (BPE) tokenization strategy. MolDeBERTa is pretrained on up to 123 million SMILES molecules from PubChem, representing one of the largest publicly available SMILES-based corpora. To achieve this, we introduce three novel pretraining objectives designed to inject strong inductive biases for molecular properties and structural similarity directly into the latent space, resulting in reduced gap between linguistic chemical representations and physical molecular properties. The model was then systematically investigated across three architectural scales, two dataset sizes, and five distinct pretraining objectives. MolDeBERTa when evaluated on 9 downstream MoleculeNet benchmarks outperformed existing masked language models, achieving up to a 16% reduction in regression error and improvements of up to 3.0 ROC-AUC points on classification benchmarks. MolDeBERTa advances unsupervised encoder-based foundational models at scale both for pretraining data and downstream evaluation, enabling data-efficient chemistry-informed representation learning. The source code is publicly available at https://github.com/pcdslab/MolDeBERTa, and Hugging Face at https://huggingface.co/collections/SaeedLab/moldeberta. All the pretraining datasets are available at https://huggingface.co/datasets/SaeedLab/MolDeBERTa",
+      "authors": [
+        "de Oliveira, G. B.",
+        "Saeed, F."
+      ],
+      "primary_category": "bioinformatics",
+      "categories": [
+        "bioinformatics"
+      ],
+      "published": "2026-06-10T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.02.15.706011v2.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "molecular representation learning model beneficial for virtual screening",
+      "llm_evidence_cn": "有益于虚拟筛选的分子表示学习模型",
+      "llm_evidence": "有益于虚拟筛选的分子表示学习模型",
+      "canonical_evidence": "有益于虚拟筛选的分子表示学习模型",
+      "llm_tldr_en": "MolDeBERTa is a structure-informed molecular encoder that outperforms existing models on property prediction and molecular design, trained with byte-level BPE and a pretraining objective aware of physicochemical and substructural features.",
+      "llm_tldr_cn": "现有分子语言模型多采用通用掩码语言建模，忽略了对性质至关重要的物理化学和子结构信息。本工作推出MolDeBERTa，采用字节级BPE编码并结合结构感知预训练目标，使自监督学习能捕获官能团、原子环境等细粒度特征。在分子性质预测与生成任务上，MolDeBERTa全面超越第一代分子Transformer，证明了融入理化先验的优势。该基础模型为虚拟筛选、分子优化等高通量计算辅助设计提供了更精准的表示工具，加速了材料和药物发现进程。",
+      "llm_tldr": "现有分子语言模型多采用通用掩码语言建模，忽略了对性质至关重要的物理化学和子结构信息。本工作推出MolDeBERTa，采用字节级BPE编码并结合结构感知预训练目标，使自监督学习能捕获官能团、原子环境等细粒度特征。在分子性质预测与生成任务上，MolDeBERTa全面超越第一代分子Transformer，证明了融入理化先验的优势。该基础模型为虚拟筛选、分子优化等高通量计算辅助设计提供了更精准的表示工具，加速了材料和药物发现进程。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.09684v1",
+      "source": "arxiv",
+      "title": "Geometric Dissipation Constraints in Stochastic Reaction Dynamics: A Variational Observable for Hidden Kinetic Structure in Energy Landscapes",
+      "abstract": "We propose a geometric framework for characterizing hidden kinetic constraints in stochastic reaction dynamics. While free-energy barriers and entropy production provide global descriptors of thermodynamic behavior, they are largely insensitive to local geometric structure in configuration space that governs pathway selection. Starting from overdamped Langevin dynamics formulated as a gradient flow in Wasserstein space, we derive a variational functional whose leading-order asymptotic structure defines a local dissipation-geometry coupling observable. This quantity combines force-drift alignment with phase-space contraction induced by the divergence of the drift field, yielding a scalar field that reflects second-order geometric features of the underlying energy landscape. We demonstrate that this observable distinguishes kinetically distinct reaction channels that are degenerate under conventional free-energy analysis, as shown through numerical experiments on benchmark systems including the Muller-Brown potential, corrugated periodic landscapes, and the conformational transitions of Alanine Dipeptide. These experiments demonstrate robust separation of pathways and are consistent with a quadratic scaling behavior in the high-frequency homogenization regime. Our results suggest that stochastic reaction dynamics contain an additional geometric layer of kinetic control in molecular motion not captured by standard thermodynamic or reaction-coordinate descriptions.",
+      "authors": [
+        "Shlomo Segal"
+      ],
+      "primary_category": "cond-mat.stat-mech",
+      "categories": [
+        "cond-mat.stat-mech"
+      ],
+      "published": "2026-06-08T16:03:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.09684v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Variational framework reveals hidden kinetic constraints in stochastic reaction dynamics, aiding mechanistic understanding of pathway selection.",
+      "llm_evidence_cn": "变分框架揭示随机反应动力学中的隐藏动力学约束，辅助理解路径选择机制。",
+      "llm_evidence": "变分框架揭示随机反应动力学中的隐藏动力学约束，辅助理解路径选择机制。",
+      "canonical_evidence": "变分框架揭示随机反应动力学中的隐藏动力学约束，辅助理解路径选择机制。",
+      "llm_tldr_en": "Proposes a geometric framework with a variational observable to characterize local dissipation-geometry coupling, uncovering hidden kinetic structure in energy landscapes that governs reaction pathway selection.",
+      "llm_tldr_cn": "针对传统自由能障碍等全局描述符对构型空间几何不敏感的问题，从过阻尼朗之万动力学推导出变分泛函，定义局部耗散-几何耦合可观测量，揭示决定反应路径选择的隐藏动力学结构。该框架为复杂反应路径选择提供了全新的几何分析工具，可补充现有能量景观理论，辅助理解化学反应的选择性根源。",
+      "llm_tldr": "针对传统自由能障碍等全局描述符对构型空间几何不敏感的问题，从过阻尼朗之万动力学推导出变分泛函，定义局部耗散-几何耦合可观测量，揭示决定反应路径选择的隐藏动力学结构。该框架为复杂反应路径选择提供了全新的几何分析工具，可补充现有能量景观理论，辅助理解化学反应的选择性根源。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
       "selection_source": "fresh_fetch",
       "quick_tier": "6"
     }
