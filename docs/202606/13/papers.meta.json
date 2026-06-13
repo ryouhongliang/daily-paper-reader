@@ -1,0 +1,54 @@
+{
+  "label": "2026-06-13",
+  "date": "2026-06-13",
+  "generated_at": "2026-06-13T23:15:53",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/13/2606.07396v1-scalable-prediction-of-complex-surface-reconstructions-under-operating-conditions-via-harmony-search-based-global-optimization",
+      "section": "quick",
+      "title_en": "Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization",
+      "authors": "Shi-Yang Chen, Xiao-Ming Cao",
+      "date": "2026-06-05",
+      "pdf": "https://arxiv.org/pdf/2606.07396v1",
+      "score": "7.0",
+      "evidence": "通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选",
+      "tldr": "操作条件下催化剂表面重构的原子级模拟面临大搜索空间和势能面不准确的挑战。提出HASGO框架，结合通用机器学习原子间势与和声搜索算法，并通过多头重放微调和随机结构扰动增强容错性与收敛鲁棒性。该方法成功解析Ag(100)表面在乙烯环氧化中的方锥形表面下O5基序。为催化剂理性设计提供可扩展的稳健预测工具。",
+      "tags": "query:caos-poly",
+      "abstract_en": "The dynamic structural evolution of catalyst surfaces under operating conditions dictates catalytic performance, yet capturing these reconstructions atomically remains challenging. Global optimization based on machine learning interatomic potentials (MLIPs) is promising, but scaling to large-scale, low-symmetry operando systems is hindered by expansive search spaces and potential energy surface (PES) inaccuracies. Herein, we present Harmony-search-based Atomic Structural Global Optimization (HASGO), a framework integrating universal MLIPs with a harmony search algorithm. HASGO overcomes the problem of PES softening by incorporating a multi-head replay fine-tuning protocol. Moreover, the stochastic structural perturbation step in its algorithm offers a fault-tolerant strategy to enhance the robustness of global convergence. These enable HASGO to identify intricate surface oxide overlayers that align with atomic-resolution microscopy, thereby resolving the square-pyramidal subsurface O5 motif on Ag(100) during ethylene epoxidation. This scalable framework provides a robust approach for uncovering operando structures, accelerating the rational design of industrial catalysts.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/13/2606.11979v1-algebraic-varieties-and-ideal-theory-in-combinatorial-click-reaction-design",
+      "section": "quick",
+      "title_en": "Algebraic Varieties and Ideal Theory in Combinatorial Click-Reaction Design",
+      "authors": "Vicent Ribas Ripoll",
+      "date": "2026-06-10",
+      "pdf": "https://arxiv.org/pdf/2606.11979v1",
+      "score": "7.0",
+      "evidence": "代数计算方法用于设计点击化学组装",
+      "tldr": "组合点击反应设计需要从多样化的化学家族和手柄类型中选择兼容的三元组，面临复杂组合约束。本文通过交换代数构造装配理想，将可行反应编码为多项式簇，并利用消去理想、toric理想和多步理想分析诊断性、冗余性和正交约束。在生物正交点击化学实例中，得到30个可行三元组，团数ω=4，ML度=1，并导出新增族提高ω的充要条件。该代数框架为组合化学正交设计提供了可计算的严格检验工具。",
+      "tags": "query:caos-poly",
+      "abstract_en": "We study compatibility-constrained combinatorial chemical assembly through the lens of commutative algebra. Given a finite set $F$ of chemical families, a finite set $H$ of handle types, and a compatibility relation $Pairs(f) \\subseteq H \\times H$ for each $f \\in F$, we construct an assembly ideal $I = J_{bool} + J_{sel} + K_{compat}$ in a polynomial ring $R = k[F,H,H']$ whose variety $V(I) \\subseteq \\{0,1\\}^n$ encodes the set of feasible reaction triples. We prove that $I$ is zero-dimensional and radical, whence $R/I \\cong k^{|V(I)|}$. Elimination ideals characterise handle diagnosticity (whether a handle determines its family), the toric ideal of the log-linear model on $V(I)$ measures redundancy in the compatibility relation, and a multi-step ideal $I^{(k)}$ encodes orthogonality constraints among simultaneous assembly plans; the clique number $ω(G_\\perp)$ of the associated orthogonality graph gives the maximum number of mutually compatible plans. We derive a necessary and sufficient criterion for a new family to raise $ω$. The framework is instantiated on the bioorthogonal click-chemistry landscape ($|F|=8$, $|H|=17$), yielding $|V(I)|=30$, a toric ideal with 2 generators, ML degree 1, and $ω(G_\\perp)=4$. All computations are verified over $\\mathbb{Q}$ in SymPy.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/13/biorxiv-10-64898-2026-06-04-730138-v1-deep-learning-guided-design-of-hydrolases-for-crystalline-pet-depolymerization",
+      "section": "quick",
+      "title_en": "Deep learning-guided design of hydrolases for crystalline PET depolymerization",
+      "authors": "Wu, B., Li, M., Zhang, J., Li, J., Wang, X., Zhong, B., Liu, J., Wang, B., Tan, Y., Qi, W., Tan, P., Zhao, W., Zheng, L., Hong, L.",
+      "date": "2026-06-05",
+      "pdf": "https://www.biorxiv.org/content/10.64898/2026.06.04.730138v1.full.pdf",
+      "score": "6.0",
+      "evidence": "深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选",
+      "tldr": "聚对苯二甲酸乙二醇酯（PET）塑料污染严重，酶法回收受限于结晶结构导致的低效降解。本研究利用深度学习框架PET-Flow设计出VenusPETase，其水解活性提升3.4倍、热稳定性提高12°C，可在50°C下高效降解结晶度8%–50%的PET，产物中TPA占比超95%。在100 L反应器中24小时完全解聚消费后PET，实现闭环回收，为温和条件处理结晶PET提供了高性能生物催化剂。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Poly(ethylene terephthalate) (PET), a ubiquitous polyester used in packaging and textiles, persists in the environment due to its high crystallinity and stability, contributing substantially to global plastic pollution. Enzymatic depolymerization by PET hydrolase (PETase) offers a chemically precise and environmentally sustainable route to convert PET into its monomeric building blocks, enabling recycling. However, practical implementation remains hindered by the rigid, crystalline architecture of PET, which restricts enzyme access and necessitates energy-intensive pretreatment to enable efficient depolymerization. In addition, most PETases achieve only partial depolymerization with low terephthalic acid (TPA) yields and accumulate inhibitory intermediates, while limited thermostability and slow surface kinetics further restrict efficiency. To overcome these barriers, we report VenusPETase, an engineered variant of KbPETase designed using PET-Flow, a state-of-the-art computational framework for PETase engineering. Compared with KbPETase, VenusPETase exhibits a 3.4-fold increase in hydrolytic activity, up to a 27-fold improvement after heat treatment of protein, and a 12 {degrees}C enhancement in thermostability. VenusPETase exhibits rapid degradation across a wide crystallinity range (8%-50%) at 50 {degrees}C, effectively spanning the entire spectrum of commercial PET products. Moreover, VenusPETase outperformed nine high-performance PETases under their respective optimal conditions and degraded untreated PET substrates across 8%-50% crystallinity, producing TPA as over 95% of the released products with minimal intermediate accumulation. X-ray crystallography and molecular dynamics simulations suggest that dynamic modulation, elevated surface electrostatic potential enhance the interaction of VenusPETase with crystalline PET, thereby lowering the hydrolytic energy barrier and improving catalytic performance. We also demonstrate that untreated, postconsumer-PET from nine different products can all be degraded by VenusPETase. The recovered monomers can be directly repolymerized into virgin-quality PET, demonstrating a closed-loop enzymatic recycling process. In a 100 L bioreactor, VenusPETase completely depolymerizes post-consumer crystalline PET (28% crystallinity) within 24 h under 50 {degrees}C. These results establish VenusPETase as a robust biocatalyst that enables efficient, closed-loop recycling of crystalline PET under mild conditions.",
+      "source": "biorxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

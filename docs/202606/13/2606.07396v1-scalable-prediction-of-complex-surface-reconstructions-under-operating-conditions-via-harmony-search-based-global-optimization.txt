@@ -1,0 +1,788 @@
+Title: Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization
+
+URL Source: https://arxiv.org/pdf/2606.07396v1
+
+Published Time: Mon, 08 Jun 2026 01:04:06 GMT
+
+Number of Pages: 43
+
+Markdown Content:
+# Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization 
+
+## Shiyang Chen 1 and Xiao-Ming Cao 1,2* 
+
+> 1*
+
+State Key Laboratory of Green Chemical Engineering and Industrial Catalysis, Centre for Computational Chemistry and Research Institute of Industrial Catalysis, East China University of Science and Technology, 130 Meilong Road, Shanghai, 200237, Shanghai, China. 
+
+> 2*
+
+State Key Laboratory of Synergistic Chem-Bio Synthesis, School of Chemistry and Chemical Engineering, Shanghai Jiao Tong University, 800 Dongchuan Road, Shanghai, 200240, Shanghai, China. *Corresponding author(s). E-mail(s): xmcao@sjtu.edu.cn; 
+
+Abstract 
+
+The dynamic structural evolution of catalyst surfaces under operating conditions dictates catalytic performance, yet capturing these reconstructions atomically remains challenging. Global optimization based on machine learning interatomic potentials (MLIPs) is promising, but scaling to large-scale, low-symmetry operando systems is hindered by expansive search spaces and potential energy surface (PES) inaccuracies. Herein, we present Harmony-search-based Atomic Structural Global Optimization (HASGO), a framework integrating universal MLIPs with a harmony search algorithm. HASGO over-comes the problem of PES softening by incorporating a multi-head replay fine-tuning protocol. Moreover, the stochastic structural perturbation step in its algorithm offers a fault-tolerant strategy to enhance the robustness of global convergence. These enable HASGO to identify intricate surface oxide overlay-ers that align with atomic-resolution microscopy, thereby resolving the square-pyramidal subsurface O 5
+
+motif on Ag(100) during ethylene epoxidation. This scalable framework provides a robust approach for uncovering operando structures, accelerating the rational design of industrial catalysts. 
+
+# Introduction 
+
+Transition metals exhibit exceptional catalytic activity in a wide range of reactions across chemical pro-duction, environmental treatment, and energy conversion. The interplay between metal and reaction intermediates frequently induces surface reconstructions and phase transitions, causing surface active sites to evolve dynamically during reaction[1, 2]. For instance, dynamically generated surface oxide species serve as the realistic active centres in many oxidation processes, such as CO oxidation[3, 4], methane combustion[5– 8], and the oxygen evolution reaction[9, 10]. Nevertheless, elucidating the evolution of surface structures at the atomic level under the high-temperature and high-pressure conditions typical of industrial catalysis remains a significant challenge for current operando characterisation techniques. Experimentally observed surface reconstructions at low pressure often correspond to the most thermo-dynamically stable structures, representing the global minimum (GM) on the PES[11–15]. This alignment suggests that surface reconstruction can be rigorously modelled as a global optimisation (GO) problem. While the advancement of first-principles calculations has enabled the application of GO algorithms, such as USPEX[16], CALYPSO[17], and ABCluster[18], to simulate these surfaces, substantial computational costs 1
+
+> arXiv:2606.07396v1 [cond-mat.mtrl-sci] 5 Jun 2026
+
+have largely restricted research to small unit cells, typically p(2 ×2)[19–21]. Importantly, surface reconstruc-tion under operating conditions is a process governed by the Grand Canonical (GC) ensemble, characterised by fixed chemical potentials but variable stoichiometry and symmetry. As recently demonstrated by Liu and co-workers[14], confining simulations to small, high-symmetry unit cells severely constrains the searchable chemical space, potentially precluding the discovery of the true thermodynamically stable phases under oper-ating conditions. Consequently, there is a clear imperative for techniques that can mitigate the computational burden of GO on large-scale, low-symmetry systems while maintaining first-principles accuracy. Machine learning interatomic potentials (MLIPs) have emerged as a promising alternative to first-principles calculations for accelerating PES exploration. Equivariant graph neural network (GNN) archi-tectures, such as PAINN[22], MACE[23], Orb[24], and Equiformer[25], have significantly reduced the data requirements for training while maintaining near-density functional theory (DFT) accuracy[14, 15, 26–31]. However, applying MLIP-based GO to large surfaces presents two primary challenges. First, the limited extrapolation capabilities of MLIPs necessitate that investigated configurations remain within, or in prox-imity to, the structural distribution of the training set, requiring extensive DFT labelling. Second, as system size increases, the high-dimensional nature of the PES demands a sophisticated balance between exploration and exploitation to avoid entrapment in spurious local minima due to MLIP inaccuracies. Recent advances in universal MLIPs (u-MLIPs) have demonstrated impressive “out-of-the-box” mod-elling capabilities across the entire periodic table[32–39]. While u-MLIPs can reduce initial training costs, they frequently suffer from systematic “PES softening,” where atomic forces and energies are systemati-cally underestimated[34, 35, 40]. This softening is often rooted in the narrow distribution of pre-training data, which lacks the high-energy, non-equilibrium configurations encountered during GM search[41, 42]. Although fine-tuning with out-of-distribution (OOD) samples can enhance robustness, it often triggers “catastrophic forgetting”, eroding the model’s broad chemical knowledge[43–45]. Furthermore, a robust GO framework must be inherently fault-tolerant, capable of accommodating marginal PES deviations between the MLIP and DFT benchmarks, especially during the exploration of high-energy regions. Thus, achieving synergy between data strategies and GO algorithms is a key factor for the efficient search and identification of realistic surface structures under operating conditions. Inspired by these advances, we developed Harmony-search-based Atomic Structural Global Optimization (HASGO), a framework that integrates system-specific MLIPs with the harmony search (HS) algorithm[46] for efficient atomistic GO under realistic catalytic environments. In HASGO, the MLIP is constructed by fine-tuning a u-MLIP with DFT data generated during GO on a smaller surrogate system. By leveraging the HS algorithm’s ability to strike a balance between exploration and exploitation, HASGO accelerates the structural search while simultaneously building a reliable and data-efficient dataset for model refinement. To evaluate its performance in realistic surface reconstruction problems, we applied variable-lattice HASGO to metal oxide reconstruction on Pd(100), Cu(100), and Ag(100). Variable-lattice HASGO first reproduces experimentally observed high-vacuum surface oxide phases, including the PdO(101)-step reconstruction on 
+
+p(5 ×5) Pd(100), the (2 √2 × √2)R45 ◦ missing-row reconstruction (MRR) CuO phase on Cu(100), and the analogous MRR AgO phase on Ag(100). We further show that, under the operating condition of ethylene epoxidation, variable-lattice HASGO identifies an Ag(100)-O reconstruction featuring a subsurface O 5 motif, in line with recent infrared spectroscopic discovery[15]. These validations demonstrate HASGO’s broad applicability across diverse chemical environments and structural scales, providing a scalable pathway for uncovering the operando structures critical to industrial catalysis. 
+
+# Results 
+
+## An Overview of the HASGO Workflow 
+
+Fig. 1 shows the workflow of HASGO. It integrates GO via the HS algorithm with the fine-tuning of a u-MLIP to efficiently navigate the reliable PES of target systems. Dataset generation for u-MLIP fine-tuning proceeds in three stages. Initially, GO utilising the HS algorithm and the foundation u-MLIP generates candidate structures for small-scale systems (typically ≤ 25 atoms). Subsequently, a representative subset is extracted using the farthest point sampling (FPS) strategy[47], drawing from all generated candidates and local optimisation trajectories. These selected structures are labelled via DFT single-point calculations and used alongside a multi-head replay training protocol[48] to adapt the original u-MLIP to the specific target system. During the primary GM exploration phase, this fine-tuned u-MLIP enables the metaheuristic algorithm to reliably navigate the solution space. It provides rapid fitness evaluations and local relaxations in the down-stream GO cycle, ultimately identifying the configuration with the lowest energy. This workflow mitigates 2the limited extrapolation capabilities of MLIPs when encountering OOD structures, ensuring robust energy evaluations throughout the optimisation process. In addition, the GM exploration at each epoch undergoes a random choice between exploration and exploitation, followed by structural perturbation in the HS algo-rithm. This structural perturbation step provides fault tolerance against marginal discrepancies between the MLIP and DFT PES, enhancing the robustness of GM convergence. Detailed HASGO configurations are provided in the Methods section.   
+
+> Fig. 1 |Overview of the HASGO framework . The workflow consists of the data generation part (upper left), the fine-tuning part (lower), and the GM exploration part (upper right). Data generation: (I) initial GO using HS algorithms for target systems with limited size, (II) GO using the foundation model for (III) energy calculation and fitness evaluation to (IV) identify the small-scale GM structure. Fine-tuning: local optimisation trajectories of small-scale target systems are sampled by the FPS strategy and curated into a specified dataset after labelling, which is used to fine-tune the foundation model via a multi-head replay training strategy for GM exploration. GM exploration: (V) initial GO of larger-scale target systems followed by (VI) enhanced GO using the fine-tuned model for (VII) accurate energy calculation and fitness evaluation, and (VIII) identification of the best fitness structure with the lowest potential energy as the larger-scale GM.
+
+## Harmony Search Effectiveness 
+
+To identify the optimal GO algorithm for locating the GM on the PES, we conducted a systematic benchmark of ten prominent GO algorithms. The evaluation was performed, using a fixed 500 epochs for GO with the MACE-OMAT foundation model for local relaxation and energy calculation, on a benchmark p(4 × 4) Pd(100) surface model containing oxygen vacancies[13], a larger system of critical importance for controlling catalytic reaction rates[49, 50]. The benchmark algorithms included Genetic Algorithm (GA)[51], Particle Swarm Optimization (PSO)[52], Ant Colony Optimization (ACO)[53], Artificial Bee Colony (ABC)[18], Grey Wolf Optimizer (GWO)[54], Improved GWO (IGWO)[55], Whale Optimization Algorithm (WOA)[56], Biogeography-Based Optimizer (BBO)[57], Multi-Verse Optimizer (MVO)[58], and HS[46]. Our results demonstrate that the HS algorithm exhibits the best balance between computational effi-ciency and search reliability. As illustrated in the comparative analysis (Fig. 2a and Fig. 2b), HS identified a GM configuration significantly more stable than those found by competing algorithms. This robust per-formance persists even as population sizes scale (Fig. 2b), establishing HS as the effective metaheuristic for high-dimensional atomic structural searches. Furthermore, with the increase of population sizes, HS achieves more efficient convergence while exhibiting a consistent GM with that obtained using a small population size. 3Energy Validation of the Fine-Tuned u-MLIP Model 
+
+A critical challenge in utilising MLIPs for GO is limited extrapolation capability in high-energy, OOD regions. To overcome this, we first evaluated our multi-head replay fine-tuning protocol using a smaller system of the Pd(100)-O c(√5 × √5) reconstruction, for which the entire GO process could be validated by DFT calculations. We compared the MACE-OMAT foundation model and two fine-tuned models trained on 0.1k and 3k samples against the standard HS+PBE-D3[59, 60] benchmark, respectively. Each search started from the same set of randomly generated, unrelaxed configurations to maintain consistency, with the HASGO algorithm executed over 20 epochs using a population size of 10 candidate structures per epoch. As illustrated in Fig. 2c, all three MLIP variants exhibit rapid convergence behaviours that closely mirror the trajectory of the DFT for this small system. Notably, the 0.1k and 3k fine-tuned models converged to within ∼0.04 eV of the DFT benchmark, representing a massive throughput acceleration of 10 3 relative to conventional first-principles methods. While the 0.1k model successfully identified the correct GM, the 3k model achieved higher geometric fidelity (Fig. 2d), as quantified by Euclidean distances with the DFT benchmark in the MACE-OMAT descriptor space. This indicates that larger datasets provide the refined local force information necessary to drive the system into the exact DFT GM and yield more reliable dynamically oxidised surface structures.                  
+
+> Fig. 2 |HASGO algorithm benchmark and validation of the fine-tuning strategy. Performance comparison of ten global optimisation algorithms on a Pd(100)-p(4 ×4) surface model over 500 epochs using the MACE-OMAT foundation model, with population sizes of 20 ( a) and 50 ( b) candidates per epoch. c–e , Robustness and scalability of the multi-head replay fine-tuning strategy for HASGO-driven Pd(100)-O surface reconstructions. cEnergy evolution of HS-driven GO trajectories for a
+> p(√5× √5) surface, comparing DFT with three MLIP variants: u-MLIP, FT-0.1k, and FT-3k. d. Structural convergence quan-tified by the Euclidean distance of MACE-OMAT invariant descriptors relative to the DFT trajectory. e, Energy convergence for the extended p(5 ×5) system. In c. and e. dashed and solid lines denote DFT and MLIP energies, respectively, evaluated on the structures along each MLIP GO trajectory.
+
+When scaled to a complex Pd(100)-p(5 × 5) supercell, the exponentially expanded configurational space renders the full HASGO search at the DFT level computationally prohibitive. Thus, a series of DFT single-point calculations were performed based on the MLIP trajectories to benchmark the predictive confidence of MLIPs. Fig. 2e shows that the foundation model exhibited a significant energy underestimation of −0.80 eV for the final GM structure compared with its DFT benchmark. The inclusion of just 100 fine-tuning samples 4(MACE FT-0.1k ) markedly reduced this deviation to −0.16 eV, which could compete with the inclusion of 3,000 fine-tuning samples (MACE FT-3k , +0 .13 eV). This indicates that our replay strategy is reliable for the identification of the GM even with sparse training data. However, notable energy deviations exist in the whole GO process using MACE FT-0.1k , while MACE FT-3k exhibited almost consistent energies with its DFT benchmark. This demonstrates the ability of our replay strategy to construct a high-confidence PES using 3,000 fine-tuning samples. Interestingly, despite large energy deviations between the foundation model and two fine-tuned models based on the MLIP energies, the DFT results for the GM structures obtained by the three models are very close, indicating that HASGO is markedly robust for the search of the GM structure, even when the employed global PES exhibits energy deviations in certain regions. In summary, these results highlight a favourable trade-off between data efficiency and search performance, where a minimal sample set is sufficient to guide HASGO to the correct GM in previously inaccessible search spaces, while more samples are required to obtain a more reliable trajectory of the whole GO process. 
+
+## Complex Surface Reconstructions 
+
+Achieving an atomistic understanding of surface reconstructions under operating conditions still remains challenging. Within a GC ensemble at a fixed chemical potential of the reaction condition, identifying the globally optimized structure requires navigating an immense configurational space characterized by variable stoichiometry and symmetries. While surface reconstruction, particularly upon oxidation, has been exten-sively studied using small-scale, high-symmetry models, the limited knowledge of large-scale, low-symmetry phases due to structural complexity has hindered deeper atomic-level insights [19–21]. Having established the high-confidence PES provided by MACE FT-3k , we deployed this model as the core computational engine for rapid energy evaluation. By coupling HASGO with the Automated Search for Optimal surface Phases (ASOPs) method[14], we sampled a vast configuration space spanning diverse unit cell dimensions and sto-ichiometric compositions to map the thermodynamically stable phases of oxidized metal surfaces under operating conditions. To validate the reliability of the HASGO framework, we first examined the struc-tural evolution of oxidised Pd, Cu, and Ag surfaces under high-vacuum conditions relevant to atomic-scale microscopic characterisation (Supplementary Tables S1–S4), benchmarking the predicted phases against experimental scanning tunnelling microscopy (STM) and high-resolution transmission electron microscopy (HRTEM) observations. We then extended HASGO to ethylene epoxidation on Ag(100) under realistic reac-tion condition, thereby assessing its capability for operando structural simulation in an industrially relevant catalytic environment. 
+
+Phase evolution of PdO/Pd(100) 
+
+To map the structural landscape of Pd(100) under STM characterisation condition, we employed the HS algorithm to explore 44 Niggli-reduced unit cell types, 664 distinct chemical compositions, and the corre-sponding 492,800 local minima (Supplementary Table S1 and Supplementary Fig. S15). The thermodynamic stability of each composition was quantified using the surface grand potential ( γ, Eq. 4) at T = 573 K and PO2 = 5 .0 × 10 −5 mbar, directly matching the experimental STM imaging condition[61]. Projection of these states onto the PES contour map identified the ( √5 × √5) R27 ◦ PdO(101) surface overlayer on a p(5 × 5) supercell as the most thermodynamically stable phase (Fig. 3a), with γ = −0.177 J · m−2. By contrast, a control HASGO search constrained to a high-symmetry p(2 × 2) unit cell, which was frequently investigated[62–65], under the same thermodynamic condition recovered only a simple (2 × 2) phase with 
+
+γ = −0.082 J · m−2 (Supplementary Fig. S19), lying 0 .095 J · m−2 above the variable-lattice optimum. This energetic separation shows that the PdO(101) overlayer is stabilised only when both the unit cell geometry and chemical composition are allowed to vary beyond the conventional p(2 × 2) constraint. The optimal phase corresponds to a Pd 20 O20 stoichiometry with symmetric 0.8 monolayer (ML) coverages of Pd and O (Fig. 3b). Structurally, the predicted overlayer resolves into alternating parallel chains composed of distinct [PdO 4] square-planar and [PdO 2] linear coordination motifs (Fig. 3d), in remarkable agreement with exper-imental STM topographies[61, 66] (Fig. 3c). Furthermore, the calculated lattice vectors of the predicted PdO(101) overlayer give average short and long side lengths of 3 .03 ˚ A and 6 .15 ˚ A, respectively, closely match-ing the corresponding values extracted from STM experiments[67]. Together, these results demonstrate that HASGO can resolve intricate, large-scale surface reconstructions without imposing prior structural bias. 5Fig. 3 | The metal oxide surface reconstruction simulation and structural optimisation on Pd(100) under the STM imaging condition at 573 K and PO2 = 5 × 10 −5 mbar[61]. a. The PES contour map for palladium surface oxides on Pd(100) within the GC ensemble. b,d Top views of globally optimised structure in stick and CPK styles, respectively, identified as the most stable phase within the GC ensemble, featuring 0.8 ML Pd and 0.8 ML O on Pd(100)-p(5 × 5) through HASGO, as labelled in the PES map (Phase 1). c. Top-view STM image of ( √5 × √5) R27 ◦ PdO(101) on Pd(100)[61]. Colour scheme: teal for Pd and red for O atoms. 
+
+Missing-row reconstruction of CuO/Cu(100) 
+
+We next applied the same search protocol to Cu(100) under STM imaging condition at T = 673 K and 
+
+PO2 = 7 × 10 −5 mbar[68], exploring massive Niggli-reduced unit cells, chemical compositions, and local minima with the same number as those in the PdO/Pd(100) case (Supplementary Table S2). As illustrated in the phase stability diagram (Fig. 4a), variable-lattice HASGO identified the (2 √2 × √2)R45 ◦ CuO missing-row reconstruction (MRR, Phase 1) as the thermodynamically stable overlayer, with γ = −0.193 J · m−2.In contrast, the corresponding high-symmetry p(2 × 2) HASGO search yielded only a simple (2 × 2) phase with γ = −0.176 J · m−2 (Supplementary Fig. S20), rendering the MRR inaccessible within the restricted cell description. This comparison confirms that the CuO missing-row phase emerges only when the search space is released from the symmetry and cell-size constraints imposed by the conventional p(2 × 2) model. This phase possesses a Cu 9O6 stoichiometry (Fig. 4b), and its structural parameters exhibit high fidelity to experimental HRTEM and STM benchmarks[68]. The structural integrity of this HASGO-optimised model is apparent in the side-view geometry (Fig. 4f), which captures the characteristic buckling and elevated Cu– O rows intrinsic to MRR surfaces (Fig. 4e)[68]. Plan-view analysis (Fig. 4d) reveals that this reconstruction is driven by the periodic ejection of every fourth [100] copper row. The resulting overlayer contains distinct coordination environments, in which surface O atoms occupy four-fold hollow-like sites (O 4c ) and coordinate with undercoordinated Cu atoms (Cu 7c and Cu 8c ). This specific arrangement of Cu–O chains is expected to minimise surface strain and regulate the electronic properties of the oxidised Cu(100) interface[74]. Capturing this low-symmetry MRR phase therefore highlights the capacity of HASGO to overcome the rigid symmetry constraints of small unit cells, which can otherwise bias traditional modelling against real active phases. Phase 2 is the second most thermodynamically stable structure in the same phase diagram (Fig. 4a), featuring a Cu 12 O6 stoichiometry with Cu and O coverages of 1.0 and 0.5 ML, respectively (Fig. 4b). With 
+
+γ = −0.191 J · m−2, Phase 2 lies only 0 .002 J · m−2 above the GM of Phase 1. This marginal energetic 6penalty is consistent with its established role as the experimental and theoretical structural precursor to the full (2 √2 × √2)R45 ◦ missing-row reconstruction[69–72].                          
+
+> Fig. 4 |The metal oxide surface reconstruction simulation and structural optimisation on Cu(100) under the STM imaging condition at T= 673 K and PO2= 7 ×10 −5mbar. a. The PES contour map for copper surface oxides on Cu(100) within the GC ensemble. b. Top view snapshots of two representative phases, as labelled in the PES map. Top views of c. experimental STM image for the (2 √2× √2) R45 ◦CuO MRR monolayer on Cu(100)[73] and d. the most thermodynamically stable Phase 1. Side views of e. HRTEM image of reconstructed Cu(100) layers [68] and f. (2 √2× √2) R45 ◦CuO MRR monolayer on Cu(100) of Phase 1. Colour scheme: coral for Cu and red for O atoms.
+
+Missing-row reconstruction of AgO/Ag(100) 
+
+Variable-lattice HASGO was further extended to Ag(100) (Supplementary Table S3) under the reported in situ X-ray diffraction (XRD) characterisation condition of T = 440 K and PO2 = 1 × 10 −1 mbar[75]. As displayed in the PES contour map (Fig. 5a), HASGO identified the AgO missing-row reconstruction (MRR, Phase 1) as the thermodynamically stable surface phase (Fig. 5b), with γ = −0.125 J · m−2. Under the same thermodynamic condition, the restricted p(2 × 2) HASGO search recovered a simple (2 × 2) phase with 
+
+γ = −0.090 J · m−2 (Supplementary Fig. S21), 0 .035 J · m−2 higher than the variable-lattice optimum. The energetic preference for the larger, lower-symmetry phase reinforces that the AgO MRR motif is a genuine outcome of symmetry-unconstrained GO. Notably, this MRR motif on Ag(100) is structurally analogous to the CuO MRR identified on Cu(100), featuring periodic removal of metal rows that generates alternating ridges and troughs on the surface. Detailed inspection of the surface architecture (Fig. 5c) shows that the reconstruction is characterised by Ag–O–Ag chains along the remaining rows, with surface O atoms occupying four-fold hollow-like sites and coordinating to undercoordinated Ag atoms at the ridge positions. These structural features have been identified experimentally by both in situ XRD[75] and high-resolution electron-energy-loss spectroscopy[76]. This arrangement of Ag–O chains effectively relieves surface tensile stress and stabilises the oxidised Ag(100) interface, analogous to the mechanism observed for Cu(100). 
+
+O5 reconstruction of AgO/Ag(100) during ethylene epoxidation 
+
+Inspired by the excellent agreement between HASGO predictions and experimental observations under high-vacuum conditions, we further applied variable-lattice HASGO to the ethylene epoxidation over Ag(100) under the realistic reaction condition of T = 500 K, PO2 = 1 bar, and PC2H4 = 1 bar. Under these operating conditions, the thermodynamically relevant surface phase space is no longer governed solely by Ag–O stoichiometry, as ethylene–surface interactions can affect the surface grand potential as well, thereby modifying the surface atomic configuration and reshaping the surface free energy landscape and relative stability of reconstructed Ag–O overlayers[2, 15, 77, 78]. We therefore treated ethylene adsorption and Ag– O reconstruction within the same variable-lattice search, rather than optimising the oxide surface first and adding ethylene only afterwards. 7Fig. 5 | The Ag surface structure evolution under various conditions. a. The PES contour map for silver surface oxides on Ag(100) at 440 K and PO2 = 1 × 10 −1 mbar from ASOP simulation. b,c Top view snapshot of globally optimised phase, identified as the most stable phase within the GC ensemble, featuring 0.75 ML Ag, 0.5 ML O on Ag(100), as labelled in the PES map (a, Phase 1). d. The PES contour map for silver surface oxides on Ag(100) at 500 K and 1 bar of both oxygen and ethylene from ASOP simulation. e. Top view globally optimised structure, identified as the most stable phase within the GC ensemble, featuring 1.0 ML Ag, 0.75 ML O and 0.25 ML ethylene on Ag(100), as labelled in the PES map (d, Phase 1).  
+
+> f. Top view of the subsurface and surface AgO layer in Phase 1. Colour scheme: blue for Ag, red for O, grey for C and white for H atoms.
+
+The relative thermodynamic stability of the ternary Ag–O–C 2H4 phases was evaluated using a γ analo-gous to that used for the PdO, CuO, and AgO systems (Eq. 4). For the reaction system, this formulation additionally includes the chemical potential of ethylene ( μC2H4 ) and the adsorption free energy of ethylene (GC2H4,ads ). Ethylene coverage was therefore explicitly included as a compositional variable, enabling Ag– O structures with different C 2H4 loadings to be compared within a single GC ensemble (Supplementary Table S4). This treatment allows the phase search to capture adsorbate-driven changes in the stability of reconstructed Ag–O overlayers under ethylene epoxidation condition. As displayed in the PES contour map (Fig. 5d), variable-lattice HASGO identified the AgO overlayer with O 5 (Phase 1) as the GM during ethy-lene epoxidation, featuring 1.0 ML Ag, 0.75 ML O, and 0.25 ML ethylene (Ag 4O3(C 2H4)1, Fig. 5e), with 
+
+γ = −0.335 J · m−2. This γ is substantially lower than that of the ethylene-free variable-lattice AgO/Ag(100) optimum at the same oxygen chemical potential ( γ = −0.161 J · m−2, Supplementary Fig. S23), corre-sponding to a stabilisation of 0 .174 J · m−2 upon inclusion of ethylene. This energetic separation indicates 8that ethylene adsorption does not merely decorate a pre-existing Ag–O overlayer, but actively reshapes sur-face phase stability and promotes a more favourable adsorbate-coupled reconstruction. As shown in Fig. 5f, the predicted structure is decorated with chemisorbed ethylene on Ag atoms located on a nearly hexag-onal Ag–O–Ag skeleton and above the subsurface O 5 species, namely [Ag 4OAg]. This geometry indicates that ethylene adsorption and oxide reconstruction are coupled in the thermodynamically preferred operando 
+
+phase. The reconstructed Ag–O skeleton provides exposed Ag sites for ethylene adsorption, while the same overlayer accommodates the square-pyramidal subsurface O 5 environment as its characteristic oxygen motif. Importantly, this assignment is consistent with recent infrared spectroscopic discovery[15] although it could not be directly observed by STM or HRTEM due to pressure gap for the operating condition. This identified O5 motif as the most thermodynamically stable structure under ethylene epoxidation condition. When the same reaction environment is simulated within a high-symmetry p(2 × 2) unit cell, the search converges to a (2 × 2) phase with γ = −0.250 J · m−2 (Supplementary Fig. S22), which remains 0 .085 J · m−2 less stable than the variable-lattice O 5 phase and entirely overlooks the adsorbate-coupled subsurface O 5 motif. This comparison underscores that the low-symmetry, large-scale exploration enabled by HASGO is indispensable for identifying the authentic operando active phase under realistic catalytic environments. 
+
+# Discussion 
+
+In this work, we introduced HASGO, a highly efficient framework designed to resolve the atomic-level structural evolution of complex surface reconstructions under operating conditions. By integrating the HS algorithm with a multi-head replay fine-tuning strategy for u-MLIPs, HASGO mitigates PES softening, a pervasive limitation in u-MLIPs when evaluating OOD atomic configurations far from equilibrium. Notably, fine-tuning with a sparse dataset of merely 100 configurations is sufficient to guide the algorithmic search to the correct GM, while utilising 3,000 samples achieves near-exact energetic and topological agreement with DFT benchmarks. Concurrently, the inherent fault-tolerant mechanism and the balance between configura-tional exploration and local exploitation adapt the HS algorithm for use with MLIPs, exhibiting superior performance in finding the most thermodynamically stable structures with competitive computational effi-ciency. These advances extend the role of MLIP-accelerated GO beyond computational speed-up, enabling systematic exploration of variable unit cells and compositions regions, covering a great number of large, low-symmetry slabs, within the GC phase space that are essential for resolving realistic catalyst surfaces under operating conditions. The surface-reconstruction results demonstrate the chemical consequence of this expanded search capa-bility. By allowing stoichiometry, cell geometry, and long-range ordering to vary within the GC ensemble, variable-lattice HASGO recovers the experimentally observed p(5 × 5) PdO(101) overlayer on Pd(100), the (2 √2 × √2) R45 ◦ CuO missing-row reconstruction on Cu(100), and the analogous AgO MRR phase on Ag(100), whereas searches on conventional high-symmetry p(2 × 2) unit cell converge to simpler struc-tures with higher surface grand potentials. The agreement with STM, HRTEM, and XRD observations therefore validates more than the predicted atomic geometries. It shows that experimentally observed oxide overlayers can be understood as thermodynamic outcomes of a broader GC landscape that must be sampled without imposing restrictive symmetry assumptions. This requirement becomes even more pro-nounced under ethylene epoxidation condition. When ethylene coverage is incorporated into the phase composition, variable-lattice HASGO identifies an adsorbate-coupled Ag–O reconstruction containing the square-pyramidal subsurface O 5 motif, consistent with the operando phase recently inferred from infrared spectroscopy. The progression from high-vacuum Pd, Cu, and Ag oxide reconstructions to the Ag–O– C2H4 reaction environment demonstrates that HASGO does not simply reproduce known structural motifs, but enables the thermodynamic evolution of the active phase to be followed as the chemical environment approaches catalytic operation. By combining data-efficient u-MLIP fine-tuning, fault-tolerant HS explo-ration, and first-principles surface thermodynamics, HASGO renders low-symmetry, compositionally flexible active phases computationally accessible, providing a practical basis for mechanistic understanding and rational design of dynamic catalytic interfaces. 
+
+# Methods 
+
+## u-MLIP Model Fine-tuning 
+
+The fine-tuning component of HASGO employs the multi-head replay training strategy. To execute this strategy, a system-specific dataset pool must first be constructed, utilising MACE-OMAT[79] as the founda-tion model. Exhaustive GM searches are conducted on small-scale targets using HASGO. Importantly, the 9complete local optimisation trajectories generated during these searches are retained. This ensures the incor-poration of diverse configurations, including high-energy, high-force, and OOD states, which are vital for mitigating systematic PES softening[30]. Unphysical structures, such as those featuring uncharacteristically short interatomic distances, are automatically filtered out prior to sampling. To compile the final fine-tuning dataset, configurations are iteratively sampled from the pool using the FPS method within the high-dimensional MACE descriptor space, accelerated by a KDTree-based greedy search[80]. This maximin distance approach maximises geometric dispersion, guaranteeing comprehensive coverage of the relevant configurational space while minimising the computational burden of DFT labelling. To evaluate the effect of dataset volume, variants containing 0.1k and 3k samples were benchmarked (detailed in Supplementary Section S2). To reconcile the trade-off between data efficiency of OOD samples and the utilisation of the broad pre-trained knowledge embedded in the u-MLIP, we employed a multi-head replay fine-tuning strategy. A complementary replay dataset comprising 10,000 representative structures was sam-pled from the broader OMAT dataset using FPS. Combining both the specified and replay datasets during training yields a robust, system-tailored u-MLIP without catastrophic forgetting (detailed in Supplementary Section S2). 
+
+## Harmony Search Method 
+
+The HS algorithm is a metaheuristic optimisation technique inspired by musical improvisation[46]. As illus-trated in Fig. S3a, for atomic structural GO, the process initialises by populating a harmony memory ( HM ). The HM functions as a repository of candidate solution vectors (harmonies, X) and their corresponding post-relaxation fitness values (energies, E). Its fundamental structure is as follows: 
+
+HM =
+
+
+
+X1 E1
+
+X2 E2
+
+... ...
+
+XM EM
+
+ =
+
+
+
+x11 y11 z11 . . . x1N y1N z1N E1
+
+x21 y21 z21 . . . x2N y2N z2N E2
+
+... ... ... . . . ... ... ...
+
+xM 1 yM 1 zM 1 . . . x M N yM N zM N EM
+
+ (1) Each harmony, Xi = ( xi1, y i1, z i1, ..., x iN , y iN , z iN ), is a 3 N -dimensional vector representing the flattened Cartesian coordinates of the N atoms. To model surface reconstructions accurately, the periodic slab is partitioned along the z-axis into vacuum, surface, buffer, and substrate regions (Supplementary Fig. S3b). During optimisation, HS actively updates the surface coordinates, buffer atoms undergo local relaxation only via the LBFGS algorithm, and substrate atoms remain rigidly fixed. The optimisation trajectory, termed “improvisation,” iteratively updates the configurations stored within the HM. To guarantee expansive PES exploration, initial configurations ( HM (0)) are generated with ran-domly displaced surface atoms in the surface region and locally relaxed (see Supplementary Section S1). The improvisation process is governed by three primary parameters—harmony memory consideration rate (HMCR), pitch adjustment rate (PAR), and bandwidth (BW)—to dynamically balance between random exploration for a novel candidate and exploitation of the candidate with the best fitness stored in the previous HM .During memory consideration, HMCR dictates whether the algorithm exploits known states or explores new ones: 
+
+Xi(n)( i ∈ 1, 2, · · · , M ) = 
+
+
+
+Xbest (n − 1) if ri < HMCR 
+
+Xrand  
+
+> i
+
+if ri ≥ HMCR (2) Here, Xi(n) is the ith candidate at epoch n, Xbest (n − 1) the lowest-energy structure from the preceding epoch, and Xrand  
+
+> i
+
+denotes a novel, randomly generated and locally relaxed structure. A uniform random number ri is evaluated against HMCR to resolve this probabilistic choice. Following a random choice between exploration and exploitation, candidates undergo structural pertur-bation (pitch adjustment and refinement), providing fault tolerance against marginal discrepancies between the MLIP and DFT PES. If a random number rik is less than PAR, the positional vector Xik is perturbed: 
+
+Xik (n) = 
+
+
+
+Xik (n) ± BW( n) · N (1 /2, 1/36) if rik < PAR ,
+
+Xik (n) if rik ≥ PAR (3) where i ∈ { 1, 2, . . . , M }, k ∈ { x1, y 1, z 1, . . . , x N , y N , z N }, and N (1 /2, 1/36) is a Gaussian distribution mainly between [0 , 1]. The bandwidth BW governs the maximum displacement distance of atomic coordi-nates, and PAR governs the likelihood of locally refining the atomic coordinate during improvisation. During 10 the refinement stage, BW is decreased over epochs via an exponential decay scheme to narrow the search radius, facilitating a vital algorithmic transition from exploration-first to exploitation-first. This enables the HS to perform intensive, high-resolution searches within confined and high-fitness regions, ultimately enhancing the efficiency of locating the GM structure. 
+
+## Metal Oxide Surface Reconstruction Simulation under Grand Canonical Ensemble. 
+
+To rigorously assess surface oxide formation on Pd(100), Cu(100) and Ag(100) under high-vacuum oxida-tion conditions, and Ag(100) under ethylene epoxidation condition, we integrated HASGO with the ASOPs framework[14] for simulation in a GC ensemble. This automated pipeline facilitates composition grid gen-eration, structural exploration, and thermodynamic phase selection via top-k algorithms. The searchable compositional domain included all Niggli reduced cells with a lattice vector ratio ( a/b ) strictly less than 3, accommodating surface metal and oxygen coverages between 0 and 1 monolayer (ML), while surface C 2H4
+
+coverage was 0 for high-vacuum oxidation conditions and 0.01–0.33 ML for ethylene epoxidation condi-tion. For the Ag–O–C 2H4 reaction system, ethylene molecules and the variable Ag–O surface atoms were included in the same active region and globally optimised concurrently at each sampled composition, rather than treating ethylene as a post-local-optimisation adsorbate on a preformed oxide surface. To maintain tractability, phase exploration per grid was capped at 15 distinct chemical compositions. We utilised a hierarchical search strategy to efficiently map this expansive configuration space (Supple-mentary Figs. S15–S18). Broad screening was initially executed on smaller unit cells with surface area ratios ranging from 4 to 12. The HS algorithm, driven by the fine-tuned u-MLIP, evaluated the GM energy for each composition. The surface grand potential ( γ) of these small-cell structures was then calculated and interpolated to generate a preliminary thermodynamic contour map. Directed by this initial PES mapping, we expanded our structural search to larger supercells ( p(4 × 4) and p(5 × 5)) for the most promising compo-sitions. This subsequent exploration transcends the symmetry constraints of smaller cells, allowing for the discovery of intricate surface reconstructions. The high-resolution data from these large-scale simulations subsequently refined the initial PES contours, providing an accurate thermodynamic description. The relative thermodynamic stability of the identified phases was evaluated using the surface grand potential ( γ), formulated as: 
+
+γ = EMxOy (C 2H4)z − Esurf − xμ M − yμ O − z(μC2H4 − GC2H4,ads )
+
+A (4) where M indicates the underlying transition metal; EMxOy (C 2H4)z and Esurf represent the calculated energy of the globally optimised phase and the pristine metallic surface, respectively; μM, μO, and μC2H4
+
+represent the chemical potentials of the metal atom, O atom, and ethylene molecule, respectively (details in Supplementary Section S4); x, y, and z denote the numbers of metal, O atoms, and ethylene molecules within the surface oxide layer; GC2H4,ads represents the thermal effects of the adsorbed ethylene, including the adsorbate entropies and enthalpies; and A corresponds to the surface area of the unit cell. 
+
+# Data and Code Availability 
+
+The code and datasets generated during and/or analysed during the current study will be made publicly available upon the formal publication of this manuscript. 
+
+# References 
+
+[1] Weaver, J. F. Surface chemistry of late transition metal oxides. Chemical Reviews 113 , 4164–4215 (2013). [2] Polo-Garzon, F., Bao, Z., Zhang, X., Huang, W. & Wu, Z. Surface reconstructions of metal oxides and the consequences on catalytic chemistry. ACS Catalysis 9, 5692–5707 (2019). [3] Bossche, M. V. d. & Gronbeck, H. Methane oxidation over PdO (101) revealed by first-principles kinetic modeling. Journal of the American Chemical Society 137 , 12035–12044 (2015). [4] Chin, Y.-H., Garc´ ıa-Dieguez, M. & Iglesia, E. Dynamics and thermodynamics of Pd–PdO phase transi-tions: effects of Pd cluster size and kinetic implications for catalytic methane combustion. The Journal of Physical Chemistry C 120 , 1446–1460 (2016). 11 [5] Ryu, S.-H., Kim, S., Lee, H., Choi, J.-H. & Jeong, H. Robust palladium oxide nano-cluster cat-alysts using atomic ions and strong interactions for high-performance methane oxidation. Nature Communications 15 , 8348 (2024). [6] Yang, W. et al. Active Palladium Structures on Ceria Obtained by Tuning Pd–Pd Distance for Efficient Methane Combustion. ACS Catalysis 14 , 16459–16468 (2024). [7] Ammon, C. et al. Dissociation and oxidation of methanol on Cu(110). Surface Science 507 , 845–850 (2002). [8] Divins, N. J. et al. Investigation of the evolution of Pd–Pt supported on ceria for dry and wet methane oxidation. Nature Communications 13 , 5080 (2022). [9] Merrill, M. D. & Dougherty, R. C. Metal oxide catalysts for the evolution of O 2 from H 2O. The Journal of Physical Chemistry C 112 , 3655–3666 (2008). [10] Hu, X. et al. Engineering nonprecious metal oxides electrocatalysts for two-electron water oxidation to H2O2. Advanced Energy Materials 12 , 2201466 (2022). [11] Rønne, N. et al. Atomistic structure search using local surrogate model. The Journal of Chemical Physics 157 (2022). [12] Dominguez, J. E. Q., Christiansen, M.-P. V., Neyman, K. M., Hammer, B. & Bruix, A. Efficient grand canonical global optimization with on-the-fly-trained machine-learning interatomic potentials. arXiv preprint arXiv:2509.19968 (2025). [13] Shi, X. et al. Accessing complex reconstructed material structures with hybrid global optimization accelerated via on-the-fly machine learning. Chemical Science 14 , 8777–8784 (2023). [14] Chen, D., Shang, C. & Liu, Z.-P. Automated search for optimal surface phases (ASOPs) in grand canonical ensemble powered by machine learning. The Journal of Chemical Physics 156 (2022). [15] Chen, D. et al. Square-pyramidal subsurface oxygen [Ag4OAg] drives selective ethene epoxidation on silver. Nature Catalysis 7, 536–545 (2024). [16] Glass, C. W., Oganov, A. R. & Hansen, N. USPEX–Evolutionary crystal structure prediction. Computer Physics Communications 175 , 713–720 (2006). [17] Wang, Y., Lv, J., Zhu, L. & Ma, Y. CALYPSO: A method for crystal structure prediction. Computer Physics Communications 183 , 2063–2070 (2012). [18] Zhang, J. & Dolg, M. ABCluster: the artificial bee colony algorithm for cluster global optimization. 
+
+Physical Chemistry Chemical Physics 17 , 24173–24181 (2015). [19] Gruznev, D. et al. Atomic structure and electronic properties of the two-dimensional (Au, Al)/Si (111) 2×2 compound. Physical Review B 92 , 245407 (2015). [20] Gruznev, D. V. et al. Two-dimensional In–Sb compound on silicon as a quantum spin Hall insulator. 
+
+Nano Letters 18 , 4338–4345 (2018). [21] Kvashnin, A. G., Kvashnin, D. G. & Oganov, A. R. Novel unexpected reconstructions of (100) and (111) surfaces of NaCl: Theoretical prediction. Scientific Reports 9, 14267 (2019). [22] Sch¨ utt, K., Unke, O. & Gastegger, M. Equivariant message passing for the prediction of tensorial prop-erties and molecular spectra. Proceedings of the 38th International Conference on Machine Learning 
+
+9377–9388 (2021). [23] Batatia, I., Kovacs, D. P., Simm, G., Ortner, C. & Cs´ anyi, G. MACE: Higher order equivariant message passing neural networks for fast and accurate force fields. Advances in neural information processing systems 35 , 11423–11436 (2022). 12 [24] Neumann, M. et al. Orb: A fast, scalable neural network potential. arXiv preprint arXiv:2410.22570 
+
+(2024). [25] Liao, Y.-L. & Smidt, T. Equiformer: Equivariant graph attention transformer for 3d atomistic graphs. 
+
+arXiv preprint arXiv:2206.11990 (2022). [26] Xu, J., Xie, W., Han, Y. & Hu, P. Atomistic insights into the oxidation of flat and stepped platinum surfaces using large-scale machine learning potential-based grand-canonical monte carlo. ACS Catalysis 
+
+12 , 14812–14824 (2022). [27] Xu, J., Cao, X.-M. & Hu, P. Accelerating metadynamics-based free-energy calculations with adaptive machine learning potentials. Journal of Chemical Theory and Computation 17 , 4465–4476 (2021). [28] Zhang, Y., Li, Z., Han, Z.-K. & Ouyang, R. Global optimization of cation ordering in perovskites by recommendation-based basin-hopping. Journal of Chemical Theory and Computation 20 , 6971–6979 (2024). [29] Lee, C. et al. Galaxydock-dl: Protein–ligand docking by global optimization and neural network energy. 
+
+Journal of Chemical Theory and Computation 20 , 7370–7382 (2024). [30] Yang, C., Wu, C., Xie, W., Xie, D. & Hu, P. General reactive element-based machine learning potentials for heterogeneous catalysis. Nature Catalysis 1–14 (2025). [31] Liu, Y. et al. An automated framework for exploring and learning potential-energy surfaces. Nature Communications 16 , 7666 (2025). [32] Deng, B. et al. Chgnet as a pretrained universal neural network potential for charge-informed atomistic modelling. Nature Machine Intelligence 5, 1031–1041 (2023). [33] Choudhary, K. et al. Unified graph neural network force-field for the periodic table: solid state applications. Digital Discovery 2, 346–355 (2023). [34] Chen, C. & Ong, S. P. A universal graph deep learning interatomic potential for the periodic table. 
+
+Nature Computational Science 2, 718–728 (2022). [35] Merchant, A. et al. Scaling deep learning for materials discovery. Nature 624 , 80–85 (2023). [36] Zhang, D. et al. Pretraining of attention-based deep learning potential model for molecular simulation. 
+
+npj Computational Materials 10 , 94 (2024). [37] Yang, H. et al. Mattersim: A deep learning atomistic model across elements, temperatures and pressures. 
+
+arXiv preprint arXiv:2405.04967 (2024). [38] Gao, R. et al. A foundation machine learning potential with polarizable long-range interactions for materials modelling. Nature Communications 16 , 10484 (2025). [39] Mazitov, A. et al. Pet-mad as a lightweight universal interatomic potential for advanced materials modeling. Nature Communications 16 , 10653 (2025). [40] Deng, B. et al. Overcoming systematic softening in universal machine learning interatomic potentials by fine-tuning. arXiv preprint arXiv:2405.07105 (2024). [41] Kulichenko, M. et al. Data generation for machine learning interatomic potentials and beyond. Chemical Reviews 124 , 13681–13714 (2024). [42] Huo, Songze and Cao, Xiao-Ming. Accelerating High-Throughput Catalyst Screening by Direct Generation of Equilibrium Adsorption Structures. arXiv preprint arXiv:2512.15228 (2025). [43] Kumar, A., Raghunathan, A., Jones, R., Ma, T. & Liang, P. Fine-tuning can distort pretrained features and underperform out-of-distribution. arXiv preprint arXiv:2202.10054 (2022). 13 [44] Ramasesh, V. V., Dyer, E. & Raghu, M. Anatomy of catastrophic forgetting: Hidden representations and task semantics. arXiv preprint arXiv:2007.07400 (2020). [45] Radova, M., Stark, W. G., Allen, C. S., Maurer, R. J. & Bart´ ok, A. P. Fine-tuning foundation models of materials interatomic potentials with frozen transfer learning. npj Computational Materials 11 , 237 (2025). [46] Geem, Z. W., Kim, J. H. & Loganathan, G. V. A new heuristic optimization algorithm: harmony search. Simulation 76 , 60–68 (2001). [47] Eldar, Y., Lindenbaum, M., Porat, M. & Zeevi, Y. Y. The farthest point strategy for progressive image sampling. IEEE transactions on image processing 6, 1305–1315 (1997). [48] Batatia, Ilyes and Lin, Chen and Hart, Joseph et al. Cross learning between electronic structure theories for unifying molecular, surface, and inorganic crystal foundation force fields. arXiv preprint arXiv:2510.25380 (2025). [49] Weaver, J. F., Zhang, F., Pan, L., Li, T. & Asthagiri, A. Vacancy-mediated processes in the oxidation of CO on PdO (101). Accounts of Chemical Research 48 , 1515–1523 (2015). [50] Zhang, F. et al. CO oxidation on PdO (101) during temperature-programmed reaction spectroscopy: role of oxygen vacancies. The Journal of Physical Chemistry C 118 , 28647–28661 (2014). [51] Whitley, D. A genetic algorithm tutorial. Statistics and computing 4, 65–85 (1994). [52] Kennedy, J. & Eberhart, R. Particle swarm optimization. Proceedings of ICNN’95 - International Conference on Neural Networks 4, 1942–1948 (1995). [53] Socha, K. & Dorigo, M. Ant colony optimization for continuous domains. European journal of operational research 185 , 1155–1173 (2008). [54] Mirjalili, S., Mirjalili, S. M. & Lewis, A. Grey wolf optimizer. Advances in Engineering Software 69 ,46–61 (2014). [55] Kaveh, A. & Zakian, P. Improved GWO algorithm for optimal design of truss structures. Engineering with Computers 34 , 685–707 (2018). [56] Nasiri, J. & Khiyabani, F. M. A whale optimization algorithm (WOA) approach for clustering. Cogent Mathematics & Statistics 5, 1483565 (2018). [57] Simon, D. Biogeography-based optimization. IEEE transactions on evolutionary computation 12 ,702–713 (2008). [58] Mirjalili, S., Mirjalili, S. M. & Hatamlou, A. Multi-verse optimizer: a nature-inspired algorithm for global optimization. Neural Computing and Applications 27 , 495–513 (2016). [59] Grimme, S., Ehrlich, S. & Goerigk, L. Effect of the damping function in dispersion corrected density functional theory. Journal of Computational Chemistry 32 , 1456–1465 (2011). [60] Grimme, S., Antony, J., Ehrlich, S. & Krieg, H. A consistent and accurate ab initio parametrization of density functional dispersion correction (DFT-D) for the 94 elements H-Pu. The Journal of Chemical Physics 132 (2010). [61] Shipilin, M. et al. The influence of incommensurability on the long-range periodicity of the Pd (100)-(5 ×
+
+5) R27 ◦-PdO (101). Surface Science 660 , 1–8 (2017). [62] Hang Li, Y., Xing, J. and Jia Chen, Z. et al. Unidirectional suppression of hydrogen oxidation on oxidized platinum clusters. Nature Communications 4, 2500 (2013). [63] Michaelides, A. and Hu, P. Catalytic water formation on platinum: A first-principles study. Journal of the American Chemical Society 123 , 4235–4242 (2001). 14 [64] Jørgensen, M. and Gronbeck, H. First-principles microkinetic modeling of methane oxidation over Pd (100) and Pd (111). ACS Catalysis 6, 6730–6738 (2016). [65] Walen, H., Liu, D. and Oh, J. et al. Sulfur atoms adsorbed on Cu (100) at low coverage: Characterization and stability against complexation. The Journal of Physical Chemistry B 122 , 963–971 (2018). [66] Zheng, G. & Altman, E. The oxidation mechanism of Pd (100). Surface Science 504 , 253–270 (2002). [67] Kosteln´ ık, P. et al. The Pd (100)-(5 × 5) R27 ◦—O surface oxide: A leed, dft and stm study. Surface Science 601 , 1574–1581 (2007). [68] Li, M., Curnan, M. T., Saidi, W. A. & Yang, J. C. Uneven oxidation and surface reconstructions on stepped Cu (100) and Cu (110). Nano Letters 22 , 1075–1082 (2022). [69] Zeng, H. C., McFarlane, R. A. & Mitchell, K. A. R. A LEED crystallographic investigation of some missing row models for the Cu(100)-(2 √2 × √2) R45 ◦-O surface structure. Surface Science Letters 
+
+208 , L7–L14 (1989). [70] Jacobsen, K. W. et al. Theory of the oxygen-induced restructuring of Cu (110) and Cu (100) surfaces. 
+
+Physical Review Letters 65 , 1788 (1990). [71] Lee, M. & McGaughey, A. J. Energetics and kinetics of the c (2 × 2) to (2 √2 × √2) R45 ◦ transition during the early stages of Cu (100) oxidation. Physical Review Bondensed Matter and Materials Physics 
+
+83 , 165447 (2011). [72] Lian, X., Xiao, P., Liu, R. & Henkelman, G. Calculations of oxygen adsorption-induced surface reconstruction and oxide formation on Cu (100). Chemistry of Materials 29 , 1472–1484 (2017). [73] Monig, H. et al. Understanding scanning tunneling microscopy contrast mechanisms on metal oxides: a case study. ACS Nano 7, 10233–10244 (2013). [74] Lian, X.; Xiao, P.; Liu, R.; Henkelman, G. Calculations of oxygen adsorption-induced surface reconstruction and oxide formation on Cu(100). Chemistry of Materials 2017 , 29 (4), 1472–1484. [75] Stierle, A., Costina, I., Kumaragurubaran, S. & Dosch, H. In situ x-ray diffraction study of ag (100) at ambient oxygen pressures. The Journal of Physical Chemistry C 111 , 10998–11002 (2007). [76] Rocca, M. et al. Phase transition of dissociatively adsorbed oxygen on ag (001). Physical Review B 61 ,213 (2000). [77] Hua, M., Li, S., Tian, X., Li, G. & Lin, X. Independent switchable atomic silver quantum transistor via potential-driven surface reconstruction. The Journal of Chemical Physics 163 , 114101 (2025). [78] Lin, X., Tian, X., Song, L., Hua, M. & Groß, A. Restructuring of lead electrodes upon adsorption of 
+
+N O − 
+
+> 3
+
+anions studied from first-principles and its relevance for the operation of lead quantum switches. 
+
+The Journal of Physical Chemistry C 125 , 17962–17970 (2021). [79] Barros-Luque, Luis and Shuaibi, Muhammed and Fu, Xiang et al. The Open Materials 2024 (OMat24) inorganic materials dataset and models. Nature Computational Science , 1–11 (2026). [80] Bentley, J. L. Multidimensional binary search trees used for associative searching. Communications of the ACM 18 , 509–517 (1975). [81] Yang, Y., Cai, C., Lin, J., Gong, L. & Yang, Q. Accurate determination of lattice parameters based on niggli reduced cell theory by using digitized electron diffraction micrograph. Micron 96 , 9–15 (2017). [82] Van Thieu, N. & Mirjalili, S. MEALPY: An open-source library for latest meta-heuristic algorithms in python. Journal of Systems Architecture 139 , 102871 (2023). [83] Hou, P., Yu, Q., Luo, F. & Liu, J.-C. Reactant-induced dynamic active sites on cu catalysts during the water–gas shift reaction. ACS Catalysis 15 , 352–360 (2024). 15 [84] Kresse, G. & Furthm¨ uller, J. Efficient iterative schemes for ab initio total-energy calculations using a plane-wave basis set. Physical Review B 54 , 11169 (1996). [85] Perdew, J. P., Burke, K. & Ernzerhof, M. Generalized gradient approximation made simple. Physical Review Letters 77 , 3865 (1996). [86] Wang, Y., Lv, J., Zhu, L. & Ma, Y. Calypso: A method for crystal structure prediction. Computer Physics Communications 183 , 2063–2070 (2012). [87] McInnes, L., Healy, J. & Melville, J. Umap: Uniform manifold approximation and projection for dimension reduction. arXiv preprint arXiv:1802.03426 (2018). 
+
+# Acknowledgements 
+
+This work was supported by the National Key R&D Project of China (2023YFA1507601). We acknowledged the Open Source Supercomputing Center of S-A-I for providing the computing resources 
+
+## Corresponding authors 
+
+Correspondence to Xiao-Ming Cao. 
+
+# Author Contributions 
+
+S.C. developed the HASGO framework, performed the calculations, and analysed the data. X.-M.C. con-ceived and supervised the project. Both authors discussed the results and contributed to writing the manuscript. 
+
+# Competing Interests 
+
+The authors declare no competing interests. 
+
+# Additional Information 
+
+Supplementary Information is available for this paper. 
+
+Correspondence and requests for materials should be addressed to X.-M.C. ( xmcao@sjtu.edu.cn ). 16 Supplementary Information for “Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization” 
+
+# S1 Initial Structure Generation 
+
+HASGO is designed to operate autonomously, automatically generating the initial atomic structure when no user-defined configuration is provided. To automatically generate the initial surface structure, the p(1 × 1) primitive cell for the specified (hkl) surface, defined by a [ u, v] vector, can be cleaved from the bulk crystal. Any supercell of the surface defined by [ u′, v′] is first constructed through positive definite transition matrix transformation. The surface area A is then explicitly calculated as the magnitude of the cross product of these two vectors, A = |u′ ×v′|. This geometric parameter represents the total area of the transformed unit cell and serves as the essential normalizing factor in our thermodynamic calculations. By deriving A directly from the supercell vectors, we ensure that the surface grand potential is accurately scaled, allowing for a consistent stability comparison across different cell sizes and symmetries. This transformation is fundamentally guided by the principles of the Niggli reduced cell theory [81] , as presented in Supplementary Fig. S1. Subsequently, the atoms designated for global optimization are sequentially placed at random adsorption sites via Delaunay triangulation on the substrate within the predefined spatial boundaries, as presented in Supplementary Fig. S2. To ensure physical consistency during global optimization process, the system employs a 4-layer periodic slab model (as illustrated in Supplementary Fig. S3b): the bottom atomic layer is fixed, the intermediate 2 buffer layers are restricted to local relaxation, while the active surface region is subjected to global and local optimization via the Harmony Search algorithm.        
+
+> Fig. S1 |Examples of the methodology of composition grid generation . Generating the grid of ( √5×√5) reconstructed Pd(100) is illustrated.
+> Fig. S2 |Examples of automatically generated surface initial state. a. Top and b. side view of ( √5×√5) reconstructed Pd(100) initial state is illustrated. Red dashed lines refers to the boundary for HASGO global optimization. Dark blue atoms for Pd, red atoms for O.
+
+17 S2 Multi-head Replay Finetuning Setting 
+
+Settings and hyperparameters of the multi-head replay finetuning on MACE-OMAT-0-medium model foun-dation model. In this study, the MACE [23] model was utilized to fit the MACE-OMAT foundation model. Two datasets were constructed for training: a target dataset containing system-specific structures with a 90:10 train-validation split, and a replay buffer of 10,000 structures sampled from the OMAT24 [79] dataset using the Farthest Point Sampling (FPS) method with pseudo-label replay enabled. The model architecture consisted of 2 interaction blocks with 128 channels per block, maximum angular momentum L max was set as 1, and correlation order of 3. A cutoff radius of 6.0 ˚ A was employed for interatomic interactions. Train-ing was performed with a batch size of 16 for 200 epochs using exponential moving average (EMA) and stochastic weight averaging (SWA) techniques. Loss function weights were set to 1000, 100, and 10 for forces, energies, and stresses, respectively. The total training loss ( Ltotal ) was defined as a weighted sum of the loss calculated on the finetuning dataset ( Lft ) and the pretraining dataset ( Lpt ), setting weight 10.0, 1.0 for finetuning dataset and pretraining dataset respectively. The learning rate scheduler employed a patience of 15 epochs with early stopping at 30 epochs. All calculations were conducted with a random seed of 123 for reproducibility. All remaining hyperparameters and settings utilized during model training and evaluation were maintained at the default values established in MACE (https://github.com/ACEsuit/mace). To construct the ”Specified Dataset” in Method 2, we designed two comparative sub-datasets containing 0.1k and 3k samples, respectively, to evaluate the model’s sensitivity to data density. Initially, we use the Farthest Point Sampling (FPS) method to select 5k representative samples from the comprehensive pool of local optimization trajectories. To refine these samples for effective fine-tuning, we applied stringent physical constraints based on energy and force thresholds. For the 0.1k dataset, we excluded all structures with energy > 0 eV or maximum atomic force > 10.0 eV ˚ A−1, while further thinning the dataset by removing 90% of configurations with maximum forces greater than 1.0 eV ˚ A−1. For the 3k dataset, we excluded all structures with energy > 0 eV or maximum atomic force > 100.0 eV ˚ A−1, while further thinning the dataset by removing 90% of configurations with maximum forces greater than 10.0 eV ˚ A−1. All energy, force, and descriptor calculations were performed using the MACE-OMAT foundation model. 18 S3 Harmony Search Setting 
+
+To efficiently approach the GM point on PES, we integrated the MEALPY library [82] into HASGO. The MEALPY library was also used for the other benchmark nature-inspired metaheuristic GO algorithms. Fig. S3a illustrates the operating principle of the Harmony Search (HS) algorithm in HASGO. The per-formance and convergence of HS rely on the judicious selection of its core hyperparameters. The total computational budget is defined by the Epoch parameter, which specifies the total number of search itera-tions performed. The population size determines the number of candidate solutions (harmonies) maintained and processed within the Harmony Memory in each generation, directly impacting the diversity of the explored space. The algorithm’s search dynamics are primarily controlled by parameters governing the Pitch Adjustment operation, which uses the Bandwidth ( BW ). The Forward Parameter ( f w para ) acts as the initial scaling factor, determining the starting magnitude of the BW relative to the entire search domain, thereby setting the initial extent of global exploration. Subsequently, the Forward Damping ( f w damp ) fac-tor controls the dynamic reduction of this BW over successive epochs. By setting f w damp close to but less than 1.0, the algorithm facilitates a crucial transition from wide-ranging exploration in early stages to precise local exploitation as it converges toward the optimal solution. For all work in this paper, f w para 
+
+is set to 0.05, f w damp is set to 0.999.      
+
+> Fig. S3 |The application of the Harmony Search (HS) algorithm in the global optimisation task. a. Illustration of the operating principle of the HS algorithm in HASGO. b. Side view of the periodic slab model employed for global optimisation by HASGO.
+
+19 S4 The Gibbs free energy computation 
+
+In this work, the chemical potentials of metal atoms were referenced to their corresponding bulk phases: 
+
+μPd , μCu , and μAg were set to the energies of one Pd, Cu, and Ag atom in bulk palladium, copper, and silver, respectively. The chemical potential of ethylene, μC2H4 , was evaluated from standard thermodynamic relations at the specified temperature and pressure. The Gibbs free energy of adsorbed ethylene, GC2H4,ads ,includes the adsorption entropy as well as thermal corrections to enthalpy and entropy. Its calculated value ranges from -0.35 to -0.25 eV depending on the local adsorption environment. To reduce the computational cost in the ASOP simulations, GC2H4,ads was approximated as a constant value of -0.30 eV. For μO2 , it can be calculated from the thermodynamics equation as 
+
+μO2 (T, p θ ) = μO2 (T, p θ = 1 bar ) + kB T ln( pO2 /p θ) (5) where μO2 (T, p θ) is the zero reference state of μO2 . To avoid the use of DFT energy of spin-polarized O2 molecule, the standard molar enthalpy of formation of H 2O (at 298.15 K, ∆ f Hm(H 2O) = -2.506 eV) is then used to determine the μO2 (T, p θ): 
+
+μO2 (T, p θ ) = ( H(H 2O) − H(H 2) − ∆f Hm(H 2O)) × 2 + ∆ μO2 (T, p θ ) (6) where H(H 2O) and H(H 2) is the enthalpy of gaseous H 2O and H 2 on 298.15 K, which can be approx-imated as the ZPE corrected total energies of a H 2O and a H 2 isolated molecule. ∆ μO2 (T, p θ ) item is the chemical potential variation of 1 bar O 2 from 298.15 K (in enthalpy) to T (in free energy). Notably, DFT-D3 dispersion correction was not applied to the Cu/CuO system, following previous studies showing that Cu/CuO energetics are more accurately described without dispersion corrections. [83] 
+
+20 S5 DFT Calculations 
+
+All DFT calculations in the GNN dataset are performed using the plane-wave VASP package [84] . The kinetic energy cutoff was set to 450 eV, the electron-ion interaction was represented by the projector-augmented wave (PAW) pseudopotential, and the exchange-correlation functional was evaluated with GGA-PBE [85] . The Monkhorst-Pack k-mesh was 25 times the reciprocal lattice vectors (1/25 ˚ A−1) for single-point calculations. For all structures, the energy and force convergence criteria were set to less than 5 × 10 −6 eV and 0.01 eV ˚ A−1, respectively. The van der Waals interactions were considered using the DFT-D3 method with zero damping [59, 60] during the calculation of the structures in the global optimization trajectory, whereas standard DFT (without D3) was employed for the fine-tuning dataset preparation. 21 S6 Convergence 
+
+The HASGO simulation is stopped when the halting criterion is reached. The halting criterion in HASGO is by default set to 10 further generations if the simulation can not find other better structures for systems 
+
+≤10 atoms per simulation cell [86] .22 S7 MLIPs Dataset Analysis 
+
+## S7.1 PdO 
+
+Fig. S4 | Comparison of DFT reference data and MLIPs predictions for the specified PdO dataset for finetuning with 0.1k data: (Left) energy parity plot and (Right) force parity plot. 
+
+Fig. S5 | Comparison of DFT reference data and MLIPs predictions for the specified PdO dataset for finetuning with 3k data: (Left) energy parity plot and (Right) force parity plot. 
+
+23 S7.2 CuO 
+
+Fig. S6 | Comparison of DFT reference data and MLIPs predictions for the specified CuO dataset for finetuning with 0.1k data: (Left) energy parity plot and (Right) force parity plot. 
+
+Fig. S7 | Comparison of DFT reference data and MLIPs predictions for the specified CuO dataset for finetuning with 3k data: (Left) energy parity plot and (Right) force parity plot. 
+
+24 S7.3 AgO 
+
+Fig. S8 | Comparison of DFT reference data and MLIPs predictions for the specified AgO dataset for finetuning with 0.1k data: (Left) energy parity plot and (Right) force parity plot. 
+
+Fig. S9 | Comparison of DFT reference data and MLIPs predictions for the specified AgO dataset for finetuning with 3k data: (Left) energy parity plot and (Right) force parity plot. 
+
+25 S7.4 AgCHO 
+
+Fig. S10 | Comparison of DFT reference data and MLIPs predictions for the specified AgCHO dataset for finetuning with 3k data: (Left) energy parity plot and (Right) force parity plot. 
+
+26 S8 Data Coverage 
+
+After the finetuned datasets finally established, we utilized Uniform Manifold Approximation and Projection (UMAP [87] ) to visualize the two-dimensional distribution of local atomic environments. Using descriptors derived from the MACE-OMAT foundation model, we compared the Finetuned 0.1k, Finetuned 3k (Spec-ified Dataset in Fig. 1b), and Foundation Dataset (Replay Dataset in Fig. 1b ensembles. For four surface reconstruction systems, PdO (Supplementary Fig. S11), CuO (Supplementary Fig. S12, AgO (Supplemen-tary Fig. S13) and AgO with adsorbed ethylene (Supplementary Fig. S14), the fine-tuned samples reside in distinct, localized clusters separate from the Replay Dataset distribution of the MACE-OMAT foundation model. This clear spatial segregation demonstrates that the newly sampled environments represent OOD data, capturing chemical spaces not previously covered by the foundation model.   
+
+> Fig. S11 |UMAP visualization of chemical environment feature spaces. Two-dimensional projection of local atomic environ-ment descriptors for the PdO-specified dataset and its corresponding replay dataset. The descriptors were extracted from the feature space of the MACE-OMAT foundation model to ensure consistent feature representation. The visualization illustrates the distribution of the 10k samples in the Foundation dataset (blue circles) relative to the Finetuned datasets. Specifically, Finetuned 0.1k (red circles) represents the distribution for 100 samples for fine-tuning, while Finetuned 3k (green circles) rep-resents the distribution for 3k samples for fine-tuning.
+
+27 Fig. S12 | UMAP visualization of chemical environment feature spaces. Two-dimensional projection of local atomic environment descriptors for the CuO-specified dataset and its corresponding replay dataset. The descriptors were extracted from the feature space of the MACE-OMAT foundation model to ensure consistent feature representation. The visualization illustrates the distribution of the 10k samples in the Foundation dataset (blue circles) relative to the Finetuned datasets. Specifically, Finetuned 0.1k (red circles) represents the distribution for 100 samples for fine-tuning, while Finetuned 3k (green circles) represents the distribution for 3k samples for fine-tuning. 
+
+28 Fig. S13 | UMAP visualization of chemical environment feature spaces. Two-dimensional projection of local atomic environment descriptors for the AgO-specified dataset and its corresponding replay dataset. The descriptors were extracted from the feature space of the MACE-OMAT foundation model to ensure consistent feature representation. The visualization illustrates the distribution of the 10k samples in Foundation dataset (blue circles) relative to the Finetuned datasets. Specifically, Finetuned 0.1k (red circles) represents the distribution for 100 samples for fine-tuning, while Finetuned 3k (green circles) represents the distribution for 3k samples for fine-tuning. 
+
+29 Fig. S14 | UMAP visualization of chemical environment feature spaces. Two-dimensional projection of local atomic environment descriptors for the AgCHO-specified dataset and its corresponding replay dataset. The descriptors were extracted from the feature space of the MACE-OMAT foundation model to ensure consistent feature representation. The visualization illustrates the distribution of the 10k samples in Foundation dataset (blue circles) relative to the Finetuned datasets with 3k samples (green circles). 
+
+30 S9 Detailed ASOPs Information 
+
+Fig. S15 | The construction of the PES for Pd(100) surface oxides: a. raw data of γ for various compositions undergo minimum projection to b. the final continuous PES contour plot. 
+
+Fig. S16 | The construction of the PES for Cu(100) surface oxides: a. raw data of γ for various compositions undergo minimum projection to b. the final continuous PES contour plot. 
+
+Fig. S17 | The construction of the PES for Ag(100) surface oxides: a. raw data of γ for various compositions undergo minimum projection to b. the final continuous PES contour plot. 
+
+31 Fig. S18 | The construction of the PES for Ag(100) surface oxides with adsorbed ethylene: a. raw data of γ for various compositions undergo minimum projection to b. the final continuous PES contour plot. 
+
+32 S10 Surface Reconstruction within High-Symmetry Unit Cells 
+
+Fig. S19 | The metal-oxides surface reconstruction simulation on Pd(100) under STM imaging condition at 
+
+T = 573 K and PO2 = 5 × 10 −5 mbar. a. The PES scatter map for palladium surface oxides on a high-symmetry p(2 × 2) Pd(100) unit cell within a GC ensemble. b. The (2 × 2) phase, identified as the global minimum under this condition within the high-symmetry p(2 × 2) unit cell. 
+
+Fig. S20 | The metal-oxides surface reconstruction simulation on Cu(100) under STM imaging condition at 
+
+T = 673 K and PO2 = 7 × 10 −5 mbar. a. The PES scatter map for copper surface oxides on a high-symmetry p(2 × 2) Cu(100) unit cell within a GC ensemble. b. The (2 × 2) phase, identified as the global minimum under this condition within the high-symmetry p(2 × 2) unit cell. 
+
+33 Fig. S21 | The metal-oxides surface reconstruction simulation on Ag(100) under STM imaging condition at 
+
+T = 440 K and PO2 = 1 × 10 −1 mbar. a. The PES scatter map for silver surface oxides on a high-symmetry p(2 × 2) Ag(100) unit cell within a GC ensemble. b. The (2 × 2) phase, identified as the global minimum under this condition within the high-symmetry p(2 × 2) unit cell. 
+
+Fig. S22 | The metal-oxides surface reconstruction simulation on Ag(100) under ethylene epoxidation at 
+
+T = 500 K, PO2 = 1 bar, and PC2H4 = 1 bar. a. The PES scatter map for silver surface oxides on a high-symmetry p(2 × 2) Ag(100) unit cell within a GC ensemble. b. The (2 × 2) phase, identified as the global minimum under this condition within the high-symmetry p(2 × 2) unit cell. 
+
+34 S11 Surface Reconstruction under Operating Conditions 
+
+Fig. S23 | The metal-oxides surface reconstruction simulation on Ag(100) under industrial operating condition (T = 500 K, PO2 = 1 bar). a. The PES contour map for silver surface oxides on Ag(100) from ASOPs simulation. b. Phase 1 (Ag 20 O19 , (5 ×5), γ = −0.161 J · m−2), which can be characterized as the Ag(101) overlayer structure with one missing oxygen atoms, leading to higher oxygen coverage. c. Phase 2 (Ag 3O2, (2 √2 × √2) R45 ◦, γ = −0.147 J · m−2), which corresponds to the most stable phase identified under high-vacuum condition (Phase 1 in Fig. 5b). Phase 1 in this figure is the global minimum under this specific operating condition. 
+
+35 S12 ASOP Explored Supercell Matrices and Compositions 
+
+## S12.1 Pd(100) 
+
+Table S1 lists all symmetry-inequivalent supercell transformation matrices H grouped by A = | det H|,together with the specific ( NPd , N O) compositions explored under each. 
+
+Table S1 : Supercell vectors [ u, v ] and their explored compositions (NPd , N O) in ASOP for Pd(100). 
+
+A [u, v ] Explored ( NPd , N O)4
+
+ 1 3
+
+> −1 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 
+
+ 2 −21 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 0 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 1 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 5
+
+ 1 −22 1
+
+ (1,2), (2,2), (2,3), (3,2), (3,3), (3,4), (3,5), (4,2) (4,3), (4,4), (4,5), (5,1), (5,2), (5,3), (5,4) 
+
+ 2 3
+
+> −1 1
+
+ (2,2), (2,4), (2,5), (3,2), (3,3), (3,4), (3,5), (4,2) (4,3), (4,4), (4,5), (5,1), (5,2), (5,4), (5,5) 6
+
+ 2 −22 1
+
+ (2,3), (3,3), (3,4), (3,5), (3,6), (4,3), (4,4), (4,5) (4,6), (5,3), (5,4), (5,5), (5,6), (6,2), (6,3) [ 3 0 0 2 ] (1,3), (3,3), (3,4), (3,5), (3,6), (4,3), (4,4), (4,5) (4,6), (5,3), (5,4), (5,5), (5,6), (6,2), (6,3) [ 3 0 1 2 ] (3,3), (3,4), (3,5), (3,6), (4,3), (4,4), (4,5), (4,6) (5,3), (5,4), (5,5), (5,6), (6,2), (6,3), (6,4) [ 3 1 0 2 ] (3,3), (3,4), (3,5), (3,6), (4,3), (4,4), (4,5), (4,6) (5,3), (5,4), (5,5), (5,6), (6,2), (6,3), (6,4) 7  1 3
+
+> −2 1
+
+ (4,3), (4,4), (4,5), (4,6), (5,3), (5,4), (5,5), (5,6) (5,7), (6,4), (6,5), (6,7), (7,2), (7,3), (7,5) 8
+
+ 1 3
+
+> −2 2
+
+ (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) 
+
+ 2 −32 1
+
+ (4,4), (4,6), (5,4), (5,5), (5,6), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) 
+
+ 2 −22 2
+
+ (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) [ 4 0 0 2 ] (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) [ 4 0 1 2 ] (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) [ 4 1 0 2 ] (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) [ 4 2 0 2 ] (4,4), (4,6), (5,4), (5,5), (5,7), (6,4), (6,5), (6,6) (6,7), (6,8), (7,4), (7,5), (7,6), (7,8), (8,4) 9
+
+ 1 4
+
+> −2 1
+
+ (5,4), (5,7), (5,8), (6,5), (6,6), (6,8), (6,9), (7,5) (7,6), (7,7), (7,8), (7,9), (8,5), (8,6), (8,7) 
+
+ 3 −32 1
+
+ (5,7), (5,8), (6,5), (6,6), (6,8), (6,9), (7,5), (7,6) (7,7), (7,8), (7,9), (8,5), (8,6), (8,7), (9,6) [ 3 0 0 3 ] (5,7), (5,8), (6,5), (6,6), (6,8), (6,9), (7,5), (7,6) (7,7), (7,8), (7,9), (8,5), (8,6), (8,7), (9,6) 36 A [u, v ] Explored ( NPd , N O)[ 3 1 0 3 ] (5,7), (5,8), (6,5), (6,6), (6,8), (6,9), (7,5), (7,6) (7,7), (7,8), (7,9), (8,5), (8,6), (8,7), (9,6) 10 
+
+ 1 −33 1
+
+ (5,5), (5,7), (6,5), (6,8), (6,9), (7,6), (7,9), (7,10) (8,7), (8,8), (8,9), (8,10), (9,6), (9,7), (9,8) 
+
+ 2 −42 1
+
+ (5,5), (6,5), (6,8), (6,9), (7,5), (7,6), (7,9), (7,10) (8,6), (8,7), (8,8), (8,9), (8,10), (9,6), (10,5) 
+
+ 2 3
+
+> −2 2
+
+ (5,5), (6,5), (6,8), (6,9), (7,6), (7,9), (7,10), (8,5) (8,7), (8,8), (8,9), (8,10), (9,6), (9,8), (10,5) [ 5 0 0 2 ] (5,5), (6,5), (6,8), (6,9), (7,6), (7,9), (7,10), (8,5) (8,7), (8,8), (8,9), (8,10), (9,6), (9,8), (10,5) [ 5 1 0 2 ] (5,5), (6,5), (6,8), (6,9), (7,6), (7,9), (7,10), (8,5) (8,7), (8,8), (8,9), (8,10), (9,6), (9,8), (10,5) [ 5 2 0 2 ] (5,5), (6,5), (6,8), (6,9), (7,6), (7,9), (7,10), (8,5) (8,7), (8,8), (8,9), (8,10), (9,6), (9,8), (10,5) 11 
+
+ 2 −33 1
+
+ (6,9), (7,7), (7,10), (7,11), (8,6), (8,7), (8,9), (8,10) (8,11), (9,8), (9,9), (9,10), (9,11), (10,7), (10,8) 
+
+ 3 −42 1
+
+ (7,6), (7,7), (7,10), (8,6), (8,7), (8,8), (8,9), (8,10) (9,7), (9,8), (9,9), (9,10), (9,11), (10,7), (10,8) 
+
+ 5 −11 2
+
+ (7,5), (7,7), (7,10), (8,6), (8,7), (8,8), (8,9), (8,10) (9,7), (9,8), (9,9), (9,10), (9,11), (10,7), (10,8) 12 
+
+ 2 3
+
+> −2 3
+
+ (6,6), (6,9), (7,10), (8,8), (8,11), (8,12), (9,6), (9,7) (9,9), (9,10), (9,11), (10,9), (10,11), (10,12), (11,9) 
+
+ 2 4
+
+> −2 2
+
+ (6,6), (6,9), (7,10), (7,11), (8,8), (8,12), (9,6), (9,7) (9,8), (9,9), (9,10), (10,9), (10,10), (10,11), (10,12) 
+
+ 3 −32 2
+
+ (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) 
+
+ 3 −33 1
+
+ (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) 
+
+ 4 −42 1
+
+ (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) [ 4 0 0 3 ] (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) [ 4 0 1 3 ] (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) [ 4 1 0 3 ] (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) [ 4 2 0 3 ] (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) 
+
+ 5 −21 2
+
+ (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) [ 6 0 1 2 ] (6,6), (6,9), (7,10), (8,8), (8,12), (9,6), (9,7), (9,9) (9,10), (10,8), (10,9), (10,10), (10,11), (10,12), (11,8) 16 [ 4 0 0 4 ] (10,14), (11,14), (11,16), (12,12), (12,13), (12,14), (13,11), (13,12) (13,13), (13,14), (13,15), (13,16), (14,10), (14,12), (14,13) 25 [ 5 0 0 5 ] (15,21), (17,25), (18,22), (19,20), (19,21), (19,22), (20,18), (20,20) (20,21), (20,22), (21,18), (21,19), (21,20), (21,23), (22,19) 37 S12.2 Cu(100) 
+
+Table S2 lists all symmetry-inequivalent supercell transformation matrices H grouped by A = | det H|,together with the specific ( NCu , N O) compositions explored under each, without vdW correction. 
+
+Table S2 : Supercell vectors [ u, v ] and their explored compositions (NCu , N O) in ASOP for Cu(100) without vdW correction. 
+
+A [u, v ] Explored ( NCu , N O)4
+
+ 1 3
+
+> −1 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 
+
+ 2 −21 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 0 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 1 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 5
+
+ 1 −22 1
+
+ (1,3), (2,3), (2,4), (3,2), (3,3), (3,4), (3,5), (4,2) (4,3), (4,4), (4,5), (5,2), (5,3), (5,4), (5,5) 
+
+ 2 3
+
+> −1 1
+
+ (1,2), (2,2), (2,3), (3,2), (3,3), (3,4), (3,5), (4,2) (4,3), (4,4), (4,5), (5,2), (5,3), (5,4), (5,5) 6
+
+ 2 −22 1
+
+ (2,3), (3,3), (3,4), (4,3), (4,4), (4,5), (4,6), (5,3) (5,4), (5,5), (5,6), (6,3), (6,4), (6,5), (6,6) [ 3 0 0 2 ] (2,3), (3,3), (3,4), (4,3), (4,4), (4,5), (4,6), (5,3) (5,4), (5,5), (5,6), (6,3), (6,4), (6,5), (6,6) [ 3 0 1 2 ] (2,3), (3,3), (3,4), (4,3), (4,4), (4,5), (4,6), (5,3) (5,4), (5,5), (5,6), (6,3), (6,4), (6,5), (6,6) [ 3 1 0 2 ] (2,3), (3,3), (3,4), (4,3), (4,4), (4,5), (4,6), (5,3) (5,4), (5,5), (5,6), (6,3), (6,4), (6,5), (6,6) 7  1 3
+
+> −2 1
+
+ (4,4), (4,5), (5,3), (5,4), (5,5), (5,6), (5,7), (6,4) (6,5), (6,6), (6,7), (7,3), (7,4), (7,5), (7,7) 8
+
+ 1 3
+
+> −2 2
+
+ (4,4), (4,5), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) 
+
+ 2 −32 1
+
+ (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7), (6,8) (7,4), (7,5), (7,6), (7,8), (8,4), (8,5), (8,8) 
+
+ 2 −22 2
+
+ (4,4), (5,4), (5,5), (5,6), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) [ 4 0 0 2 ] (4,4), (4,5), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) [ 4 0 1 2 ] (4,4), (4,5), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) [ 4 1 0 2 ] (4,4), (4,5), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) [ 4 2 0 2 ] (4,4), (4,5), (5,4), (5,5), (6,4), (6,5), (6,6), (6,7) (6,8), (7,4), (7,5), (7,6), (7,8), (8,4), (8,8) 9
+
+ 1 4
+
+> −2 1
+
+ (5,5), (5,6), (6,5), (7,5), (7,6), (7,7), (7,8), (7,9) (8,4), (8,5), (8,7), (8,9), (9,4), (9,5), (9,9) 
+
+ 3 −32 1
+
+ (4,5), (5,4), (5,5), (5,6), (6,5), (7,5), (7,6), (7,7) (7,8), (7,9), (8,5), (8,6), (8,7), (8,9), (9,9) [ 3 0 0 3 ] (5,5), (5,6), (6,5), (6,6), (7,4), (7,5), (7,6), (7,7) (7,8), (7,9), (8,5), (8,6), (8,7), (8,9), (9,9) [ 3 1 0 3 ] (5,5), (5,6), (6,5), (6,6), (7,5), (7,6), (7,7), (7,8) (7,9), (8,5), (8,6), (8,7), (8,9), (9,5), (9,9) 38 A [u, v ] Explored ( NCu , N O)10 
+
+ 1 −33 1
+
+ (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) 
+
+ 2 −42 1
+
+ (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) 
+
+ 2 3
+
+> −2 2
+
+ (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) [ 5 0 0 2 ] (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) [ 5 1 0 2 ] (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) [ 5 2 0 2 ] (5,6), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (8,9), (8,10), (9,5), (9,6), (9,10), (10,5) 11 
+
+ 2 −33 1
+
+ (6,6), (6,7), (7,6), (7,7), (8,6), (8,7), (8,10), (9,6) (9,7), (9,8), (9,9), (9,10), (9,11), (10,6), (10,11) 
+
+ 3 −42 1
+
+ (6,6), (6,7), (7,6), (7,7), (8,6), (8,7), (8,9), (9,6) (9,7), (9,8), (9,9), (9,10), (9,11), (10,6), (10,11) 
+
+ 5 −11 2
+
+ (6,6), (6,7), (7,6), (7,7), (8,6), (8,7), (8,10), (9,6) (9,7), (9,8), (9,9), (9,10), (9,11), (10,6), (10,11) 12 
+
+ 2 3
+
+> −2 3
+
+ (6,7), (7,7), (7,8), (8,6), (8,7), (9,6), (9,8), (9,11) (10,6), (10,7), (10,9), (10,12), (11,6), (11,12), (12,6) 
+
+ 2 4
+
+> −2 2
+
+ (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) 
+
+ 3 −32 2
+
+ (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) 
+
+ 3 −33 1
+
+ (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) 
+
+ 4 −42 1
+
+ (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) [ 4 0 0 3 ] (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) [ 4 0 1 3 ] (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) [ 4 1 0 3 ] (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) [ 4 2 0 3 ] (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) 
+
+ 5 −21 2
+
+ (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) [ 6 0 1 2 ] (6,7), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,9) (9,10), (10,6), (10,7), (10,9), (10,12), (11,12), (12,6) 16 [ 4 0 0 4 ] (8,9), (9,10), (10,8), (10,9), (10,10), (11,8), (11,9), (12,8) (12,14), (13,8), (13,12), (13,15), (13,16), (14,8), (14,16) 25 [ 5 0 0 5 ] (13,15), (15,15), (16,13), (16,15), (17,13), (18,13), (19,13), (19,21) (19,22), (20,13), (20,21), (20,25), (21,13), (21,25), (22,25) 39 S12.3 Ag(100) 
+
+Table S3 lists all symmetry-inequivalent supercell transformation matrices H grouped by A = | det H|,together with the specific ( NAg , N O) compositions explored under each. 
+
+Table S3 : Supercell vectors [ u, v ] and their explored compositions (NAg , N O) in ASOP. 
+
+A [u, v ] Explored ( NAg , N O)4
+
+ 1 3
+
+> −1 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 
+
+ 2 −21 1
+
+ (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 0 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) [ 2 1 0 2 ] (1,1), (1,2), (1,3), (1,4), (2,1), (2,2), (2,3), (2,4) (3,1), (3,2), (3,3), (3,4), (4,1), (4,2), (4,3), (4,4) 5
+
+ 1 −22 1
+
+ (1,2), (1,3), (2,2), (2,3), (3,2), (3,3), (3,4), (4,2) (4,3), (4,4), (5,1), (5,2), (5,3), (5,4), (5,5) 
+
+ 2 3
+
+> −1 1
+
+ (1,3), (2,2), (2,3), (3,2), (3,3), (3,4), (4,2), (4,3) (4,4), (4,5), (5,1), (5,2), (5,3), (5,4), (5,5) 6
+
+ 2 −22 1
+
+ (2,3), (3,3), (4,2), (4,3), (4,4), (4,5), (5,3), (5,4) (5,5), (5,6), (6,2), (6,3), (6,4), (6,5), (6,6) [ 3 0 0 2 ] (1,3), (1,4), (2,3), (3,2), (3,3), (4,3), (4,4), (5,3) (5,4), (5,5), (5,6), (6,2), (6,3), (6,4), (6,6) [ 3 0 1 2 ] (2,3), (3,3), (3,4), (4,3), (4,4), (5,2), (5,3), (5,4) (5,5), (5,6), (6,2), (6,3), (6,4), (6,5), (6,6) [ 3 1 0 2 ] (2,2), (2,3), (3,3), (4,3), (4,4), (5,2), (5,3), (5,4) (5,5), (5,6), (6,2), (6,3), (6,4), (6,5), (6,6) 7  1 3
+
+> −2 1
+
+ (3,3), (4,3), (4,4), (5,3), (5,4), (5,5), (6,3), (6,4) (6,5), (6,6), (7,2), (7,3), (7,4), (7,5), (7,7) 8
+
+ 1 3
+
+> −2 2
+
+ (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) 
+
+ 2 −32 1
+
+ (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) 
+
+ 2 −22 2
+
+ (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) [ 4 0 0 2 ] (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) [ 4 0 1 2 ] (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) [ 4 1 0 2 ] (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) [ 4 2 0 2 ] (4,4), (5,4), (5,5), (6,4), (6,5), (6,6), (7,3), (7,4) (7,5), (7,6), (7,7), (8,3), (8,4), (8,5), (8,6) 9
+
+ 1 4
+
+> −2 1
+
+ (4,4), (5,5), (6,4), (6,5), (7,4), (7,5), (7,6), (7,7) (8,4), (8,5), (8,6), (8,7), (8,8), (9,4), (9,5) 
+
+ 3 −32 1
+
+ (5,5), (6,4), (6,5), (7,4), (7,5), (7,6), (7,7), (8,4) (8,5), (8,6), (8,7), (8,8), (9,3), (9,4), (9,5) [ 3 0 0 3 ] (5,5), (6,4), (6,5), (7,4), (7,5), (7,6), (7,7), (8,4) (8,5), (8,6), (8,7), (8,8), (9,3), (9,4), (9,5) 40 A [u, v ] Explored ( NAg , N O)[ 3 1 0 3 ] (5,5), (6,4), (6,5), (7,4), (7,5), (7,6), (7,7), (8,4) (8,5), (8,6), (8,7), (8,8), (9,3), (9,4), (9,5) 10 
+
+ 1 −33 1
+
+ (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7), (8,8) (9,5), (9,6), (9,7), (9,8), (9,9), (10,5), (10,6) 
+
+ 2 −42 1
+
+ (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7), (8,8) (9,4), (9,5), (9,6), (9,7), (9,8), (10,5), (10,6) 
+
+ 2 3
+
+> −2 2
+
+ (5,5), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (9,5), (9,6), (9,7), (9,8), (10,5), (10,6) [ 5 0 0 2 ] (5,5), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (9,5), (9,6), (9,7), (9,8), (10,5), (10,6) [ 5 1 0 2 ] (5,5), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (9,5), (9,6), (9,7), (9,8), (10,5), (10,6) [ 5 2 0 2 ] (5,5), (6,5), (6,6), (7,5), (7,6), (8,5), (8,6), (8,7) (8,8), (9,5), (9,6), (9,7), (9,8), (10,5), (10,6) 11 
+
+ 2 −33 1
+
+ (7,6), (8,5), (8,6), (8,7), (8,8), (9,6), (9,7), (9,8) (9,9), (10,5), (10,6), (10,7), (10,8), (10,9), (11,5) 
+
+ 3 −42 1
+
+ (7,5), (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,8) (9,9), (10,5), (10,6), (10,7), (10,8), (10,9), (11,5) 
+
+ 5 −11 2
+
+ (7,6), (7,7), (8,6), (8,7), (9,6), (9,7), (9,8), (9,9) (10,5), (10,6), (10,7), (10,8), (10,9), (11,5), (11,7) 12 
+
+ 2 3
+
+> −2 3
+
+ (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (11,6), (11,7), (11,8), (11,9), (12,6) 
+
+ 2 4
+
+> −2 2
+
+ (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7), (10,8) (10,9), (10,10), (11,6), (11,7), (11,8), (11,10), (12,6) 
+
+ 3 −32 2
+
+ (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) 
+
+ 3 −33 1
+
+ (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) 
+
+ 4 −42 1
+
+ (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) [ 4 0 0 3 ] (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) [ 4 0 1 3 ] (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) [ 4 1 0 3 ] (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) [ 4 2 0 3 ] (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) 
+
+ 5 −21 2
+
+ (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) [ 6 0 1 2 ] (7,6), (7,7), (8,7), (9,6), (9,7), (9,8), (9,9), (10,7) (10,8), (10,9), (10,10), (11,6), (11,7), (11,8), (12,6) 16 [ 4 0 0 4 ] (10,9), (12,8), (12,9), (12,10), (12,11), (13,9), (13,10), (13,11) (13,12), (13,13), (14,9), (14,10), (14,11), (14,12), (14,13) 25 [ 5 0 0 5 ] (19,13), (19,15), (19,16), (20,15), (20,18), (20,19), (20,20), (21,15) (21,16), (21,17), (21,18), (21,19), (22,15), (22,16), (22,17) 41 S12.4 Ag(100) with ethylene 
+
+Table S4 lists all symmetry-inequivalent supercell transformation matrices H grouped by A = | det H|,together with the specific ( NAg , N O, N C2H4 ) compositions explored under each. 
+
+Table S4 : Supercell vectors [ u, v ] and their explored compositions (NAg , N O, N C2H4 ) in ASOP for Ag(100) with ethylene. 
+
+A [u, v ] Explored ( NAg , N O, N C2H4 )4
+
+ 1 3
+
+> −1 1
+
+ (1,1,1), (1,2,1), (1,3,1), (1,4,1), (2,1,1), (2,2,1), (2,3,1), (2,4,1) (3,1,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1) 
+
+ 2 −21 1
+
+ (1,1,1), (1,2,1), (1,3,1), (1,4,1), (2,1,1), (2,2,1), (2,3,1), (2,4,1) (3,1,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1) [ 2 0 0 2 ] (1,1,1), (1,2,1), (1,3,1), (1,4,1), (2,1,1), (2,2,1), (2,3,1), (2,4,1) (3,1,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1) [ 2 1 0 2 ] (1,1,1), (1,2,1), (1,3,1), (1,4,1), (2,1,1), (2,2,1), (2,3,1), (2,4,1) (3,1,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,2,1), (4,3,1), (4,4,1) 5
+
+ 1 −22 1
+
+ (1,3,1), (1,4,1), (2,3,1), (2,4,1), (3,2,1), (3,3,1), (3,4,1), (4,2,1) (4,3,1), (4,4,1), (5,1,1), (5,2,1), (5,3,1), (5,4,1), (5,5,1) 
+
+ 2 3
+
+> −1 1
+
+ (1,3,1), (3,1,1), (3,2,1), (3,3,1), (3,4,1), (4,1,1), (4,2,1), (4,3,1) (4,4,1), (4,5,1), (5,1,1), (5,2,1), (5,3,1), (5,4,1), (5,5,1) 6
+
+ 2 −22 1
+
+ (3,3,1), (4,2,1), (4,3,1), (4,4,1), (4,5,1), (5,2,1), (5,3,1), (5,4,1) (5,5,1), (5,6,1), (6,1,1), (6,2,1), (6,3,1), (6,4,1), (6,6,1) [ 3 0 0 2 ] (3,2,1), (3,3,1), (3,4,1), (4,2,1), (4,3,1), (4,4,1), (5,2,1), (5,3,1) (5,4,1), (5,5,1), (5,6,1), (6,1,1), (6,2,1), (6,3,1), (6,4,1) [ 3 0 1 2 ] (3,2,1), (3,3,1), (3,4,1), (4,2,1), (4,3,1), (4,4,1), (5,2,1), (5,3,1) (5,4,1), (5,5,1), (5,6,1), (6,1,1), (6,2,1), (6,3,1), (6,4,1) [ 3 1 0 2 ] (3,2,1), (3,3,1), (3,4,1), (4,2,1), (4,3,1), (4,4,1), (5,2,1), (5,3,1) (5,4,1), (5,5,1), (5,6,1), (6,1,1), (6,2,1), (6,3,1), (6,4,1) 7  1 3
+
+> −2 1
+
+ (2,5,2), (4,3,2), (4,4,2), (5,3,2), (5,4,2), (5,5,2), (5,6,2), (6,3,2) (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2), (7,5,2), (7,6,2) 8
+
+ 1 3
+
+> −2 2
+
+ (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) 
+
+ 2 −32 1
+
+ (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) 
+
+ 2 −22 2
+
+ (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) [ 4 0 0 2 ] (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) [ 4 0 1 2 ] (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) [ 4 1 0 2 ] (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) [ 4 2 0 2 ] (5,4,2), (5,5,2), (6,3,2), (6,4,2), (6,5,2), (6,6,2), (7,3,2), (7,4,2) (7,5,2), (7,6,2), (8,2,2), (8,3,2), (8,4,2), (8,5,2), (8,6,2) 9
+
+ 1 4
+
+> −2 1
+
+ (6,4,2), (6,5,2), (6,6,2), (7,4,2), (7,5,2), (7,6,2), (7,7,2), (8,4,2) (8,5,2), (8,6,2), (8,7,2), (9,3,2), (9,4,2), (9,6,2), (9,7,2) 
+
+ 3 −32 1
+
+ (5,6,2), (6,5,2), (6,6,2), (7,4,2), (7,5,2), (7,6,2), (7,7,2), (8,4,2) (8,5,2), (8,6,2), (9,3,2), (9,4,2), (9,5,2), (9,6,2), (9,7,2) [ 3 0 0 3 ] (6,5,2), (6,6,2), (7,4,2), (7,5,2), (7,6,2), (7,7,2), (8,4,2), (8,5,2) (8,6,2), (8,7,2), (9,3,2), (9,4,2), (9,5,2), (9,6,2), (9,7,2) 42 A [u, v ] Explored ( NAg , N O, N C2H4 )[ 3 1 0 3 ] (6,5,2), (6,6,2), (7,4,2), (7,5,2), (7,6,2), (7,7,2), (8,4,2), (8,5,2) (8,6,2), (8,7,2), (9,3,2), (9,4,2), (9,5,2), (9,6,2), (9,7,2) 10 
+
+ 1 −33 1
+
+ (6,6,3), (7,5,3), (7,6,3), (8,4,3), (8,5,3), (8,6,3), (8,7,3), (9,4,3) (9,5,3), (9,6,3), (9,7,2), (9,7,3), (10,4,3), (10,7,2), (10,8,3) 
+
+ 2 −42 1
+
+ (6,6,3), (7,5,3), (7,6,3), (8,5,3), (8,6,2), (8,6,3), (8,7,3), (8,8,2) (9,4,3), (9,5,3), (9,6,2), (9,6,3), (9,7,3), (10,4,3), (10,5,3) 
+
+ 2 3
+
+> −2 2
+
+ (6,6,3), (7,5,3), (7,6,3), (8,5,3), (8,6,2), (8,6,3), (8,7,3), (8,8,2) (9,4,3), (9,5,3), (9,6,2), (9,6,3), (9,7,3), (10,3,3), (10,4,3) [ 5 0 0 2 ] (6,6,3), (7,5,3), (7,6,3), (8,5,3), (8,6,2), (8,6,3), (8,7,3), (8,8,2) (9,4,3), (9,5,3), (9,6,2), (9,6,3), (9,7,3), (10,3,3), (10,4,3) [ 5 1 0 2 ] (6,6,3), (7,5,3), (7,6,3), (8,5,3), (8,6,2), (8,6,3), (8,7,3), (8,8,2) (9,4,3), (9,5,3), (9,6,2), (9,6,3), (9,7,3), (10,3,3), (10,4,3) [ 5 2 0 2 ] (6,6,3), (7,5,3), (7,6,3), (8,5,3), (8,6,2), (8,6,3), (8,7,3), (8,8,2) (9,4,3), (9,5,3), (9,6,2), (9,6,3), (9,7,3), (10,3,3), (10,4,3) 11 
+
+ 2 −33 1
+
+ (7,6,3), (7,7,3), (8,5,3), (8,6,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3) (10,4,3), (10,5,3), (10,6,3), (10,7,3), (10,8,3), (11,4,3), (11,8,3) 
+
+ 3 −42 1
+
+ (7,6,3), (7,7,3), (8,5,3), (8,6,3), (8,7,3), (8,8,3), (9,6,3), (9,7,3) (9,8,3), (10,5,3), (10,6,3), (10,7,3), (10,8,3), (11,4,3), (11,5,3) 
+
+ 5 −11 2
+
+ (7,6,3), (7,7,3), (8,5,3), (8,6,3), (8,7,3), (9,5,3), (9,6,3), (9,7,3) (9,8,3), (10,5,3), (10,6,3), (10,7,3), (10,8,3), (11,4,3), (11,5,3) 12 
+
+ 2 3
+
+> −2 3
+
+ (8,6,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (10,7,3), (10,8,3), (10,9,3) (11,5,3), (11,6,3), (11,7,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 
+
+ 2 4
+
+> −2 2
+
+ (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 
+
+ 3 −32 2
+
+ (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 
+
+ 3 −33 1
+
+ (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 
+
+ 4 −42 1
+
+ (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) [ 4 0 0 3 ] (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) [ 4 0 1 3 ] (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) [ 4 1 0 3 ] (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) [ 4 2 0 3 ] (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 
+
+ 5 −21 2
+
+ (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) [ 6 0 1 2 ] (7,7,3), (8,7,3), (9,6,3), (9,7,3), (9,8,3), (9,9,3), (10,6,3), (10,7,3) (10,8,3), (10,9,3), (11,6,3), (11,8,3), (11,9,3), (12,6,3), (12,9,3) 16 [ 4 0 0 4 ] (10,9,5), (11,8,5), (11,9,5), (12,8,5), (12,9,5), (12,10,5), (13,9,5), (13,10,5) (13,11,4), (13,11,5), (14,9,5), (14,10,5), (14,11,4), (14,11,5), (16,12,4) 25 [ 5 0 0 5 ] (19,15,7), (20,14,7), (20,15,6), (20,15,7), (20,18,7), (20,19,7), (20,19,8), (21,15,6) (21,16,6), (21,18,7), (21,19,7), (21,19,8), (23,11,8), (24,19,6), (25,19,6) 43

@@ -6,43 +6,32 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-12
-- 运行时间：2026-06-12 23:17:43 UTC
+- 最新运行日期：2026-06-13
+- 运行时间：2026-06-13 23:15:43 UTC
 - 运行状态：成功
-- 本次总论文数：7
-- 精读区：3
-- 速读区：4
+- 本次总论文数：3
+- 精读区：0
+- 速读区：3
 
 ### 今日简报（AI）
-今日从7篇前沿研究中精读表面化学与AI分子设计两篇高分论文，同步速览催化合成与模型优化。  
-表面合成实现[4]辐射烯精准构筑与手性识别，AI代理驱动化学反应路径进化设计成为亮点。  
-可顺势关注“精准表面合成+智能化学设计”的交叉进展，这类技术或将重塑新材料发现模式。
-- 详情：[/202606/12/README](/202606/12/README)
+今日速读三篇前沿研究，涵盖材料表面重构全局优化、代数簇驱动的点击化学设计及深度学习辅助PET解聚酶开发。  
+最值得关注的方向是：基于和谐搜索的全局优化首次实现工况下复杂表面重构的可扩展预测，以及代数簇理论为组合点击反应设计提供了新数学框架。  
+建议对催化剂设计或塑料循环经济感兴趣的读者，可优先深挖PET水解酶的深度学习改造思路，其应用前景明确。
+- 详情：[/202606/13/README](/202606/13/README)
 
 ### 精读区论文标签
-1. [Steering Selective Formation and 2D Crystallization of [4]Radialenes on Au(111) via [1+1+1+1] Cycloaddition of Isocyanides and Enantioselective Molecular Recognition](/202606/12/2606.08111v1-steering-selective-formation-and-2d-crystallization-of-4radialenes-on-au111-via-1111-cycloaddition-of-isocyanides-and-enantioselective-molecular-recognition)  
-   标签：评分：9.0/10、query:caos-poly
-   evidence：通过化学选择性环加成与对映选择性二维结晶实验合成[4]radialene。
-2. [My Chemical Harness: Evolutionary Molecular Design over Synthetic Pathways with Large Language Model Agents](/202606/12/2606.11256v1-my-chemical-harness-evolutionary-molecular-design-over-synthetic-pathways-with-large-language-model-agents)  
-   标签：评分：9.0/10、query:caos-poly
-   evidence：基于路线的进化分子设计，以LLM为控制器，直接实现考虑合成路线的计算机辅助有机合成
-3. [Augmenting Molecular Language Models with Local $n$-gram Memory](/202606/12/2606.12113v1-augmenting-molecular-language-models-with-local-n-gram-memory)  
-   标签：评分：8.0/10、query:caos-poly
-   evidence：通过n-gram记忆增强分子语言模型用于逆合成和反应预测，直接支持计算有机合成
+- 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Iron-catalysed on-surface synthesis of substrate-decoupled graphdiyne monolayers](/202606/12/2606.06992v1-iron-catalysed-on-surface-synthesis-of-substrate-decoupled-graphdiyne-monolayers)  
+1. [Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization](/202606/13/2606.07396v1-scalable-prediction-of-complex-surface-reconstructions-under-operating-conditions-via-harmony-search-based-global-optimization)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：新型表面有机合成方法制备共价单层
-2. [MolDeBERTa: Foundational Model for Physicochemical and Substructure-Informed Molecular Representation Learning](/202606/12/biorxiv-10-64898-2026-02-15-706011-v2-moldeberta-foundational-model-for-physicochemical-and-substructure-informed-molecular-representation-learning)  
+   evidence：通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选
+2. [Algebraic Varieties and Ideal Theory in Combinatorial Click-Reaction Design](/202606/13/2606.11979v1-algebraic-varieties-and-ideal-theory-in-combinatorial-click-reaction-design)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：有益于虚拟筛选的分子表示学习模型
-3. [In-Context Learning for Latent Space Bayesian Optimization](/202606/12/2606.09664v1-in-context-learning-for-latent-space-bayesian-optimization)  
+   evidence：代数计算方法用于设计点击化学组装
+3. [Deep learning-guided design of hydrolases for crystalline PET depolymerization](/202606/13/biorxiv-10-64898-2026-06-04-730138-v1-deep-learning-guided-design-of-hydrolases-for-crystalline-pet-depolymerization)  
    标签：评分：6.0/10、query:caos-poly
-   evidence：改进分子设计贝叶斯优化，虚拟筛选关键工具
-4. [Geometric Dissipation Constraints in Stochastic Reaction Dynamics: A Variational Observable for Hidden Kinetic Structure in Energy Landscapes](/202606/12/2606.09684v1-geometric-dissipation-constraints-in-stochastic-reaction-dynamics-a-variational-observable-for-hidden-kinetic-structure-in-energy-landscapes)  
-   标签：评分：6.0/10、query:caos-poly
-   evidence：变分框架揭示随机反应动力学中的隐藏动力学约束，辅助理解路径选择机制。
+   evidence：深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选
 
 
 <div class="dpr-home-promo-card">

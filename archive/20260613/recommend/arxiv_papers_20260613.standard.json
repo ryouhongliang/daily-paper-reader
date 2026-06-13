@@ -1,0 +1,137 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-13T23:13:11.599967+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.07396v1",
+      "source": "arxiv",
+      "title": "Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization",
+      "abstract": "The dynamic structural evolution of catalyst surfaces under operating conditions dictates catalytic performance, yet capturing these reconstructions atomically remains challenging. Global optimization based on machine learning interatomic potentials (MLIPs) is promising, but scaling to large-scale, low-symmetry operando systems is hindered by expansive search spaces and potential energy surface (PES) inaccuracies. Herein, we present Harmony-search-based Atomic Structural Global Optimization (HASGO), a framework integrating universal MLIPs with a harmony search algorithm. HASGO overcomes the problem of PES softening by incorporating a multi-head replay fine-tuning protocol. Moreover, the stochastic structural perturbation step in its algorithm offers a fault-tolerant strategy to enhance the robustness of global convergence. These enable HASGO to identify intricate surface oxide overlayers that align with atomic-resolution microscopy, thereby resolving the square-pyramidal subsurface O5 motif on Ag(100) during ethylene epoxidation. This scalable framework provides a robust approach for uncovering operando structures, accelerating the rational design of industrial catalysts.",
+      "authors": [
+        "Shi-Yang Chen",
+        "Xiao-Ming Cao"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-05T15:34:18+00:00",
+      "link": "https://arxiv.org/pdf/2606.07396v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "predicts catalyst surface reconstructions via ML potentials and global optimization, enabling virtual screening of catalyst scaffolds",
+      "llm_evidence_cn": "通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选",
+      "llm_evidence": "通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选",
+      "canonical_evidence": "通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选",
+      "llm_tldr_en": "Addresses the challenge of predicting catalyst surface structures under operando conditions by integrating universal ML potentials with a harmony search algorithm, enabling efficient global optimization and fine-tuning. This method can guide catalyst design by screening stable surfaces.",
+      "llm_tldr_cn": "该文解决操作条件下催化剂表面重构原子级预测的难题，提出整合通用机器学习原子势与和声搜索算法的HASGO框架。该方法通过多轮重放微调协议克服势能面软化问题，实现了低对称性大体系表面结构的可扩展预测。这为催化剂的理性设计和虚拟筛选提供了关键的结构基础。",
+      "llm_tldr": "该文解决操作条件下催化剂表面重构原子级预测的难题，提出整合通用机器学习原子势与和声搜索算法的HASGO框架。该方法通过多轮重放微调协议克服势能面软化问题，实现了低对称性大体系表面结构的可扩展预测。这为催化剂的理性设计和虚拟筛选提供了关键的结构基础。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-04-730138-v1",
+      "source": "biorxiv",
+      "title": "Deep learning-guided design of hydrolases for crystalline PET depolymerization",
+      "abstract": "Poly(ethylene terephthalate) (PET), a ubiquitous polyester used in packaging and textiles, persists in the environment due to its high crystallinity and stability, contributing substantially to global plastic pollution. Enzymatic depolymerization by PET hydrolase (PETase) offers a chemically precise and environmentally sustainable route to convert PET into its monomeric building blocks, enabling recycling. However, practical implementation remains hindered by the rigid, crystalline architecture of PET, which restricts enzyme access and necessitates energy-intensive pretreatment to enable efficient depolymerization. In addition, most PETases achieve only partial depolymerization with low terephthalic acid (TPA) yields and accumulate inhibitory intermediates, while limited thermostability and slow surface kinetics further restrict efficiency. To overcome these barriers, we report VenusPETase, an engineered variant of KbPETase designed using PET-Flow, a state-of-the-art computational framework for PETase engineering. Compared with KbPETase, VenusPETase exhibits a 3.4-fold increase in hydrolytic activity, up to a 27-fold improvement after heat treatment of protein, and a 12 {degrees}C enhancement in thermostability. VenusPETase exhibits rapid degradation across a wide crystallinity range (8%-50%) at 50 {degrees}C, effectively spanning the entire spectrum of commercial PET products. Moreover, VenusPETase outperformed nine high-performance PETases under their respective optimal conditions and degraded untreated PET substrates across 8%-50% crystallinity, producing TPA as over 95% of the released products with minimal intermediate accumulation. X-ray crystallography and molecular dynamics simulations suggest that dynamic modulation, elevated surface electrostatic potential enhance the interaction of VenusPETase with crystalline PET, thereby lowering the hydrolytic energy barrier and improving catalytic performance. We also demonstrate that untreated, postconsumer-PET from nine different products can all be degraded by VenusPETase. The recovered monomers can be directly repolymerized into virgin-quality PET, demonstrating a closed-loop enzymatic recycling process. In a 100 L bioreactor, VenusPETase completely depolymerizes post-consumer crystalline PET (28% crystallinity) within 24 h under 50 {degrees}C. These results establish VenusPETase as a robust biocatalyst that enables efficient, closed-loop recycling of crystalline PET under mild conditions.",
+      "authors": [
+        "Wu, B.",
+        "Li, M.",
+        "Zhang, J.",
+        "Li, J.",
+        "Wang, X.",
+        "Zhong, B.",
+        "Liu, J.",
+        "Wang, B.",
+        "Tan, Y.",
+        "Qi, W.",
+        "Tan, P.",
+        "Zhao, W.",
+        "Zheng, L.",
+        "Hong, L."
+      ],
+      "primary_category": "biochemistry",
+      "categories": [
+        "biochemistry"
+      ],
+      "published": "2026-06-05T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.04.730138v1.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep learning-guided design of hydrolases as catalysts for PET depolymerization, a virtual screening of enzyme scaffolds",
+      "llm_evidence_cn": "深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选",
+      "llm_evidence": "深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选",
+      "canonical_evidence": "深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选",
+      "llm_tldr_en": "Deep learning guides the design of PET hydrolase enzymes for crystalline plastic depolymerization, achieving higher monomer yields without pretreatment.",
+      "llm_tldr_cn": "针对PET水解酶难以降解结晶塑料的问题，该研究利用深度学习指导酶蛋白的设计，筛选可高效解聚晶态PET的突变体。通过计算引导，获得的变体无需高能耗预处理即可实现更高的对苯二甲酸产率。该工作展示了计算虚拟筛选在催化剂设计中的应用，虽为生物催化但与化学催化剂骨架优化共享相似的筛选思路。",
+      "llm_tldr": "针对PET水解酶难以降解结晶塑料的问题，该研究利用深度学习指导酶蛋白的设计，筛选可高效解聚晶态PET的突变体。通过计算引导，获得的变体无需高能耗预处理即可实现更高的对苯二甲酸产率。该工作展示了计算虚拟筛选在催化剂设计中的应用，虽为生物催化但与化学催化剂骨架优化共享相似的筛选思路。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11979v1",
+      "source": "arxiv",
+      "title": "Algebraic Varieties and Ideal Theory in Combinatorial Click-Reaction Design",
+      "abstract": "We study compatibility-constrained combinatorial chemical assembly through the lens of commutative algebra. Given a finite set $F$ of chemical families, a finite set $H$ of handle types, and a compatibility relation $Pairs(f) \\subseteq H \\times H$ for each $f \\in F$, we construct an assembly ideal $I = J_{bool} + J_{sel} + K_{compat}$ in a polynomial ring $R = k[F,H,H']$ whose variety $V(I) \\subseteq \\{0,1\\}^n$ encodes the set of feasible reaction triples. We prove that $I$ is zero-dimensional and radical, whence $R/I \\cong k^{|V(I)|}$. Elimination ideals characterise handle diagnosticity (whether a handle determines its family), the toric ideal of the log-linear model on $V(I)$ measures redundancy in the compatibility relation, and a multi-step ideal $I^{(k)}$ encodes orthogonality constraints among simultaneous assembly plans; the clique number $ω(G_\\perp)$ of the associated orthogonality graph gives the maximum number of mutually compatible plans. We derive a necessary and sufficient criterion for a new family to raise $ω$. The framework is instantiated on the bioorthogonal click-chemistry landscape ($|F|=8$, $|H|=17$), yielding $|V(I)|=30$, a toric ideal with 2 generators, ML degree 1, and $ω(G_\\perp)=4$. All computations are verified over $\\mathbb{Q}$ in SymPy.",
+      "authors": [
+        "Vicent Ribas Ripoll"
+      ],
+      "primary_category": "math.AG",
+      "categories": [
+        "math.AG"
+      ],
+      "published": "2026-06-10T11:57:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.11979v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Algebraic computational method for designing click-chemistry assemblies",
+      "llm_evidence_cn": "代数计算方法用于设计点击化学组装",
+      "llm_evidence": "代数计算方法用于设计点击化学组装",
+      "canonical_evidence": "代数计算方法用于设计点击化学组装",
+      "llm_tldr_en": "The paper introduces an algebraic framework based on commutative algebra to model compatibility-constrained click-reaction systems, enabling computational feasibility analysis and handle diagnosticity, aiding in the design of complex chemical assemblies.",
+      "llm_tldr_cn": "该论文针对组合化学组装中兼容性约束问题，运用交换代数构建装配理想，将可行的反应三元组编码为代数簇。通过消元理想表征手柄诊断性，用仿样理想度量兼容性冗余，为点击化学反应体系的设计提供了可计算的数学框架。该工作将代数几何引入合成化学，为计算机辅助反应路径规划提供了新范型。",
+      "llm_tldr": "该论文针对组合化学组装中兼容性约束问题，运用交换代数构建装配理想，将可行的反应三元组编码为代数簇。通过消元理想表征手柄诊断性，用仿样理想度量兼容性冗余，为点击化学反应体系的设计提供了可计算的数学框架。该工作将代数几何引入合成化学，为计算机辅助反应路径规划提供了新范型。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
