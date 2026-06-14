@@ -6,32 +6,28 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-13
-- 运行时间：2026-06-13 23:15:43 UTC
+- 最新运行日期：2026-06-14
+- 运行时间：2026-06-14 23:34:17 UTC
 - 运行状态：成功
-- 本次总论文数：3
-- 精读区：0
-- 速读区：3
+- 本次总论文数：2
+- 精读区：1
+- 速读区：1
 
 ### 今日简报（AI）
-今日速读三篇前沿研究，涵盖材料表面重构全局优化、代数簇驱动的点击化学设计及深度学习辅助PET解聚酶开发。  
-最值得关注的方向是：基于和谐搜索的全局优化首次实现工况下复杂表面重构的可扩展预测，以及代数簇理论为组合点击反应设计提供了新数学框架。  
-建议对催化剂设计或塑料循环经济感兴趣的读者，可优先深挖PET水解酶的深度学习改造思路，其应用前景明确。
-- 详情：[/202606/13/README](/202606/13/README)
+分子-表面共价场理论精读 + AI绿色溶剂筛选工具速读  
+值得细看：表面化学新的共价作用描述框架，以及用不确定性感知Transformer实现材料溶剂的智能降筛  
+建议读者先理清分子吸附的成键图像，再追踪AI模型如何从小数据中迁移出靠谱的绿色溶剂推荐
+- 详情：[/202606/14/README](/202606/14/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [On the Covalent Fields of Molecule-Surface Interactions](/202606/14/2606.08619v1-on-the-covalent-fields-of-molecule-surface-interactions)  
+   标签：评分：8.0/10、query:caos-poly
+   evidence：共价场理论解决活性位点模糊性和标度关系崩溃，助力催化剂虚拟筛选
 
 ### 速读区论文标签
-1. [Scalable Prediction of Complex Surface Reconstructions under Operating Conditions via Harmony-Search-Based Global Optimization](/202606/13/2606.07396v1-scalable-prediction-of-complex-surface-reconstructions-under-operating-conditions-via-harmony-search-based-global-optimization)  
+1. [A green solvent screening tool for emerging materials via uncertainty aware, transformer enhanced transfer learning](/202606/14/2606.13060v1-a-green-solvent-screening-tool-for-emerging-materials-via-uncertainty-aware-transformer-enhanced-transfer-learning)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：通过ML势和全局优化预测催化剂表面重构，可用于催化剂骨架虚拟筛选
-2. [Algebraic Varieties and Ideal Theory in Combinatorial Click-Reaction Design](/202606/13/2606.11979v1-algebraic-varieties-and-ideal-theory-in-combinatorial-click-reaction-design)  
-   标签：评分：7.0/10、query:caos-poly
-   evidence：代数计算方法用于设计点击化学组装
-3. [Deep learning-guided design of hydrolases for crystalline PET depolymerization](/202606/13/biorxiv-10-64898-2026-06-04-730138-v1-deep-learning-guided-design-of-hydrolases-for-crystalline-pet-depolymerization)  
-   标签：评分：6.0/10、query:caos-poly
-   evidence：深度学习指导水解酶设计用于PET解聚，属于催化剂骨架的虚拟筛选
+   evidence：基于机器学习的绿色溶剂筛选工具，直接适用于反应条件的虚拟筛选
 
 
 <div class="dpr-home-promo-card">

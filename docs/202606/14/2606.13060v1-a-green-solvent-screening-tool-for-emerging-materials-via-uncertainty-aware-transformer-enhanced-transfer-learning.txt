@@ -1,0 +1,455 @@
+Title: A green solvent screening tool for emerging materials via uncertainty aware, transformer enhanced transfer learning
+
+URL Source: https://arxiv.org/pdf/2606.13060v1
+
+Published Time: Fri, 12 Jun 2026 00:40:41 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+# A green solvent screening tool for emerging materials via uncertainty aware, transformer enhanced transfer learning 
+
+## Ioannis Kouroudis* †1,2 , Simon Ternes* †3,5 , Zhaosu Gu 1,2 , Gohar Ali Siddiqui 1,2 , Marina Ustinova 5, Angelo Lembo 4, Alessio Gagliardi* 1,2 , and Aldo Di Carlo 3,5 1Chair of Simulation of Nanosystems for Energy Conversion, Department of Electrical Engineering, TUM School of Computation, Information and Technology, Atomistic Modeling Center (AMC) 
+
+> 2
+
+Munich Data Science Institute (MDSI), Technical University of Munich, Hans-Piloty-Straße 1, 85748 Garching, Germany 
+
+> 3
+
+Institute of Structure of Matter – National Research Council Rome (ISM-CNR), via del Fosso del Cavaliere 100, Rome, 00133, RM,Italy 
+
+> 4
+
+Department of Chemical Science and Technologies, University of Rome Tor Vergata, Via della Ricerca Scientifica 1, 00133 Rome, Italy 
+
+> 5
+
+Department of Electrical Engineering, University of Rome “Tor Vergata”, via del Politecnico 1, Rome, 00133,RM, Italy 
+
+> †
+
+These authors contributed equally to this work. *Corresponding Authors Ioannis Kouroudis: ioannis.kouroudis@tum.de, Simon Ternes: ternes@ing.uniroma2.it, Alessio Gagliardi: alessio.gagliardi@tum.de 
+
+Abstract 
+
+Accurate prediction of solubility remains a central challenge across materials science and sustainable chemistry. In particular due to emerging technologies like organic and hybrid photovoltaics, batteries, and catalysis, solvent usage is expected to increase significantly within the coming years. Therefore, substituting solvents with greener alternatives is vital. This is where machine learning can make a substantial impact. However, the limited data on critical parameters of solubility significantly constraints machine learning efficacy. In this work, we transfer a pre-trained foundational model on QM9 targets to our application with minimal data requirements. Additionally, the pipeline integrates uncertainty quantification, allowing the user to gauge the confidence of the predictions. As baseline, we succeed in predicting the Hansen solubility parameters and Dielectric Constant for which extensive databases exist. Importantly, we achieve high model performance on additional targets, such as Gutmann Donor and Acceptor numbers, where the available data is extremely limited. Overall, we augment data on solubility descriptors by up to two orders of magnitude with high quality predictions. For effective dissemination, we deploy easy-to-use, easily integrateable with high throughput labs, customizable tool for ranking and screening possible solvent substitutes. Finally, we both rediscovered known green solvent alternatives and proposed new candidates proving its relevance for finding eco-friendly solvents. 
+
+# 1 Introduction 
+
+Solvents or so-called volatile organic compounds (VOCs) are ubiquitous in the chemical, pharmaceutical, painting, cleaning and varnishing industries since the beginning of the industrial revolution[1]. Nowadays, on a global scale, over 20 million tons of solvents are used every year[2]. Most recently, new energy-related emerging technologies such as batteries[3], fuel cells[4] and organic/hybrid photovoltaics (PVs)[5] are starting to ramp-up solvent-intensive production. With significant market growth expected in these fields within the coming decade[6], the environmental impact and safety concerns of the employed solvents become an 1
+
+> arXiv:2606.13060v1 [cs.LG] 11 Jun 2026
+
+urgent matter[7, 8, 9]. For example, the emerging field of perovskite PVs involves complex ionic solutions with organic and inorganic compounds and thus relies heavily on VOCs for the majority of state-of-the-art perovskite fabrication routines[10, 11]. It is a complex evaluation process to weigh the advantages of employing a solvent for rolling-out a technology with its disadvantages[2]. Especially for renewable energy-related technologies, potential benefits for human, animal and plant life must be contextualized with the associated impact of solvent waste, pollution and toxicity[11, 12, 13]. There are, in turn, a multitude of strategies to reduce the negative impacts of solvent use in industry. These involve solvent recycling, the elimination of solvent-based processes or substitution of a solvent with an alternative of less concern[2, 10]. In the latter strategy, the term “green solvent” was introduced for chemicals which have reduced impact on the environment and less concern for operational employment. Detailed classification systems on the detrimental impacts of solvents on the environment and operators were developed, including criteria such i) possibility of incineration, ii) recycling, iii) bio-treatments and iv) the impact of VOC emissions in the atmosphere iiv) the aquatic impact iiiv) sourcing from sustainable materials, etc... These aspects are typically rated by an individual scoring system making “solvent greenness” comparable[14, 15]. Thus, the selection of suitable green VOCs for industry is an interdisciplinary topic combining aspects of environmental science, material science and chemical engineering[16, 17]. In every specific case, the solvent’s full environmental impact, its structural interaction with the targeted material system as well as its functionality in industrial processes such as coating, printing and drying must be studied[15, 18, 19]. One of the most important practical properties of a solvent is its ability to dissolve other chemicals (or, for liquid–liquid systems, its miscibility), which is governed by solvent–solute intermolecular interactions and, in some cases, specific complexation phenomena[2]. While predicting solubility is a challenging task[20, 21], a starkly simplified classification in ”soluble” and ”non-soluble” can be obtained by quantifying the strengths of certain chemical interactions in so-called solubility parameters[22, 23, 24]. The most widely-used framework, the three Hansen solubility parameters, quantify the strengths of dispersion forces, δd,intermolecular forces, δp, and hydrogen bonds, δh [25]. In this approach, the affinity between a solvent and a solute can be estimated by weighted distances between these three coordinates in the so-called “Hansen space”. Solubility is then classified by a distance threshold. However, Hansen parameters do not capture all interaction mechanisms that determine solubility[24]. For example, they do not fully capture electrostatic, ionic, or acid-base interactions[26, 27]. In this context, Kamlet-Taft solvatochromic parameters ( α, β,
+
+π∗)[28], Gutmann donor/acceptor numbers (DN, AN)[29] as well as Dielectric constants ( εr ) can provide complementary information[27, 10]. However, the abundance of data on these parameters is not always given. While extensive databases with thousands of entries for measured and calculated εr exist (just as for the Hansen parameters[25]), data on α, β, π∗, DN and AN is very sparse—varying from several hundred to only tens of non-zero entries[30]. Thus, so far, the applicability of the latter parameters is limited to a very restricted subset of chemicals. An extensions to a large number of possible solvent substitutes is of high merit for discovery of alternative solvents. Machine learning (ML) has an excellent track record in assisting material discovery. Its benefits are evident both in silico simulations [31] as well as real-world experiments [32]. For instance, Henke et al. and Lampe et al. have used a pipeline with Gaussian processes and Bayesian optimization on the synthesis process of hybrid perovskites [33, 34]. Other examples are the exploration of new compositions of hybrid perovksite crystals [35] and the identification of crystallization thresholds and luminescence properties through image recognition [36, 37]. For the issue of prediction of solubility parameters addressed in this work, Hassan and Kazemi[38], Hu et al. [39] as well as Mahmood et al. [40] have compared a range of simple machine learning models, using molecular descriptors as inputs, resulting in high-accuracy predictions. Similarly, Sanchez-Lengeling et al. [41] used simulation inputs to predict Hansen solubility parameters with Bayesian ML. Larsen 
+
+et al. combined similar predictions with a solvent-selection tool where simple environmental descriptors allow for identifying solvents with a lower environmental impact[42]. These approaches were shown to yield consistent results within the investigated dataset. However, for material discovery, robust models that prioritize generalization over performance are needed. Therefore, to prevent over-fitting and foster generalization, we employ transfer learning on foundational models, coupled with uncertainty quantification and tested by n-fold cross-validation. Large foundational models, such as MACE [43], DimeNet [44] and NequIP [45] are based on complex architectures involving millions of parameters trained on large datasets to predict a large variety of molecular properties at high fidelity. However, their accuracy sharply diminishes 2with the number of available training data. This poses a problem for their application to many experimental properties where only a relatively small number of data points are available. Transfer learning provides an elegant solution to this issue by training a slim add-on model on the outputs of foundational model to adapt them to a new domain. Some prominent examples are transfer learning of crystallization processes[46] and molecular properties [47]. However, despite these successes, transfer learning is not yet widely adopted in materials discovery, likely because its effective use requires careful alignment of tasks and objectives. To address this issue, Kolluru et al. presented a versatile and facile transfer learning method by training transformers on the latent space of foundational models [48]. In this work, we introduce a pipeline that is constructed on the above foundations, adding complementary information with molecular descriptors. We further extend the state-of-the-art by uncertainty quantification via Gaussian processes in the final layer of the pipeline. Gaussian processes have shown high promise in material applications when combined with graph neural networks[49]. For the present work, they offer two main advantages: 1) They offer a confidence interval of the predictions to experimentalists that can be leveraged for incentivizing new experiments and 2) they provide robust performance even on sparse data effectively preventing overfitting by means of the prior distribution. As a main result of this work, we succeed in predicting vectors of solubility parameters 1, ( δd, δp, δh, εr , DN, AN, α, β, π∗), on a database of over 5000 VOCs[50]. These vectors are normalized component-wise and compared by measuring the distance to a reference solvent to rank the similarity between the reference and green alternatives. To maximize the dissemination of our work, we deploy a ready-to-use solvent selection tool conveniently performing this ranking with custom weights. While regulations on solvent use in industry for reducing environmental impact and ensuring healthy work conditions become more rigorous, finding a ”greener” solvent alternative could be the missing cornerstone for rolling out emerging revolutionary technologies to the commercial market at scale. 
+
+# 2 Methods and Models 
+
+## Solvent similarity ranking for solubility prediction 
+
+Solubility refers to the maximum concentration of a solute that can be homogeneously mixed in solution with a solvent due to the chemical interactions between solvent and solute[51]. Predicting solubility quantitatively is a very challenging task because complex thermodynamics of solid-state stability and solute-solvent inter-actions over multiple length scales are involved and experimental uncertainty is high[20, 21]. A phenomeno-logical, widely-used approach to profile the tendency of certain chemicals to undergo chemical interactions decisive for solubility are so-called ’solubility parameters’ [22, 23, 24]. The most popular ones, the Hansen solubility parameters, divide the energy of vaporization of a molecule needed for breaking chemical bonds into three parts: 1) molecular atomic dispersion forces 2) molecular dipole-permanent forces and 3) hydro-gen bonding (electron exchange)[25]. The associated energies are reflected in the parameters δd, δp and δh
+
+measured in units of MPa 0.5. Similarity of chemical interaction profiles can then be measured as (weighted) distances of the Hansen parameters in the Hansen space. The question of solubility—starkly simplified down to a binary categorization of ”soluble” (or ”miscible”) and ”non-soluble” (”non-miscible”)—is then addressed by defining a threshold of Hansen Distance between solute and solvent, which gives correct rough estimates in many cases[52]. However, data on Hansen solubility parameters for solutes of typical applications such as perovskite PVs and polymers is rare (and often not statistically validated)[52, 53], while data of solubility parameters of solvents is more extensive[25]. Therefore, for the issue of solvent substitution, rather than calculating distances between solute and solvents, it is a more robust approach to compare the reference sol-vent to be substituted with another solvent. This introduces a maximum statistical error factor of two if the new solvent and the solute lie in opposite positions to each other in Hansen space (with the reference solvent situated in between). However, it eliminates the uncertainty of choosing the correct solubility parameters for the solute. Ranking for smallest distance and considering the possibility that statistical deviation can occur in a beneficial direction, comparing the solubility parameters of two solvents is a good option for solvent substitution. To increase the chances of success, one can use multiple reference solvents that are known to dissolve the material system of interest. Experimentally, this approach could be validated by testing the 
+
+> 1Some of these predictors are correlated, but they can still yield valuable complementary information.
+
+3miscibility of the reference solvent with the screened solvent candidates. A fundamental limitation in prediction power of the Hansen solubility parameters is imposed by their definition. Importantly, they do not accurately capture donor-acceptor complexes as well as electrostatic interactions due to ionic charge[26, 54, 55]. These interactions can be crucial for solubility in solutions of ionic and acidic/basic solution, impacting for instance the applications of hybrid perovskite PVs[10] and battery electrolytes[56]. To address the issue of predicting donor-acceptor complexes, Gutmann proposed to measure the ”donor number” (DN) and the ”acceptor number” (AN) as quantitative measures based on the negative enthalpy of formation of the 1:1 Lewis acid–base adduct between the standard Lewis acid SbCl 5
+
+and Triethylphosphine oxide (Et 3PO, TEPO)[29]. Historically, they were first determined by calorimetric measurements, but are nowadays mostly measured by NMR spectroscopy[57]. Seven years later, Kamlet and Taft introduced parameters based on solvatochromic shifts of molecules in solutions measured spectroscop-ically[28]: The hydrogen bond donor acidity parameter, α, the hydrogen bond acceptor basicity, β and the dipolarity/polarizabilty parameter π∗. They are derived from spectral shifts in UV/VIS absorptions spectra or fluorescence spectra due to dissolution of the chemicals. Another important parameter for predicting electro-static effects is the dielectric constant of the solvents, εr . Note that all above solubility parameters can be correlated for some classes of chemicals[27, 58, 59, 60], however it is unlikely any correlation would hold over the whole range of organic VOC molecules. Further note that different choices and weighting of these parameters should be applied depending on the target application. For example, hybrid perovskite solu-tions are ionic and well-known for the formation of Lewis-Base:Adducts with Dimethylsulfoxide (DMSO)[61, 62]. They further include small organic molecules such as methylammonium and formamidinium. Thus, for hybrid perovskite ionic solutions, the parameter set ( δd,δp,δh, DN, β, DC) should be decisive for selecting a suitable solvent. For organic solar cells, on the contrary, the three Hansen solubility parameters might be sufficient for solvent substitution. To account for the varying importance of solubility parameters depending on the application, we propose a weighted Euclidean distance, ˆR2 
+
+> Si,S ref
+
+, for solvent ranking as a generaliza-tion of Hansen distance to the additional parameters (zero weights can be given if parameters should not be considered). For ranking potential candidate for solvent substitution, Si, the distance between every candidate to the reference solvent Sref to be substituted is calculated as ˆR2 
+
+> Si,S ref
+
+= X
+
+> n
+
+w2 
+
+> n
+
+(ˆ pn, ref − ˆpn,i )2 , (1) where we consider n = 9 solubility parameters in total and the hat notation indicates a component-wise median absolute deviation (MAD) on the predicted range of the respective parameter pn. The normalization is important to remove the impact of different units as well as predicted ranges of the parameters. As discussed above, the weights can be adjusted according to the chosen application. Another possible choice of weights wi for general solvent substitution is given by the r2 values obtained by our ML pipeline to prioritize more accurately predicted parameters. This is what we use as a standard setting in the Results section. As another customization choice, we provide alternative metrics such as the Mahalanobis distance and Kullback–Leibler divergence with the goal to leverage the predicted uncertainties, as well. All of these choices are integrated in the solvent screening tool discussed below. 
+
+## Data mining 
+
+For the application of ML on solubility parameters, the availability of data on either of these parameters plays an important role. While extensive databases with thousands of entries exist on Hansen parameters and εr
+
+[25], data of the other parameters mentioned above is less abundant. To our knowledge, data is restricted to several hundred entries for AN, DN and β down to only tens of non-zero entries for α and π∗[30, 39]. The main sources of data for this work was the website by R. Stenutz[30] accessed in June 2024, and the book Hansen Solubility parameters a Users Handbook by Charles M. Hansen[25]. We have further consulted the work of Hu et al. for Gutmann donor and Acceptor numbers [39]. Information on the molecular structure and information about the H-Symbols (GHS system) was pulled from PubChem[63]. Note that these sources of digital data can be substituted easily in the future if inconsistencies become apparent or more extensive datasets are found. The tool will be updated accordingly. The 5000 VOC candidates were extracted from the CompSol database[50] (in fact not all of the candidates are liquid in room temperature, but dissolution at elevated temperatures might be an option for some technologies). For the Dielectric Constant parameter 4we filtered out values above 100 as solvent materials are not expected to have higher values and therefore, this points had a high probability of being erroneously measured. 
+
+## Construction of Models and Algorithms 
+
+In our study, we chose to use DimeNet (Directional Message Passing Neural Network) [44] as the founda-tional model for predicting solubility parameters of the investigated solvent molecules. We note that more foundational models such as MACE[43] and NequIP[45] have been developed since the start of the project. DimeNet can be substituted in future works without loss of generality or applicability of our pipeline. The SMILES notation, atom positions and atomic numbers for each molecule are pulled from PubChem via their IUPAC-Name. SMILES is used to filter the molecules for the occurrence of atomic groups that would set the expected solubility parameter to zero[64, 29, 57, 65] for AN and α. This alleviates some of the learning load of the subsequent model. In case of non-zero values, the atom positions and atomic numbers are used as input to the DimeNet model. The DimeNet model in its default architecture outputs one value per molecule. This constrains transfer learning, as using the output directly is analogous to using the relevant predicted property and not the reach matrix of molecular descriptors learned for this task. The penultimate layer of DimeNet however contains a matrix M of dimensions Rn×m where n is the number of atoms in the molecule and m the number of pre-chosen interaction blocks. We perform a column-wise summation of this matrix thus acquiring a fixed size vector for our molecules. This vector contains a higher information density than the one-dimensional final output, thereby making it more conducive to transferability. In pytorch , there are 11 readily available pre-trained DimeNet models, each on a different QM9 property. The QM9 database comprises approximately 134,000 small organic molecules combining 3D geometries with Density Functional Theory-calculated quantum-chemical properties such as dipole moments, rotational constants and isotropic polarizability, etc... [66]. We optimize the choice of pre-trained model based on the prediction accuracy of the full pipeline as a hyperparamaeter (see Table 1 for a full list of hyperparameters). In addition to the vector obtained from DimeNet, we use an embedding vector, en, based on descriptors with dimensionality 
+
+n. The descriptors were determined following the methodology of Mahmood et al. [40]: At first, we append molecular descriptors to the graph dataset from the OCHEM database[67]. We then obtain the SMILES fingerprint using RDkit and search for it in the OCHEM database. Once matched, we remove descriptors which have too sparse values or low variance. In the end we select descriptors with low self-correlation and correlation with the target of higher than 0.5. This step allows the DimeNet outputs and the descriptors to adjust each other, allowing for a result that is larger then the sum of its parts. Finally, the transformer output is used as input for a Gaussian Process (GPs) regressor which provides a robust prediction as well as a vital uncertainty quantification. The transformers and GPs are trained simultaneously towards the minimization of the negative log likelihood of the predictions. The DimeNet weights remain frozen, leveraging the full benefits of the pre-training. A clear indication of the effects of each component can be see in section Section 3 where an ablation study is performed and models with different components are compared to each other. A succinct representation of our complete pipeline can be seen in Fig. 1 The scarcity of the available experimental data of Kamlet-Taft β, α, π∗, Gutmann AN and Gutmann DN numbers discussed in the last section poses a challenge for the application of predictive ML. A possible mitigation strategy for low sample numbers is to employ models that propagate associated uncertainty with the predicted values. In this way, they are intrinsically regularized against over-fitting by quantifying the gaps in the knowledge of training data. This is the reason why the last layer of our model incorporates the data-driven stochastic algorithm, Gaussian processes (GPs). The algorithm models predictions as the posterior of the Bayes formula, while the prior and the likelihood are modeled as Gaussian distributions whose parameters are optimized based on the already measured samples [68]. GPs combine robustness to overfitting and the well-documented accuracy of global kernel methods (a more detailed description can be found in [69]). Note that with state-of-the-art algorithms implemented in gpytorch [70, 71], GPs can easily handle datasets of a million samples with very limited approximations. This why GPs work both on scarce as well as large datasets. 5DimeNet pre-trained on target t trained trained predict predict / train Gaussian Processes Transformers     
+
+> PubChem pull by IUPAC-Name Coords No n-dim. molecular descriptors
+> QM9
+> dkj mji xixiParameter
+> α(kj,ji) dji
+> Yes enen
+> jiktarget parameter target equals zero zero filter
+> Coords SMILES
+> mji
+> Σi
+
+Figure 1: Machine Learning pipeline used in this work. A SMILES-based filter firstly identifies if the chemical is expected to have a non-zero target parameter. For non-zero parameters, the foundational model DimeNet is used on the molecular coordinates pulled from PubChem and complemented with n-dimensional molecular descriptors en. A Gaussian Processes regressor is then trained on a vector obtained by summation over the columns of the matrix M of the last DimeNet layer along with the molecular descriptors, en, to predict the targeted solubility parameter. For some parameters, it was beneficial to process the DimeNet output with a transformer layer for attention based value adjustment. 
+
+Hyperparameter Value 
+
+GP mean Linear, Constant, Zero Number of gaussian mixtures in kernel 2, 4, 6 pre-trained DimeNet target 0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11 Property pre-processing Standardization, Normalization Transformer heads 1, size of input vector Table 1: Hyperparameter values that were explored for every predicted parameter. 
+
+## Solvent Screening Tool 
+
+As introduced above, an exact definition of the colloquially used term “green” is challenging, although a matrix of factors can be considered that make “solvent greenness” comparable[14]. Some of these factors are mirrored in the GHS hazard system that is used on a daily basis by chemists and engineers to assess pre-cautionary measures before a solvent is employed[72]. The cataloged GHS characteristics were designed to guide short-term decision making in how to handle solvents. Therefore, they do not necessarily represent long-term characteristics such as the full environment impact and life cycle of the industrial use of a certain chemical, starting from the production of the solvent from natural resources, through its mixture with other materials and possible contamination to the recycling and/or release to the environment after waste treatment[16, 15, 73]. To give an extreme example, the ’greenest of all solvents’, water, is still a limited resource in many areas of the word and contaminated water cannot be released into the environment without treatment[74]. When selecting a solvent for an industrial process, all these factors must be taken into account for determining its true environmental impact. Still, the functionality of a solvent for a certain application also plays into the balance of this cost/benefit analysis. As inscribed in the name itself, the functionality of a solvent is, first and foremost, determined by their ability to dissolve or mix with a certain class of materials[2]. At the same time, its secondary solvent properties such as the viscosity, the boiling point, the diffusion coefficients, stability under stress factors, chemical reaction pathways can play an important role[75, 76]. For the tool developed in this work, we focus on solubility as primary performance indicator. Further, we apply very rudimentary filters to identify possible “green solvents”. By choice of the user, these filters simply exclude any H2xx (physical hazards), any H3xx (health-related hazards) and any H4xx (environmental hazards) symbols to assess whether a chemical is a “green” alternative. Note that more detailed filters of H-Symbols could have been added to the tool. This was deliberately ruled out to avoid users relying on the provided information instead of a proper safety data sheet. However, when working on the raw data on their own risk, users can implement these filters themselves. The solvent selection tool was deployed as a lightweight streamlit application. The main idea is that any reference solvent to be 6replaced can be chosen and the database is then sorted according to the smallest distance to the reference solvent according to Eq. (1). In the tool, the user can select any solvent in the database that they want to find a similarity for and get auto-generated tables like these ones in csv, Excel or L ATEXformat. The weights of either predictor can be either chosen by the r2 values of the predictions or custom selected. A further customization is given by choosing between three different distance metrics. In the Euclidean distance we provide its propagated uncertainty in a separate column, while Mahalanobis distance and Kullback–Leibler divergence already incorporate the uncertainties predicted by our pipeline. The tool is available under 
+
+https://kouter.streamlit.app/ (Github page https://github.com/cassimon/kouter )2. Note further that the Hazard symbols were mined from PubChem and thus errors in the screening are to be expected 3.The benefit of the tool as compared to previous works is that it is customizable to the needs of different applications and offers predictions over a wide range of over 5000 VOCs. To customize the tool for their purposes, users can select custom weights to choose the exact prioritization of interactions that matters for their particular material system. Further, the user can exclude chemicals of high uncertainty for conservative solvent substitutions or include even highly uncertain ones for a broader exploration of the chemical space. 
+
+# 3 Results & Discussion 
+
+## Performance of Machine Learning Pipeline 
+
+The combined predictions on the test sets are presented in Fig. 2 for all solubility parameters. The results presented are the combined test set predictions of an n-fold validation scheme ( n = 5 for large and medium datasets and n = 10 for sparse datasets). Thus, we make certain that our model performs consistently without reporting a fortunate data split or weight initialization. In this way, we confidently expect our model to generalize well even on unseen data. Comparing the predictions on large datasets (several 1000 points) and medium datasets (several 100 points) to very small dataset (less than 50 points), we find no significant decay in performance. This data efficiency underlines the strengths of transfer learning with foundational models that require fewer training points to reach decent performances as compared to models that need to be trained from scratch. In addition, the majority of predictions are symmetric to the line of perfect agreement (dashed line), indicating that the prediction errors are largely unbiased. The δd and 
+
+δh parameters exhibit a slight systematic deviation in the high and low value regime, likely caused by the scarcity of training data in these regions. In pursuit of streamlining our pipeline, we tested the performance impact of every element. In detail, we test the incomplete pipeline where we omit and combine elements in all relevant configurations. On every test, we compare the relative root mean square error (RRMSE) performances on the n-fold validation with the full pipeline. For a fair comparison, a hyperparameter sweep was performed every time (see Table 1 for an overview of hyerparameters). The results are depicted in Fig. 3. The state-of-the-art baseline, GPs and descriptors, achieves a decent performance for our dataset with a mean RRMSE of 0 .656. In comparison, using the DimeNet outputs alone does not yield a performance difference. However, concatenating the descriptors with the DimeNet outputs and using the resulting vector as an input to GPs, we obtain a significant improvement across all parameters. This is a crucial result as it points to the two distinct information sources. The descriptors encompass the distillation of human chemical intuition and are therefore of great importance for the prediction performance. Without descriptors, the rest of the pipeline has to compensate for the knowledge gap. Including them however allows the model to leverage data driven learning for learning the remaining mechanisms not captured by expert knowledge. In this way, we combine the advantages of expert knowledge and data driven discovery. This is evident in Fig. 3 where the models that contain both the foundational model and the descriptors significantly outperform all the others. The addition of a processing step of the concatenated vector through a transformer layer further improves the result on some of the parameters. This becomes more evident in the low data regime, as the addition of another layer of complexity increases the data load required. Therefore, transformers add consistent improvement in cases of large data sets and only provide better performance in small data sets if the DimeNet and descriptor variables are strongly correlated to the output in ways that the attention mechanism can decipher. 
+
+> 2Tool will be released upon acceptance of manuscript
+> 3The tool should never be used for any practical laboratory decisions and only for research purposes (as is written in its disclaimer)
+
+712 14 16 18 20 22  
+
+> Pred. Hansen D [MPa 1/2 ]
+> 12
+> 14
+> 16
+> 18
+> 20
+> 22
+> True Hansen  D [MPa 1/2 ]
+
+RRMSE: 0.504 
+
+R2: 0.746 
+
+(a)    
+
+> 010 20
+> Pred. Hansen P [MPa 1/2 ]
+> 0
+> 5
+> 10
+> 15
+> 20
+> 25
+> True Hansen  P [MPa 1/2 ]
+
+RRMSE: 0.533 
+
+R2: 0.716 
+
+(b)       
+
+> 010 20 30 40
+> Pred. Hansen H[MPa 1/2 ]
+> 0
+> 10
+> 20
+> 30
+> 40
+> True Hansen  H [MPa 1/2 ]
+
+RRMSE: 0.415 
+
+R2: 0.828 
+
+(c)      
+
+> 020 40 60 80 100
+> Pred. Dielectric Constant ( )
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> True Dielectric Constant ( )
+
+RRMSE: 0.518 
+
+R2: 0.732 
+
+(d)    
+
+> 020 40 60
+> Pred. Gutmann DN [kcal/mol]
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> True Gutmann DN [kcal/mol]
+
+RRMSE: 0.451 
+
+R2: 0.797 
+
+(e)     
+
+> 020 40 60
+> Pred. Gutmann AN [kcal/mol]
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> 70
+> True Gutmann AN  [kcal/mol]
+
+RRMSE: 0.397 
+
+R2: 0.842 
+
+(f)    
+
+> 0.0 0.5 1.0 1.5
+> Pred. Kamlet-Taft
+> 0.00
+> 0.25
+> 0.50
+> 0.75
+> 1.00
+> 1.25
+> 1.50
+> 1.75
+> True Kamlet-Taft
+
+RRMSE: 0.411 
+
+R2: 0.831 
+
+(g)    
+
+> 0.0 0.5 1.0 1.5
+> Pred. Kamlet-Taft
+> 0.2
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 1.2
+> 1.4
+> True Kamlet-Taft
+
+RRMSE: 0.468 
+
+R2: 0.781 
+
+(h)       
+
+> 0.00 0.25 0.50 0.75 1.00 1.25
+> Pred. Kamlet-Taft *
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 1.2
+> True Kamlet-Taft  *
+
+RRMSE: 0.573 
+
+R2: 0.672 
+
+(i) Figure 2: Regression curves resulting from the pipeline shown in Fig. 1, for all the relevant parameters for the solubility. The results are generating by 5 fold validation for the relatively large datasets and 10 fold validations for the smaller ones. All the presented results are predictions on the test set, i.e. the data not seen by the model during training. With this in consideration, our pipeline, with or without transformers significantly outperforms the GPs with descriptors by a margin of at least 31%, with some properties improving by as much as 85%. Further, in comparison to other state of the art approaches, our pipeline also provides a crucial uncertainty quantification, which allows for a more thorough understanding of the prediction space. Finally, to reference our results to the state-of-the-art, we summarize the performance of our full pipeline along with a baseline model of GPs and molecular descriptors[40] for every predicted solubility parameter in Table 2. For the large and medium data set size, our final pipeline outperforms the baseline model by 8approximately 0.25 RRMSE ( 50% relative improvement). The performance improvement decreases on some of the small datasets. In all probability this is because the molecules included in these datasets are not overly chemically diverse, thus making the prediction of the test set relatively easier. Nevertheless, even on those datasets our pipeline provides a meaningful and measurable improvement. To sum up, we find that our pipeline excels both on large and on small datasets, where conventional approaches struggle. Even on large datasets, it performs on par with conventional approaches. Our versatile and adaptable pipeline is therefore a worthwhile addition to the state-of-the-art. GPs         
+
+> + Descriptors
+> Dimenet
+> + GPs
+> Dimenet
+> + Transformers
+> + GPs
+> Dimenet
+> + GPs
+> + Descriptors
+> Dimenet
+> + Transformers
+> + GPs
+> + Descriptors
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> RRMSE  0.656
+> 0.733 0.735
+> 0.507 0.512
+> Hansen D [MPa 1/2 ]
+> Hansen P [MPa 1/2 ]
+> Hansen H[MPa 1/2 ]
+> Dielectric Constant ( )
+> Gutmann DN [kcal/mol]
+> Gutmann AN [kcal/mol]
+> Kamlet-Taft
+> Kamlet-Taft
+> Kamlet-Taft *
+
+Figure 3: RRMSE for every predicted solubility parameter omitting different components of the pipeline shown before in Fig. 1 keeping Gaussian Processes as a final layer. The baseline model relying only on molecular Descriptors as inputs, reaches a decent average performance. While DimeNet achieves a similar performance to the GPs and molecular descriptors, a significant improvement is achieved when integrating DimeNet outputs with descriptors. A transformer layer gives further improvement for some parameters, where attention is beneficial. Property Relative RMSE % Improvement Our Pipeline GP model Hansen Dispersion 0.536 0.690 28.73 Hansen Polarity 0.509 0.605 18.86 Hansen Bonding 0.396 0.66 66.67 Dielectric Constant ( εr ) 0.517 0.771 48.84 Gutmann Donor Number 0.458 0.865 84.83 Acceptor Number 0.397 0.432 8.10 Kamlet-Taft β 0.448 0.762 68.96 Kamlet-Taft α 0.411 0.453 9.27 Kamlet-Taft π∗ 0.573 0.669 14.34 Table 2: Comparison of Relative RMSE of our model and a gaussian processes model. 
+
+## Application-oriented Results for Solvent Substitution 
+
+To apply the above-developed pipeline for material discovery, we predict solubility parameters on a database of 5000 VOCs[50]. The final prediction is an average of the predictions of every individual model of the n-fold validation. The use of transfer learning from large foundational models increases the chances of good 9generalization on unseen data. In addition, the rigorous cross validation approach makes a strong case for our model’s generalization abilities. For qualitative analysis, we applied our substitution tool on a set of VOCs of concern listed in Table 3— commonly used in a broad range of industrial applications from pharmaceutics, polymer processing and photovoltaics fabrication to battery electrolytes. Fig. 4 depicts the molecular structures of these solvents next to the candidates for solvent substitution at closest distance without screening and after screening of H3xx and H4xx symbols, respectively. Note that these closest-distance predictions are prone to random error fluctuations and that we have not considered any other material properties besides solubility parameters such as reactivity, stability, boiling points, rheology, etc.... The predictions are therefore an exemplary ”top-1 trial” without any expert knowledge, which is meant as an academic, qualitative plausibility check. In a real-world application, experimentalists should analyze the whole list of n-best candidates for materials discovery, factoring in their chemical expertise and intuition. For this purpose, they can either work directly on the raw predicted data or, more conveniently, use our solvent tool (see Section 2). The tool provides additional degrees of freedom by (i) enabling and disabling screening of certain hazards, (ii) custom weighting of solubility parameters and (iii) propagating prediction uncertainty in the distance metric (Mahalanobis, kl-div) or simply listing it in a separate column (Euclidean). Overall, the ”top-1 trial” predictions are very plausible: functional groups of reference solvents are frequently represented in the proposed substitute solvents, as well. This is expected due to the correlation between molecular structure and energy interaction properties summarized by solubility parameters. For unscreened predictions, many are well aligned with chemical intuition, advocating for the correctness of the employed methodology. For instance, ethanol is predicted to have the most similar solubility behavior as methanol, 2-chlorotoluene as chlorobenzene, dimethylsulfoxide as N,N-dimethylformamide and ethyl acetate as diethyl carbonate. However, since we did not consider the reactivity, other predictions (styrene, 1-pyrrolidinecarboxaldehyde and 2(5H)-furanone) are likely not of industrial relevance. Still, we included them here to underscore that we did not bias, filter or reduce our data to prioritize plausible results. 
+
+Solvent (Substitue) Key Industrial Applications Ref. Dichloromethane 
+
+(2-Bromobut-2-ene) Pharmaceuticals, paints, polymer films, agrochemicals, extrac-tion [18] 
+
+Chlorobenzene 
+
+(2,5-Dimethylthiophene) Hybrid and organic solar cells, polymers, dyes, agrochemicals, rubber chemicals [15] 
+
+Toluene 
+
+(1,4- Dihydronaphthalene) Paints & coatings, adhesives, rubber processing, pharmaceuti-cals, natural product extraction [77, 78] 
+
+Methanol 
+
+(1,3-Butanediol) Biodiesel production; pharmaceuticals; natural product ex-traction; fuel cells [79, 80] 
+
+N,N -Dimethylformamide 
+
+(γ-Valerolactone) Hybrid and organic solar cells, polyamide/polyurethane pro-cessing, pharmaceuticals, electrochemistry, synthetic fibers [81] 
+
+N -Methyl-2-pyrrolidone 
+
+(3,4-Dimethyl 1,2-cyclopentandione) Li-ion battery electrodes; membranes; pharmaceuticals; paints [82, 83] 
+
+Ethylene carbonate 
+
+(Dimethylsulfone) Li-ion battery electrolytes, polycarbonate synthesis, epoxies [84, 85] 
+
+Diethyl carbonate 
+
+(Methyl isovalerate) Li-ion battery electrolytes; polycarbonate synthesis; carbony-lation; fuel oxygenate; plasticiser [86, 87] Table 3: Common industrial solvents and proposed substitutes with typical applications. We now continue the qualitative analysis of our ”top-1 trial” predictions for the results screened by H3xx and H4xx symbols. Dichloromethane is a widely used solvent in the chemical industry, which is challenging to subsitute due to its high solvation ability and high volatility. Our tool proposes 2-bromobut-2-ene as a 10 candidate for substitution. While this is still a halogenated chemical that is not considered “green” in a strict definition it passes the rudimentary screening applied herein. It is a sensible suggestion given the highly halo-genated dichloromethane. However, the functionality of 2-bromobut-2-ene as a solvent is questionable due to its reactivity[88]. (The next closest candidate is food agent 2,5-dimethylthiophene just as suggested for sub-stitution of Chlorobenzene.) The proposed ”green” substitution of the aromatic, high-boiling point solvents, Chlorobenzene and Toluene are 2,5-dimethylthiophene and 1,4-dihydronaphthalene, preserving (partially) the aromatic ring motif. We have not found any instance of them being used as a solvent before, which is most likely not practical due to their reactivity. The widely employed, polar protic solvent methanol is proposed to be replaced by 1,3-butanediol, which has been employed as a solvent before[89] (but has a significantly higher boiling point). The high-bioling point, polar aprotic solvent N,N-dimethylformamide is proposed to be substituted by gamma-Valerolactone (GVL), which is perfectly consistent with green solvent fabrication of perovksite solar cells[90, 91, 92]. N-methyl-2-pyrrolidone is proposed to be replaced by the cyclic diketone 1-methyl-2,3-cyclohexadione used in the flavor industry. Ethylene carbonate, which is heavily used as a lithium-ion battery electrolyte, is proposed to be substituted by dimethylsulfone which has been demonstrated successfully as a battery electrolyte before[93]. The prediction is therefore consistent with literature. Diethyl carbonate is suggested for substitution with the flavor enhancing ester methyl iosvalerate, which adds to the more exotic predictions of the previously reported 1-methyl-2,3-cyclohexadione. While we could not find any instance of these exotic molecules for use as a solvent and economical feasibility is questionable, exotic predictions are expected when employing our pipeline for ”top-1 trial” predictions for material discovery. As stated above, they underline that we did not filter, bias or reduce our data. We sum up that our tool is very useful for data-informed decisions of solvent substitution for experi-mentalists because several predictions match well with solvents that have been used as green alternatives before. We would like to repeat that we have only shown the closest distance suggestions here, expecting a certain rate of exotic predictions due to the methodology. Most strikingly, the tool succeeds in predicting three green solvent/electrolyte alternatives that were already used in literature, underlining the consistency of the applied methodology. 2-Bromopropene Dichloromethane 2-Bromobut-2-ene      
+
+> Dist: 0.98 Dist: 0.42 Ref. for Dist. Ref. for Dist. Ref. for Dist. Ref. for Dist. Ref. for Dist.
+> 1,4-Dihydronaphthalene Styrene
+> Ethanol Methanol
+> Dist: 1.19
+> 1,3-Butanedio lDist: 1.49 N,N-Dimethylformamide Dimethylsulfoxide Gamma-Valerolactone
+> Dist: 0.26
+> Ethylene carbonate 2(5H)-Furanone dimethylsulfone
+> Diethyl Carbonate Methyl isovalerate
+> Dist: 0.57
+> Ethyl Acetate Dist: 0.39
+
+Reference Substitution (unscreened) Substitution (screened) Reference Substitution (unscreened) Substitution (screened) Toluene Dist: 1.22 Ref. for Dist. Ref. for Dist. Chlorobenzene Dist 0.21 2-Chlorotoluene Dist: 0.82 2,5-Dimethylthiophene 1-Pyrrolidinecarbo-xaldehyde 3,4-Dimethyl 1,2-cyclopentandione Dist: 0.84 N-Methylpyrrolidone Dist: 0.26 Ref. for Dist. Ref. for Dist. Dist: 0.59 Dist: 0.29 Dist: 1.29 Dist: 0.64 
+
+Figure 4: Comparison reference solvent molecules with molecules situated at closest Euclidean distance calculated by Eq. (1). The closest distance increases for the screened results where H3xx and H4xx Ghs-symbols were eliminated. These predictions are merely qualitative plausibility checks. For a real application, the complete list of the n closest predictions should be analyzed by an expert and additional criteria such as reactivity, boiling points, material prices should be considered. 11 4 Conclusion and Outlook 
+
+In this work, we present a versatile machine learning pipeline based on transfer learning from the founda-tional model DimeNet with optional Attention used in conjunction with molecular descriptors. The final layer is a Gaussian Processes model to achieve a data efficient, uncertainty aware, highly robust and accu-rate framework. We applied this pipeline to the prediction of solubility parameters and the determination of novel, efficient and green solvents. We demonstrate that our pipeline has a good performance not only for the large datasets of the three Hansen solubility parameters and Dielectric constants. It also reaches a good performance on datasets of several hundreds and even less than 50 datapoints for predicting Gutmann Acceptor/Donor numbers as well as Kamlet-Taft solvatochromic parameters. These characteristics uniquely underline the benefits of transfer learning leveraging pre-trained foundational models. For creating a cus-tomizable solvent screening tool, our model is applied to the CompSol database of over 5000 volatile organic compounds, augmenting the available datasets for the given parameters by a factor of 4 for the Hansen param-eters, and up to a factor of 100 for other solubility parameters. Since extrapolation is a hard claim, especially for small datasets, we have performed strict 5- to 10-fold validation to avoid presenting unrepresentative op-timistic results. In the validation process, our model’s performance remained consistently accurate, giving us confidence in the extrapolative power of our results. Notably, the tool is deployed as an easy-to-use web app for chemists and engineers who are not machine learning experts (see https://kouter.streamlit.app/ ). The tool includes customization of distance weighting, uncertainty filtering and screening filters for elimi-nating solvents of concern 4. On top of that, the codes for the ML process are fully disclosed as well as the obtained, predicted data-sets. In this way, we provide the unique opportunity to the community to re-use our methods and data for their particular application, emphasizing the relevance and impact of this work. An additional benefit of leveraging pre-trained foundational models is that the pipeline is very lightweight -deployment on personal computers is feasible. This further underlines the importance of this work, making it available even to groups without specialized computational infrastructure. In this context, we would like to stress as well that DimeNet is already integrated in the PyTorch library. Since its release however, it has been outperformed by other, more intricate models, notably, MACE and NequIP. In the future, the DimeNet model will be substituted by more recently developed foundational models such as NequIP or MACE as the pipeline is fully adaptable. In addition, even more solubility parameters such as the Catal` an parameters or Fawcett Acidity and Basicity will be predicted. Since the pipeline is very adaptable in its target range, it could also be used to predict other functions of chemicals where available data is sparse such as charge transport properties for electronics or reaction pathways. Finally, instead of using a database of known liquid molecules, new molecules that have never been synthesized could be investigated. The present work should therefore be seen as a first, powerful proof-of-concept demonstration of what this pipeline is able to achieve. As a part of this demonstration, the tool released with the publication will help emerging energy technology roll-out to become more eco-friendly by substituting solvents of concern. In the future, this pipeline can be coupled with high throughput labs to efficiently expedite material discovery and development. 
+
+# Data Availability 
+
+upon publication 
+
+# Code Availability 
+
+upon publication 
+
+# Credits 
+
+The author contributions according to the CRediT taxonomy can be seen in Table 4. 
+
+> 4the tool is for discovery of new chemicals only and should not be employed for any safety-related decisions
+
+12 Table 4: Author Contributions according to the CRediT taxonomy 
+
+Contribution Author(s) 
+
+Conceptualization Aldo Di Carlo, Simon Ternes, Ioannis Kouroudis, Alessio Gagliardi Methodology Ioannis Kouroudis, Simon Ternes Software Ioannis Kouroudis, Simon Ternes, Zhaosu Gu , Gohar Siddiqui Validation Ioannis Kouroudis Formal analysis Ioannis Kouroudis,Simon Ternes, Gohar Siddiqui Investigation Simon Ternes, Ioannis Kouroudis, Marina Ustinova, Angelo Lembo, Alessio Gagliardi, Aldo Di Carlo Resources Ioannis Kouroudis, Simon Ternes, Alessio Gagliardi Data curation Simon Ternes Writing – Original Draft Simon Ternes, Ioannis Kouroudis Writing – Review & Editing Ioannis Kouroudis, Simon Ternes, Gu Zhaosu, Gohar Siddiqui, Marina Ustinova, Angelo Lembo, Aldo Di Carlo, and Alessio Gagliardi Visualization Simon Ternes, Ioannis Kouroudis Supervision Simon Ternes, Ioannis Kouroudis Project administration Aldo Di Carlo, Alessio Gagliardi Funding acquisition Aldo Di Carlo, Alessio Gagliardi 
+
+# ACKNOWLEDGEMENTS 
+
+A.G. acknowledges financial support from TUM Innovation Network for Artificial Intelligence powered Multi-functional Material Design (ARTEMIS) and funding in the framework of Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy – EXC 2089/1 – 390776260 (e-conversion). S.T. acknowledges the European Union’s Framework Programme for Research and Innovation Horizon Eu-rope (2021-2027) under the Marie Sklodowska-Curie Grant Agreement No. 101107885 “INT-PVK-PRINT”. S.T. and A.L. acknowledge the European Union’s Framework Programme for Research and Innovation Hori-zon Europe (2021-2027) under the Grant Agreement No. 101147311 “LAPERITIVO”. A.D.C. acknowledges the European Union’s Framework Programme for Research and Innovation Horizon Europe (2021-2027) under the Grant Agreement No. 101122327 “SMARTLINE-PV”. M. U. gratefully acknowledges financial support of the GoPV project of ”Bando di gara per progetti di ricerca di cui all’art. 10, comma 2, lettera a) 26/10/2000 Piano triennale 2019–2021 della Ricerca di sistema elettrico nazionale” (n. CSEAA 00011) This project has received funding from the MENTOR, European Union’s Horizon Europe (HORIZON) Marie Sklodowska-Curie Actions Doctoral Networks (MSCA-DN) HORIZON-MSCA-2023-DN-01 call, under the Grant Agreement number 101169056. The project duration is from 1 October 2024 to 30 September 2028. 
+
+# References 
+
+[1] Francisco G. Calvo-Flores et al. “Green and Bio-Based Solvents”. In: Topics in Current Chemistry 
+
+376.3 (Apr. 24, 2018), p. 18. issn : 2364-8961. doi : 10 . 1007 / s41061 - 018 - 0191 - 6 . url : https : //doi.org/10.1007/s41061-018-0191-6 (visited on 12/05/2025). [2] Neil Winterton. “The green solvent: a critical perspective”. In: Clean Technologies and Environmental Policy 23.9 (Nov. 1, 2021), pp. 2499–2522. issn : 1618-9558. doi : 10.1007/s10098-021-02188-8 . url :
+
+https://doi.org/10.1007/s10098-021-02188-8 (visited on 12/05/2025). 13 [3] Benoit Clement et al. “Recent Advances in Printed Thin-Film Batteries”. In: Engineering 13 (June 1, 2022), pp. 238–261. issn : 2095-8099. doi : 10 . 1016 / j . eng . 2022 . 04 . 002 . url : https : / / www . sciencedirect.com/science/article/pii/S2095809922002053 (visited on 10/30/2024). [4] Mohammadmehdi Choolaei, Mohsen Fallah Vostakola, and Bahman Amini Horri. “Recent Advances and Challenges in Thin-Film Fabrication Techniques for Low-Temperature Solid Oxide Fuel Cells”. In: Crystals 13.7 (July 2023). Publisher: Multidisciplinary Digital Publishing Institute, p. 1008. issn :2073-4352. doi : 10.3390/cryst13071008 . url : https://www.mdpi.com/2073- 4352/13/7/1008 
+
+(visited on 09/26/2025). [5] Ian A. Howard et al. “Coated and Printed Perovskites for Photovoltaic Applications”. In: Advanced Ma-terials 31.26 (2019). eprint: https://advanced.onlinelibrary.wiley.com/doi/pdf/10.1002/adma.201806702, p. 1806702. issn : 1521-4095. doi : 10.1002/adma.201806702 . url : https://onlinelibrary.wiley. com/doi/abs/10.1002/adma.201806702 (visited on 09/26/2025). [6] Thin Film Material Market Size, Share & Growth Analysis [2032] . url : https://www.fortunebusinessinsights. com/thin-film-material-market-107350 (visited on 12/05/2025). [7] Elena David and Violeta-Carolina Niculescu. “Volatile Organic Compounds (VOCs) as Environmental Pollutants: Occurrence and Mitigation Using Nanomaterials”. In: International Journal of Environ-mental Research and Public Health 18.24 (Jan. 2021). Publisher: Multidisciplinary Digital Publishing Institute, p. 13147. issn : 1660-4601. doi : 10.3390/ijerph182413147 . url : https://www.mdpi.com/ 1660-4601/18/24/13147 (visited on 12/05/2025). [8] Puneeta Pandey and Radheshyam Yadav. “A Review on Volatile Organic Compounds (VOCs) as Environmental Pollutants: Fate and Distribution”. In: INTERNATIONAL JOURNAL OF PLANT AND ENVIRONMENT 4.2 (July 31, 2018), pp. 14–26. issn : 2455-202X. doi : 10 . 18811 / ijpen . v4i02.2 . url : https://ijplantenviro.com/index.php/IJPE/article/view/1047 (visited on 12/05/2025). [9] N. Pongboonkhumlarp and W. Jinsart. “Health risk analysis from volatile organic compounds and fine particulate matter in the printing industry”. In: International Journal of Environmental Science and Technology 19.9 (Sept. 1, 2022), pp. 8633–8644. issn : 1735-2630. doi : 10.1007/s13762-021-03733-0 .
+
+url : https://doi.org/10.1007/s13762-021-03733-0 (visited on 12/05/2025). [10] Suresh K. Podapangi et al. “Green solvents, materials, and lead-free semiconductors for sustainable fabrication of perovskite solar cells”. In: RSC Advances 13.27 (June 15, 2023). Publisher: The Royal Society of Chemistry, pp. 18165–18206. issn : 2046-2069. doi : 10 . 1039 / D3RA01692G . url : https : //pubs.rsc.org/en/content/articlelanding/2023/ra/d3ra01692g (visited on 12/05/2025). [11] David Sunghwan Lee et al. “Green solvent strategies for the sustainable development of perovskite solar cells”. In: Chemical Communications 61.10 (Jan. 28, 2025). Publisher: The Royal Society of Chemistry, pp. 2011–2025. issn : 1364-548X. doi : 10.1039/D4CC05454G . url : https://pubs.rsc. org/en/content/articlelanding/2025/cc/d4cc05454g (visited on 12/05/2025). [12] Yannick-Serge Zimmermann et al. “Organic photovoltaics: Potential fate and effects in the environ-ment”. In: Environment International 49 (Nov. 15, 2012), pp. 128–140. issn : 0160-4120. doi : 10 . 1016/j.envint.2012.08.015 . url : https://www.sciencedirect.com/science/article/pii/ S0160412012001894 (visited on 12/05/2025). [13] Rosario Vidal et al. “Assessing health and environmental impacts of solvents for producing perovskite solar cells”. In: Nature Sustainability 4.3 (Mar. 2021). Publisher: Nature Publishing Group, pp. 277– 285. issn : 2398-9629. doi : 10 . 1038 / s41893 - 020 - 00645 - 8 . url : https : / / www . nature . com / articles/s41893-020-00645-8 (visited on 12/05/2025). [14] Louis J. Diorazio, David R. J. Hose, and Neil K. Adlington. “Toward a More Holistic Framework for Solvent Selection”. In: Organic Process Research & Development 20.4 (Apr. 15, 2016). Publisher: American Chemical Society, pp. 760–773. issn : 1083-6160. doi : 10.1021/acs.oprd.6b00015 . url :
+
+https://doi.org/10.1021/acs.oprd.6b00015 (visited on 12/06/2025). 14 [15] Christian Capello, Ulrich Fischer, and Konrad Hungerb¨ uhler. “What is a green solvent? A comprehen-sive framework for the environmental assessment of solvents”. In: Green Chemistry 9.9 (Aug. 28, 2007). Publisher: The Royal Society of Chemistry, pp. 927–934. issn : 1463-9270. doi : 10.1039/B617536H . url :
+
+https://pubs.rsc.org/en/content/articlelanding/2007/gc/b617536h (visited on 12/05/2025). [16] Coby J. Clarke et al. “Green and Sustainable Solvents in Chemical Processes”. In: Chemical Reviews 
+
+118.2 (Jan. 24, 2018). Publisher: American Chemical Society, pp. 747–800. issn : 0009-2665. doi : 10. 1021/acs.chemrev.7b00571 . url : https://doi.org/10.1021/acs.chemrev.7b00571 (visited on 12/05/2025). [17] Denis Prat et al. “CHEM21 selection guide of classical- and less classical-solvents”. In: Green Chem-istry 18.1 (2016). Publisher: Royal Society of Chemistry, pp. 288–296. doi : 10 . 1039 / C5GC01008J .
+
+url : https : / / pubs . rsc . org / en / content / articlelanding / 2016 / gc / c5gc01008j (visited on 12/05/2025). [18] Fergal P. Byrne et al. “Tools and techniques for solvent selection: green solvent selection guides”. In: 
+
+Sustainable Chemical Processes 4.1 (May 23, 2016), p. 7. issn : 2043-7129. doi : 10.1186/s40508-016-0051-z . url : https://doi.org/10.1186/s40508-016-0051-z (visited on 12/05/2025). [19] James H. Clark and Stewart J. Tavener. “Alternative Solvents: Shades of Green”. In: Organic Process Research & Development 11.1 (Jan. 1, 2007). Publisher: American Chemical Society, pp. 149–155. 
+
+issn : 1083-6160. doi : 10.1021/op060160g . url : https://doi.org/10.1021/op060160g (visited on 12/06/2025). [20] P. Llompart et al. “Will we ever be able to accurately predict solubility?” In: Scientific Data 11.1 (Mar. 18, 2024). Publisher: Nature Publishing Group, p. 303. issn : 2052-4463. doi : 10.1038/s41597-024 - 03105 - 6 . url : https : / / www . nature . com / articles / s41597 - 024 - 03105 - 6 (visited on 12/23/2025). [21] Anton J. Hopfinger et al. “Findings of the Challenge To Predict Aqueous Solubility”. In: Journal of Chemical Information and Modeling 49.1 (Jan. 26, 2009). Publisher: American Chemical Society, pp. 1–5. issn : 1549-9596. doi : 10.1021/ci800436c . url : https://doi.org/10.1021/ci800436c 
+
+(visited on 12/23/2025). [22] Allan F. M. Barton. “Solubility parameters”. In: Chemical Reviews 75.6 (Dec. 1, 1975). Publisher: American Chemical Society, pp. 731–753. issn : 0009-2665. doi : 10.1021/cr60298a003 . url : https: //doi.org/10.1021/cr60298a003 (visited on 12/05/2025). [23] John W. Van Dyk, Harry L. Frisch, and Dao T. Wu. “Solubility, solvency, and solubility parameters”. In: Industrial & Engineering Chemistry Product Research and Development 24.3 (Sept. 1, 1985). Pub-lisher: American Chemical Society, pp. 473–478. issn : 0196-4321. doi : 10.1021/i300019a028 . url :
+
+https://doi.org/10.1021/i300019a028 (visited on 12/05/2025). [24] Cl´ audio C. Fernandes et al. “Application of Hansen solubility parameters in the eutectic mixtures: difference between empirical and semi-empirical models”. In: Scientific Reports 15.1 (Jan. 31, 2025). Publisher: Nature Publishing Group, p. 3862. issn : 2045-2322. doi : 10.1038/s41598-025-87050-3 .
+
+url : https://www.nature.com/articles/s41598-025-87050-3 (visited on 12/05/2025). [25] Charles M. Hansen. Hansen Solubility Parameters: A User’s Handbook, Second Edition . 2nd ed. Boca Raton: CRC Press, June 15, 2007. 544 pp. isbn : 978-0-429-12752-6. doi : 10.1201/9781420006834 .[26] Manuel J. Louwerse et al. “Revisiting Hansen Solubility Parameters by Including Thermodynamics”. In: ChemPhysChem 18.21 (2017). eprint: https://chemistry-europe.onlinelibrary.wiley.com/doi/pdf/10.1002/cphc.20170 pp. 2999–3006. issn : 1439-7641. doi : 10 . 1002 / cphc . 201700408 . url : https : / / onlinelibrary . wiley.com/doi/abs/10.1002/cphc.201700408 (visited on 12/05/2025). [27] Yaqi Lan et al. “Comparing and Correlating Solubility Parameters Governing the Self-Assembly of Molecular Gels Using 1,3:2,4-Dibenzylidene Sorbitol as the Gelator”. In: Langmuir 30.47 (Dec. 2, 2014). Publisher: American Chemical Society, pp. 14128–14142. issn : 0743-7463. doi : 10.1021/la5008389 .
+
+url : https://doi.org/10.1021/la5008389 (visited on 12/05/2025). 15 [28] Mortimer J. Kamlet et al. “Linear solvation energy relationships. 23. A comprehensive collection of the solvatochromic parameters, .pi.*, .alpha., and .beta., and some methods for simplifying the generalized solvatochromic equation”. In: The Journal of Organic Chemistry 48.17 (Aug. 1, 1983). Publisher: American Chemical Society, pp. 2877–2887. issn : 0022-3263. doi : 10.1021/jo00165a018 . url : https: //doi.org/10.1021/jo00165a018 (visited on 08/01/2025). [29] V. Gutmann. “Empirical parameters for donor and acceptor properties of solvents”. In: Electrochimica Acta 21.9 (Sept. 1, 1976), pp. 661–670. issn : 0013-4686. doi : 10 . 1016 / 0013 - 4686(76 ) 85034 - 7 .
+
+url : https : / / www . sciencedirect . com / science / article / pii / 0013468676850347 (visited on 12/05/2025). [30] Stenutz Chem Tables . url : https://www.stenutz.eu/chem/ (visited on 12/05/2025). [31] Ioannis Kouroudis, Manuel Gosswein, and Alessio Gagliardi. “Utilizing data-driven optimization to automate the parametrization of kinetic Monte Carlo models”. In: The Journal of Physical Chemistry A 127.28 (2023), pp. 5967–5978. [32] Felix Mayr et al. “Machine learning and optoelectronic materials discovery: a growing synergy”. In: 
+
+The Journal of Physical Chemistry Letters 13.8 (2022), pp. 1940–1951. [33] Nina A Henke et al. “Synthesizer: Chemistry-Aware Machine Learning for Precision Control of Nanocrys-tal Growth”. In: Advanced Materials (2025), e09472. [34] Carola Lampe et al. “Rapid data-efficient optimization of perovskite nanocrystal syntheses through machine learning algorithm fusion”. In: Advanced Materials 35.16 (2023), p. 2208772. [35] Ghanshyam Pilania et al. “Finding new perovskite halides via machine learning”. In: Frontiers in Materials 3 (2016), p. 19. [36] Jeffrey Kirman et al. “Machine-learning-accelerated perovskite crystallization”. In: Matter 2.4 (2020), pp. 938–947. [37] M Harth et al. “Optoelectronic perovskite film characterization via machine vision”. In: Solar Energy 
+
+262 (2023), p. 111840. [38] Raouf Hassan and Mohammad Reza Kazemi. “Data-driven frameworks to robustly predict solubility parameter of diverse polymers”. In: Scientific Reports 15.1 (2025), p. 31157. [39] Huaping Hu et al. “The prediction of donor number and acceptor number of electrolyte solvent molecules based on machine learning”. In: Journal of Energy Chemistry 98 (Nov. 1, 2024), pp. 374–382. 
+
+issn : 2095-4956. doi : 10.1016/j.jechem.2024.06.050 . url : https://www.sciencedirect.com/ science/article/pii/S2095495624004625 (visited on 12/06/2025). [40] Asif Mahmood, Yahya Sandali, and Jin-Liang Wang. “Easy and fast prediction of green solvents for small molecule donor-based organic solar cells through machine learning”. In: Physical Chemistry Chemical Physics 25.15 (2023), pp. 10417–10426. [41] Benjamin Sanchez-Lengeling et al. “A Bayesian approach to predict solubility parameters”. In: Ad-vanced Theory and Simulations 2.1 (2019), p. 1800069. [42] Christian Larsen et al. “A tool for identifying green solvents for printed electronics”. In: Nature Com-munications 12.1 (2021), p. 4510. [43] Ilyes Batatia et al. “MACE: Higher order equivariant message passing neural networks for fast and accurate force fields”. In: Advances in neural information processing systems 35 (2022), pp. 11423– 11436. [44] Johannes Gasteiger, Janek Gross, and Stephan Gunnemann. “Directional message passing for molecular graphs”. In: arXiv preprint arXiv:2003.03123 (2020). [45] Simon Batzner et al. “E (3)-equivariant graph neural networks for data-efficient and accurate inter-atomic potentials”. In: Nature communications 13.1 (2022), p. 2453. [46] Joohwi Lee and Ryoji Asahi. “Transfer learning for materials informatics using crystal graph convolu-tional neural network”. In: Computational Materials Science 190 (2021), p. 110314. 16 [47] Hironao Yamada et al. “Predicting materials properties with little data using shotgun transfer learn-ing”. In: ACS central science 5.10 (2019), pp. 1717–1730. [48] Adeesh Kolluru et al. “Transfer learning using attentions across atomic systems with graph neural networks (TAAG)”. In: The Journal of Chemical Physics 156.18 (2022). [49] Ioannis Kouroudis et al. “AUGUR, a flexible and efficient optimization algorithm for identification of optimal adsorption sites”. In: npj Computational Materials 11.1 (2025), p. 136. [50] Compsol database (revised, 2024) . Sept. 24, 2024. doi : 10.60893/figshare.jpr.26871184.v1 . url :
+
+https://aip.figshare.com/articles/dataset/Compsol_database_revised_2024_/26871184/1 
+
+(visited on 12/05/2025). [51] International Union of Pure and Applied Chemistry (IUPAC). Solubility . Version 5.0.0. 2025. doi :
+
+10 . 1351 / goldbook . S05740 . url : https : / / doi . org / 10 . 1351 / goldbook . S05740 (visited on 12/23/2025). [52] Shruti Venkatram et al. “Critical Assessment of the Hildebrand and Hansen Solubility Parameters for Polymers”. In: Journal of Chemical Information and Modeling 59.10 (Oct. 28, 2019). Publisher: American Chemical Society, pp. 4188–4194. issn : 1549-9596. doi : 10.1021/acs.jcim.9b00656 . url :
+
+https://doi.org/10.1021/acs.jcim.9b00656 (visited on 12/05/2025). [53] Azin Babaei et al. “Hansen theory applied to the identification of nonhazardous solvents for hybrid perovskite thin-films processing”. In: Polyhedron 147 (June 1, 2018), pp. 9–14. issn : 0277-5387. doi :
+
+10.1016/j.poly.2018.03.003 . url : https://www.sciencedirect.com/science/article/pii/ S0277538718301232 (visited on 12/23/2025). [54] Yumi Kobayashi, Sonoko Tokishita, and Hideki Yamamoto. “Determination of Hansen Solubility Pa-rameters of Ionic Liquids by Using Walden Plots”. In: Industrial & Engineering Chemistry Research 
+
+59.32 (Aug. 12, 2020). Publisher: American Chemical Society, pp. 14217–14223. issn : 0888-5885. doi :
+
+10 . 1021 / acs . iecr . 0c01947 . url : https : / / doi . org / 10 . 1021 / acs . iecr . 0c01947 (visited on 12/06/2025). [55] Markus Holzweber et al. “Mutual Lewis Acid–Base Interactions of Cations and Anions in Ionic Liq-uids”. In: Chemistry (Weinheim an Der Bergstrasse, Germany) 19.1 (Jan. 2, 2013), pp. 288–293. issn :0947-6539. doi : 10 . 1002 / chem . 201201978 . url : https : / / pmc . ncbi . nlm . nih . gov / articles / PMC3576480/ (visited on 12/06/2025). [56] Pan Zhou, Yong Xiang, and Kai Liu. “Understanding and applying the donor number of electrolytes in lithium metal batteries”. In: Energy & Environmental Science 17.21 (Oct. 29, 2024). Publisher: The Royal Society of Chemistry, pp. 8057–8077. issn : 1754-5706. doi : 10.1039/D4EE02989E . url : https: //pubs.rsc.org/en/content/articlelanding/2024/ee/d4ee02989e (visited on 12/05/2025). [57] Matthias Schmeisser et al. “Gutmann Donor and Acceptor Numbers for Ionic Liquids”. In: Chemistry – A European Journal 18.35 (2012). eprint: https://chemistry-europe.onlinelibrary.wiley.com/doi/pdf/10.1002/chem.2012 pp. 10969–10982. issn : 1521-3765. doi : 10.1002/chem.201200584 . url : https://onlinelibrary. wiley.com/doi/abs/10.1002/chem.201200584 (visited on 08/01/2025). [58] Anthony N. Paruta, Bartley J. Sciarrone, and Nicholas G. Lordi. “Correlation Between Solubility Parameters and Dielectric Constants”. In: Journal of Pharmaceutical Sciences 51.7 (July 1, 1962), pp. 704–705. issn : 0022-3549. doi : 10.1002/jps.2600510726 . url : https://www.sciencedirect. com/science/article/pii/S002235491533608X (visited on 12/05/2025). [59] Baoli Shi. “Relationship between Hansen Solubility Parameters and Lewis Acid-Base Parameters of Solvents”. In: Journal of Macromolecular Science, Part B 47.1 (Dec. 1, 2007). Publisher: Taylor & Francis eprint: https://doi.org/10.1080/00222340701746192, pp. 174–179. issn : 0022-2348. doi :
+
+10.1080/00222340701746192 . url : https://doi.org/10.1080/00222340701746192 (visited on 12/05/2025). [60] W. Earle Waghorne. “Solvent Acidity and Basicity Scales: Analysis of Catalan’s SB and SA Scales and Gutmann’s Acceptor Number and Comparison with Kamlet and Taft’s β and α Solvent Scales, Gutmann’s Donor Number and Abraham’s B and A Solute Scales”. In: Journal of Solution Chemistry 
+
+53.5 (May 1, 2024), pp. 747–760. issn : 1572-8927. doi : 10.1007/s10953-024-01382-8 . url : https: //doi.org/10.1007/s10953-024-01382-8 (visited on 12/06/2025). 17 [61] Chongwen Li et al. “Rational design of Lewis base molecules for stable and efficient inverted perovskite solar cells”. In: Science 379.6633 (Feb. 17, 2023). Publisher: American Association for the Advancement of Science, pp. 690–694. doi : 10.1126/science.ade3970 . url : https://www.science.org/doi/10. 1126/science.ade3970 (visited on 12/06/2025). [62] Jin-Wook Lee, Hui-Seon Kim, and Nam-Gyu Park. “Lewis Acid–Base Adduct Approach for High Efficiency Perovskite Solar Cells”. In: Accounts of Chemical Research 49.2 (Feb. 16, 2016). Publisher: American Chemical Society, pp. 311–319. issn : 0001-4842. doi : 10.1021/acs.accounts.5b00440 .
+
+url : https://doi.org/10.1021/acs.accounts.5b00440 (visited on 12/06/2025). [63] PubChem. PubChem . url : https://pubchem.ncbi.nlm.nih.gov/ (visited on 12/23/2025). [64] Didier Mathieu. “Pencil and Paper Estimation of Hansen Solubility Parameters”. In: ACS Omega 3.12 (Dec. 31, 2018). Publisher: American Chemical Society, pp. 17049–17056. doi : 10.1021/acsomega. 8b02601 . url : https://doi.org/10.1021/acsomega.8b02601 (visited on 12/06/2025). [65] John Burke. Solubility Parameters: Theory and Application . ISSN: 0887-8978 Publisher: The Book and Paper Group of the American Institute for Conservation. 1984. url : https://cool.culturalheritage. org/coolaic/sg/bpg/annual/v03/bp03-04.html (visited on 12/06/2025). [66] Raghunathan Ramakrishnan et al. “Quantum chemistry structures and properties of 134 kilo molecules”. In: Scientific data 1.1 (2014), pp. 1–7. [67] Iurii Sushko et al. “Online chemical modeling environment (OCHEM): web platform for data storage, model development and publishing of chemical information”. In: Journal of computer-aided molecular design 25.6 (2011), pp. 533–554. [68] Christopher Williams and Carl Rasmussen. “Gaussian processes for regression”. In: Advances in neural information processing systems 8 (1995). [69] Christopher K. I. Williams and Carl Edward Rasmussen. Gaussian Processes for Machine Learning .Vol. 2. 3. MIT press Cambridge, MA, 2006. [70] Jacob Gardner et al. “Gpytorch: Blackbox matrix-matrix gaussian process inference with gpu acceler-ation”. In: Advances in neural information processing systems 31 (2018). [71] Geoff Pleiss et al. “Constant-time predictive distributions for Gaussian processes”. In: International Conference on Machine Learning . PMLR. 2018, pp. 4114–4123. [72] Takeshi Morita and Kaoru Morikawa. “Expert Review for GHS Classification of Chemicals on Health Effects”. In: Industrial Health 49.5 (2011), pp. 559–565. doi : 10.2486/indhealth.MS1267 .[73] “Framework for Solvent Recovery, Reuse, and Recycling In Industries”. In: Computer Aided Chemical Engineering . Vol. 47. ISSN: 1570-7946. Elsevier, Jan. 1, 2019, pp. 199–204. doi : 10.1016/B978-0-12-818597-1.50032-1 . url : https://www.sciencedirect.com:5037/science/chapter/bookseries/ abs/pii/B9780128185971500321 (visited on 12/06/2025). [74] Susan D. Richardson and Thomas A. Ternes. “Water Analysis: Emerging Contaminants and Current Is-sues”. In: Analytical Chemistry 83.12 (June 15, 2011). Publisher: American Chemical Society, pp. 4614– 4648. issn : 0003-2700. doi : 10.1021/ac200915r . url : https://doi.org/10.1021/ac200915r (visited on 12/05/2025). [75] Markus Enekvist et al. “Computer-aided design and solvent selection for organic paint and coating formulations”. In: Progress in Organic Coatings 162 (Jan. 1, 2022), p. 106568. issn : 0300-9440. doi :
+
+10.1016/j.porgcoat.2021.106568 . url : https://www.sciencedirect.com/science/article/ pii/S0300944021004392 (visited on 12/06/2025). [76] Laura Pilon et al. “Development of a solvent sustainability guide for the paints and coatings industry”. In: Green Chemistry 26.18 (Sept. 16, 2024). Publisher: The Royal Society of Chemistry, pp. 9697– 9711. issn : 1463-9270. doi : 10 . 1039 / D4GC01962H . url : https : / / pubs . rsc . org / en / content / articlelanding/2024/gc/d4gc01962h (visited on 12/06/2025). [77] Roger A. Sheldon. “Green solvents for sustainable organic synthesis: state of the art”. In: Green Chemistry 7.5 (May 3, 2005), pp. 267–278. issn : 1463-9270. doi : 10.1039/B418069K . url : https: //pubs.rsc.org/en/content/articlelanding/2005/gc/b418069k (visited on 06/01/2026). 18 [78] Alessandro Pellis et al. “Safer bio-based solvents to replace toluene and tetrahydrofuran for the bio-catalyzed synthesis of polyesters”. In: Green Chemistry 21.7 (2019), pp. 1686–1694. doi : 10.1039/ C8GC03567A . url : https://pubs.rsc.org/en/content/articlelanding/2019/gc/c8gc03567a 
+
+(visited on 06/01/2026). [79] Yeshimebet Simeon Erchamo et al. “Improved biodiesel production from waste cooking oil with mixed methanol–ethanol using enhanced eggshell-derived CaO nano-catalyst”. In: Scientific Reports 11.1 (Mar. 23, 2021), p. 6708. issn : 2045-2322. doi : 10.1038/s41598-021-86062-z . url : https://www. nature.com/articles/s41598-021-86062-z (visited on 06/01/2026). [80] Ji-Eun Lee et al. “The Influence of Solvent Choice on the Extraction of Bioactive Compounds from Asteraceae: A Comparative Review”. In: Foods 13.19 (Jan. 2024), p. 3151. issn : 2304-8158. doi : 10. 3390/foods13193151 . url : https://www.mdpi.com/2304-8158/13/19/3151 (visited on 06/01/2026). [81] Majid M. Heravi, Mahdieh Ghavidel, and Leyla Mohammadkhani. “Beyond a solvent: triple roles of dimethylformamide in organic chemistry”. In: RSC Advances 8.49 (Aug. 2, 2018), pp. 27832– 27862. issn : 2046-2069. doi : 10 . 1039 / C8RA04985H . url : https : / / pubs . rsc . org / en / content / articlelanding/2018/ra/c8ra04985h (visited on 06/01/2026). [82] Nadir S. Basma et al. “Local Structure and Polar Order in Liquid N-Methyl-2-pyrrolidone (NMP)”. In: The Journal of Physical Chemistry B 122.38 (Sept. 27, 2018), pp. 8963–8971. issn : 1520-6106. doi :
+
+10 . 1021 / acs . jpcb . 8b08020 . url : https : / / doi . org / 10 . 1021 / acs . jpcb . 8b08020 (visited on 06/01/2026). [83] “New solvent seeks to replace NMP”. In: Chemical & Engineering News (). url : https://pubs.acs. org/doi/pdf/10.1021/cen-09722-buscon1 (visited on 06/01/2026). [84] Yinghua Chen et al. “Trace ethylene carbonate-mediated low-concentration ether-based electrolytes for high-voltage lithium metal batteries”. In: Energy & Environmental Science 17.15 (July 30, 2024), pp. 5613–5626. issn : 1754-5706. doi : 10 . 1039 / D4EE01831A . url : https : / / pubs . rsc . org / en / content/articlelanding/2024/ee/d4ee01831a (visited on 06/01/2026). [85] Lea Westphal et al. “Temperature-Resolved Crystal Structure of Ethylene Carbonate”. In: The Journal of Physical Chemistry C 129.25 (June 26, 2025), pp. 11546–11553. issn : 1932-7447. doi : 10.1021/ acs.jpcc.4c08421 . url : https://doi.org/10.1021/acs.jpcc.4c08421 (visited on 06/01/2026). [86] Bikila Alemu Jote et al. “Effect of diethyl carbonate solvent with fluorinated solvents as electrolyte system for anode free battery”. In: Journal of Power Sources 461 (June 15, 2020), p. 228102. issn :0378-7753. doi : 10 . 1016 / j . jpowsour . 2020 . 228102 . url : https : / / www . sciencedirect . com / science/article/pii/S0378775320304055 (visited on 06/01/2026). [87] Kartikeya Shukla and Vimal Chandra Srivastava. “Diethyl carbonate: critical review of synthesis routes, catalysts used and engineering aspects”. In: RSC Advances 6.39 (Mar. 31, 2016), pp. 32624–32645. issn :2046-2069. doi : 10.1039/C6RA02518H . url : https://pubs.rsc.org/en/content/articlelanding/ 2016/ra/c6ra02518h (visited on 06/01/2026). [88] Vladimir L. Orkin et al. “Photochemistry of Bromine-Containing Fluorinated Alkenes: Reactivity toward OH and UV Spectra”. In: The Journal of Physical Chemistry A 106.43 (Oct. 1, 2002), pp. 10195– 10199. issn : 1089-5639, 1520-5215. doi : 10.1021/jp014436s . url : https://pubs.acs.org/doi/10. 1021/jp014436s (visited on 12/20/2025). [89] Mª. Dolores Romero, Eduardo D´ ıez, and Ismael D´ ıaz. “Feasibility of 1,3-butanediol as solvent for limonene and linalool separation”. In: Chemical Engineering and Processing: Process Intensification 
+
+49.11 (Nov. 1, 2010), pp. 1183–1187. issn : 0255-2701. doi : 10.1016/j.cep.2010.08.020 . url : https: //www.sciencedirect.com/science/article/pii/S0255270110002138 (visited on 12/20/2025). [90] Jonghoon Han et al. “Green Solution Processing of Halide Perovskite Solar Cells: Status and Future Di-rections”. In: Solar RRL 8.22 (2024). eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1002/solr.202400262, p. 2400262. issn : 2367-198X. doi : 10.1002/solr.202400262 . url : https://onlinelibrary.wiley. com/doi/abs/10.1002/solr.202400262 (visited on 12/20/2025). 19 [91] Byeong Jo Kim et al. “Eco-Friendly All-Layer Green Solvent Efficient Perovskite Solar Cells”. In: ACS Sustainable Chemistry & Engineering 12.35 (Sept. 2, 2024). Publisher: American Chemical Society, pp. 13371–13381. doi : 10 . 1021 / acssuschemeng . 4c05425 . url : https : / / doi . org / 10 . 1021 / acssuschemeng.4c05425 (visited on 12/20/2025). [92] Jongil Bae et al. “Advancing perovskite solar cells with biomass-derived solvents: a pathway to sus-tainability”. In: Green Chemistry 27.35 (Sept. 8, 2025). Publisher: The Royal Society of Chemistry, pp. 10598–10611. issn : 1463-9270. doi : 10.1039/D5GC02249E . url : https://pubs.rsc.org/en/ content/articlelanding/2025/gc/d5gc02249e (visited on 12/20/2025). [93] Andreas Hofmann and Thomas Hanemann. “Novel electrolyte mixtures based on dimethyl sulfone, ethylene carbonate and LiPF6 for lithium-ion batteries”. In: Journal of Power Sources 298 (Dec. 1, 2015), pp. 322–330. issn : 0378-7753. doi : 10.1016/j.jpowsour.2015.08.071 . url : https://www. sciencedirect.com/science/article/pii/S0378775315302251 (visited on 12/20/2025). 20

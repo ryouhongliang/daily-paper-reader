@@ -1,0 +1,538 @@
+Title: On the Covalent Fields of Molecule-Surface Interactions
+
+URL Source: https://arxiv.org/pdf/2606.08619v1
+
+Published Time: Tue, 09 Jun 2026 01:34:17 GMT
+
+Number of Pages: 44
+
+Markdown Content:
+# On the Covalent Fields of Molecule–Surface Interactions 
+
+# Edvin Fako 1,2* and Philippe Schwaller 1,2* 
+
+> 1
+
+Laboratory of Artificial Chemical Intelligence (LIAC), Institute of Chemical Sciences and Engineering, Ecole Polytechnique F´ ed´ erale de Lausanne (EPFL), Lausanne, Switzerland 
+
+> 2
+
+National Centre of Competence in Research (NCCR) Catalysis, Ecole Polytechnique F´ ed´ erale de Lausanne (EPFL), Lausanne, Switzerland 
+
+> *
+
+Corresponding authors. Email: edvinfako@gmail.com, philippe.schwaller@epfl.ch 
+
+# Abstract 
+
+The ambiguity of the active site, the empirical status of Brønsted–Evans–Polanyi relations, and the unpredictability of linear scaling relation breakdown are three symptoms of a single repre-sentational choice: treating chemical affinity as an attribute of discrete geometric sites. Here we show that all three are resolved when chemical affinity is represented as a continuous prop-erty of the interface: the covalent field. We present a framework, Covalent Field Theory (CFT), in which active sites emerge as regions where the field sustains a bias toward bond formation beyond the thermal threshold, removing the need for geometric classification. Linear scaling relations are correlation structure in the field across probe families; their breakdown is a topo-logical bifurcation with a precise geometric signature. Brønsted–Evans–Polanyi correlations arise from the covalent field decomposition, providing a theoretical basis for what has previ-ously been treated as an empirical regularity, demonstrated across 120,000 candidate pathways. Applied to a high-entropy alloy nanoparticle and a partially reduced high-entropy oxide, CFT maps these properties onto surfaces of arbitrary compositional and structural complexity. 
+
+Keywords: Heterogeneous catalysis, Covalent field theory, Linear scaling relationships, Surface representation, Machine-learned potentials, Catalyst design 1
+
+> arXiv:2606.08619v1 [physics.chem-ph] 7 Jun 2026
+
+# Introduction 
+
+The active site, a discrete surface location held responsible for chemical transformation, has served as the foundational concept of heterogeneous catalysis for over a century [1–4]. The term now appears in over 28,000 publications annually [5], yet this ubiquity masks a profound conceptual problem: despite a century of use, no rigorous and universally applicable definition exists [6]. As our capacity to characterize and simulate catalysts grows in scale and scope, the fragmentation of knowledge into highly specific, non-transferable case studies has become the primary bottleneck to rational materials design. The modern era of computational catalysis is a triumph of the static-site paradigm. The quantitative power of Density Functional Theory (DFT) [7–9] enabled the discovery of linear scaling relationships (LSR) and Brønsted–Evans–Polanyi (BEP) relations [10–12], transform-ing heterogeneous catalysis from qualitative observation to quantitative prediction [13–15]. Yet these advances rest on the assumption that the catalyst surface is an (quasi) immutable, static entity. A concession that was computationally necessary but that has since become struc-turally embedded in how data is generated, interpreted and modeled, despite being at odds with decades of experimental evidence for dynamic surface reconstructions under reaction condi-tions [16–18]. Despite a wealth of experimental insight, and as a direct consequence of the static-site paradigm, the field faces a self-reinforcing problem. The current computational toolkit pro-vides no way of measuring bond-forming capacity directly: reactivity is either inferred from observation (molecular dynamics, metadynamics) or reconstructed event-by-event by explicitly connecting local minima through transition-state theory [19]. Despite sophisticated methods for evaluating ensemble energetics (via quantum chemistry [7, 8] or machine learning [20, 21]) and for propagating the system through phase space, the computational study of surface reac-tivity remains an observational science. Data-driven methods and machine learning promise to accelerate discovery, but largely rely on datasets generated within the same paradigm [22– 24], biasing models toward idealized systems and limiting their ability to reason and discover [25, 26]. These are not independent shortcomings; they share a common origin in the repre-sentational language the field has inherited. Heterogeneous catalysis shares the same atom-istic representation with alloy, battery, and fluid research, yet the very definition of a chemical reaction involves a change in the chemical identity of a molecular species. Within the atom-istic representation, the static-site idea is not an added assumption but a necessity: chemical 2species are identified as arrangements of atoms corresponding to local minima of the potential energy surface. As a direct consequence, simple molecules, high-symmetry surfaces, and high-symmetry sites are over-represented not because they are the most relevant, but because they are the easiest to construct and label reliably. The rapid development of machine-learned interatomic potentials [20, 21, 27, 28] has made simulation of structurally and compositionally complex surfaces increasingly tractable [29, 30], shifting the primary bottleneck in computational catalyst discovery from energy evaluation to representation, and crucially, interpretation. Existing spatial descriptions of surface reactivity do not fill this gap. Generalized coordination numbers provide geometry-based affinity prox-ies without chemical specificity [31]; local d-band center [32] maps offer spatially resolved electronic descriptors [33, 34] but remain properties of the reference surface alone, with probe identity entering only implicitly. Dense adsorption energy grids achieve chemical specificity but require ionic relaxation at every point, making them computationally prohibitive and inher-ently incompatible with dynamic or metastable surfaces [35, 36]. What is needed, and what has not previously existed, is a description that is simultaneously probe-specific, energetically interpretable, applicable to surfaces of arbitrary complexity, and evaluable at non-equilibrium configurations without requiring relaxation to local minima or statistical sampling of rare reac-tive events. In this contribution, we show that assuming surfaces possess an intrinsic capacity for host-ing and facilitating reactive events that varies continuously across the interface, leads to a uni-fied picture of surface reactivity. We introduce Covalent Field Theory to quantify this capacity, defined at arbitrary configurations, and without requiring relaxation of the surface or prior identification of binding sites. The ability to evaluate the covalent field independently of the instantaneous configuration of the surface unlocks the ability to monitor how reactivity evolves as the surface reconstructs over time. The covalent field is defined at any point within the sys-tem, but can be evaluated on an orientable two-dimensional manifold enclosing the interface, sampled systematically without relaxation or prior site identification. The practical need for exactly this description first surfaced in an experimental collaboration on ligand-modulated copper electrocatalysts for CO 2 reduction [37] (Supplementary Note 1), where treating affinity as a continuous field resolved a question that the discrete-site frame-work had no natural language for. That result, obtained before the framework was formally axiomatized, was the first indication that the representational choice carries genuine explana-3tory power. For trivial (atomic) probes the covalent field is a scalar field on this manifold; for probes of increasing internal complexity it extends naturally to a systematic hierarchy of richer repre-sentations, defined formally in the theory section. Reactive events can also be represented with covalent fields. In the initial and final states of a surface reaction, the total energy is well de-scribed by the individual covalent fields of the participating probes. As probes approach each other along a reaction coordinate, however, their fields begin to couple and the pairwise de-scription breaks down. The deviation from additivity (the higher-body-order residual) reaches a maximum at a configuration that places the greatest simultaneous covalent demand on a sin-gle surface site. This configuration, the point of maximal deviation, can itself be represented as a probe with its own covalent field: a spatially resolved map of the surface capacity to facilitate bond formation and breaking. From the structure of the covalent field, catalytically relevant observables emerge as derived quantities rather than geometric assumptions. Linear scaling relations arise as correlations between probe-specific fields across the same surface, a manifold-level property that holds even when every site is chemically distinct. Even the surface capacity to facilitate bond formation and breaking has its own covalent field that couples the fields of reactants and products, and from which unit-slope Brønsted–Evans–Polanyi relations emerge as an exact algebraic identity. This allows for separation of two contributions heavily confounded in conventional analysis, an intrinsic site-dependent covalent barrier and a configurational term from the initial state. The demonstrations that follow apply CFT to surfaces of genuine chemical complexity, a high entropy alloy nanoparticle and a partially reduced high entropy oxide, where conventional site enumeration is intractable, making the field representation the natural language of analy-sis. Across these systems, linear scaling relations and their deviations are resolved spatially, competing adsorption requirements are mapped simultaneously onto surface geometry, and the intrinsic site dependent barrier is separated from configurational initial state contributions across 120,000 candidate reaction pathways. In this language, the active site finds a defini-tion it has lacked for a century: a region where the covalent field sustains a bias toward bond formation large enough to be catalytically decisive. 4Fig. 1: Covalent field decomposition of an interface interaction a , CFT partitions any surface-adsorbate system into a field-generating reference R and a molecular probe G; their interaction en-ergy, evaluated as the probe moves through space, defines the covalent field ΦRG . b, Covalent field ΦR∗C
+
+mapped around the PtPdAuAgCu nanoparticle in three planar slices; yellow regions are repulsive, blue regions are strongly attractive, illustrating the local character of covalent interactions. c, Anisotropic field for ∗NNH as a function of distance from the surface h and rotation angle α about the surface normal (φ = θ = 0 ). The field is nearly isotropic at a top site but varies by ∼0.5 eV at a bridge site depending on whether the N–N axis is parallel or orthogonal to the metal–metal bond, illustrating the orientational sensitivity captured by the anisotropic field extension. d, Spectral field for glycerol ρRG (ϵ; d) represented as a kernel density of relaxed conformer energies at each probe-surface distance. Far from the surface the distribution reflects gas-phase conformational preferences; near the surface, probe-surface interac-tions narrow the accessible conformational space, selecting specific interaction modes. 
+
+# Defining the Covalent Field 
+
+Every computational study of surface reactivity implicitly performs the same decomposition: a surface is prepared, a molecule is placed near it, and an interaction energy is computed. Co-valent Field Theory makes this decomposition explicit and systematic. Any surface-adsorbate system is partitioned into a reference structure R (a particle, slab, or any other material in-terface) and a chemical probe G (an atom, molecule, or molecular fragment) defined by its molecular graph ( Figure 1a ). The interaction energy between probe and reference, evaluated as the probe moves through the space surrounding the interface, defines a continuous map of surface chemical affinity: the covalent field ΦRG (r). This field is the primary object of the the-ory; all catalytically relevant quantities are derived from its structure rather than imposed upon 5it (Postulate III, Methods). The probe’s position in space is represented by a single point, the anchor : the atom (or geometric midpoint of atoms) that forms the primary covalent bond to the surface. This reduc-tion is not a simplification but a consequence of the nature of covalent bonding, which is both local and directional: all properties of the probe, its orientation, conformation, and internal geometry, project onto this single point without loss of the dominant interaction (Postulate I, Methods). The probe is oriented at each anchor position facing away from the reference, fol-lowing the covalent interaction vector of the surface bond [36] (see Methods). The locality of covalent interactions has a second structural consequence: interaction energies decay rapidly beyond bonding distances, confining the chemically relevant domain of the field to a thin shell enclosing the interface. This shell is represented as an orientable two-dimensional manifold 
+
+M, constructed by fitting a mesh to the reference geometry. Evaluating the covalent field at each manifold vertex yields a spatial map of surface affinity that is directly interpretable in energetic terms: each vertex corresponds to the interaction energy of a specific probe-reference configuration. Because the field is a smooth, continuous function on this manifold, its criti-cal points, the binding minima, migration saddles, and repulsive maxima, are not independent: their counts are linked through a global topological identity that constrains the active site struc-ture of the entire surface simultaneously (Methods). Active sites cannot be created or destroyed in isolation; a new binding minimum must be accompanied by a new saddle connection, making the active site count a global property of the field rather than a local geometric one. The simplest realization of the covalent field is the frozen probe approximation, in which a single representative conformation defines the probe identity and the field becomes a scalar function of anchor position alone. This is the zeroth order term of a systematic hierarchy that extends naturally to a fiber bundle [38] over orientation and conformational space. When orien-tational effects are significant, retaining the dependence on rotation α about the surface normal at each manifold vertex yields the anisotropic field ΦRG (r; α), capturing the directional character of probe-surface coupling that the scalar field does not. When the probe has rich conformational freedom, the distribution of interaction energies over a relaxed conformer ensemble at each an-chor position defines the spectral field ρRG (ϵ; r). Both extensions are illustrated in Figure 1c,d 
+
+and defined formally in Methods. When multiple probes occupy the surface simultaneously and their separation is large rel-ative to the range of covalent interactions, the total energy is well approximated by the sum of 6their individual fields. This additivity condition defines the regime of validity of the field de-scription (Postulate IV, Methods). Along a reaction coordinate, however, the molecular graphs of the participating probes change and the probes interact directly: the pairwise description breaks down and the total energy deviates from the sum of individual fields. The higher-body-order residual ∆EHBO is the exact remainder of this deviation by construction, not an approx-imation, and its magnitude along the reaction coordinate quantifies the degree of inter-probe coupling at each configuration. When a bond forms, the molecular graph transitions between well-defined CFT probes, of the reactants on one, and products on the other side. The probe at this transition, whose anchor is the forming bond, has its own covalent field that spatially represents how the surface couples the fields of reactants and products. Evaluated across the manifold, ∆EM 
+
+> HBO
+
+of this probe iden-tifies regions of minimum higher-body-order repulsion, the intrinsic barrier field, from which unit-slope Brønsted–Evans–Polanyi relations follow as an exact algebraic identity, derived for-mally in Methods. In deriving this identity, the assumption is made that multiple initial/final state pairs traverse through the same minimal energy pathway. However, the covalent fields of the reactants, PMD probe and products contain information about all possible pathways. The covalent field is oracle-agnostic: the field topology, scaling relation structure, and 
+
+∆EHBO decomposition are independent of the choice of energy source provided the oracle preserves the ordering and curvature of interaction energies across the manifold. MACE-MH1-r2scan [39] is used throughout as a computationally efficient and broadly validated energy source. 
+
+# Results and Discussion 
+
+# Surface manifolds and spatially-resolved energetics 
+
+Mapping the ∗C covalent field across the manifold M of the HEA nanoparticle yields a contin-uous, spatially resolved affinity map ΦM∗C (Figure 2c ) with well-defined gradients ( Figure 2d ). Because each vertex corresponds to the interaction energy of a specific probe-reference con-figuration, additive quantities are defined on the manifold without further approximation: the reaction energy ∆EM 
+
+> react.
+
+= Φ M∗CO − ΦM∗C − ΦM∗O maps point-by-point thermodynamics directly onto the surface ( Figure 2e ). This description of surface resolved reaction energy ignores all geometric considerations, a point that will be revisited in detail. 7The covalent field is a smooth function on a compact oriented manifold; the Morse in-equalities [40] then require that the counts of binding minima ( c0), migration saddles ( c1), and repulsive maxima ( c2) satisfy c0 − c1 + c2 = 2 for a spherical nanoparticle: a global constraint (Methods) that makes active site counts a topological feature of the probe-surface interaction rather than a consequence of local atomic arrangement. 
+
+Fig. 2: Covalent field manifold. a , PtPdAuAgCu high-entropy alloy nanoparticle containing 55 atoms. 
+
+b, Orientable quad mesh M fitted to the particle surface; preserved topology enables surface normal computation at each vertex. c, Covalent field of carbon ΦMNP  
+
+> ∗C
+
+mapped onto the manifold as a function of the two-dimensional surface coordinates, and its gradient map ( d); each vertex corresponds to the interaction energy of a specific probe-reference configuration. e, Individual covalent fields for oxygen (ΦMNP  
+
+> ∗O
+
+), carbon ( ΦMNP  
+
+> ∗C
+
+), and carbon monoxide ( ΦMNP  
+
+> ∗CO
+
+), and the manifold-resolved reaction energy 
+
+∆EMNP  
+
+> react.
+
+, illustrating that additive thermodynamic quantities are directly defined on the manifold. f,Manifolds constructed at distances spanning 1.5 to 3.5 ˚ A from the reference particle. g, Covalent field profiles as a function of probe-surface distance for representative top and hollow sites across probes of increasing complexity (atomic carbon, pyridine, glycerol); profiles follow Morse-like shapes with probe-specific minima, and ordering is preserved above approximately 2.3 ˚ A, confirming that the static manifold captures field topology without reproducing exact adsorption minima. 
+
+8The manifold is evaluated at a fixed distance from the reference particle. Fitting manifolds across 1.5 to 3.5 ˚ A and evaluating the field for probes of increasing complexity (Figure 2f) shows that energy profiles follow Morse-like shapes with probe-specific minima (predictably given the smoothness of the governing MLIP). Above approximately 2.3 ˚ A the profiles be-come uniform and well-separated, confirming that field ordering and critical point structure are preserved across the sampled range. The smooth variation in the surface-normal direction fur-ther establishes that the full distance-parameterized family is continuous in three dimensions, providing a formal basis for the distance-independence of the topological structure observed here. 
+
+# Linear scaling relations across the manifold 
+
+Linear scaling relations arise in conventional analysis from comparisons of adsorption ener-gies at equivalent sites across different materials: a procedure that becomes ambiguous on chemically complex surfaces where no two sites are alike. In the field representation this ambiguity dissolves: exchanging the molecular graph of the probe while fixing the anchor position and surface-normal orientation enforces geometric equivalence automatically, with-out prior site classification. Applied to three probe families ( ∗O/ ∗OH, ∗N/ ∗NH/ ∗NH 2, and 
+
+∗C/ ∗CH/ ∗CH 2/∗CH 3) across the HEA nanoparticle, the manifold distributions follow linear trends ( Figure 3a–c ) even though every surface site is chemically distinct. Linear scaling rela-tions are not a property of equivalent sites across materials, they are a manifold-level property of a single complex surface. Deviations from the linear trend are computed per vertex and projected back onto the surface ( Figure 3d ), spatially localizing the regions of outlier catalytic behavior that scaling-plot approaches can detect but never locate. Balancing competing adsorption requirements across sequential reaction steps is the central challenge of multi-functional catalyst design. For CO 2 reduction, optimal activity requires simultaneous balance of ∗CX, ∗H, and ∗OX affinities, a balance achieved by Cu but not Pd or Au [41]. High-entropy oxides under reaction conditions partially reduce and reconstruct, generating surface motifs of precisely this complexity [42]. Comparing affinity distributions across equivalent manifolds for Cu, Au, and Pd(211) against the HEO surface ( Figure 3e )shows that the expected reactivity hierarchy is preserved across the manifolds of the pristine reference metals, while the HEO distribution reveals spatially distinct regions of both oxidized and Cu-like affinity toward ∗CO, ∗O, and ∗H. 9Mapping all three fields simultaneously onto the surface as a multi-channel descriptor ( ∗O, 
+
+∗H, ∗CO assigned to red, green, and blue channels respectively, Figure 3f ) reveals that ∗H and 
+
+∗O affinities are strongly correlated across the surface while ∗CO affinity varies independently. Sites binding all three species strongly appear white and correspond to (partially) reduced sur-face bridge and hollow motifs most relevant for CO 2 reduction activity. The physical origin is directly readable from the map: oxidized surface domains suppress ∗H affinity while leaving 
+
+∗CO affinity largely unaffected, a spatial decoupling that correlation-plot approaches average away and that the field representation makes immediately visible. 
+
+# Decomposing a surface reaction into covalent field contributions 
+
+To build physical intuition for the CFT decomposition, we trace a single minimum-energy pathway for ∗C + ∗O → ∗ CO on the HEA nanoparticle ( Figure 4a ). The pairwise decomposi-tion of the total energy into individual probe-field contributions ( Figure 4b,c , S7 ) reveals that the barrier originates entirely in higher-body-order terms: the pairwise contributions show no barrier. The probe trajectories tell the physical story directly ( Figure 4a ). Two distinct modes are visible: first, O traverses the surface toward C while remaining covalently bound to the surface, with C barely moving, reflecting the stronger covalent field of carbon. Once the C–O bond forms ( Figure S8 ), the mode changes: O lifts away from the surface as C shifts toward the Pd top site. The point separating these two modes is not the transition state, it is the configuration of greatest simultaneous coordination demand on the surface, the Point of Maximal Deviation (PMD). The higher-body-order residual ∆EHBO (Figure 4d ) confirms this directly: negligible at the initial state where C and O are well-separated, rising as the probes couple, and peaking precisely at the mode change. The transition state at image 3 appears earlier in the trajectory than intuition suggests, pulled toward the initial state by the steep energy release of C–O bond formation. Here the TS is significantly affected by the thermodynamics of the initial and final states. 
+
+Figures 4e and 4f reveal the two competing field effects that govern any reaction trajectory taking place on the surface: O (or C) must escape its own covalent minimum on the interface, while the system resists the many-body repulsion arising from overcoordination of the surface atom ( Figure S8 ). The observed NEB pathway is a compromise between these two effects, 10 Fig. 3: Linear scaling relations across the manifold. a–c , Covalent field correlations for probe fami-lies ∗O/ ∗OH, ∗N/ ∗NH/ ∗NH 2, and ∗C/ ∗CH/ ∗CH 2/∗CH 3 across the HEA nanoparticle manifold. Linear trends persist even though every surface site is chemically distinct, establishing LSRs as a manifold-level property rather than a property of equivalent sites. d, Spatial distribution of LSR deviations pro-jected onto the manifold; gray regions satisfy the scaling relation, blue (red) regions bind more weakly (strongly) than predicted. e, Affinity distributions for ∗CO, ∗O, and ∗H on the partially reduced HEO surface compared against Cu, Au, and Pd(211) references (black); the HEO distribution spans both ox-idized and Cu-like affinity regimes. f, Multi-channel affinity descriptor mapping ΦMHEO  
+
+> ∗O
+
+(red), ΦMHEO 
+
+> ∗H
+
+(green), and ΦMHEO  
+
+> ∗CO
+
+(blue) simultaneously onto the surface. White regions bind all three species strongly and correspond to partially reduced motifs most relevant for CO 2 reduction activity. 
+
+but both are expressions of the covalent field. In principle, all pathways connecting initial and final states are possible; which one a reaction event follows is a statistical outcome of reaction dynamics. The covalent fields are the landscape that biases these events, all thermodynamic information about all such pathways is already contained within them. Barriers of reactions proceeding without continuous surface contact reduce to the covalent field directly; for surface-mediated transformations, the PMD probe satisfying the covalent 11 Fig. 4: Covalent field decomposition of the ∗C + ∗O → ∗ CO reaction pathway. a , Minimum-energy pathway computed by the nudged elastic band method; images are colored by total energy relative to the initial state. b, Pairwise decomposition of the total energy into individual probe-field contributions: 
+
+ΦPNP  
+
+> ∗C
+
+(gray), ΦPNP  
+
+> ∗O
+
+(red), and the C–O pair interaction EC-O (white). Both atoms are displaced from their equilibrium geometries along the pathway, with the energy penalty offset by C–O bond formation. 
+
+c, Sum of pairwise contributions (green) compared to the total energy; the pairwise description holds in the initial and final states but shows no barrier, demonstrating that the barrier originates entirely in higher-body-order terms. d, Higher-body-order residual ∆EHBO along the pathway; negligible at the initial state, rising as the probes couple, and reaching its maximum at image 5 — the point of maximal deviation (PMD). e, Trajectories of the individual probes through their respective covalent fields along the pathway; ∗O moves substantially while ∗C remains largely stationary, reflecting the stronger covalent field of carbon. f, Covalent field of ∗O in the presence of carbon, ΦPNP ∗C 
+
+> ∗O
+
+, at each NEB image; the O position is indicated in red. 
+
+binding requirements of both reactants simultaneously maps the intrinsic barrier field across the full manifold, as demonstrated in the following section. 
+
+# Mapping reaction barriers to the manifold 
+
+The preceding section showed that for a reaction that proceeds on an interface, where neither reactant loses covalent contact to the surface, a configuration exists for which the molecular graphs of the reactants transform into the molecular graph of the product. This configuration, point of maximal deviation (PMD) meets all CFT formal requirements to be considered itself a probe: it is defined by its own molecular graph at the transition between reactant and product fields and anchored at the forming bond midpoint. This frozen probe geometry can be con-structed from covalent requirements alone and compared to the PMD configuration obtained in 12 Fig. 5: Brønsted–Evans–Polanyi correlations as a consequence of covalent field decomposition. a ,PMD probe geometry identified along the ∗C + ∗O → ∗ CO pathway; anchor at the geometric midpoint of the forming bond, with both atoms simultaneously within covalent range of the same surface atom. 
+
+b, Anisotropic covalent field of the PMD probe ΦM 
+
+> PMD
+
+decomposed into pairwise contributions at fixed 
+
+α; ∆EM 
+
+> HBO
+
+is the remainder after subtracting individual probe-field contributions. c, Minimum of ΦM
+
+> PMD
+
+over α per manifold vertex. d, Standard deviation σα(Φ M
+
+> PMD
+
+) over α; bridge and three-fold sites show variations up to ∼1 eV, providing a diagnostic of frozen approximation reliability. e, Manifold distri-bution of ∆EM
+
+> HBO
+
+; purple basins identify candidate active sites capable of sustaining simultaneous dual coordination. f, Thermodynamics-corrected barriers ( ∆EM 
+
+> HBO
+
+− EIS react. ) versus reaction energy across 
+
+∼120,000 candidate pathways, colored by anchoring metal. Unit-slope parallel families emerge as an exact algebraic identity of the decomposition; vertical offsets count topologically distinct active site en-vironments. Pd (dark blue) shown as reference. g, Initial-state versus final-state energies; absence of correlation confirms IS configurations are distributed independently of the basin they access. h, Final-state ∗CO affinity versus ∆EM
+
+> HBO
+
+; inverse correlation reflects geometric incompatibility between PMD dual coordination and the top-site preference of ∗CO. 
+
+the previous section ( Figure 5a ). As such, its covalent field can be calculated independently from any initial or final resting state assumptions, and the intrinsic barrier ( ∆EM
+
+> HBO
+
+) can be computed from the PMD covalent field ( Figure 5b ). By decomposing the total interaction 13 into pairwise contributions at geometrically equivalent structures, we can construct the higher-body-order deviation of the PMD probe: 
+
+∆EM 
+
+> HBO
+
+= Φ M 
+
+> PMD ∗CO
+
++ ECO form.PMD − ΦM 
+
+> PMD ∗C
+
+− ΦM 
+
+> PMD ∗O
+
+(1) Practically, this is done by rotating the PMD probe about the surface normal in 10 ◦ in-crements yielding the anisotropic field ΦM
+
+> PMD
+
+(α). The minimum energy across all orientations (Figure 5c ) and its standard deviation σα(Φ M
+
+> PMD
+
+) (Figure 5d ) are recorded at each vertex; bridge and three-fold sites exhibit the highest orientational sensitivity, with energy variations reach-ing ∼1 eV. Because the PMD probe geometry is fully specified at each vertex and orientation, 
+
+∆EM 
+
+> HBO
+
+follows directly from equation (1): the individual probe-field contributions ΦM 
+
+> PMD ∗C
+
+and 
+
+ΦM 
+
+> PMD ∗O
+
+are evaluated at the atomic positions within the frozen PMD geometry and subtracted from ΦM
+
+> PMD
+
+. This intrinsic barrier field, reveals discrete basins of dual-coordination capacity on the manifold ( Figure 5e ). Purple regions identify where a single surface atom can simul-taneously satisfy the covalent demands of both reactants (the geometric prerequisite for bond formation) and constitute the candidate active areas for this reaction class. Identifying basins that satisfy the covalent requirement of the PMD establishes whether the surface can facilitate bond formation. However, the activation and reaction energies depend on the specific configurations of the initial and final states. For a given PMD vertex and orientation 
+
+α, the positions of the constituent C and O atoms within the frozen PMD geometry define candidate initial-state positions for ∗C and ∗O, and a candidate final-state position for ∗CO, by identifying the nearest manifold vertices to each atomic anchor. Restricting to vertex pairs whose separation is sufficient for covalent field independence ( Figure 5e , equation (5)), the reaction energy for each PMD configuration is defined entirely from manifold distributions of the individual covalent fields: 
+
+∆EPMD react. = Φ M∗CO (r∗CO ) + ECO form. − ΦM∗C (r∗C) − ΦM∗O(r∗O) (2) By identifying manifold minima of ∆EM 
+
+> HBO
+
+for each sampled orientation of the PMD probe and constructing initial and final states as described above, the 55-atom nanoparticle yields 
+
+∼120,000 candidate reaction pathways without transition-state searches. For each pathway, the geometries of the initial state, PMD, and final state are explicitly defined within the CFT framework. The covalent fields of the reactants and products are coupled through all of these pathways simultaneously; which one a reactive event follows is a statistical outcome of the 14 dynamics on the covalent field landscape. With both a thermodynamic and a kinetic observable defined on the manifold for every candidate pathway, the relationship between reaction energy and activation barrier can be ex-amined directly. Plotting the thermodynamics-corrected barrier ( ∆EM 
+
+> HBO
+
+− EIS react. ) against the reaction energy ( Figure 5f ) reveals a structure of parallel BEP families with unit slope. By construction, the unit slope is an exact algebraic identity of the decomposition (Methods): the PMD position is selected as minima of each ∆EM 
+
+> HBO
+
+basin, and varying the initial state shifts both the apparent barrier and the reaction energy by equal amounts. The construction does not guarantee that each proposed barrier reflects the true minimum-energy pathway; what it establishes is that a surface moiety capable of funneling a distribution of initial states into a distribution of final states necessarily expresses itself as a family of parallel, unit-slope BEP lines. The number of such families is therefore a direct count of topologically distinct active site environments on the manifold. The absence of clear correlation between initial-state and final-state energies ( Figure 5g )demonstrates the independence of ∆EM 
+
+> HBO
+
+from initial-state configuration that the decompo-sition requires. An inverse correlation between ∆EM 
+
+> HBO
+
+and the final-state affinity for ∗CO (Figure 5h ) shows that sites most effective at stabilizing the strained PMD geometry bind the 
+
+∗CO product more weakly. This anti-correlation reflects a geometric incompatibility between the simultaneous dual coordination demanded by the PMD and the top-site preference of ∗CO: a spatial relationship invisible to site-averaged analysis but directly readable from the manifold representation. 
+
+# Conclusions 
+
+The ambiguity of the active site, the empirical status of Brønsted–Evans–Polanyi relations, and the unpredictability of linear scaling relation breakdown have resisted resolution for decades not because they are intrinsically complex, but because the discrete-site language makes them appear so. Each dissolves when chemical affinity is treated as a continuous field property of the interface rather than an attribute of discrete geometric sites. In the field language, active sites are not located but defined: regions where the covalent field sustains a bias toward bond formation large enough to be catalytically decisive. Their counts are constrained by a global topological identity, a new binding minimum cannot ap-15 pear without a corresponding saddle connection, making active site structure a property of the field topology rather than of local atomic arrangement. Linear scaling relations are correlation structure in the field across probe families, holding manifold-wide even when every surface site is chemically distinct, and their breakdown is a topological bifurcation with a precise ge-ometric signature on the surface. Brønsted–Evans–Polanyi correlations with unit slope are an algebraic identity of the covalent field decomposition: the thermodynamics-corrected activa-tion barrier ∆EM 
+
+> HBO
+
+is independent of initial-state configuration by construction, and varying the initial state shifts both the apparent barrier and the reaction energy by equal amounts. The 120,000-pathway demonstration does not prove this slope, it confirms the self-consistency of the frozen probe approximation across a chemically heterogeneous surface. These are not three separate results. They are three consequences of a single representa-tional choice, visible simultaneously once the field is the primary object. The number of BEP lines counts the topologically distinct active site environments; their offsets measure intrinsic barrier capacity; their slopes are exact. The multi-channel affinity descriptor maps compet-ing adsorption requirements directly onto surface geometry, identifying regions where the field simultaneously satisfies multiple thermodynamic criteria: a spatial specificity that correlation-plot approaches cannot provide. Critically, the covalent field is not a static construct. While the demonstrations here use static surface snapshots for clarity, the field is defined at arbitrary configurations of the surface and probe, without requiring relaxation or prior site identification. A working catalyst is a time-evolving interface, and CFT provides the instrument for evaluating how its affinity landscape evolves as the surface reconstructs, activates, and responds to reaction conditions. The frame-work changes not only how efficiently surface reactivity can be described, but what questions can be asked: spatial active site topology, distance-resolved field continuity, and the topologi-cal signature of scaling relation breakdown are questions that the discrete-site language cannot even formulate. As machine-learned interatomic potentials make structurally and compositionally complex surfaces increasingly tractable, the primary bottleneck in computational catalyst discovery shifts from energy evaluation to representation. Covalent Field Theory provides that repre-sentation — not as a descriptor scheme or a computational workflow, but as a theory in which the defining characteristics of catalytic activity emerge from the structure of the field rather than from assumptions about the structure of the surface. 16 Methods 
+
+# Mathematical framework 
+
+Configuration mapping. The reference structure R is defined by the atomic positions and species of the surface or nanoparticle. The probe G is defined by its molecular graph, with a designated anchor at the atom or geometric midpoint of the atom pair forming the primary covalent bond to the reference. Given anchor position r ∈ R3 and orientation Q ∈ SO (3) , the Cartesian position of probe atom i is 
+
+ri
+
+> probe
+
+(r, Q, χ ) = r + Q ξi(χ), (3) where ξi(χ) is the position of atom i in the probe’s body frame (anchor at origin) and χ parame-terizes internal conformational degrees of freedom. In the default frozen-probe approximation, 
+
+Q is determined by the local surface normal and χ is fixed to a reference conformer generated by AutoAdsorbate [36], making the probe configuration a deterministic function of r alone. The full set of probe atom positions under this mapping is denoted PG (r).
+
+Postulate I: Anchor definition. Every probe has a designated anchor, specified in its molecular graph. For monodentate binding the anchor is the surface-binding atom; for bidentate binding it is the geometric midpoint of the two binding atoms. The position of the probe in space is defined as the position of its anchor, r ∈ R3.
+
+Postulate II: Configuration mapping. All configurations of the probe that preserve its molecular graph, rotations, conformational changes, local dynamics, map to the anchor position via equation (3). Transformations that change the molecular graph define a distinct probe and a distinct covalent field. 
+
+Postulate III: Covalent field. The covalent field is the interaction energy between probe and reference as a function of anchor position: 
+
+ΦRG (r) = E(R ∪ P G (r)) − E(R) − EG 
+
+> 0
+
+, (4) where E(·) is the total potential energy evaluated by the chosen oracle and EG 
+
+> 0
+
+is the probe gas-phase reference energy. Under the frozen-probe approximation this is a well-defined function of 
+
+r alone. The field topology, its gradients, critical points, and spatial correlations, is independent of the choice of oracle provided the oracle faithfully reproduces the ordering and curvature of interaction energies. 17 Postulate IV: Field validity and additivity. The covalent field correctly describes probe– reference interactions when (i) the probe’s molecular graph is well-defined, and (ii) inter-probe interactions are negligible. For n isolated probes satisfying both conditions, the total energy is approximately additive: 
+
+Etotal ≈ E(R) + 
+
+> n
+
+X
+
+> i=1
+
+ΦRGi (ri). (5) When equation (5) breaks down, as along a reaction pathway where molecular graphs change, the higher-body-order residual 
+
+∆EHBO = Etotal − E(R) − X
+
+> i
+
+ΦRGi (ri) (6) quantifies inter-probe coupling. Along a reaction coordinate ∆EHBO reaches its maximum at the point of maximal deviation (PMD): the configuration placing the greatest simultaneous coordination demand on a single surface atom. ∆EPMD HBO is obtained by evaluating equation (6) at the frozen PMD probe geometry across the manifold (see Point of Maximal Deviation probe construction). 
+
+Extended representations. When orientational effects are significant, the anisotropic field 
+
+retains the angular dependence on rotation α about the surface normal: 
+
+ΦRG (r; α) = E(R ∪ P G (r, α )) − E(R) − EG 
+
+> 0
+
+. (7) When conformational sampling is required, the spectral field represents the distribution of in-teraction energies over a relaxed conformer ensemble {χk}:
+
+ρRG (ϵ; r) = 1
+
+K
+
+> K
+
+X
+
+> k=1
+
+N  ϵ; Φ RG (r, χ k), σ 2 , (8) where N (ϵ; μ, σ 2) is a Gaussian kernel with bandwidth σ. The frozen-probe scalar field is the zero-temperature limit of equation (8). 
+
+# Computational tractability 
+
+A natural question arising from the interpretability claim, where each manifold vertex corre-sponds to a structure whose value is its total energy (here evaluated with an MLIP), is whether this procedure is computationally tractable. Conventional workflows locate stationary points of the potential energy surface through iterative relaxations requiring tens to hundreds of po-tential calls. Figure 6 compares these costs. Five ionic relaxations of ∗C require 156 potential 18 Fig. 6: Computational tractability. a , Five ionic relaxations (156 calls) versus sparse manifold grid. 
+
+> b, Three NEB calculations ( ∼7000 calls) versus dense manifold grid. Manifold evaluation distributes effort uniformly across the surface.
+
+calls and yield five data points, whereas a sparse manifold grid (218 vertices) maps the entire surface at similar cost ( Figure 6a ). Likewise, three NEB calculations consume ∼7000 calls, while a dense manifold grid achieves comprehensive surface coverage at similar computational cost ( Figure 6b ). The CFT manifold approach therefore matches the cost of conventional PES exploration while distributing information uniformly across the particle surface. Rather than concentrating effort on pre-selected sites, manifold evaluation samples the surface systemati-cally, allowing reactive regions to emerge directly from the data removing any bias in sampling. 
+
+# Probe generation and manifold evaluation 
+
+Chemical probes were constructed and placed using the AutoAdsorbate algorithm [36], which takes a surrogate-SMILES (*SMILES) string as input, generates a reference conformer ensemble, and positions the probe on the surface by aligning the covalent interaction vector with the local surface normal at each manifold vertex. For monodentate probes the covalent interaction vector is defined by the anchor-surrogate bond; for bidentate probes it is defined by the geometric midpoint of the two anchor atoms. Internal probe geometry was frozen at the reference conformer for all standard covalent field evaluations; conformational sampling was 19 applied only for the spectral field calculations described in the main text. The surface manifold M was constructed by fitting a quadrilateral mesh to the reference particle using a shrinkwrap algorithm initialized from a subdivided cube primitive. Manifolds spanning the 1.5–3.5 ˚ A distance range were generated by uniformly scaling the fitted mesh along the surface-normal direction. For each vertex, the probe anchor was placed at the vertex position, the probe was oriented according to the local normal, and the total energy of the reference-probe configuration was evaluated in a single potential call with no further relaxation. Covalent field values were obtained by subtracting the isolated reference energy E(R) and the probe gauge energy EG 
+
+> 0
+
+from the total configuration energy, following Postulate III. Isolated reference energies were computed once per reference structure; probe gauge energies were computed for each probe species in a large simulation cell to approximate gas-phase conditions. 
+
+# Computational Details 
+
+The high-entropy alloy (HEA) nanoparticle used as the primary reference structure was taken from Ref. 43. The particle adopts a face-centred-cubic lattice with equimolar PtPdAuAgCu composition and contains 55 atoms. For the high-entropy oxide (HEO) calculations, the surface slab was taken from Ref. 29. No additional relaxation was applied prior to CFT evaluation; the as-reported structure was used directly as the field-generating reference R.All interaction energies reported in this work were evaluated using MACE-MH1-r2scan [39], an equivariant message-passing neural network potential trained on a broad set of materials and molecular systems at the r 2SCAN level of density functional theory. MACE-MH1-r2scan was selected because its training distribution covers transition-metal surfaces, alloys, and oxide chemistries relevant to the systems studied here, and because its energy and force predictions have been validated against DFT reference data across the periodic table. Within the CFT framework, the potential serves as an energy oracle: the validity of the representational claims (scaling relation topology, higher-body-order residuals, and manifold affinity gradients) de-pends on the oracle faithfully reproducing the ordering and curvature of the interaction energy surface rather than on absolute energetic accuracy. All energy evaluations were performed us-ing the mace-torch implementation interfaced through the Atomic Simulation Environment (ASE) [44]. Local minima for adsorbed intermediates were located using the Broyden-Fletcher-Goldfarb-Shanno (BFGS) optimizer as implemented in ASE, with a convergence criterion of 0.02 eV ˚ A−1
+
+20 Fig. 7: Manifold construction and surrogate-SMILES probe specification. a , Quadrilateral mesh fit-ted to the PtPdAuAgCu nanoparticle surface using a shrinkwrap algorithm initialized from a subdivided cube primitive. Each vertex of the cube primitive is displaced along the surface-normal direction until contact with the particle is established, producing a mesh that conforms to the particle geometry while preserving the original topology. b, Because the mesh topology is fixed throughout the fitting proce-dure, surface normal vectors are well-defined at every vertex and can be recomputed after deformation by standard finite-difference schemes on the quad faces; normals serve as the orientation reference for probe placement at each manifold point. c, Surrogate-SMILES ( *SMILES ) notation: a surrogate atom (asterisk, *) is attached to the anchor of the probe’s molecular graph, enforcing the correct hybridization of the anchor atom and defining the covalent interaction vector as the bond between anchor and sur-rogate. d, Representative *SMILES strings and their corresponding probe geometries after conformer generation; the surrogate atom is removed before energy evaluation, leaving the probe oriented with its covalent interaction vector aligned to the local surface normal. 
+
+on the maximum atomic force. Minimum-energy pathways were computed using the climbing-image nudged elastic band (CI-NEB) method [45] as implemented in ASE. Each NEB chain 21 consisted of 11 images interpolated linearly between relaxed initial and final states. The chain was optimized using the BFGS algorithm until the maximum force perpendicular to the band fell below 0.05 eV ˚ A−1. Transition-state geometries and energies were extracted from the highest-energy image of each converged chain. 
+
+# Morse constraint on active site counts 
+
+The covalent field ΦRG |M, evaluated by a smooth energy oracle on a compact orientable mani-fold, is generically a Morse function. The Morse inequalities then impose a global constraint on its critical points: 
+
+c0 − c1 + c2 = χ(M), (9) where ck counts critical points of index k: binding minima ( k = 0 ), migration saddles (k = 1 ), and repulsive maxima ( k = 2 ), and χ(M) is the Euler characteristic of the manifold. For a nanoparticle with spherical topology χ(M) = 2 , binding minima and saddle connections are not independent: the active site count is a global property of the field topology rather than a local geometric one. This constraint holds for the frozen probe scalar field; anisotropic and spectral extensions modify the topology of the domain but preserve the same organizing principle. 
+
+# Linear scaling relation analysis 
+
+Covalent field values for each probe family ( ∗O/ ∗OH; ∗N/ ∗NH/ ∗NH 2; ∗C/ ∗CH/ ∗CH 2/∗CH 3)were evaluated at identical manifold vertices using frozen probes. Geometric equivalence across probe species within each family was enforced by fixing the anchor position and surface-normal orientation and varying only the molecular graph. Linear fits were performed by ordi-nary least squares. Deviations from the fitted line were computed per vertex and projected back onto the manifold surface for spatial visualization. For the HEO multi-channel descriptor, covalent field values were normalized to the [0 , 1] range independently for each probe species before assignment to the red ( ∗O), green ( ∗H), and blue ( ∗CO) channels. 22 Point of Maximal Deviation (PMD) 
+
+The PMD is distinct from the transition state: the transition state geometry depends on the thermodynamics of the specific initial and final states, whereas the PMD is the configuration of maximum higher-body-order residual along the reaction pathway, corrected for thermody-namic asymmetries. The change in molecular graph along the reaction coordinate identifies the forming bond directly, which defines the anchor of the PMD probe at its geometric mid-point, (consistent with a bidentate probe). The deviation from field additivity is largest when inter-probe interactions are strongest, and covalent interactions are inherently short-ranged and geometrically constrained. The internal geometry of the PMD probe is therefore physically constrained for this reac-tion mechanism and can be approximated by a frozen conformation ξ∗ 
+
+> 0
+
+, fixed across all mani-fold vertices. This approximation is justified not by the accuracy of the geometry itself but by a physical argument: what is transferred across manifold vertices is the requirement for simul-taneous dual coordination, which is a property of the reaction class rather than of any specific site. The short-range character of covalent interactions ensures that this requirement imposes a geometrically narrow constraint that is largely insensitive to the identity of the anchoring metal. The energy scales confirm this directly: the distinction between sites in their capacity to stabilize simultaneous dual coordination is large relative to the orientational sensitivity of the frozen geometry, as shown by σα(Φ M
+
+> PMD
+
+) (Figure 5d ). The gauge energy EPMD  
+
+> 0
+
+of the PMD probe is the interaction energy between probes A and 
+
+B at the frozen geometry ξ∗ 
+
+> 0
+
+in the absence of the reference particle: 
+
+EPMD  
+
+> 0
+
+= E(PA(ξ∗ 
+
+> 0
+
+) ∪ P B (ξ∗ 
+
+> 0
+
+)) − EA 
+
+> 0
+
+− EB 
+
+> 0
+
+. (10) When ∆EM 
+
+> HBO
+
+is used to identify active regions of the manifold, EPMD  
+
+> 0
+
+enters as a constant offset uniform across all vertices and does not affect the spatial distribution of inter-probe coupling. Anisotropic field evaluation was performed by rotating the PMD probe about the surface normal in increments of 10 ◦, yielding 36 energy evaluations per manifold vertex. The PMD field is: 
+
+ΦR
+
+> PMD
+
+(r; α) = E(R ∪ P PMD (r, α )) − E(R) − EPMD  
+
+> 0
+
+, (11) 23 where α is rotation about the surface normal. 
+
+# Data Availability 
+
+The datasets used in this study are available via Zenodo [46]. 
+
+# Code Availability 
+
+The source code of the CFT framework is available on GitHub at: https://github.com/ schwallergroup/CFT .
+
+# Acknowledgments 
+
+E.F. and P.S. acknowledge support from the NCCR Catalysis (grant number 225147), a National Center of Competence in Research funded by the Swiss National Science Foundation. 
+
+# Author contributions 
+
+PS contributed to conceptualization, methodology, writing, editing, funding and project super-vision. EF contributed to conceptualization, methodology, implementation, writing, visualiza-tion and assessment. 
+
+# Competing interests 
+
+The authors declare no competing interests. 24 References 
+
+[1] Paul Sabatier. Hydrog´ enations et d´ eshydrog´ enations par catalyse. Berichte der deutschen chemischen Gesellschaft , 44(3):1984–2001, July 1911. [2] H S Taylor. A theory of the catalytic surface. Proc. R. Soc. Lond. A Math. Phys. Sci. ,108(745):105–111, May 1925. [3] Irving Langmuir. Part ii.—“heterogeneous reactions”. chemical reactions on surfaces. 
+
+Trans. Faraday Soc. , 17(0):607–620, 1922. [4] Ren´ e Marcelin. Sur la m´ ecanique des ph´ enom` enes irr´ eversibles. Journal de Chimie Physique et de Physico-Chimie Biologique , 10:139–212, 1913. First introduction of the concept of potential energy surfaces. [5] Clarivate Analytics. Web of science [database], 2025. Accessed on September 10, 2025. [6] Charlotte Vogt and Bert M. Weckhuysen. The concept of active site in heterogeneous catalysis. Nature Reviews Chemistry , 6(2):89–111, January 2022. [7] P. Hohenberg and W. Kohn. Inhomogeneous electron gas. Physical Review ,136(3B):B864–B871, November 1964. [8] W. Kohn and L. J. Sham. Self-consistent equations including exchange and correlation effects. Physical Review , 140(4A):A1133–A1138, November 1965. [9] M. C. Payne, M. P. Teter, D. C. Allan, T. A. Arias, and J. D. Joannopoulos. Iterative minimization techniques for ab-initio total-energy calculations: molecular dynamics and conjugate gradients. Reviews of Modern Physics , 64(4):1045–1097, October 1992. [10] F. Abild-Pedersen, J. Greeley, F. Studt, J. Rossmeisl, T. R. Munter, P. G. Moses, E. Sk´ ulason, T. Bligaard, and J. K. Nørskov. Scaling properties of adsorption energies for hydrogen-containing molecules on transition-metal surfaces. Physical Review Letters ,99(1), July 2007. [11] Michael Busch, Matthew D. Wodrich, and Cl´ emence Corminboeuf. Linear scaling re-lationships and volcano plots in homogeneous catalysis – revisiting the suzuki reaction. 
+
+Chemical Science , 6(12):6754–6761, 2015. 25 [12] T. Bligaard, J.K. Nørskov, S. Dahl, J. Matthiesen, C.H. Christensen, and J. Sehested. The brønsted–evans–polanyi relation and the volcano curve in heterogeneous catalysis. 
+
+Journal of Catalysis , 224(1):206–217, May 2004. [13] B Hammer and J K Nørskov. Theoretical surface science and catalysis—calculations and concepts. In Advances in Catalysis , Advances in catalysis, pages 71–129. Elsevier, 2000. [14] Andrew J Medford, Aleksandra Vojvodic, Jens S Hummelshøj, Johannes Voss, Frank Abild-Pedersen, Felix Studt, Thomas Bligaard, Anders Nilsson, and Jens K Nørskov. From the sabatier principle to a predictive theory of transition-metal heterogeneous catal-ysis. J. Catal. , 328:36–42, August 2015. [15] Rodrigo Garc´ ıa-Muelas and N´ uria L´ opez. Statistical learning goes beyond the d-band model providing the thermochemistry of adsorbates on transition metals. Nature Commu-nications , 10(1), October 2019. [16] G Ertl. Untersuchung von oberfl¨ achenreaktionen mittels beugung langsamer elektronen (LEED). Surf. Sci. , 6(2):208–232, February 1967. [17] G A Somorjai and M A Van Hove. Adsorbate-induced restructuring of surfaces. Prog. Surf. Sci. , 30(3-4):201–231, January 1989. [18] G A Somorjai and M A Van Hove. Surface restructuring as a mechanism for bond break-ing and catalytic reactions at metal surfaces. Catal. Letters , 1(12):433–437, December 1988. [19] Donald G. Truhlar, Bruce C. Garrett, and Stephen J. Klippenstein. Current status of transition-state theory. The Journal of Physical Chemistry , 100(31):12771–12800, Jan-uary 1996. [20] Albert P. Bart´ ok, James Kermode, Noam Bernstein, and G´ abor Cs´ anyi. Machine learning a general-purpose interatomic potential for silicon. Physical Review X , 8(4), December 2018. [21] Ilyes Batatia, D´ avid P´ eter Kov´ acs, Gregor N. C. Simm, Christoph Ortner, and G´ abor Cs´ anyi. Mace: Higher order equivariant message passing neural networks for fast and accurate force fields, 2022. 26 [22] Lowik Chanussot, Abhishek Das, Siddharth Goyal, Thibaut Lavril, Muhammed Shuaibi, Morgane Riviere, Kevin Tran, Javier Heras-Domingo, Caleb Ho, Weihua Hu, Aini Pal-izhati, Anuroop Sriram, Brandon Wood, Junwoong Yoon, Devi Parikh, C. Lawrence Zit-nick, and Zachary Ulissi. Open catalyst 2020 (oc20) dataset and community challenges. 
+
+ACS Catalysis , 11(10):6059–6072, May 2021. [23] Richard Tran, Janice Lan, Muhammed Shuaibi, Brandon M. Wood, Siddharth Goyal, Abhishek Das, Javier Heras-Domingo, Adeesh Kolluru, Ammar Rizvi, Nima Shoghi, Anuroop Sriram, F´ elix Therrien, Jehad Abed, Oleksandr Voznyy, Edward H. Sargent, Zachary Ulissi, and C. Lawrence Zitnick. The open catalyst 2022 (oc22) dataset and challenges for oxide electrocatalysts. ACS Catalysis , 13(5):3066–3084, February 2023. [24] Anuroop Sriram, Sihoon Choi, Xiaohan Yu, Logan M. Brabson, Abhishek Das, Zachary Ulissi, Matt Uyttendaele, Andrew J. Medford, and David S. Sholl. The open dac 2023 dataset and challenges for sorbent discovery in direct air capture. ACS Central Science ,10(5):923–941, May 2024. [25] Carlota Bozal-Ginesta, Sergio Pablo-Garc´ ıa, Changhyeok Choi, Albert Taranc´ on, and Al´ an Aspuru-Guzik. Developing machine learning for heterogeneous catalysis with ex-perimental and computational data. Nat. Rev. Chem. , 9(9):601–616, September 2025. [26] Hongliang Xin, John R. Kitchin, N´ uria L´ opez, Neil M. Schweitzer, Nongnuch Artrith, Fanglin Che, Lars C. Grabow, G. T. Kasun Kalhara Gunasooriya, Heather J. Kulik, Teodoro Laino, Hao Li, Suljo Linic, Andrew J. Medford, Randall J. Meyer, Jiayu Peng, Cory Phillips, Jin Qian, Long Qi, Wendy J. Shaw, Zachary W. Ulissi, Siwen Wang, and Xiaonan Wang. Roadmap for transforming heterogeneous catalysis with artificial intelli-gence, February 2026. [27] Chi Chen and Shyue Ping Ong. A universal graph deep learning interatomic potential for the periodic table. Nature Computational Science , 2(11):718–728, November 2022. [28] Amir Omranpour, Jan Elsner, K. Nikolas Lausch, and J¨ org Behler. Machine learning potentials for heterogeneous catalysis. ACS Catalysis , 15(3):1616–1634, January 2025. [29] Shuang Han and Sandip De. Machine learning-accelerated evolutionary monte carlo for rapid phase exploration of compositionally complex materials in reactive environments, September 2025. 27 [30] Shuang Han, Steen Lysgaard, Tejs Vegge, and Heine Anton Hansen. Rapid mapping of alloy surface phase diagrams via bayesian evolutionary multitasking. Npj Comput. Mater. ,9(1), August 2023. [31] Federico Calle-Vallejo, David Loffreda, Marc T M Koper, and Philippe Sautet. Introduc-ing structural sensitivity into adsorption-energy scaling relations by means of coordination numbers. Nat. Chem. , 7(5):403–410, May 2015. [32] B. Hammer and J.K. Nørskov. Electronic factors determining the reactivity of metal surfaces. Surface Science , 343(3):211–220, December 1995. [33] J. K. Nørskov and N. D. Lang. Effective-medium theory of chemical binding: Application to chemisorption. Physical Review B , 21(6):2131–2136, March 1980. [34] J. K. Nørskov. Covalent effects in the effective-medium the-ory of chemical binding: Hydrogen heats of solution in the¡mml:math xmlns:mml=“http://www.w3.org/1998/math/mathml” dis-play=“inline”¿¡mml:mn¿3¡/mml:mn¿¡mml:mi¿d¡/mml:mi¿¡/mml:math¿metals. Physical Review B , 26(6):2875–2885, September 1982. [35] Johannes T. Margraf, Hyunwook Jung, Christoph Scheurer, and Karsten Reuter. Explor-ing catalytic reaction networks with machine learning. Nature Catalysis , 6(2):112–121, January 2023. [36] Edvin Fako and Sandip De. Simple heuristics for advanced sampling of reactive species on surfaces. ACS Catalysis , 16(4):3149–3158, February 2026. [37] Jari Leemans, Edvin Fako, Ludovic Zaza, Moritz Tritschler, Junwu Chen, Philippe Schwaller, and Raffaella Buonsanti. Ligand-modulated release of copper active sites ex-tends ethylene production in co 2 electroreduction. Journal of the American Chemical Society , March 2026. [38] Lorenzo Fatibene and Mauro Francaviglia. Fiber Bundles , page 9–51. Springer Nether-lands, 2003. [39] Ilyes Batatia, Philipp Benner, Yuan Chiang, Alin M. Elena, D´ avid P. Kov´ acs, Janosh Riebesell, Xavier R. Advincula, Mark Asta, Matthew Avaylon, William J. Baldwin, 28 Fabian Berger, Noam Bernstein, Arghya Bhowmik, Filippo Bigi, Samuel M. Blau, Vlad C˘ arare, Michele Ceriotti, Sanggyu Chong, James P. Darby, Sandip De, Flaviano Della Pia, Volker L. Deringer, Rokas Elijoˇ sius, Zakariya El-Machachi, Edvin Fako, Fabio Falcioni, Andrea C. Ferrari, John L. A. Gardner, Mikołaj J. Gawkowski, Annalena Genreith-Schriever, Janine George, Rhys E. A. Goodall, Jonas Grandel, Clare P. Grey, Petr Grig-orev, Shuang Han, Will Handley, Hendrik H. Heenen, Kersti Hermansson, Cheuk Hin Ho, Stephan Hofmann, Christian Holm, Jad Jaafar, Konstantin S. Jakob, Hyunwook Jung, Venkat Kapil, Aaron D. Kaplan, Nima Karimitari, James R. Kermode, Panagiotis Kourtis, Namu Kroupa, Jolla Kullgren, Matthew C. Kuner, Domantas Kuryla, Guoda Liepuoniute, Chen Lin, Johannes T. Margraf, Ioan-Bogdan Magd˘ au, Angelos Michaelides, J. Harry Moore, Aakash A. Naik, Samuel P. Niblett, Sam Walton Norwood, Niamh O’Neill, Christoph Ortner, Kristin A. Persson, Karsten Reuter, Andrew S. Rosen, Louise A. M. Rosset, Lars L. Schaaf, Christoph Schran, Benjamin X. Shi, Eric Sivonxay, Tam´ as K. Stenczel, Christopher Sutton, Viktor Svahn, Thomas D. Swinburne, Jules Tilly, Cas van der Oord, Santiago Vargas, Eszter Varga-Umbrich, Tejs Vegge, Martin Vondr´ ak, Yangshuai Wang, William C. Witt, Thomas Wolf, Fabian Zills, and G´ abor Cs´ anyi. Afoundation model for atomistic materials chemistry. The Journal of Chemical Physics ,163(18), November 2025. [40] Robin Forman. A user’s guide to discrete morse theory. S´ eminaire Lotharingien de Combinatoire [electronic only] , 48:B48c, 35 p., electronic only–B48c, 35 p., electronic only, 2002. [41] Alexander Bagger, Wen Ju, Ana Sofia Varela, Peter Strasser, and Jan Rossmeisl. Electro-chemical co2 reduction: A classification problem. ChemPhysChem , 18(22):3266–3273, October 2017. [42] Shuang Han, Giovanni Barcaro, Alessandro Fortunelli, Steen Lysgaard, Tejs Vegge, and Heine Anton Hansen. Unfolding the structural stability of nanoalloys via symmetry-constrained genetic algorithm and neural network potential. Npj Comput. Mater. , 8(1), June 2022. [43] Juan Manuel Arce-Ramos, Quang Thang Trinh, Zicong Marvin Wong, Ben Wang, Ben-jamin W. J. Chen, Jia Zhang, and Teck Leong Tan. Breaking scaling relations in agau-29 cupdpt high-entropy alloy nanoparticles for co2 electroreduction via machine learning. 
+
+Materials Horizons , 2025. [44] Ask Hjorth Larsen, Jens Jørgen Mortensen, Jakob Blomqvist, Ivano E Castelli, Rune Christensen, Marcin Dułak, Jesper Friis, Michael N Groves, Bjørk Hammer, Cory Har-gus, Eric D Hermes, Paul C Jennings, Peter Bjerre Jensen, James Kermode, John R Kitchin, Esben Leonhard Kolsbjerg, Joseph Kubal, Kristen Kaasbjerg, Steen Lysgaard, J´ on Bergmann Maronsson, Tristan Maxson, Thomas Olsen, Lars Pastewka, Andrew Peter-son, Carsten Rostgaard, Jakob Schiøtz, Ole Sch¨ utt, Mikkel Strange, Kristian S Thygesen, Tejs Vegge, Lasse Vilhelmsen, Michael Walter, Zhenhua Zeng, and Karsten W Jacobsen. The atomic simulation environment—a python library for working with atoms. Journal of Physics: Condensed Matter , 29(27):273002, June 2017. [45] Graeme Henkelman and Hannes J´ onsson. Improved tangent estimate in the nudged elas-tic band method for finding minimum energy paths and saddle points. The Journal of Chemical Physics , 113(22):9978–9985, December 2000. [46] Edvin Fako and Philippe Schwaller. On the covalent fields of molecule–surface interac-tions, 2026. 30 Supporting Information: On the Covalent Fields of Molecule–Surface Interactions 
+
+# Edvin Fako 1,2,∗, Philippe Schwaller 1,2,∗
+
+Corresponding authors: edvinfako@gmail.com (E. Fako), philippe.schwaller@epfl.ch (P. Schwaller)  
+
+> 1
+
+Laboratory of Artificial Chemical Intelligence (LIAC), Institute of Chemical Sciences and Engineering, Ecole Polytechnique F´ ed´ erale de Lausanne (EPFL), Lausanne, Switzerland  
+
+> 2
+
+National Centre of Competence in Research (NCCR) Catalysis, Ecole Polytechnique F´ ed´ erale de Lausanne (EPFL), Lausanne, Switzerland 
+
+1Supplementary Note 1: Proto-CFT Analysis of the Ligand-Modulated Cop-per Electrocatalyst 
+
+The atomistic simulations reported in Ref. [37] constitute the first application of the manifold evaluation procedure and AutoAdsorbate probe placement that underlies CFT, predating its formal axiomatization. A shrinkwrap surface manifold was constructed over a grain-boundary forming Cu nanoparticle dimer ( Supplementary Figure S1a,b ), and the covalent fields of ∗CO and ∗H were evaluated at each manifold vertex in the presence and absence of secondary phos-phine (PR 2H) ligands. The manifold distributions ( Supplementary Figure S1c ) and the delta affinity map ∆Φ M = Φ M
+
+> ligand
+
+−ΦM 
+
+> no ligand
+
+projected onto the particle surface ( Supplementary Fig-ure S1d ) reveal that ligands introduce pronounced site heterogeneity: ligand-free sites acquire enhanced affinity for both intermediates while ligand-occupied regions are suppressed. The kernel density distributions ( Supplementary Figure S1e ) and cumulative active area analysis (Supplementary Figure S1f ) show that this suppression is asymmetric: ∗CO adsorption sites are reduced more severely than ∗H sites, disfavoring the adjacent ∗CO intermediates required for C–C coupling and consistent with methane-dominated selectivity during early activation ob-served experimentally. The local origin of this asymmetry is directly readable from the covalent field maps in the immediate environment of a single ligand ( Supplementary Figure S1g ): the steric and electronic footprint of the phosphine suppresses the extended ∗CO binding region more than the compact ∗H binding region, a consequence of the different spatial demands of the two intermediates that the field representation makes geometrically explicit. This analysis used the manifold machinery as a computational procedure that produced cor-rect results. CFT provides the theoretical grounding that makes those results derived quantities of a formal theory rather than outputs of an ad hoc calculation: the asymmetric suppression of 
+
+∗CO and ∗H affinities is a direct consequence of the multi-channel field structure (Φ M∗H, ΦM∗CO ),connected by the same representational choice to the Morse topology of active site counts, the manifold-level origin of linear scaling relations, and the algebraic identity underlying BEP cor-relations. Ref. 37 used proto-CFT to obtain the right answer; CFT explains why it was the right answer and what else follows from the same representational choice. 2Fig. S1: Proto-CFT analysis of ligand-modulated ∗CO and ∗H affinities on a grain-boundary forming Cu nanoparticle [37]. a , Workflow for constructing the Cu/Cu grain-boundary model: two Cu spheres are brought into contact, relaxed, and evolved by molecular dynamics to generate a repre-sentative ensemble of roughened surface motifs. b, Atomistic snapshot of the grain-boundary interface with (orange) and without (purple) PR 2H ligand coverage at experimentally determined surface density (θ = 0 .6). c, Manifold distributions of ∗CO and ∗H covalent field values with and without ligands; ligands broaden both distributions and shift the ∗CO distribution more severely toward weaker binding. 
+
+d, Delta affinity map ∆Φ M∗CO projected onto the particle surface (blue: suppressed, red: enhanced); the spatial extent of ligand-induced ∗CO suppression is visible directly on the surface geometry. e, Ker-nel density estimates of the manifold affinity distributions for ∗CO and ∗H with (orange) and without (purple) ligand coverage, showing asymmetric broadening. f, Cumulative active area as a function of manifold affinity criterion for ∗CO and ∗H; ∗CO adsorption sites are suppressed more severely than ∗Hsites, disfavoring C–C coupling during early catalyst activation. g, Zoom into the local covalent field environment surrounding a single phosphine ligand for ∗H (left) and ∗CO (right); the larger spatial foot-print of the ∗CO suppression region relative to ∗H is geometrically explicit in the field representation. Adapted from Leemans et al., J. Am. Chem. Soc. 148 , 13118–13127 (2026) under CC-BY 4.0. 
+
+# Supplementary Figures 
+
+3Fig. S2: Covalent field slices for atomic probes on the PtPdAuAgCu nanoparticle. Planar cross-sections of ΦRG evaluated at the same slice geometry as Fig. 1b for four atomic probes: ∗C, ∗O, ∗H, and ∗He (yellow: repulsive, blue: strongly attractive). Carbon shows the deepest and most spatially confined field, consistent with strong, directional metal–carbon covalent bonding. The helium field is purely repulsive at all surface sites, confirming that attractive wells in the covalent probes reflect genuine covalent bonding rather than Pauli repulsion or dispersion. 
+
+4Fig. S3: Linear scaling relations across manifold distances for the ∗O/ ∗OH and ∗N/ ∗NH/ ∗NH 2
+
+probe families. Each panel corresponds to a static manifold evaluated at a fixed probe–surface distance (2.0, 2.5, 3.0, and 3.5 ˚ A). At 2.0 ˚ A the correlation is weaker, as probes at this distance sample a mixed regime of covalent and repulsive interactions. At 2.5 ˚ A and above, linear correlations are robust and stable, confirming that the scaling structure recovered by manifold sampling is insensitive to the exact choice of evaluation distance within the covalent interaction regime. 
+
+5Fig. S4: Linear scaling relations across manifold distances for the ∗C/ ∗CH/ ∗CH 2/∗CH 3 probe family. As in Supplementary Fig. S3, the 2.0 ˚ A manifold yields a weaker correlation while distances of 2.5–3.5 ˚ A recover robust linear scaling trends. Consistent behavior across both probe families supports a fixed manifold evaluation distance in the range 2.5–3.0 ˚ A for routine CFT analysis. 
+
+6Fig. S5: Spatially resolved linear scaling relation deviations on the high-entropy oxide surface. 
+
+LSR deviation map for the partially reduced HEO slab (gray: on-trend, blue: weaker than predicted, red: stronger than predicted), constructed using the same procedure as Fig. 4d. The spatial distribution of deviations is markedly more heterogeneous than on the HEA nanoparticle, reflecting the chemical and structural diversity of the oxide surface. Fully oxidized patches appear blue; partially reduced metal-like sites appear red. The identical procedure applied to both systems confirms that manifold-resolved LSR analysis transfers directly to oxide surfaces without modification. 
+
+7Fig. S6: Individual channel maps of the multi-channel affinity descriptor on the partially reduced HEO surface. Covalent field distributions for ∗O (red channel), ∗H (green channel), and ∗CO (blue channel) shown separately on a common energy scale, corresponding to the three components of the composite map in Fig. 4f. ∗H and ∗O affinities track each other closely across the surface while ∗CO affinity varies independently, producing the spatial decoupling visible in the RGB composite. 
+
+8Fig. S7: NEB pathway images for ∗C + ∗O → ∗ CO. Atomistic structures of all 11 NEB images along the minimum-energy pathway, with the energy profile shown above; images are colored by total energy relative to the initial state. The initial state (image 1) has C and O adsorbed on neighboring bridge sites of the same Pd atom. The transition state (image 3, TS) corresponds to O traversing the shared Pd top site. The final state (image 11) is top-adsorbed CO. The point of maximal deviation (image 5, PMD) marks the configuration where both C and O remain simultaneously within covalent range of the same surface atom; this point is path-independent and distinct from the transition state, which depends on the thermodynamics of the specific initial and final states. 
+
+9Fig. S8: Perturbation of the ∗O covalent field by the presence of ∗C along the NEB pathway. Each panel shows the difference field ∆Φ ∗O = Φ R∗C 
+
+> ∗O
+
+− ΦR∗O on a planar slice through the nanoparticle at each NEB image (blue: C destabilizes ∗O; red: C enhances ∗O stability via incipient C–O bond formation); current O position marked in red. In the initial state (image 1) O sits in a white region, confirming negligible inter-probe coupling at large separation. A persistent deep-red attractive region is present in all images, indicating that C–O bond formation is energetically favorable across a wide range of O approach geometries. The transition state lies within a repulsive region, revealing that the conventional barrier originates in the limited capacity of the Pd atom to bind ∗C and ∗O simultaneously rather than in the intrinsic difficulty of C–O bond formation. 
+
+10 Fig. S9: Apparent BEP correlations across the HEA nanoparticle, segmented by anchoring metal. 
+
+Thermodynamics-corrected barrier ( ∆EM 
+
+> HBO
+
+− EIS react. ) versus reaction energy for all ∼120,000 candidate pathways, colored by anchoring metal. Parallel families with unit slope emerge for each metal, consis-tent with the algebraic identity derived in Methods: varying the initial state shifts both axes equally, generating parallel lines whose vertical offsets reflect the intrinsic barrier capacity of each PMD basin. 
+
+11 Fig. S10: Initial-state versus final-state covalent field energies across the HEA nanoparticle. Ab-sence of correlation between ∗C/ ∗O initial-state affinities and ∗CO final-state affinities confirms that initial-state configurations are distributed independently of the PMD basin they access, validating the decoupling assumed in the BEP decomposition. 
+
+12 Fig. S11: Initial-state covalent field energy versus ΦPMD HBO across the HEA nanoparticle. Absence of correlation confirms that the thermodynamic stability of the initial ∗C and ∗O configurations is in-dependent of the intrinsic barrier capacity of the PMD basin, consistent with the path-independence of 
+
+∆EM 
+
+> HBO
+
+established in Methods. 
+
+13 Fig. S12: Final-state ∗CO affinity versus ∆EM 
+
+> HBO
+
+across the HEA nanoparticle. Inverse correlation between final-state ∗CO binding and intrinsic barrier capacity reflects a geometric incompatibility be-tween the simultaneous dual coordination demanded by the PMD geometry and the top-site preference of adsorbed CO: sites most effective at stabilizing the strained PMD configuration bind the product more weakly. This anti-correlation is a manifold-level property invisible to site-averaged analysis. 
+
+14

@@ -1,0 +1,39 @@
+{
+  "label": "2026-06-14",
+  "date": "2026-06-14",
+  "generated_at": "2026-06-14T23:34:25",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202606/14/2606.08619v1-on-the-covalent-fields-of-molecule-surface-interactions",
+      "section": "deep",
+      "title_en": "On the Covalent Fields of Molecule-Surface Interactions",
+      "authors": "Edvin Fako, Philippe Schwaller",
+      "date": "2026-06-07",
+      "pdf": "https://arxiv.org/pdf/2606.08619v1",
+      "score": "8.0",
+      "evidence": "共价场理论解决活性位点模糊性和标度关系崩溃，助力催化剂虚拟筛选",
+      "tldr": "活性位点模糊、BEP关系经验化及线性标度关系断裂不可预测，源于将化学亲和力视为离散位点。共价场理论将亲和力表示为连续场，使活性位点自然涌现，线性标度关系成为场相关结构，断裂对应拓扑分叉。验证于~120,000路径，并成功应用于高熵合金和氧化物，统一了催化基础问题。",
+      "tags": "query:caos-poly",
+      "abstract_en": "The ambiguity of the active site, the empirical status of Brønsted-Evans-Polanyi relations, and the unpredictability of linear scaling relation breakdown are three symptoms of a single representational choice: treating chemical affinity as an attribute of discrete geometric sites. Here we show that all three are resolved when chemical affinity is represented as a continuous property of the interface: the covalent field. We present a framework, Covalent Field Theory (CFT), in which active sites emerge as regions where the field sustains a bias toward bond formation beyond the thermal threshold, removing the need for geometric classification. Linear scaling relations are correlation structure in the field across probe families; their breakdown is a topological bifurcation with a precise geometric signature. Brønsted-Evans-Polanyi correlations arise from the covalent field decomposition, providing a theoretical basis for what has previously been treated as an empirical regularity, demonstrated across ~120,000 candidate pathways. Applied to a high-entropy alloy nanoparticle and a partially reduced high-entropy oxide, CFT maps these properties onto surfaces of arbitrary compositional and structural complexity.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/14/2606.13060v1-a-green-solvent-screening-tool-for-emerging-materials-via-uncertainty-aware-transformer-enhanced-transfer-learning",
+      "section": "quick",
+      "title_en": "A green solvent screening tool for emerging materials via uncertainty aware, transformer enhanced transfer learning",
+      "authors": "Ioannis Kouroudis, Simon Ternes, Zhaosu Gu, Gohar Ali Siddiqui, Marina Ustinova, Angelo Lembo, Alessio Gagliardi, Aldo Di Carlo",
+      "date": "2026-06-11",
+      "pdf": "https://arxiv.org/pdf/2606.13060v1",
+      "score": "7.0",
+      "evidence": "基于机器学习的绿色溶剂筛选工具，直接适用于反应条件的虚拟筛选",
+      "tldr": "面对有机光伏、电池等新兴领域溶剂使用量预计骤增的挑战，绿色溶剂替代对可持续化学至关重要，但溶解度描述符如Gutmann供体/受体数的实验数据极为匮乏，严重制约机器学习模型发展。本研究提出一种结合预训练知识迁移与不确定性量化的Transformer模型，通过在QM9上预训练，再微调至目标，能以极少样本精确预测汉森溶解度参数、介电常数等，并在低至几十个样本的Gutmann数预测中达到高精度。在此基础上，大幅扩充了溶解度描述符高质量预测数据库，并部署了一套易用、可定制且兼容高通量实验室的绿色溶剂筛选工具。最终，该工具成功复现已知绿色溶剂并识别新候选，验证了其加速环保溶剂发现的潜力。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Accurate prediction of solubility remains a central challenge across materials science and sustainable chemistry. In particular due to emerging technologies like organic and hybrid photovoltaics, batteries, and catalysis, solvent usage is expected to increase significantly within the coming years. Therefore, substituting solvents with greener alternatives is vital. This is where machine learning can have substantial impact. However, the limited data on critical parameters of solubility significantly constraints machine learning efficacy. In this work, we transfer a pre-trained foundational model on QM9 targets to our application with minimal data requirements. Additionally, the pipeline integrates uncertainty quantification, allowing the user to gauge the confidence of the predictions. As baseline, we succeed in predicting the Hansen solubility parameters and Dielectric Constant for which extensive databases exist. Importantly, we achieve high model performance on additional targets, such as Gutmann Donor and Acceptor numbers, where the available data is extremely limited. Overall, we augment data on solubility descriptors by orders of magnitude with high quality predictions. For effective dissemination, we deploy easy-to-use, easily integrateable with high throughput labs, customizable tool for ranking and screening possible solvent substitutes. Finally, we rediscovered known green solvent alternatives and proposed new candidates proving its relevance for finding eco-friendly solvents.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
