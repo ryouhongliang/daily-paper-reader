@@ -1,0 +1,94 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-17T00:20:25.792336+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.11589v1",
+      "source": "arxiv",
+      "title": "Large Language Models in Process Systems Engineering: Opportunities, Architectures, and Industrial Deployment Challenges",
+      "abstract": "Large Language Models (LLMs) have rapidly emerged as tools of interest across engineering disciplines, and Process Systems Engineering (PSE) is no exception. This survey provides a systematic review of LLM applications in PSE, organizing the literature into seven categories: (1) process design and engineering, (2) molecular design and synthesis, (3) process modeling and simulation, (4) time-series forecasting, (5) optimization and scheduling, (6) process control, and (7) fault detection and diagnosis. For each category, we summarize the state of the art, identify common methodological approaches, and critically assess demonstrated capabilities versus aspirational claims. We find that LLMs show genuine promise for tasks involving natural language, including querying documentation, synthesizing unstructured knowledge, and enabling flexible human-machine interaction. However, applications requiring real-time execution, constraint satisfaction, or formal safety guarantees remain challenging. We conclude by identifying open problems and productive research directions for the PSE community.",
+      "authors": [
+        "Bhushan Gopaluni",
+        "Vidya Kotamraju",
+        "Syon Bhushan"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-06-10T02:34:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.11589v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "survey of LLM applications in molecular design and synthesis within process systems engineering",
+      "llm_evidence_cn": "综述过程系统工程中大语言模型在分子设计与合成中的应用",
+      "llm_evidence": "综述过程系统工程中大语言模型在分子设计与合成中的应用",
+      "canonical_evidence": "综述过程系统工程中大语言模型在分子设计与合成中的应用",
+      "llm_tldr_en": "This survey reviews LLM applications in process systems engineering, including molecular design and synthesis, highlighting genuine promise for computer-aided organic synthesis.",
+      "llm_tldr_cn": "本综述回顾了大语言模型在过程系统工程中的应用，涵盖分子设计与合成等多个领域，表明其在计算机辅助有机合成中的实际潜力。",
+      "llm_tldr": "本综述回顾了大语言模型在过程系统工程中的应用，涵盖分子设计与合成等多个领域，表明其在计算机辅助有机合成中的实际潜力。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15495v1",
+      "source": "arxiv",
+      "title": "Contrastive learning of dynamical representations for enhanced molecular sampling",
+      "abstract": "Identifying collective variables that capture slow dynamical modes is essential for sampling rare events in complex systems. Existing machine-learning approaches often require predefined metastable states, carefully chosen descriptors, or training trajectories with high-quality kinetic information. Here, we introduce SelfTICA, a self-supervised contrastive-learning framework that reformulates collective-variable discovery as dynamical representation learning. SelfTICA defines positive and negative pairs from time-lagged molecular configurations, learns reusable features through a contrastive objective linked to spectral variational principles, and extracts orthogonal slow modes by applying time-lagged independent component analysis in the learned representation space. By decoupling representation learning from slow-mode extraction, SelfTICA avoids direct optimization of eigendecomposition-based objectives and enables spectra and collective variables to be evaluated across lag times without retraining. Across different atomistic systems, SelfTICA learns dynamical representations from limited, biased, or exploratory data and converts them into collective variables that accelerate rare-event exploration and improve free-energy convergence.",
+      "authors": [
+        "Kai Zhu",
+        "Jintu Zhang",
+        "Pietro Novelli",
+        "Tingjun Hou",
+        "Luigi Bonati"
+      ],
+      "primary_category": "physics.comp-ph",
+      "categories": [
+        "physics.comp-ph",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-13T22:44:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.15495v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "contrastive learning for dynamical representations enhances molecular sampling, enabling computational study of organic reaction mechanisms",
+      "llm_evidence_cn": "对比学习动力学表示增强分子采样，使有机反应机理的计算研究成为可能",
+      "llm_evidence": "对比学习动力学表示增强分子采样，使有机反应机理的计算研究成为可能",
+      "canonical_evidence": "对比学习动力学表示增强分子采样，使有机反应机理的计算研究成为可能",
+      "llm_tldr_en": "SelfTICA introduces contrastive learning to learn collective variables from time-lagged molecular configurations, improving sampling of rare events in molecular dynamics and potentially aiding computational studies of organic reactions.",
+      "llm_tldr_cn": "在分子模拟中，识别能捕获慢运动模式的集体变量对于采样稀有事件至关重要。现有方法通常依赖预定义态或高质量动力学数据。本文提出SelfTICA，一种自监督对比学习框架，它将分子构象的时间延迟对定义为正负样本，学习可复用的动态表示，进而提取正交慢模式。该方法无需先验态信息，适用于多种复杂分子体系。在多个蛋白和聚合物测试体系上，SelfTICA准确捕获了构象转变的慢自由度，显著加速了稀有事件采样，并优于主流对比方法。其学习的表示具有良好的可迁移性，可望推动机理驱动的有机合成研究。",
+      "llm_tldr": "在分子模拟中，识别能捕获慢运动模式的集体变量对于采样稀有事件至关重要。现有方法通常依赖预定义态或高质量动力学数据。本文提出SelfTICA，一种自监督对比学习框架，它将分子构象的时间延迟对定义为正负样本，学习可复用的动态表示，进而提取正交慢模式。该方法无需先验态信息，适用于多种复杂分子体系。在多个蛋白和聚合物测试体系上，SelfTICA准确捕获了构象转变的慢自由度，显著加速了稀有事件采样，并优于主流对比方法。其学习的表示具有良好的可迁移性，可望推动机理驱动的有机合成研究。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "label": "2026-06-17",
+  "date": "2026-06-17",
+  "generated_at": "2026-06-17T00:27:15",
+  "count": 2,
+  "papers": [
+    {
+      "paper_id": "202606/17/2606.11589v1-large-language-models-in-process-systems-engineering-opportunities-architectures-and-industrial-deployment-challenges",
+      "section": "quick",
+      "title_en": "Large Language Models in Process Systems Engineering: Opportunities, Architectures, and Industrial Deployment Challenges",
+      "authors": "Bhushan Gopaluni, Vidya Kotamraju, Syon Bhushan",
+      "date": "2026-06-10",
+      "pdf": "https://arxiv.org/pdf/2606.11589v1",
+      "score": "7.0",
+      "evidence": "综述过程系统工程中大语言模型在分子设计与合成中的应用",
+      "tldr": "随着大型语言模型（LLM）在工程领域的兴起，过程系统工程（PSE）社区积极探索其应用潜力。本文系统梳理了LLM在PSE七个子领域的应用现状，包括过程设计与工程、分子设计与合成、过程建模与仿真、时间序列预测、优化与调度、过程控制以及故障检测与诊断。综述发现，LLM在自然语言交互、知识综合等任务中表现出色，但在需实时执行、约束满足或安全保证的场景下仍面临严峻挑战。该工作为PSE领域LLM的工业部署提供了路线图，并指出了未来研究的关键方向。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Large Language Models (LLMs) have rapidly emerged as tools of interest across engineering disciplines, and Process Systems Engineering (PSE) is no exception. This survey provides a systematic review of LLM applications in PSE, organizing the literature into seven categories: (1) process design and engineering, (2) molecular design and synthesis, (3) process modeling and simulation, (4) time-series forecasting, (5) optimization and scheduling, (6) process control, and (7) fault detection and diagnosis. For each category, we summarize the state of the art, identify common methodological approaches, and critically assess demonstrated capabilities versus aspirational claims. We find that LLMs show genuine promise for tasks involving natural language, including querying documentation, synthesizing unstructured knowledge, and enabling flexible human-machine interaction. However, applications requiring real-time execution, constraint satisfaction, or formal safety guarantees remain challenging. We conclude by identifying open problems and productive research directions for the PSE community.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/17/2606.15495v1-contrastive-learning-of-dynamical-representations-for-enhanced-molecular-sampling",
+      "section": "quick",
+      "title_en": "Contrastive learning of dynamical representations for enhanced molecular sampling",
+      "authors": "Kai Zhu, Jintu Zhang, Pietro Novelli, Tingjun Hou, Luigi Bonati",
+      "date": "2026-06-13",
+      "pdf": "https://arxiv.org/pdf/2606.15495v1",
+      "score": "6.0",
+      "evidence": "对比学习动力学表示增强分子采样，使有机反应机理的计算研究成为可能",
+      "tldr": "复杂系统的罕见事件采样依赖于慢动态集体变量的发现。传统方法常需预定义亚稳态或高质量动力学轨迹，限制了应用范围。本文提出自监督对比学习框架SelfTICA，通过时间延迟构象定义正负对，利用对比目标学习可重用特征，再应用时间滞后独立成分分析提取正交慢模式。其解耦设计避免了特征分解的直接优化，并可跨滞后时间评估谱。在多个原子体系中，该方法从有限或有偏数据中学习动态表示，转化为集体变量后显著加速了罕见事件探索并改善了自由能收敛。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Identifying collective variables that capture slow dynamical modes is essential for sampling rare events in complex systems. Existing machine-learning approaches often require predefined metastable states, carefully chosen descriptors, or training trajectories with high-quality kinetic information. Here, we introduce SelfTICA, a self-supervised contrastive-learning framework that reformulates collective-variable discovery as dynamical representation learning. SelfTICA defines positive and negative pairs from time-lagged molecular configurations, learns reusable features through a contrastive objective linked to spectral variational principles, and extracts orthogonal slow modes by applying time-lagged independent component analysis in the learned representation space. By decoupling representation learning from slow-mode extraction, SelfTICA avoids direct optimization of eigendecomposition-based objectives and enables spectra and collective variables to be evaluated across lag times without retraining. Across different atomistic systems, SelfTICA learns dynamical representations from limited, biased, or exploratory data and converts them into collective variables that accelerate rare-event exploration and improve free-energy convergence.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
