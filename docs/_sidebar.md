@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-06-18 <!--dpr-date:20260618-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/18/2606.17445v1-toward-controllable-catalyst-inverse-design-via-large-scale-autoregressive-pretraining" data-sidebar-item="{&quot;title&quot;: &quot;Toward Controllable Catalyst Inverse Design via Large-Scale Autoregressive Pretraining&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.17445v1-toward-controllable-catalyst-inverse-design-via-large-scale-autoregressive-pretraining&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;caos-poly&quot;}], &quot;evidence&quot;: &quot;面向多相催化剂逆向设计的生成模型&quot;}">Toward Controllable Catalyst Inverse Design via Large-Scale Autoregressive Pretraining</a>
   * 2026-06-17 <!--dpr-date:20260617-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/17/2606.11589v1-large-language-models-in-process-systems-engineering-opportunities-architectures-and-industrial-deployment-challenges" data-sidebar-item="{&quot;title&quot;: &quot;Large Language Models in Process Systems Engineering: Opportunities, Architectures, and Industrial Deployment Challenges&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.11589v1-large-language-models-in-process-systems-engineering-opportunities-architectures-and-industrial-deployment-challenges&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;caos-poly&quot;}], &quot;evidence&quot;: &quot;综述过程系统工程中大语言模型在分子设计与合成中的应用&quot;}">Large Language Models in Process Systems Engineering: Opportunities, Architectures, and Industrial Deployment Challenges</a>

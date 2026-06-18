@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-18T00:54:47.493862+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2606.17445v1",
+      "source": "arxiv",
+      "title": "Toward Controllable Catalyst Inverse Design via Large-Scale Autoregressive Pretraining",
+      "abstract": "Inverse design of heterogeneous catalysts remains challenging because catalyst surfaces exhibit substantial structural complexity with coupled surface-adsorbate interactions across a vast chemical space that is difficult to explore efficiently through conventional screening alone. Although machine learning-based high-throughput screening has accelerated catalyst discovery, its efficiency inevitably declines as the search space grows, motivating the development of generative models that can directly construct catalysts with target properties. Here, we present a conditional catalyst generative model based on the Generative Pretrained Transformer architecture with a numerical embedding layer that enables the generation of catalyst structures conditioned on both categorical and continuous properties within a single autoregressive framework. The model was pretrained on 133 million catalyst structures and subsequently fine-tuned on approximately 460,000 optimized structures with associated categorical properties and binding energies for conditional generation. The resulting model achieved 98% structural validity, 95% optimization validity, and high categorical condition fidelity, with a 93 % joint match rate for adsorbate type and composition. For binding energy conditioning, the match rate of approximately 20% represents a four-fold improvement over the baseline training distribution, and the generated distributions shift systematically toward the target values, enabling a 1.5 to 4-fold improvement in screening efficiency for reaction-targeted catalyst discovery without additional fine-tuning. These results show that large-scale autoregressive pre-training, combined with explicit property conditioning, provides a practical route toward controllable catalyst generation and accelerated catalysts discovery.",
+      "authors": [
+        "Dong Hyeon Mok",
+        "Jonggeol Na",
+        "Seoin Back"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cond-mat.mtrl-sci",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-16T03:00:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.17445v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "generative model for inverse design of heterogeneous catalysts with target properties",
+      "llm_evidence_cn": "面向多相催化剂逆向设计的生成模型",
+      "llm_evidence": "面向多相催化剂逆向设计的生成模型",
+      "canonical_evidence": "面向多相催化剂逆向设计的生成模型",
+      "llm_tldr_en": "Proposes a conditional catalyst generative model using GPT architecture for inverse design, enabling direct construction of catalyst structures with desired properties to overcome screening limitations in vast chemical space.",
+      "llm_tldr_cn": "针对多相催化剂逆向设计面临的化学空间巨大、传统筛选效率下降的问题，提出基于生成式预训练Transformer的条件催化剂生成模型，通过大规模自回归预训练直接生成具有目标性质的催化剂结构，克服了传统高通量筛选的局限，为计算辅助催化剂虚拟筛选提供了新的生成式方法。",
+      "llm_tldr": "针对多相催化剂逆向设计面临的化学空间巨大、传统筛选效率下降的问题，提出基于生成式预训练Transformer的条件催化剂生成模型，通过大规模自回归预训练直接生成具有目标性质的催化剂结构，克服了传统高通量筛选的局限，为计算辅助催化剂虚拟筛选提供了新的生成式方法。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}

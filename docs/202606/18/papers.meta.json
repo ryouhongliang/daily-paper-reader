@@ -1,0 +1,24 @@
+{
+  "label": "2026-06-18",
+  "date": "2026-06-18",
+  "generated_at": "2026-06-18T00:56:37",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202606/18/2606.17445v1-toward-controllable-catalyst-inverse-design-via-large-scale-autoregressive-pretraining",
+      "section": "deep",
+      "title_en": "Toward Controllable Catalyst Inverse Design via Large-Scale Autoregressive Pretraining",
+      "authors": "Dong Hyeon Mok, Jonggeol Na, Seoin Back",
+      "date": "2026-06-16",
+      "pdf": "https://arxiv.org/pdf/2606.17445v1",
+      "score": "9.0",
+      "evidence": "面向多相催化剂逆向设计的生成模型",
+      "tldr": "异质催化剂逆设计因表面结构复杂、化学空间巨大而难以高效探索。采用基于生成式预训练Transformer的条件生成模型，结合数值嵌入层，实现单自回归框架下的多属性条件生成。模型在1.33亿结构上预训练并微调后，结构有效性达98%，优化有效性95%，类别条件联合匹配率93%，结合能条件匹配率提升至基线四倍。这使得反应靶向催化剂筛选效率提升1.5至4倍，证明大规模自回归预训练与显式属性条件相结合，是可控催化剂生成和加速发现的可行路径。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Inverse design of heterogeneous catalysts remains challenging because catalyst surfaces exhibit substantial structural complexity with coupled surface-adsorbate interactions across a vast chemical space that is difficult to explore efficiently through conventional screening alone. Although machine learning-based high-throughput screening has accelerated catalyst discovery, its efficiency inevitably declines as the search space grows, motivating the development of generative models that can directly construct catalysts with target properties. Here, we present a conditional catalyst generative model based on the Generative Pretrained Transformer architecture with a numerical embedding layer that enables the generation of catalyst structures conditioned on both categorical and continuous properties within a single autoregressive framework. The model was pretrained on 133 million catalyst structures and subsequently fine-tuned on approximately 460,000 optimized structures with associated categorical properties and binding energies for conditional generation. The resulting model achieved 98% structural validity, 95% optimization validity, and high categorical condition fidelity, with a 93 % joint match rate for adsorbate type and composition. For binding energy conditioning, the match rate of approximately 20% represents a four-fold improvement over the baseline training distribution, and the generated distributions shift systematically toward the target values, enabling a 1.5 to 4-fold improvement in screening efficiency for reaction-targeted catalyst discovery without additional fine-tuning. These results show that large-scale autoregressive pre-training, combined with explicit property conditioning, provides a practical route toward controllable catalyst generation and accelerated catalysts discovery.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
