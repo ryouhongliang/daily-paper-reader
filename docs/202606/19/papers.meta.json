@@ -1,8 +1,54 @@
 {
   "label": "2026-06-19",
   "date": "2026-06-19",
-  "generated_at": "2026-06-19T00:41:09",
-  "count": 0,
-  "papers": [],
+  "generated_at": "2026-06-19T22:46:24",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/19/2606.13876v1-towards-atom-by-atom-fabrication-mechanosynthetic-donation-and-abstraction",
+      "section": "deep",
+      "title_en": "Towards Atom-by-Atom Fabrication: Mechanosynthetic donation and abstraction",
+      "authors": "Brandon Blue, Mathieu Morin, Alex Inayeh, Rosemary Cranston, Cameron J. Mackie, Marc Savoie, Adam Bottomley, Christian J. Imperiale, Zehra Ahmed, Rafik Addou, Aly Asani, Eduardo Barrera-Ramirez, Jeremy Barton, Doreen Cheng, Megan Cowie, Chris Deimert, Tyler Enright, James Zhangming Fan, Robert A. Freitas, Alan T. K. Godfrey, Ryan Groome, Si Yue Guo, Kareem A. Clarcia, Aru Hill, Taleana Huff, Mark Jobes, Robert J. Kirby, Sam Lilak, Hadiya Ma, Adam C. Maahs, Oliver MacLean, Steven M. Maley, Michael Marshall, Terry McCallum, Ralph Merkle, Matthew Moses, Jonathan Myall, Ryan Plumadore, Adam Powell, Henry Rodriguez, Sam Rohe, Luis Sandoval, Khalil Sayed-Akhmad, Benjamin Scheffel, Kashif Tanveer, Bheeshmon Thanabalasingam, Denis A. B. Therien, Janice L. Wong, Reid Wotton, Cristina Yu, Damian G. Allis, Michael Drew, Matthew R. Kennedy, Tait Takatani, Marco Taucer, Dušan Vobornik, Ryan Yamachika, Mathieu Durand",
+      "date": "2026-06-11",
+      "pdf": "https://arxiv.org/pdf/2606.13876v1",
+      "score": "8.0",
+      "evidence": "展示位置控制的碳原子机械合成加成，属直接有机合成",
+      "tldr": "面向逐个原子制造，本研究利用IM-STM与功能化分子工具，在Si(100)表面实现了位置控制的机械合成碳原子捐赠和硅原子提取，首次演示了三维空间中特定原子与官能团自由基化学的位置控制，并通过比较工具行为揭示了分子工具设计的一般原则。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Enabled by inverted-mode scanning tunneling microscopy (IM-STM) and the use of functionalized molecular tools, we demonstrate positionally-controlled mechanosynthetic addition (donation) of carbon and subtraction (abstraction) of silicon atoms on a model build site: atomically clean and crystalline Si(100). The resulting structures represent the first demonstrations of an emerging ability to manipulate radical chemistry with positional control of specific atoms and moieties in 3D. Furthermore, by comparing the behavior of molecular tools designed for atomic donation versus abstraction, we highlight general principles governing molecular tool design for selective and reliable mechanosynthetic functionality.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/19/2606.20497v1-interpretable-meta-learning-for-multi-objective-chemical-search",
+      "section": "deep",
+      "title_en": "Interpretable Meta-Learning for Multi-Objective Chemical Search",
+      "authors": "Antonio Varagnolo, Yulia Pimonova, Michael G. Taylor, Raphaël Pestourie, Nicholas E. Lubbers",
+      "date": "2026-06-18",
+      "pdf": "https://arxiv.org/pdf/2606.20497v1",
+      "score": "8.0",
+      "evidence": "考虑合成可及性的多目标化学分子搜索",
+      "tldr": "在广阔的合成可及化学空间中导航需要同时处理多个竞争目标的代理模型，但现有深度学习模型在量子化学高计算成本下难以兼顾可解释性与效率。本文提出融合线性元学习与自适应置信度不确定性量化的高效全局优化框架，通过跨目标与辅助属性训练，模型获取可转移化学知识，从少量样本快速适配新目标。在真实大规模自旋交叉金属-有机配合物搜索中，元学习代理模型帕累托性能较基线提升78%，动态置信度调谐进一步在静态校准前沿上取得超50%主导优势。该工作首次将线性元学习部署于多目标化学搜索，并解决了主动搜索分布尾部校准的关键挑战，为分子设计提供了可解释且高效的方案。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Navigating the vast space of synthetically accessible molecules demands surrogate models that are interpretable and capable of handling multiple competing objectives at the same time. Deep learning approaches struggle to satisfy them under the computational constraints of quantum-level chemistry. Here, we introduce a modular pipeline that combines interpretable linear meta-learning models and adaptive-confidence uncertainty quantification into an Efficient Global Optimization (EGO) framework for multi-objective molecular discovery. For the first time, linear meta-learning is deployed in a multi-objective chemical search setting: by training across chemical objectives and cheap auxiliary properties, the meta-learned surrogates acquire transferable chemical knowledge that adapts rapidly to new objectives from limited data. Evaluated empirically on a real large scale search for spin-crossover metal-organic complexes, the baseline performs 78% worse in Pareto sense than the meta-learning alternative. We also address the calibration challenges inherent to active search. Since optimal candidates typically lie precisely in the distributional tails, standard uncertainty estimates fail. We introduce an adaptive confidence-tuning algorithm that dynamically recalibrates the exploration-exploitation trade-off as the molecular search evolves. Empirically, dynamic confidence tuning further dominates over 50% of the statically calibrated front.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/19/biorxiv-10-64898-2026-06-11-731722-v1-an-unprecedented-cluster-in-a-methanotroph-acetol-dehydrogenase",
+      "section": "quick",
+      "title_en": "An Unprecedented  Cluster in a Methanotroph Acetol Dehydrogenase",
+      "authors": "Liu, C., Andreeva, E., Pol, A., Barends, T. R. M., Ye, X., Sengupta, K., DeBeer, S., Cutsail, G., Op den Camp, H., Daumann, L. J., Versantvoort, W.",
+      "date": "2026-06-15",
+      "pdf": "https://www.biorxiv.org/content/10.64898/2026.06.11.731722v1.full.pdf",
+      "score": "6.0",
+      "evidence": "结合理论方法（可能为DFT）与实验表征新金属簇，提供机理解释",
+      "tldr": "生物催化金属簇结构多样且机制难以解析，尤其对新簇需多技术整合。本研究在甲烷氧化菌的乙偶姻脱氢酶中发现并深入表征了全新的[Cu-4Fe-4S]簇，证明其催化乙偶姻氧化参与2-丙醇/丙酮代谢。该簇具有独特三维电子结构和+275 mV高氧化还原电位，结合位点跨越两个亚基并含新模体，拓展了已知生物金属辅因子种类，为理解异金属簇的生物学适应机制提供范例。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Biocatalytic metal-containing clusters are nanometer-sized chemical reactors that enable enzymes to perform chemistry far beyond what would be possible with amino acids alone 1,2. These clusters display a remarkable variability3 and elucidating their exact mechanisms is often difficult to determine, requiring input from a multitude of techniques ranging from spectroscopic to structural and theoretical methods. Thus, for unknown clusters, it is essential to accumulate, collate, and interpret as much information as possible from every relevant technique available. Here we report the discovery and in-depth, interdisciplinary characterization of an entirely novel, [Cu-4Fe-4S] cluster in the protein acetol dehydrogenase (AceDH). AceDH, isolated directly from Methylacidiphilum fumariolicum SolV cells, catalyzed the oxidation of acetol to methylglyoxal, proving its role in the 2-propanol/acetone metabolism of methanotrophs4-6. Structural, spectroscopic and electrochemical analyses reveal the [Cu-4Fe-4S] cluster has a unique three-dimensional- and electronic structure involving electronic coupling between the copper and one of the iron atoms, likely contributing to its high, +275 mV, redox potential. The binding site for the novel cluster is composed of two protein subunits and involves a novel motif. These findings expand the known repertoire of biological metal cofactors and provide insight into how heterometallic clusters are adapted for biological processes.",
+      "source": "biorxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
   "errors": []
 }

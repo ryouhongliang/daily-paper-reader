@@ -1,0 +1,1072 @@
+Title: Microsoft Word - TowardsAtomicFabricationViaMechanosynthesis.docx
+
+URL Source: https://arxiv.org/pdf/2606.13876v1
+
+Published Time: Mon, 15 Jun 2026 00:12:20 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Title: Towards Atom-by-Atom Fabrication: Mechanosynthetic donation and 
+
+# abstraction 
+
+Authors: Brandon Blue*, Mathieu Morin*, Alex Inayeh, Rosemary Cranston, Cameron 
+
+J. Mackie, Marc Savoie, Adam Bottomley, Christian J. Imperiale, Zehra Ahmed, Rafik Addou, 
+
+Aly Asani, Eduardo Barrera-Ramirez, Jeremy Barton, Doreen Cheng, Megan Cowie, Chris 
+
+Deimert, Tyler Enright, James Zhangming Fan, Robert A. Freitas Jr., Alan T.K. Godfrey, Ryan 
+
+Groome, Si Yue Guo, Kareem A. Clarcia, Aru Hill, Taleana Huff, Mark Jobes, Robert J. Kirby, 
+
+Sam Lilak, Hadiya Ma, Adam C. Maahs, Oliver MacLean, Steven M. Maley, Michael Marshall, 
+
+Terry McCallum, Ralph Merkle, Matthew Moses, Jonathan Myall, Ryan Plumadore, Adam 
+
+Powell, Henry Rodriguez, Sam Rohe, Luis Sandoval, Khalil Sayed -Akhmad, Benjamin Scheffel, 
+
+Kashif Tanveer, Bheeshmon Thanabalasingam, Denis A.B. Therien, Janice L. Wong, Reid 
+
+Wotton, Cristina Yu, Damian G. Allis, Michael Drew, Matthew R. Kennedy, Tait Takatani, 
+
+Marco Taucer, Dušan Vobornik, Ryan Yamachika, Mathieu Durand 
+
+Affiliations: 
+
+> 1
+
+CBN Nano Technologies, Inc.; Ottawa, K1Y 4W5, Canada 
+
+*Corresponding authors. 
+
+Abstract: Enabled by inverted-mode scanning tunneling microscopy (IM-STM) and the use of 
+
+functionalized molecular tools, we demonstrate positionally-controlled mechanosynthetic addition 
+
+(donation) of carbon and subtraction (abstraction) of silicon atoms on a model build site: 
+
+atomically clean and crystalline Si(100). The resulting structures represent the first demonstrations 
+
+of an emerging ability to manipulate radical chemistry with positional control of specific atoms 
+
+and moieties in 3D. Furthermore, by comparing the behavior of molecular tools designed for 
+
+atomic donation versus abstraction, we highlight general principles governing molecular tool 
+
+design for selective and reliable mechanosynthetic functionality. Pre-Print Manuscript 
+
+1
+
+Main Text 
+
+The state-of-the-art in atomically precise 3D manipulation has generally revolved around 
+
+scanning probe microscopy (SPM) based manipulation of atoms, especially hydrogen on 
+
+H:Si(100) surfaces ( 1), often under electronic bias ( 2). Other advances have been made in 
+
+selective, bias-driven removal of moieties from small, atomically-well defined patches in 
+
+H:Si(100) ( 2) or 3D molecules ( 3). These techniques rely on metal probes, often with poor control 
+
+over the atomic arrangement, requiring CO or other functionalization methods ( 4–6) to improve 
+
+their resolution and reproducibility for specific tasks. Furthermore, the use of bias to mediate these 
+
+reactions includes influences on the local electric field from the mesoscopic shape of the probe 
+
+supporting the apex atom or moiety, especially on semiconducting surfaces ( 7). These restrict the 
+
+scope of feasible structures and suitable precursors for follow-up device processing and limit the 
+
+effective resolution of patterns. 
+
+Recently published work in inverted-mode scanning tunneling microscopy (IM-STM) with 
+
+molecular tools offers a path towards atomically precise addition (donation) and subtraction 
+
+(abstraction) of individual atoms from a well-defined build site, which we refer to as atomically 
+
+precise fabrication (APF) via ‘positionally-controlled mechanosynthesis’ ( 8). Mechanosynthesis, 
+
+in this sense, denotes the synthesis of specific atomic structures by the mechanical manipulation 
+
+of precursors in 3D space with precise, positional control over covalent bond formation. With this 
+
+approach, no bias is needed during the critical steps of the reaction, and all reactions are done in 
+
+situ , without exposure to gaseous precursors. Here, we use this bottom-up process to generate a 
+
+panoply of previously unreported carbon and silicon structures, which highlight the potential of 
+
+this method for the atomically-precise fabrication of complex and covalently-assembled products. 
+
+Molecular Tool Design 
+
+Adamantane molecular tools are generally described in three parts: 1) flexible ‘legs’ 
+
+responsible for surface binding by chemisorption of the ‘feet’; 2) an adamantane core to support 
+
+the desired orientation; and 3) the ‘feedstock’ at the bridgehead position which will take part in 
+
+the reaction ( 9, 10 ). Synthesis of this class of molecular tools has been described recently ( 11 ). 
+
+The ethyl-legged, adamantane molecular tool with oxygen-terminated feet, a ge rmanium 
+
+bridgehead atom, and a – C2I terminal functional group as feedstock is referred to by a common 
+
+name: EAOGe–C 2I (Fig. 1A/B). When all three feet bind to a surface, the tripodal geometry 
+
+ensures that the feedstock is available (Fig. 1C). EAOGe–C 2I’s feedstock is connected to the core 
+
+via a single C–Ge σ-bond (bond dissociation enthalpy, BDE = 5.213 eV, see Computational 
+
+Methods Details, Fig. S1) at the bridgehead position. The iodine atom protects the reactive 
+
+feedstock until it is deiodinated ( 9, 12 ), which generates a long-lived ethynyl radical (–C 2●, where  
+
+> ●
+
+represents any moiety’s radical character) under ultra-high vacuum (UHV) conditions ( 13 ). 
+
+Variants are synthetically accessible, including other leg lengths, bridgehead atoms, and feedstock 
+
+moieties ( 11 ), also shown in the Improved Selectivity section below. 
+
+Enabling Atomically Precise Chemistry 
+
+Control over both sides of the tunnel junction is crucial to enable positionally-controlled 
+
+mechanosynthesis. On the probe side, our silicon probe chips (SPCs) present an atomically flat 
+
+Si(100) mesa, including the >5x5 nm 2 build site where the molecular tool interactions occur ( 8). 
+
+On the sample side, molecular tools are vapor-deposited on a conventionally-prepared Si(100) 
+
+wafer ( 14 ), where the optimal molecular orientation presents an accessible functional group. The Pre-Print Manuscript 
+
+2
+
+tall, sharp molecules on the sample surface generate reflected probe images (RPIs) of the 
+
+comparatively broad silicon apex, yielding an inverted tunneling architecture; in IM-STM, the 
+
+individual, surface-bound molecular tools act as local probes of the SPC’s apex mesa (Fig. 1A). 
+
+Each tool thus generates its own RPI, and the deposition density must be controlled to minimize 
+
+overlap of RPIs. Though not all tools bind in this manner ( 13 ), formation of a well-resolved RPI 
+
+is a strong prerequisite heuristic which selects for properly-oriented tools; improperly-bound tools 
+
+are readily avoided. 
+
+Fig 1. The molecular tool and general mechanosynthetic processes. (A) Overview of the probe 
+
+and sample (above and below, respectively, not to scale) for IM-STM enabled mechanosynthesis. 
+
+(B) Zoomed-in focus on the desired surface binding of the EAOGe–C 2I molecular tool. ( C)
+
+Chemical scheme for (B). ( D) The deiodinated tool (EAOGe–C 2●). Approaching the tool to the 
+
+probe surface and retracting may cause either mechanosynthetic ( E) donation, yielding EAOGe ●
+
+or ( F) abstraction, yielding EAOGe–C 2Si ●.
+
+General Mechanosynthesis Methodology 
+
+Here, we outline the typical process of mechanosynthesis under cryogenic (4 K) ultra-high 
+
+vacuum conditions (see Materials and Methods also). First, an appropriate molecular tool on the 
+
+sample surface is identified by its RPI, followed by selecting a suitable build site on the SPC (Fig. 
+
+1A). The molecular tool is then deiodinated via electronic bias ( 8), generating an ethynyl radical 
+
+(Ge–C 2●) in the case of –C 2I terminated tools (Fig. 1C/D), which is done away from the build site 
+
+to avoid contamination of this region by the iodine. Deiodination produces a characteristic, 
+
+discontinuous increase in the STM baseline tunneling position (Δ z, ~300 pm), and a subsequent 
+
+change in the IM-STM appearance of the RPI. These changes mirrored those of other 
+
+functionalized-probe observations ( 4, 15 ), and were consistently observed for all successful 
+
+deiodinations to reliably identify the state of the feedstock. Pre-Print Manuscript 
+
+3
+
+The EAOGe–C 2● tool is then guided with sub-ångström precision to the desired reaction 
+
+site by translation of the SPC relative to the tool’s RPI. Reaction is initiated by pausing STM z-
+
+axis feedback and extending the SPC by a set distance towards the tool without applied bias (see 
+
+Materials and Methods ). As the SPC and tool approach one another, a new covalent bond is formed 
+
+between the –C 2● and a surface silicon atom. This Si–C σ-bond (BDE = 5.184 eV) is opposed to 
+
+the Ge–C σ-bond (BDE = 5.213 eV) at the bridgehead. Upon retraction, the expected outcomes 
+
+based on these BDEs are either Ge–C homolytic bond cleavage, resulting in a germyl radical-
+
+terminated molecular tool (EAOGe ●) (Fig. 1E) on the silicon sample and a transient pendent 
+
+ethynyl radical on the probe apex, or breaking of the Si–C σ-bond, reverting the tool to its initial 
+
+EAOGe–C 2● state. The very small BDE difference between both and the notable limitations of the 
+
+model theoretical system (see Computational Methods ) complicate product prediction. 
+
+Silicon abstraction is another possible outcome (Fig. 1D/F), where upon retraction the 
+
+silicon remains covalently bound to the C 2 moiety, and is thus abstracted from the build site (Si– 
+
+Si BDE = 2.18–2.59 eV) ( 16 ). With three such bonds per surface silicon, the abstraction becomes 
+
+more favorable if bonds are broken sequentially. The exact chemical state of the silylated tool (Fig. 
+
+1F) is uncertain, though it is sufficiently stable to image the SPC (see Imaging Modality ). If no 
+
+change was observed, the interaction was repeated with iteratively deeper extensions until a 
+
+reaction occurred (see Materials and Methods ). Control and characterization of the interaction 
+
+outcome are important aspects towards developing mechanosynthetic applications. Other factors 
+
+influencing the ability to select for a desired outcome ( e.g. interaction site selection, etc. ) are 
+
+described in the Supporting Information .
+
+Fig 2. Individual donation and abstraction mechanosynthetic transfers. Experimental and 
+
+simulated images of single interaction outcomes with EAOGe–C 2I. ( A) Inter-row (IR-C 2), ( B) on-
+
+dimer (OD-C 2), and ( C) inter-dimer (ID-C 2) donation products, compared to ( D) a single silicon 
+
+vacancy (SiV). Each outcome is paired with proposed schematic arrangements (top row) with 
+
+respect to the Si(100) lattice. ( E) An aggregate image highlighting one of the minima of the SiV 
+
+feature. Images gathered in IM-STM with EAOGe–C 2I tools under (A-D) +3.1 to +3.5 V, and (E) 
+
+−3.3 V for applied sample bias and 10 to 20 pA current tunneling conditions. STM images 
+
+simulated at ±2.8 V bias with 50 nA isocurrent value. Simulation for (B) includes post-processing 
+
+to account for switching, see Supporting Information for details. Pre-Print Manuscript 
+
+4
+
+Observation Of Atomically Precise Material Transfer to the Si Probe Apex 
+
+Homolytic cleavage of C–Ge during retraction yields a pendent ethynyl radical expected 
+
+to be transient, spontaneously forming a second Si–C σ-bond with the SPC surface. Subsequent 
+
+IM-STM imaging with unperturbed EAOGe–C 2I yielded one of two major features consistent with 
+
+carbon dimer donation, though precise bond order cannot be determined from IM-STM images 
+
+alone: inter-row C 2 (IR-C 2, Fig. 2A), or on-dimer C 2 (OD-C 2, Fig. 2B). A third, much rarer inter-
+
+dimer C 2 (ID-C 2) outcome was also observed (Fig. 2C). The same three structures were observed 
+
+in previous work showing electron-induced dehydrogenation of acetylene (C 2H2) and ethylene 
+
+(C 2H4) on Si(100) ( 17 ). Under typical IM-STM imaging conditions, the expected C 2 π-bonds 
+
+appeared relatively dark compared to the surface silicon atoms, while the adjacent silicon dangling 
+
+bonds appeared similarly bright to the other, unreacted dimers (Fig. 2A). The OD-C 2 configuration, 
+
+with the C 2 subunit sitting directly atop but slightly off-center from the dimer (Fig. 2B), appeared 
+
+relatively brighter than the neighboring silicon sites. OD-C 2 features exhibited dynamic switching 
+
+during IM-STM imaging, seen in Fig. 2B as localized streaking and instability in the immediate 
+
+vicinity of the feature, perhaps analogous to other instances of dynamic dimer buckling ( 17 ) or 
+
+due to forces on the imaging molecule itself, as in the case of CO-functionalized SPM tips ( 18 ). 
+
+In many instances, a silicon vacancy was formed (SiV, Fig. 2D) rather than donating a 
+
+carbon. Sequential bond breaking depends strongly on the relative positioning and motion of the 
+
+individual atoms throughout a given interaction: referred to as that interaction’s trajectory, (see 
+
+Improved Selectivity and Fig. S2). When surrounded by intact silicon dimers, SiV features 
+
+exhibited a characteristic dynamic switching with several conformations (Fig. S3), including 
+
+destabilization of neighboring dimers in the same row. Such instability was not noted on the 
+
+hydrogenated surface for subsurface vacancies ( 19 ). One of these minima is demonstrated as Fig. 
+
+2E, where the minima state was extracted from individual line scans across multiple, repeated 
+
+images consistent with static simulations. The assignment of the SiV feature as a silicon atom 
+
+vacancy was further supported by distinct imaging characteristics of the molecular tool used, 
+
+(collectively referred to as the tool’s imaging modality), and subsequent reconstructions of the 
+
+silicon build site surface. Opposite bias IM-STM images of each feature presented in Fig. 2 are 
+
+found in the Supporting Information (Fig. S4). 
+
+Imaging Modality as a Characterization Tool 
+
+Fig 3. IM-STM imaging modality relationship to molecular tool state. Imaging modalities 
+
+observed using EAOGe–C 2I ( A-D ) for (A) the pre-interaction –C 2I terminated tool, the post-
+
+donation –Ge ● terminated tool resulting in (B) an IR–C 2 and (C) an OD-C 2, and (D) the post-
+
+abstraction –C 2Si ● terminated tool. Insets: Images of the feature from a reference –C 2I imager for 
+
+comparison, with scale bars of 1.5 nm. Images gathered in IM-STM under −3.5 to −3.7 V applied Pre-Print Manuscript 
+
+5
+
+sample bias for main panel images and +3.2 to +3.5 V for inset images, and 10 to 20 pA current 
+
+tunneling conditions. 
+
+The influence of probe-shape artifacts and tip functionalization on traditional SPM 
+
+techniques is well known, with certain conditions allowing for the extraction of chemical 
+
+information from SPM ( 4, 15 ). In the case of IM-STM with molecular tools, however, a variety of 
+
+other factors can confound the analysis of a given image without context. The available biases are 
+
+restricted by the relative band-gaps of the probe and substrate materials chosen, which vary based 
+
+on annealing time in the case of arsenic-doped Si(100) ( 20 ). The effective radius of curvature of 
+
+the SPC also changes with repeated annealing ( e.g. , influencing tip-induced band-bending ( 7, 8,
+
+21 )). The chemical stability of the molecular tools themselves (especially to charge transfer) during 
+
+tunneling must also be considered. 
+
+Thus, a concrete demonstration of the utility of IM-STM imaging modality as a chemical 
+
+signature was necessary to better characterize more complex mechanosynthetic products by 
+
+calibrating against simpler base features. Imaging modalities are generally distinguished by 
+
+relative resolution, presence or absence of contrast inversion, and apparent symmetries in the RPI’s 
+
+Si(100) lattice sites, similar to factors noted by others in the case of qPlus probe shape effects ( 22 ,
+
+23 ). These are primarily dependent on the chemical nature and physical orientation of the terminal 
+
+moiety of the tool, providing a strong basis for identification of the end-state of the tool in instances 
+
+where the nature of the product is not immediately self-evident ( e.g., when atomic rearrangements 
+
+obscure the mechanosynthetic outcome). 
+
+Fig. 3 highlights typical modalities for EAOGe–C 2I (Fig. 3A) and its most-observed 
+
+variants achieved after mechanosynthetic interaction: EAOGe ● for donation (Fig. 3B), and 
+
+EAOGe–C 2Si for abstraction (Fig. 3D). Across hundreds of mechanosynthetic interactions, the 
+
+resulting post-interaction modalities were collated and categorized by their products via imaging 
+
+with independent EAOGe–C 2I tools (Insets Fig. 3B-D), revealing clear correlations. The EAOGe– 
+
+C2● modalities were also instructive, but the radical itself was generally less stable, restricting the 
+
+available biases suitable for IM-STM imaging. Modality trends were found, as expected, to be 
+
+insensitive to the length of the tools’ leg moieties (Fig. S5). Modalities can also be categorized and 
+
+compared by various image analysis techniques, including Fast-Fourier Transforms (FFT ( 24 ), see 
+
+Supporting Information Fig. S6) or machine-learning approaches ( 25 ). 
+
+Multi-Transfer Mechanosynthesis Sequences 
+
+Having demonstrated the fundamental elements of mechanosynthesis, we sought to 
+
+generate new surface features via multiple transfers near one another at the same build site. Simple, 
+
+z-only trajectories under these conditions, though, were generally limited to a selectivity of ~40-
+
+60% with a notable interaction site dependence (Fig. S2). These limitations were broadly 
+
+associated with the unpredictability of the pendent C 2’s relaxation (when intending specific 
+
+donation) and the weak Ge–C bond (when intending abstraction). This limited the ability to target 
+
+specific arrangements to ~5 or fewer sequential mechanosynthetic interactions. Though individual 
+
+outcomes are difficult to control, these opportunistically-identified products are instructive. 
+
+In the case of SiV, for example, the dynamic nature of the isolated feature is very apparent 
+
+(Fig. 2C, Video S1, and Fig. S7), even at 4 K. However, a second silicon abstraction event at the 
+
+same dimer site yields a static silicon dimer vacancy (‘DV’, Fig. 4A), appearing as a dark 
+
+depression, consistent with native dimer vacancy defects ( 26 ). When the second silicon abstraction 
+
+is instead performed on the adjacent dimer of a neighboring row, the two adjacent SiV features Pre-Print Manuscript 
+
+6
+
+undergo spontaneous rearrangement to form a new reconstructed dimer (RD) spanning the 
+
+previous trough position, offset by half unit cell (Fig. 4B). Similarly, multiple reconstructed dimers 
+
+(MRD, Fig. 4C) occurred when the two in-line vacancies were further separated. In the 3-MRD 
+
+example shown, the dimers appeared to spontaneously reconstruct mid-scan, perhaps driven by 
+
+the electric field and sustained current present during STM imaging. 
+
+Fig 4. Multiple donation and abstraction mechanosynthetic transfers. Experimental and 
+
+simulated images of multi-interaction mechanosynthetic outcomes with EAOGe–C 2I. Multiple 
+
+abstraction products include ( A) silicon divacancy (DV), ( B) reconstructed dimer (RD), and ( C)
+
+multiple reconstructed dimers (3-MRD). Multiple donation products include ( D) adjacent IR-C 2
+
+donations, with combined abstraction and donation products including an IR-C 2 with ( E) two 
+
+single vacancies to either side, and ( F) a reconstructed dimer. Each outcome is paired with a 
+
+proposed schematic configuration with respect to the Si(100) lattice. Images gathered in IM-STM 
+
+with EAOGe–C 2I tools under +3.0 to +3.5 V bias and 10−20 pA current tunneling conditions. 
+
+STM images simulated at +2.8 V sample bias with a 50 nA isocurrent. 
+
+Abstraction and donation events can also, in principle, be combined towards more 
+
+advanced structures. Adjacent IR-C 2 donations across neighboring troughs (2-IR-C 2, Fig. 4D) Pre-Print Manuscript 
+
+7
+
+appeared darker in the center, (where the central dimer is fully satisfied), than the simplest, trivial 
+
+case of summing two, independent IR-C 2 features. In another case, the neighboring silicon atoms 
+
+were abstracted from either side of an initial IR-C 2 feature. Each proposed silicon abstraction 
+
+resulted in the expected –C 2Si ● modality immediately after transfer. The final product appears as 
+
+a trough-centered C 2 with silicon vacancies to either side, consistent with simulations (IR-
+
+C2+2SiV, Fig. 4E). Similar silicon abstractions were performed at adjacent dimers on the 
+
+neighboring rows to either side of an OD-C 2 feature. The adjacent SiV features caused the splitting 
+
+of the silicon dimer beneath the C 2 subunit and resulted in dimer reconstruction to either side (OD-
+
+C2+RD, Fig. 4F). Due to the configuration of the surrounding silicon atoms, the resulting feature 
+
+bears an apparent similarity to the IR-C 2 feature despite being centered on-dimer. A complete 
+
+overview of the mechanosynthetic steps and intermediates for Fig. 4F are shown in Fig. S8. See 
+
+Fig. S9 for opposite bias IM-STM images of each feature presented in Fig. 4. 
+
+Improved Selectivity for Si Atom Abstraction via Molecular Design 
+
+Further exploring the limits of mechanosynthetic selectivity, under these z-only conditions 
+
+with the silicon dimer center as the interaction point, donation occurred at a rate of 107/197 
+
+interactions with EAOGe–C 2I. This statistical sampling corresponds to an estimated true donation 
+
+rate of ~54±7% with 95% confidence following Wilson’s method ( 27 ). In addition to selecting for 
+
+additive fabrication (as in our companion paper to this work ( 28 )), we anticipated that selecting 
+
+for abstraction would also be desirable for subtractive silicon patterning. We thus developed a 
+
+specific molecular tool to favor abstraction and minimize donation as an undesirable side reaction 
+
+for that application. 
+
+By replacing the germanium bridgehead atom with carbon in the molecular tool synthesis 
+
+step, we hypothesized that the C–C bond (BDE = 5.488 eV) would further favor silicon atom 
+
+abstraction. Additionally, ethyl-alcohol leg groups were replaced with methyl-alcohol leg groups 
+
+to minimize the number of accessible surface bound configurations ( 11 ). This new molecular tool, 
+
+MAOC–C 2I, demonstrated a remarkable ability to abstract silicon atoms, with no observed C 2
+
+donations. Instead, abstraction was the only outcome when following z-only, on-dimer trajectories 
+
+with MAOC–C 2I, both at 4 K (63/63 interactions) and 77 K (100/100 interactions), further 
+
+supporting the interpretation of the SiV feature as silicon abstraction. See Figures S11-S28 for a 
+
+detailed synthetic scheme and full characterization of MAOC–C 2I . 
+
+The improvement to perfect selectivity for abstraction with the simple exchange of a single 
+
+atom in the tool’s structure is a strong indicator of the importance of molecular tool design for 
+
+specific applications. Furthermore, this perfect selectivity allowed us to demonstrate more 
+
+extensive subtractive patterning of silicon, even at 77 K, demonstrating the robustness of the 
+
+method. DV pairs, for example, were readily generated both cross-trough (Fig. 5A) and along-row 
+
+(Fig. 5B), identical to native defects ( 26 ). In some instances, a single interaction could generate a 
+
+DV with the second silicon remaining on the SPC surface as a mobile silicon adatom (Fig. 5C), 
+
+distinct from ad-dimers simulated by others (29 ). Such adatoms could then be 
+
+mechanosynthetically abstracted by the same z-only interaction process, where desired, as a 
+
+preliminary form of error correction (Fig. 5C). These capabilities were combined to generate 
+
+structures of ~10 sequentially abstracted silicon atoms shown in Fig. 5D, (see Fig. S24 for opposite 
+
+bias imaging). Comparisons to simulations (Fig. 5E) suggest the opening of a new, subsurface 
+
+trough orthogonal to the surface in the newly uncovered region, akin to Si(100) step edges. Surface 
+
+dynamics in the presence of such precisely engineered defects are expected to play an important Pre-Print Manuscript 
+
+8
+
+role in future APF efforts, and may lead to future distinctions between mechanosynthetic outcomes 
+
+at varying temperatures. 
+
+Fig 5. Demonstration of subtractive silicon patterning at 77 K. Along-row ( A) and cross-trough 
+
+(B) dimer vacancy pairs (2DV AR and 2DV CT ). An example of extraneous silicon abstraction ( C)
+
+and correcting the error to form the intended 2DV CT feature. ( D) A representative example of 
+
+extended subtractive silicon patterning to form an “L” shape with inset representation of MAOC– 
+
+C2I, and ( E) an STM simulation of a plausible final structure, simulated at −2.8 V sample bias with 
+
+a 50 nA isocurrent. Images gathered in IM-STM under −3.4 V applied sample bias and 20 pA 
+
+current tunneling conditions. 
+
+Conclusions 
+
+Herein, we have demonstrated the process and utility of atomic mechanosynthesis via 
+
+molecular tools as a method for APF in both additive and subtractive modes. The molecular tools 
+
+described are of a general kind, typified by intentional synthesis for a certain range of behaviors 
+
+and functionalities. The build site is highly flexible, with Si(100) presented here as a foundational 
+
+build site of interest for its technological relevance and extensive existing studies in literature. 
+
+Even the simplest z-only reaction trajectories with only pre-interaction lateral targeting were 
+
+shown to produce previously-unreported surface arrangements of carbon and silicon. This 
+
+technique of combining IM-STM and molecular tools exhibits clear paths towards more complex 
+
+arrangements, additional transferable moieties, and generally enabling new APF methods as a 
+
+prerequisite for eventual, atomically precise manufactured products. Pre-Print Manuscript 
+
+9
+
+The capabilities demonstrated here are not uniquely dependent on EAOGe–C 2I. One of its 
+
+many possible variants, MAOC–C 2I, was demonstrated to be specifically suitable for subtractive 
+
+patterning of silicon. The method was also shown to be robust at both 4 K and 77 K, with rich 
+
+avenues for further study. Thus, nanotechnologies previously considered infeasible due to their 
+
+dependence on each individual atom being placed in precisely the intended location with covalent 
+
+bonding are brought closer to fruition by positionally-controlled mechanosynthesis as outlined 
+
+herein. Future developments are expected to be made with respect to the use of mechanosynthetic 
+
+building blocks beyond C 2 and more intricate trajectories to fully exploit the available parameter 
+
+space for IM-STM enabled mechanosynthesis, among others. Pre-Print Manuscript 
+
+10 
+
+References and Notes: 
+
+1. S. R. Schofield, A. J. Fisher, E. Ginossar, J. W. Lyding, R. Silver, F. Fei, P. Namboodiri, J. 
+
+Wyrick, M. G. Masteghin, D. C. Cox, B. N. Murdin, S. K. Clowes, J. G. Keizer, M. Y. Simmons, 
+
+H. G. Stemp, A. Morello, B. Voisin, S. Rogge, R. A. Wolkow, L. Livadaru, J. Pitters, T. J. Z. 
+
+Stock, N. J. Curson, R. E. Butera, T. V. Pavlova, A. M. Jakob, D. Spemann, P. Räcke, F. 
+
+Schmidt-Kaler, D. N. Jamieson, U. Pratiush, G. Duscher, S. V. Kalinin, D. Kazazis, P. 
+
+Constantinou, G. Aeppli, Y. Ekinci, J. H. G. Owen, E. Fowler, S. O. R. Moheimani, J. Randall, 
+
+S. Misra, J. A. Ivie, C. R. Allemang, E. M. Anderson, E. Bussmann, Q. Campbell, X. Gao, T.-M. 
+
+Lu, S. W. Schmucker, Roadmap on atomic-scale semiconductor devices. Nano Futur. 9, 012001 
+
+(2025). 
+
+2. J. Wyrick, X. Wang, P. Namboodiri, R. V. Kashid, F. Fei, J. Fox, R. Silver, Enhanced Atomic 
+
+Precision Fabrication by Adsorption of Phosphine into Engineered Dangling Bonds on H–Si 
+
+Using STM and DFT. ACS Nano 16 , 19114–19123 (2022). 
+
+3. K. Rothe, M. Alkorta, N. Néel, T. Frederiksen, J. Kröger, Chemical Activation of a Single 
+
+Melamine Molecule via Isomerization Followed by Metalation with a Copper Atom. ACS Nano 
+
+19 , 9207–9215 (2025). 
+
+4. A. Gustafsson, N. Okabayashi, A. Peronio, F. J. Giessibl, M. Paulsson, Analysis of STM 
+
+images with pure and CO-functionalized tips: A first-principles and experimental study. Phys. 
+
+Rev. B 96 , 085415 (2017). 
+
+5. D. Wang, T. Haposan, J. Fan, Arramel, A. T. S. Wee, Recent Progress of Imaging Chemical 
+
+Bonds by Scanning Probe Microscopy: A Review. ACS Nano 18 , 30919–30942 (2024). 
+
+6. R. Urban, R. A. Wolkow, J. L. Pitters, Field ion microscope evaluation of tungsten nanotip 
+
+shape using He and Ne imaging gases. Ultramicroscopy 122 , 60–64 (2012). 
+
+7. C. C. Leon, K. Kuhnke, O. Gunnarsson, Band Bending and Beyond. J. Phys. Chem. C 125 ,
+
+3206–3214 (2021). 
+
+8. E. Barrera, B. Thanabalasingam, R. Addou, D. Allis, A. Asani, J. Barton, T. Bernots, B. Blue, 
+
+A. Bottomley, D. Cheng, B. Choi, M. Cowie, C. Deimert, M. Drew, M. Durand, T. Enright, R. 
+
+A. Freitas, A. Godfrey, R. Groome, S. Y. Guo, S. Haird, A. Hill, T. Huff, C. Imperiale, A. 
+
+Inayeh, J. Jeyachandra, M. Jobes, M. Kennedy, R. J. Kirby, M. Krykunov, S. Lilak, H. Ma, A. 
+
+Maahs, C. J. Mackie, O. MacLean, M. Marshall, T. McCallum, R. C. Merkle, M. Morin, J. 
+
+Myall, A. Ofitserov, S. Ou, R. Plumadore, A. Powell, M. Prokopenko, H. Rodriguez, S. Rohe, L. 
+
+Sandoval, M. Savoie, K. Sayed-Akhmad, B. Scheffel, T. Takatani, D. A. Therien, F. V. Barr, D. 
+
+Vobornik, J. Wong, R. Wotton, R. Yamachika, C. Yu, M. Taucer, Inverted-Mode Scanning 
+
+Tunneling Microscopy for Atomically Precise Fabrication. arXiv , doi: 
+
+10.48550/arxiv.2512.24431 (2025). Pre-Print Manuscript 
+
+11 
+
+9. T. Huff, B. Blue, T. McCallum, M. Morin, D. G. Allis, R. Addou, J. Barton, A. Bottomley, D. 
+
+Cheng, N. M. Ćulum, M. Drew, T. Enright, A. T. K. Godfrey, R. Groome, A. J. Hill, A. Inayeh, 
+
+M. R. Kennedy, R. J. Kirby, M. Krykunov, S. Lilak, H. Ma, C. J. Mackie, O. MacLean, J. Myall, 
+
+R. Plumadore, A. Powell, H. Rodriguez, L. Sandoval, M. Savoie, B. Scheffel, M. Taucer, D. A. 
+
+B. Therien, D. Vobornik, Molecular Tools for Non-Planar Surface Chemistry. arXiv , doi: 
+
+10.48550/arxiv.2508.16798 (2025). 
+
+10. R. C. Merkle, R. A. F. Jr., J. Barton, A. Hill, M. Drew, D. Allis, T. Takatani, T. McCallum, 
+
+M. Mamone, N. Zindy, K. Tanveer, Systems and methods for mechanosynthesis (2023). 
+
+https://patents.google.com/patent/US11708384B2/ .
+
+11. T. McCallum, S. Rohe, M. Morin, H. Y. Su, S. W. J. Shields, K. Tanveer, M. Mamone, N. 
+
+Zindy, A. J. Hill, M. Drew, (Hetero)adamantane synthesis: A triple alkylation reaction. doi: 
+
+10.26434/chemrxiv.15002728/v1 (2026). 
+
+12. S.-W. Hla, L. Bartels, G. Meyer, K.-H. Rieder, Inducing All Steps of a Chemical Reaction 
+
+with the Scanning Tunneling Microscope Tip: Towards Single Molecule Engineering. Phys. Rev. 
+
+Lett. 85 , 2777–2780 (2000). 
+
+13. R. J. Kirby, N. M. Culum, H. Rodriguez, T. McCallum, B. Scheffel, S. Lilak, S. Shields, A. 
+
+T. K. Godfrey, S. Rohe, C. J. Mackie, R. Plumadore, R. Addou, A. J. Hill, M. Drew, T. Huff, T. 
+
+Enright, M. Morin, XPS study of sp and sp3 carbon radicals in UHV by iodine capture. 
+
+Manuscript in preparation .
+
+14. B. S. Swartzentruber, Y.-W. Mo, M. B. Webb, M. G. Lagally, Scanning tunneling 
+
+microscopy studies of structural disorder and steps on Si surfaces. J. Vac. Sci. Technol. A: Vac., 
+
+Surf., Films 7, 2901–2905 (1989). 
+
+15. H. Mönig, Imaging atoms in real-space with elemental selectivity. arXiv , doi: 10.26125/z3pa-
+
+7387 (2025). 
+
+16. J. M. Buriak, Organometallic chemistry on silicon and germanium surfaces. Chem. Rev. 102 ,
+
+1271–308 (2002). 
+
+17. O. MacLean, M. Savoie, D. Allis, R. Addou, R. Groome, S. Y. Guo, A. J. Hill, A. Inayeh, H. 
+
+Ma, C. J. Mackie, S. Ou, M. Taucer, D. A. B. Therien, F. V. Barr, R. Yamachika, Electron-
+
+Induced Formation of C2 on Si(100) from Acetylene and Ethylene. Manuscript in preparation .
+
+18. N. Néel, J. Kröger, Atomic Force Extrema Induced by the Bending of a CO-Functionalized 
+
+Probe. Nano Lett. 21 , 2318–2323 (2021). 
+
+19. J. Croshaw, T. Dienel, T. Huff, R. Wolkow, Atomic defect classification of the H–Si(100) 
+
+surface through multi-mode scanning probe microscopy. Beilstein J. Nanotechnol. 11 , 1346– 
+
+1360 (2020). Pre-Print Manuscript 
+
+12 
+
+20. J. L. Pitters, P. G. Piva, R. A. Wolkow, Dopant depletion in the near surface region of 
+
+thermally prepared silicon (100) in UHV. J. Vac. Sci. Technol. B, Nanotechnol. Microelectron.: 
+
+Mater., Process., Meas., Phenom. 30 , 021806 (2012). 
+
+21. K. Nagaoka, M. J. Comstock, A. Hammack, M. F. Crommie, Observation of spatially 
+
+inhomogeneous electronic structure of Si(100) using scanning tunneling spectroscopy. Phys. 
+
+Rev. B 71 , 121304 (2004). 
+
+22. A. Sweetman, S. Jarvis, R. Danza, P. Moriarty, Effect of the tip state during qPlus noncontact 
+
+atomic force microscopy of Si(100) at 5 K: Probing the probe. Beilstein J. Nanotechnol. 3, 25–32 
+
+(2012). 
+
+23. C. Chiutu, A. M. Sweetman, A. J. Lakin, A. Stannard, S. Jarvis, L. Kantorovich, J. L. Dunn, 
+
+P. Moriarty, Precise Orientation of a Single C60 Molecule on the Tip of a Scanning Probe 
+
+Microscope. Phys. Rev. Lett. 108 , 268302 (2012). 
+
+24. Y. Yan, B. Xue, Z. Hu, X. Zhao, AFM tip characterization by using FFT filtered images of 
+
+step structures. Ultramicroscopy 160 , 155–162 (2016). 
+
+25. M. A. R. Laskar, U. Celano, Scanning probe microscopy in the age of machine learning. APL 
+
+Mach. Learn. 1, 041501 (2023). 
+
+26. M. Chander, Y. Z. Li, J. C. Patrin, J. H. Weaver, Si(100)-(2×1) surface defects and 
+
+dissociative and nondissociative adsorption of H2O studied with scanning tunneling microscopy. 
+
+Phys. Rev. B 48 , 2493–2499 (1992). 
+
+27. E. B. Wilson, Probable Inference, the Law of Succession, and Statistical Inference. Journal 
+
+of the American Statistical Association 22 , 209–212 (1927). 
+
+28. M. Cowie, C. Deimert, R. Groome, A. Inayeh, R. J. Kirby, C. J. Mackie, J. Myall, S. Rohe, 
+
+L. Sandoval, K. Sayed-Akhmad, B. Thanabalasingam, R. Wotton, R. Addou, A. Asani, B. Blue, 
+
+A. Bottomley, K. A. Clarcia, T. Enright, J. Z. Fan, R. A. Freitas, A. T. K. Godfrey, S. Y. Guo, A. 
+
+Hill, T. Huff, M. Jobes, H. Ma, A. C. Maahs, O. MacLean, S. M. Maley, M. Marshall, T. 
+
+McCallum, R. C. Merkle, M. Morin, R. Plumadore, H. Rodriguez, M. Savoie, B. Scheffel, J. L. 
+
+Wong, D. G. Allis, J. Barton, M. Drew, M. R. Kennedy, T. Takatani, M. Taucer, D. Vobornik, R. 
+
+Yamachika, M. Durand, Atomically precise mechanosynthesis of carbon structures on 
+
+hydrogenated Si(100) by inverted-mode STM. arXiv (2026). 
+
+29. T. Afanasieva, Adsorption and dynamics of group IV, V atoms and molecular oxygen on 
+
+semiconductor group IV (0 0 1) surfaces. J. Phys.: Condens. Matter 28 , 313001 (2016). 
+
+30. M. Naddaf, More than half of researchers now use AI for peer review — often against 
+
+guidance. Nature 649 , 273–274 (2026). Pre-Print Manuscript 
+
+13 
+
+31. I. S. Ufimtsev, T. J. Martinez, Quantum Chemistry on Graphical Processing Units. 3. 
+
+Analytical Energy Gradients, Geometry Optimization, and First Principles Molecular Dynamics. 
+
+J. Chem. Theory Comput. 5, 2619–2628 (2009). 
+
+32. C. Song, L.-P. Wang, T. J. Martínez, Automated Code Engine for Graphical Processing 
+
+Units: Application to the Effective Core Potential Integrals and Gradients. J. Chem. Theory 
+
+Comput. 12 , 92–106 (2015). 
+
+33. A. V. Titov, I. S. Ufimtsev, N. Luehr, T. J. Martinez, Generating Efficient Quantum 
+
+Chemistry Codes for Novel Architectures. J. Chem. Theory Comput. 9, 213–221 (2012). 
+
+34. A. D. Becke, Density-functional thermochemistry. III. The role of exact exchange. The 
+
+Journal of Chemical Physics 98 , 5648–5652 (1993). 
+
+35. S. Grimme, S. Ehrlich, L. Goerigk, Effect of the damping function in dispersion corrected 
+
+density functional theory. J Comput Chem 32 , 1456–1465 (2011). 
+
+36. W. J. Hehre, R. Ditchfield, J. A. Pople, Self—Consistent Molecular Orbital Methods. XII. 
+
+Further Extensions of Gaussian—Type Basis Sets for Use in Molecular Orbital Studies of 
+
+Organic Molecules. The Journal of Chemical Physics 56 , 2257–2261 (1972). 
+
+37. W. R. Wadt, P. J. Hay, Ab initio effective core potentials for molecular calculations. 
+
+Potentials for main group elements Na to Bi. J. Chem. Phys. 82 , 284–298 (1985). 
+
+38. B. Hourahine, B. Aradi, V. Blum, F. Bonafé, A. Buccheri, C. Camacho, C. Cevallos, M. Y. 
+
+Deshaye, T. Dumitrică, A. Dominguez, S. Ehlert, M. Elstner, T. van der Heide, J. Hermann, S. 
+
+Irle, J. J. Kranz, C. Köhler, T. Kowalczyk, T. Kubař, I. S. Lee, V. Lutsker, R. J. Maurer, S. K. 
+
+Min, I. Mitchell, C. Negre, T. A. Niehaus, A. M. N. Niklasson, A. J. Page, A. Pecchia, G. 
+
+Penazzi, M. P. Persson, J. Řezáč, C. G. Sánchez, M. Sternberg, M. Stöhr, F. Stuckenberg, A. 
+
+Tkatchenko, V. W. -z. Yu, T. Frauenheim, DFTB+, a software package for efficient approximate 
+
+density functional theory based atomistic simulations. J. Chem. Phys. 152 , 124101 (2020). 
+
+39. E. Rauls, J. Elsner, R. Gutierrez, Th. Frauenheim, Stoichiometric and non-stoichiometric 
+
+(101̄ 0) and (112̄ 0) surfaces in 2H–SiC: a theoretical study. Solid State Commun. 111 , 459–464 
+
+(1999). 
+
+40. J. Tersoff, D. R. Hamann, Theory of the scanning tunneling microscope. Phys. Rev. B 31 ,
+
+805–813 (1985). 
+
+41. E. Epifanovsky, A. T. B. Gilbert, X. Feng, J. Lee, Y. Mao, N. Mardirossian, P. Pokhilko, A. 
+
+F. White, M. P. Coons, A. L. Dempwolff, Z. Gan, D. Hait, P. R. Horn, L. D. Jacobson, I. 
+
+Kaliman, J. Kussmann, A. W. Lange, K. U. Lao, D. S. Levine, J. Liu, S. C. McKenzie, A. F. 
+
+Morrison, K. D. Nanda, F. Plasser, D. R. Rehn, M. L. Vidal, Z.-Q. You, Y. Zhu, B. Alam, B. J. 
+
+Albrecht, A. Aldossary, E. Alguire, J. H. Andersen, V. Athavale, D. Barton, K. Begam, A. Behn, 
+
+N. Bellonzi, Y. A. Bernard, E. J. Berquist, H. G. A. Burton, A. Carreras, K. Carter-Fenk, R. 
+
+Chakraborty, A. D. Chien, K. D. Closser, V. Cofer-Shabica, S. Dasgupta, M. D. Wergifosse, J. Pre-Print Manuscript 
+
+14 
+
+Deng, M. Diedenhofen, H. Do, S. Ehlert, P.-T. Fang, S. Fatehi, Q. Feng, T. Friedhoff, J. Gayvert, 
+
+Q. Ge, G. Gidofalvi, M. Goldey, J. Gomes, C. E. González-Espinoza, S. Gulania, A. O. Gunina, 
+
+M. W. D. Hanson-Heine, P. H. P. Harbach, A. Hauser, M. F. Herbst, M. H. Vera, M. Hodecker, 
+
+Z. C. Holden, S. Houck, X. Huang, K. Hui, B. C. Huynh, M. Ivanov, Á. Jász, H. Ji, H. Jiang, B. 
+
+Kaduk, S. Kähler, K. Khistyaev, J. Kim, G. Kis, P. Klunzinger, Z. Koczor-Benda, J. H. Koh, D. 
+
+Kosenkov, L. Koulias, T. Kowalczyk, C. M. Krauter, K. Kue, A. Kunitsa, T. Kus, I. Ladjánszki, 
+
+A. Landau, K. V. Lawler, D. Lefrancois, S. Lehtola, R. R. Li, Y.-P. Li, J. Liang, M. Liebenthal, 
+
+H.-H. Lin, Y.-S. Lin, F. Liu, K.-Y. Liu, M. Loipersberger, A. Luenser, A. Manjanath, P. 
+
+Manohar, E. Mansoor, S. F. Manzer, S.-P. Mao, A. V. Marenich, T. Markovich, S. Mason, S. A. 
+
+Maurer, P. F. McLaughlin, M. F. S. J. Menger, J.-M. Mewes, S. A. Mewes, P. Morgante, J. W. 
+
+Mullinax, K. J. Oosterbaan, G. Paran, A. C. Paul, S. K. Paul, F. Pavošević, Z. Pei, S. Prager, E. I. 
+
+Proynov, Á. Rák, E. Ramos-Cordoba, B. Rana, A. E. Rask, A. Rettig, R. M. Richard, F. Rob, E. 
+
+Rossomme, T. Scheele, M. Scheurer, M. Schneider, N. Sergueev, S. M. Sharada, W. 
+
+Skomorowski, D. W. Small, C. J. Stein, Y.-C. Su, E. J. Sundstrom, Z. Tao, J. Thirman, G. J. 
+
+Tornai, T. Tsuchimochi, N. M. Tubman, S. P. Veccham, O. Vydrov, J. Wenzel, J. Witte, A. 
+
+Yamada, K. Yao, S. Yeganeh, S. R. Yost, A. Zech, I. Y. Zhang, X. Zhang, Y. Zhang, D. Zuev, 
+
+A. Aspuru-Guzik, A. T. Bell, N. A. Besley, K. B. Bravaya, B. R. Brooks, D. Casanova, J.-D. 
+
+Chai, S. Coriani, C. J. Cramer, G. Cserey, A. E. DePrince, R. A. DiStasio, A. Dreuw, B. D. 
+
+Dunietz, T. R. Furlani, W. A. Goddard, S. Hammes-Schiffer, T. Head-Gordon, W. J. Hehre, C.-
+
+P. Hsu, T.-C. Jagau, Y. Jung, A. Klamt, J. Kong, D. S. Lambrecht, W. Liang, N. J. Mayhall, C. 
+
+W. McCurdy, J. B. Neaton, C. Ochsenfeld, J. A. Parkhill, R. Peverati, V. A. Rassolov, Y. Shao, 
+
+L. V. Slipchenko, T. Stauch, R. P. Steele, J. E. Subotnik, A. J. W. Thom, A. Tkatchenko, D. G. 
+
+Truhlar, T. V. Voorhis, T. A. Wesolowski, K. B. Whaley, H. L. Woodcock, P. M. Zimmerman, 
+
+S. Faraji, P. M. W. Gill, M. Head-Gordon, J. M. Herbert, A. I. Krylov, Software for the frontiers 
+
+of quantum chemistry: An overview of developments in the Q-Chem 5 package. The Journal of 
+
+Chemical Physics 155 , 084801 (2021). 
+
+42. Y.-S. Lin, G.-D. Li, S.-P. Mao, J.-D. Chai, Long-Range Corrected Hybrid Density 
+
+Functionals with Improved Dispersion Corrections. J. Chem. Theory Comput. 9, 263–272 
+
+(2013). 
+
+43. M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, M. A. Robb, J. R. Cheeseman, G. 
+
+Scalmani, Barone V, B. Mennucci, G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. 
+
+Hratchian, A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, M. Hada, M. Ehara, K. 
+
+Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, Y. Honda, O. Kitao, H. Nakai, T. 
+
+Vreven, J. A. Montgomery, J. E. Peralta, F. Ogliaro, M. Bearpark, J. J. Heyd, E. Brothers, K. N. 
+
+Kudin, V. N. Staroverov, T. Keith, R. Kobayashi, J. Normand, K. Raghavachari, A. Rendell, J. 
+
+C. Burant, S. S. Iyengar, J. Tomasi, M. Cossi, N. Rega, J. M. Millam, M. Klene, J. E. Knox, J. B. 
+
+Cross, V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmamm, O. Yazyev, A. J. 
+
+Austin, R. Cammi, C. Pomelli, J. W. Ochterski, R. L. Martin, K. Morokuma, V. G. Zakrzewski, 
+
+G. A. Voth, P. Salvador, J. J. Dannenburg, S. Dapprich, A. D. Daniels, O. Farkas, J. B. 
+
+Foresman, J. V. Ortiz, J. Cioslowski, D. J. Fox, Gaussian 16 (Gaussian, Inc., Wallingford, CT, 
+
+2013). 
+
+44. K. Nasr, N. Pannier, J. V. Frangioni, W. Maison, Rigid Multivalent Scaffolds Based on 
+
+Adamantane. J. Org. Chem. 73 , 1056–1060 (2008). Pre-Print Manuscript 
+
+15 
+
+45. F. Yin, Z. Wang, Z. Li, C. Li, Silver-Catalyzed Decarboxylative Fluorination of Aliphatic 
+
+Carboxylic Acids in Aqueous Solution. J. Am. Chem. Soc. 134 , 10401–10404 (2012). 
+
+46. M. Aoyama, S. Hara, Synthesis of functionalized adamantanes from fluoroadamantanes. 
+
+Tetrahedron 65 , 3682–3687 (2009). 
+
+47. T. Kitagawa, Y. Idomoto, H. Matsubara, D. Hobara, T. Kakiuchi, T. Okazaki, K. Komatsu, 
+
+Rigid Molecular Tripod with an Adamantane Framework and Thiol Legs. Synthesis and 
+
+Observation of an Ordered Monolayer on Au(111). J. Org. Chem. 71 , 1362–1369 (2006). 
+
+48. Y. Liu, D. Huang, J. Huang, K. Maruoka, Hypervalent Iodine Mediated Chemoselective 
+
+Iodination of Alkynes. J. Org. Chem. 82 , 11865–11871 (2017). Pre-Print Manuscript 
+
+16 
+
+Acknowledgments: We acknowledge the efforts of many other colleagues in their ongoing 
+
+support of CBN Nano Technologies, Inc. as a whole, including Darian Blue, Byoung Choi and 
+
+Sheldon Haird. We thank David Lister for discussions regarding IM-STM with molecular tools 
+
+and early input on SPM head design. We also thank John Turriff, Mike Meakin, and Tom 
+
+McKendree for project management inputs. No parts of the text or figures were drafted by AI-
+
+based tools, but Microsoft Copilot was utilized, based on human-written drafts, to simulate 
+
+anticipated peer-review feedback reported by others ( 30 ). This feedback was then considered by 
+
+the co-authors to further clarify the text as part of manuscript refinement. 
+
+Funding: This work was supported in part by the Canadian government under the Strategic 
+
+Innovation Fund (SIF, Agreement Number 813022). 
+
+Author contributions: 
+
+Conceptualization: DGA, MD, AH, RAFJ, RM, M. Marshall, M. Moses, TT, RY 
+
+Methodology: DGA, EBR, AH, MD, TM, M. Morin, KT, MK 
+
+Investigation: AA, DGA, KSA, ZA, AB, BB, DC, KC, MC, RC, CD, TE, JZF, ATKG, 
+
+RG, SYG, CI, RK, SL, AM, CM, HM, JM, M .Morin, M. Moses, OM, SM, TM, AP, 
+
+RP, HR, SR, BS, LS, MS, DABT, BT, JLW, RW, CY, RY 
+
+Visualization: ZA, AB, BB, RC, RG, AI, CI, MJ, M.Morin, TM 
+
+Funding acquisition: JB, RAFJ, RM 
+
+Project administration: DGA, M. Drew, M. Durand, MK, MT, TT, DV, RY 
+
+Supervision: DGA, RA, BB, EBR, TH, AI, MK, M.Morin, M. Moses, OM, TT, KSA, 
+
+MT, DV 
+
+Writing – original draft: DGA, ZA, AB, BB, RC, CI, MJ, CM, M. Morin, TM, MS, 
+
+RW 
+
+Writing – review & editing: DGA, AB, BB, AH, CM, MS, CI, ZA, RC, MJ, M. Morin, 
+
+TM, RW, RK, HM, OM, SR, MT, BS, JM 
+
+Competing interests: The authors declare competing financial interests; patents have been 
+
+filed on aspects of this work. All authors are or were affiliated with CBN Nano Technologies, 
+
+Inc. a company seeking to commercialize atomically precise 3D manufacturing. The work 
+
+presented in this manuscript was also funded in part by the Canadian government under the 
+
+Strategic Innovation Fund (SIF, Agreement Number 813022). 
+
+Data, code, and materials availability: The data underlying this work are not publicly 
+
+available, as they constitute a part of CBN Nano Technology Inc.’s intellectual property. 
+
+Reasonable, academic requests for data not included in this work or in the Supporting 
+
+Information may be submitted to the corresponding author/s or info@nfcbn.com for 
+
+consideration.

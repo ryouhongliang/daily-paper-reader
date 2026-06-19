@@ -1,16 +1,193 @@
 {
   "mode": "standard",
-  "generated_at": "2026-06-19T00:41:08.995448+00:00",
+  "generated_at": "2026-06-19T22:43:51.236026+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 0,
+    "deep_divecandidates": 2,
     "deep_cap": 6,
-    "deep_selected": 0,
-    "quick_candidates": 0,
+    "deep_selected": 2,
+    "quick_candidates": 1,
     "quick_skim_target": 11,
-    "quick_selected": 0
+    "quick_selected": 1
   },
-  "deep_dive": [],
-  "quick_skim": []
+  "deep_dive": [
+    {
+      "id": "2606.13876v1",
+      "source": "arxiv",
+      "title": "Towards Atom-by-Atom Fabrication: Mechanosynthetic donation and abstraction",
+      "abstract": "Enabled by inverted-mode scanning tunneling microscopy (IM-STM) and the use of functionalized molecular tools, we demonstrate positionally-controlled mechanosynthetic addition (donation) of carbon and subtraction (abstraction) of silicon atoms on a model build site: atomically clean and crystalline Si(100). The resulting structures represent the first demonstrations of an emerging ability to manipulate radical chemistry with positional control of specific atoms and moieties in 3D. Furthermore, by comparing the behavior of molecular tools designed for atomic donation versus abstraction, we highlight general principles governing molecular tool design for selective and reliable mechanosynthetic functionality.",
+      "authors": [
+        "Brandon Blue",
+        "Mathieu Morin",
+        "Alex Inayeh",
+        "Rosemary Cranston",
+        "Cameron J. Mackie",
+        "Marc Savoie",
+        "Adam Bottomley",
+        "Christian J. Imperiale",
+        "Zehra Ahmed",
+        "Rafik Addou",
+        "Aly Asani",
+        "Eduardo Barrera-Ramirez",
+        "Jeremy Barton",
+        "Doreen Cheng",
+        "Megan Cowie",
+        "Chris Deimert",
+        "Tyler Enright",
+        "James Zhangming Fan",
+        "Robert A. Freitas",
+        "Alan T. K. Godfrey",
+        "Ryan Groome",
+        "Si Yue Guo",
+        "Kareem A. Clarcia",
+        "Aru Hill",
+        "Taleana Huff",
+        "Mark Jobes",
+        "Robert J. Kirby",
+        "Sam Lilak",
+        "Hadiya Ma",
+        "Adam C. Maahs",
+        "Oliver MacLean",
+        "Steven M. Maley",
+        "Michael Marshall",
+        "Terry McCallum",
+        "Ralph Merkle",
+        "Matthew Moses",
+        "Jonathan Myall",
+        "Ryan Plumadore",
+        "Adam Powell",
+        "Henry Rodriguez",
+        "Sam Rohe",
+        "Luis Sandoval",
+        "Khalil Sayed-Akhmad",
+        "Benjamin Scheffel",
+        "Kashif Tanveer",
+        "Bheeshmon Thanabalasingam",
+        "Denis A. B. Therien",
+        "Janice L. Wong",
+        "Reid Wotton",
+        "Cristina Yu",
+        "Damian G. Allis",
+        "Michael Drew",
+        "Matthew R. Kennedy",
+        "Tait Takatani",
+        "Marco Taucer",
+        "Dušan Vobornik",
+        "Ryan Yamachika",
+        "Mathieu Durand"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci"
+      ],
+      "published": "2026-06-11T20:00:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.13876v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Demonstrates positionally-controlled mechanosynthetic addition of carbon atoms, a direct form of organic synthesis",
+      "llm_evidence_cn": "展示位置控制的碳原子机械合成加成，属直接有机合成",
+      "llm_evidence": "展示位置控制的碳原子机械合成加成，属直接有机合成",
+      "canonical_evidence": "展示位置控制的碳原子机械合成加成，属直接有机合成",
+      "llm_tldr_en": "Using STM and functionalized molecular tools, shows atom-by-atom addition and subtraction of carbon and silicon, advancing organic synthesis with atomic precision.",
+      "llm_tldr_cn": "有机合成传统上在分子水平进行，但原子精度的逐原子制造仍是挑战。本文利用反向模式扫描隧道显微镜和功能化分子工具，实现了在硅表面位置控制的碳原子机械合成加成和硅原子机械合成减去。这项工作首次展示了在三维空间内对特定原子和基团进行位置控制的自由基化学反应，为合成具有原子级精度的定制分子结构开辟了新途径，是迈向逐原子有机合成的重要一步。",
+      "llm_tldr": "有机合成传统上在分子水平进行，但原子精度的逐原子制造仍是挑战。本文利用反向模式扫描隧道显微镜和功能化分子工具，实现了在硅表面位置控制的碳原子机械合成加成和硅原子机械合成减去。这项工作首次展示了在三维空间内对特定原子和基团进行位置控制的自由基化学反应，为合成具有原子级精度的定制分子结构开辟了新途径，是迈向逐原子有机合成的重要一步。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Organic Synthesis",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20497v1",
+      "source": "arxiv",
+      "title": "Interpretable Meta-Learning for Multi-Objective Chemical Search",
+      "abstract": "Navigating the vast space of synthetically accessible molecules demands surrogate models that are interpretable and capable of handling multiple competing objectives at the same time. Deep learning approaches struggle to satisfy them under the computational constraints of quantum-level chemistry. Here, we introduce a modular pipeline that combines interpretable linear meta-learning models and adaptive-confidence uncertainty quantification into an Efficient Global Optimization (EGO) framework for multi-objective molecular discovery. For the first time, linear meta-learning is deployed in a multi-objective chemical search setting: by training across chemical objectives and cheap auxiliary properties, the meta-learned surrogates acquire transferable chemical knowledge that adapts rapidly to new objectives from limited data. Evaluated empirically on a real large scale search for spin-crossover metal-organic complexes, the baseline performs 78% worse in Pareto sense than the meta-learning alternative. We also address the calibration challenges inherent to active search. Since optimal candidates typically lie precisely in the distributional tails, standard uncertainty estimates fail. We introduce an adaptive confidence-tuning algorithm that dynamically recalibrates the exploration-exploitation trade-off as the molecular search evolves. Empirically, dynamic confidence tuning further dominates over 50% of the statically calibrated front.",
+      "authors": [
+        "Antonio Varagnolo",
+        "Yulia Pimonova",
+        "Michael G. Taylor",
+        "Raphaël Pestourie",
+        "Nicholas E. Lubbers"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE",
+        "cond-mat.mtrl-sci"
+      ],
+      "published": "2026-06-18T17:12:48+00:00",
+      "link": "https://arxiv.org/pdf/2606.20497v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multi-objective chemical search with synthetic accessibility",
+      "llm_evidence_cn": "考虑合成可及性的多目标化学分子搜索",
+      "llm_evidence": "考虑合成可及性的多目标化学分子搜索",
+      "canonical_evidence": "考虑合成可及性的多目标化学分子搜索",
+      "llm_tldr_en": "Introduces a modular pipeline for molecular discovery using interpretable meta-learning and uncertainty quantification in efficient global optimization, handling synthetic accessibility constraints.",
+      "llm_tldr_cn": "提出一种用于多目标化学分子发现的模块化流程，将可解释元学习与自适应置信度不确定性量化相结合，嵌入高效全局优化框架，以应对合成可及性约束下的化学空间探索。在量子化学精度下，线性元学习模型通过跨目标训练获取可迁移的化学先验，显著提升搜索效率，并保证决策过程可解释。该方法为计算机辅助有机合成中的虚拟筛选与设计提供了通用工具。",
+      "llm_tldr": "提出一种用于多目标化学分子发现的模块化流程，将可解释元学习与自适应置信度不确定性量化相结合，嵌入高效全局优化框架，以应对合成可及性约束下的化学空间探索。在量子化学精度下，线性元学习模型通过跨目标训练获取可迁移的化学先验，显著提升搜索效率，并保证决策过程可解释。该方法为计算机辅助有机合成中的虚拟筛选与设计提供了通用工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "biorxiv-10-64898-2026-06-11-731722-v1",
+      "source": "biorxiv",
+      "title": "An Unprecedented  Cluster in a Methanotroph Acetol Dehydrogenase",
+      "abstract": "Biocatalytic metal-containing clusters are nanometer-sized chemical reactors that enable enzymes to perform chemistry far beyond what would be possible with amino acids alone 1,2. These clusters display a remarkable variability3 and elucidating their exact mechanisms is often difficult to determine, requiring input from a multitude of techniques ranging from spectroscopic to structural and theoretical methods. Thus, for unknown clusters, it is essential to accumulate, collate, and interpret as much information as possible from every relevant technique available. Here we report the discovery and in-depth, interdisciplinary characterization of an entirely novel, [Cu-4Fe-4S] cluster in the protein acetol dehydrogenase (AceDH). AceDH, isolated directly from Methylacidiphilum fumariolicum SolV cells, catalyzed the oxidation of acetol to methylglyoxal, proving its role in the 2-propanol/acetone metabolism of methanotrophs4-6. Structural, spectroscopic and electrochemical analyses reveal the [Cu-4Fe-4S] cluster has a unique three-dimensional- and electronic structure involving electronic coupling between the copper and one of the iron atoms, likely contributing to its high, +275 mV, redox potential. The binding site for the novel cluster is composed of two protein subunits and involves a novel motif. These findings expand the known repertoire of biological metal cofactors and provide insight into how heterometallic clusters are adapted for biological processes.",
+      "authors": [
+        "Liu, C.",
+        "Andreeva, E.",
+        "Pol, A.",
+        "Barends, T. R. M.",
+        "Ye, X.",
+        "Sengupta, K.",
+        "DeBeer, S.",
+        "Cutsail, G.",
+        "Op den Camp, H.",
+        "Daumann, L. J.",
+        "Versantvoort, W."
+      ],
+      "primary_category": "biochemistry",
+      "categories": [
+        "biochemistry"
+      ],
+      "published": "2026-06-15T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.11.731722v1.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Theoretical methods (likely DFT) used with experiments to characterize a novel metal cluster, providing mechanistic explanation",
+      "llm_evidence_cn": "结合理论方法（可能为DFT）与实验表征新金属簇，提供机理解释",
+      "llm_evidence": "结合理论方法（可能为DFT）与实验表征新金属簇，提供机理解释",
+      "canonical_evidence": "结合理论方法（可能为DFT）与实验表征新金属簇，提供机理解释",
+      "llm_tldr_en": "Discovery and interdisciplinary characterization of a novel [Cu-4Fe-4S] cluster in an enzyme, using spectroscopy, structural, and theoretical methods to elucidate its mechanism.",
+      "llm_tldr_cn": "酶中金属簇执行复杂催化，但新簇的机理阐明需多技术整合。本文报道在甲醇脱氢酶中发现全新[Cu-4Fe-4S]簇，通过光谱、结构和理论方法的综合表征，揭示其电子结构和催化功能。这项工作不仅发现了新型生物无机催化中心，还展示了理论计算（可能含DFT）在解析酶催化机理中的关键作用，为理解金属酶功能和创新催化剂设计提供了新见解。",
+      "llm_tldr": "酶中金属簇执行复杂催化，但新簇的机理阐明需多技术整合。本文报道在甲醇脱氢酶中发现全新[Cu-4Fe-4S]簇，通过光谱、结构和理论方法的综合表征，揭示其电子结构和催化功能。这项工作不仅发现了新型生物无机催化中心，还展示了理论计算（可能含DFT）在解析酶催化机理中的关键作用，为理解金属酶功能和创新催化剂设计提供了新见解。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
 }
