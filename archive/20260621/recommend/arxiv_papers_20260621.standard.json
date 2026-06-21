@@ -1,0 +1,176 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-21T23:00:40.235426+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.17127v1",
+      "source": "arxiv",
+      "title": "Agentic Discovery of Non-Canonical Antimicrobial Peptides with AMPGAN v3",
+      "abstract": "Antimicrobial resistance causes to over a million deaths annually. Antimicrobial peptides (AMPs) are a promising solution, but generative AMP models are not yet ready to design peptides with non-natural amino acids and/or chemical modifications, which are essential for real-world peptide drugs. We present AMPGAN v3, a multi-objective conditional GAN that expands the generative vocabulary to D-amino acids and N/C-terminus modifications such as amidation. By separating adversarial and activity-aware supervision across two specialized discriminators, AMPGAN v3 substantially improves training stability and outperforms prior generative AMP models on external classifiers. We validated five candidates spanning three structural classes in vitro; two showed activity against Gram-positive strains, with the best candidate reaching MIC 8 μg/mL against B. subtilis. To support downstream curation, we further present PepCraft, a multi-agent framework for end-to-end AMP discovery in which a Planning Agent orchestrates specialized executors for generation, filtering, and verification. Its prioritization recommendations align with our in vitro outcomes. Together, these contributions let us examine, on a small but real scale, how generative and agentic AI compose in therapeutic peptide discovery. Code: https://github.com/marszzibros/AMPGANv3",
+      "authors": [
+        "Jay Jung",
+        "Xiaohan Zhang",
+        "Shenghan Song",
+        "Mahmoud Sayedahmed",
+        "Chijian Xiang",
+        "Yunong Xu",
+        "Ahmed AbdelKhalek",
+        "Severin T. Schneebeli",
+        "Matthew J. Wargo",
+        "Jianing Li",
+        "Safwan Wshah"
+      ],
+      "primary_category": "q-bio.QM",
+      "categories": [
+        "q-bio.QM",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-15T16:39:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.17127v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Generative adversarial network for designing antimicrobial peptides with non-canonical modifications, enabling virtual screening of peptide candidates.",
+      "llm_evidence_cn": "生成对抗网络设计具有非经典修饰的抗菌肽，实现肽候选物的虚拟筛选。",
+      "llm_evidence": "生成对抗网络设计具有非经典修饰的抗菌肽，实现肽候选物的虚拟筛选。",
+      "canonical_evidence": "生成对抗网络设计具有非经典修饰的抗菌肽，实现肽候选物的虚拟筛选。",
+      "llm_tldr_en": "AMPGAN v3 is a multi-objective conditional GAN that incorporates D-amino acids and terminus modifications into antimicrobial peptide design, validated by in vitro testing of five candidates showing broad-spectrum activity and low hemolysis.",
+      "llm_tldr_cn": "AMPGAN v3是一个多目标条件生成对抗网络，将D-氨基酸和末端修饰纳入抗菌肽设计词汇，通过分离对抗性和活性感知监督提高训练稳定性。体外实验验证了五种涵盖三个结构类的候选肽，其中两种显示出广谱抗菌活性且低溶血性，证明了计算虚拟筛选在设计非经典修饰肽药物方面的潜力。",
+      "llm_tldr": "AMPGAN v3是一个多目标条件生成对抗网络，将D-氨基酸和末端修饰纳入抗菌肽设计词汇，通过分离对抗性和活性感知监督提高训练稳定性。体外实验验证了五种涵盖三个结构类的候选肽，其中两种显示出广谱抗菌活性且低溶血性，证明了计算虚拟筛选在设计非经典修饰肽药物方面的潜力。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.16147v1",
+      "source": "arxiv",
+      "title": "Stitching Molecular Worlds Together with Physics-Coupled Diffusion Models",
+      "abstract": "Complex chemical systems often contain multiple components or large molecules, giving rise to substantial chemical and conformational complexity. Modeling the structures of these systems is crucial for mechanistic understanding of chemical processes and rational design, but remains highly challenging for both conventional theoretical approaches and machine learning. Here, we introduce physical-interaction-coupled diffusion models (PICDiff), a framework that couples independently trained diffusion models for subsystems of a complex system through explicit bonded and nonbonded interactions during inference. PICDiff reduces the difficulty of applying generative models to chemically and conformationally complex systems by decomposing them into smaller subsystems that are less complex and more amenable to machine-learning-based modeling. Using peptide-polymer binding and polymer conformation sampling as examples, we demonstrate that PICDiff can quantitatively sample conformations and model the thermodynamics of complex chemical systems. These results show that PICDiff provides a general and practical approach for modeling complex chemical systems by combining learned models of simpler molecular subsystems through physical interactions.",
+      "authors": [
+        "Yanbin Wang",
+        "Yajie Cai",
+        "Ming Chen"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-15T03:04:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.16147v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "physics-coupled diffusion models for complex chemical systems can aid mechanistic understanding and rational design in organic synthesis",
+      "llm_evidence_cn": "物理耦合扩散模型可用于复杂化学体系，辅助有机合成中的机理理解和理性设计",
+      "llm_evidence": "物理耦合扩散模型可用于复杂化学体系，辅助有机合成中的机理理解和理性设计",
+      "canonical_evidence": "物理耦合扩散模型可用于复杂化学体系，辅助有机合成中的机理理解和理性设计",
+      "llm_tldr_en": "PICDiff framework couples independently trained diffusion models for subsystems via physical interactions during inference to model complex chemical systems, enabling mechanistic understanding and rational design.",
+      "llm_tldr_cn": "复杂化学体系（如多组分体系或大分子）的结构建模对理解化学过程机理和进行理性设计至关重要，但传统方法和机器学习都面临挑战。本文提出物理相互作用耦合扩散模型（PICDiff），将复杂体系分解为子系统，独立训练扩散模型后，在推理时通过显式键合与非键合相互作用耦合，实现结构生成。该方法在多个测试体系上验证了有效性，能够处理化学和构象复杂性，为复杂分子体系的结构预测和设计提供了一种灵活且可扩展的计算策略，有望在有机合成、材料科学等领域辅助机理研究和分子设计。",
+      "llm_tldr": "复杂化学体系（如多组分体系或大分子）的结构建模对理解化学过程机理和进行理性设计至关重要，但传统方法和机器学习都面临挑战。本文提出物理相互作用耦合扩散模型（PICDiff），将复杂体系分解为子系统，独立训练扩散模型后，在推理时通过显式键合与非键合相互作用耦合，实现结构生成。该方法在多个测试体系上验证了有效性，能够处理化学和构象复杂性，为复杂分子体系的结构预测和设计提供了一种灵活且可扩展的计算策略，有望在有机合成、材料科学等领域辅助机理研究和分子设计。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.18390v1",
+      "source": "arxiv",
+      "title": "MOLAR: Learning Multimodal Molecular Representations from Noisy Labels",
+      "abstract": "Motivation: Noisy labels are a common challenge in molecular property prediction because molecular annotations are often obtained from assays, curated databases, or weak annotation pipelines rather than directly observed clean biological states. Treating recorded labels as reliable supervision can cause models to memorize corrupted observations and learn misleading molecular evidence. In multimodal molecular representation learning, this issue can be amplified by graph-text fusion or alignment, which may propagate label-induced errors across modalities. Results: We propose MOLAR, a noise-aware framework for learning multimodal molecular representations from noisy labels. MOLAR separates latent clean-property inference from recorded-label observation: graph and text views contribute residual evidence to a clean-property distribution, and a categorical label-observation channel maps this distribution to recorded labels for training. This formulation derives posterior label reliability and modality-specific molecular evidence from the model. Experiments on naturally noisy molecular benchmarks and controlled label-flipping benchmarks show that MOLAR consistently outperforms representative baselines. Visualization analyses further show that MOLAR provides interpretable reliability and modality-evidence diagnostics.",
+      "authors": [
+        "Yingxu Wang",
+        "Kunyu Zhang",
+        "Nan Yin",
+        "Yu Li",
+        "Eran Segal"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "q-bio.QM"
+      ],
+      "published": "2026-06-16T18:35:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.18390v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Noise-aware multimodal molecular representation learning for property prediction, applicable to computational virtual screening.",
+      "llm_evidence_cn": "噪声感知的多模态分子表示学习，适用于计算虚拟筛选。",
+      "llm_evidence": "噪声感知的多模态分子表示学习，适用于计算虚拟筛选。",
+      "canonical_evidence": "噪声感知的多模态分子表示学习，适用于计算虚拟筛选。",
+      "llm_tldr_en": "MOLAR is a framework that learns molecular representations from noisy labels by separating clean property inference from label observation, improving robustness in multimodal graph-text prediction tasks.",
+      "llm_tldr_cn": "MOLAR提出了一个噪声感知框架，通过分离潜在干净性质推理与记录标签观察，从噪声标签中学习多模态分子表示。该方法在图-文本融合任务中显著提高了抗噪性，为存在标注噪声的分子性质预测和虚拟筛选提供了更可靠的表示学习途径。",
+      "llm_tldr": "MOLAR提出了一个噪声感知框架，通过分离潜在干净性质推理与记录标签观察，从噪声标签中学习多模态分子表示。该方法在图-文本融合任务中显著提高了抗噪性，为存在标注噪声的分子性质预测和虚拟筛选提供了更可靠的表示学习途径。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.19547v1",
+      "source": "arxiv",
+      "title": "Multi-Equalization in Conceptual Density Functional Theory: Beyond Electronegativity Equalization",
+      "abstract": "The electronegativity equalization principle provides a simple framework to describe charge redistribution, yet its conventional formulation is limited to a first-order description based on chemical potential equalization. In this work, we introduce 'multi-equalization,' a generalized framework that extends this concept by incorporating higher-order responses within Conceptual Density Functional Theory.   This approach represents molecules as sets of flexible electron density partitions, allowing different electronic descriptions (e.g., atomic densities or localized orbitals) to be treated within a unified formalism. We demonstrate that correlations between energy and density derivatives with respect to the number of electrons lead to the simultaneous equalization of multiple descriptors, including chemical hardness and Fukui indices.   A constructive algorithm is introduced to determine the optimal density partitions satisfying these multi-equalization conditions. This scheme provides a consistent description of both global charge transfer and local reactivity, overcoming the intrinsic limitations of traditional electronegativity equalization models. Notably, the inclusion of density response functions enables local hardness equalization, introducing spatial resolution into reactivity descriptions. Under multi-equalization, local reactivity descriptors become constrained functionals of the global electron density. This framework establishes a deeper connection between charge equalization models and formal density functional theory, offering a theoretically grounded route toward improved predictions of molecular reactivity.",
+      "authors": [
+        "Jesús Sánchez-Márquez"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-17T19:38:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.19547v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "develops a generalized framework for conceptual DFT with higher-order responses, transferable to reactivity analysis in organic synthesis",
+      "llm_evidence_cn": "发展了概念DFT的广义框架，可转移用于有机合成中的反应性分析",
+      "llm_evidence": "发展了概念DFT的广义框架，可转移用于有机合成中的反应性分析",
+      "canonical_evidence": "发展了概念DFT的广义框架，可转移用于有机合成中的反应性分析",
+      "llm_tldr_en": "Introduces multi-equalization in conceptual DFT to incorporate higher-order responses, enabling more accurate charge redistribution modeling for chemical reactivity studies.",
+      "llm_tldr_cn": "传统的电负性均衡原理仅为一阶近似，限制了对化学键和反应中高阶效应的描述。本文在概念密度泛函理论中提出多重均衡框架，通过纳入高阶响应将分子表示为灵活的电子密度分区，统一处理原子密度或局域轨道等不同描述，揭示了能量与密度导数间的相关性，为更精确的电荷再分配模型和有机合成反应性分析提供了理论基础。",
+      "llm_tldr": "传统的电负性均衡原理仅为一阶近似，限制了对化学键和反应中高阶效应的描述。本文在概念密度泛函理论中提出多重均衡框架，通过纳入高阶响应将分子表示为灵活的电子密度分区，统一处理原子密度或局域轨道等不同描述，揭示了能量与密度导数间的相关性，为更精确的电荷再分配模型和有机合成反应性分析提供了理论基础。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

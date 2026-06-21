@@ -1,0 +1,69 @@
+{
+  "label": "2026-06-21",
+  "date": "2026-06-21",
+  "generated_at": "2026-06-21T23:05:20",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202606/21/2606.17127v1-agentic-discovery-of-non-canonical-antimicrobial-peptides-with-ampgan-v3",
+      "section": "quick",
+      "title_en": "Agentic Discovery of Non-Canonical Antimicrobial Peptides with AMPGAN v3",
+      "authors": "Jay Jung, Xiaohan Zhang, Shenghan Song, Mahmoud Sayedahmed, Chijian Xiang, Yunong Xu, Ahmed AbdelKhalek, Severin T. Schneebeli, Matthew J. Wargo, Jianing Li, Safwan Wshah",
+      "date": "2026-06-15",
+      "pdf": "https://arxiv.org/pdf/2606.17127v1",
+      "score": "7.0",
+      "evidence": "生成对抗网络设计具有非经典修饰的抗菌肽，实现肽候选物的虚拟筛选。",
+      "tldr": "抗菌肽生成模型无法设计含非天然氨基酸和化学修饰的肽。AMPGAN v3扩展词汇至D-氨基酸及N/C端修饰，并通过双判别器分离对抗与活性监督提升稳定性。体外验证中，两个候选肽对革兰氏阳性菌有效，最佳MIC 8 μg/mL。结合PepCraft多智能体框架，展示了生成式与智能体AI在肽发现中的协同，为真实药物开发提供新路径。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Antimicrobial resistance causes to over a million deaths annually. Antimicrobial peptides (AMPs) are a promising solution, but generative AMP models are not yet ready to design peptides with non-natural amino acids and/or chemical modifications, which are essential for real-world peptide drugs. We present AMPGAN v3, a multi-objective conditional GAN that expands the generative vocabulary to D-amino acids and N/C-terminus modifications such as amidation. By separating adversarial and activity-aware supervision across two specialized discriminators, AMPGAN v3 substantially improves training stability and outperforms prior generative AMP models on external classifiers. We validated five candidates spanning three structural classes in vitro; two showed activity against Gram-positive strains, with the best candidate reaching MIC 8 μg/mL against B. subtilis. To support downstream curation, we further present PepCraft, a multi-agent framework for end-to-end AMP discovery in which a Planning Agent orchestrates specialized executors for generation, filtering, and verification. Its prioritization recommendations align with our in vitro outcomes. Together, these contributions let us examine, on a small but real scale, how generative and agentic AI compose in therapeutic peptide discovery. Code: https://github.com/marszzibros/AMPGANv3",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/21/2606.18390v1-molar-learning-multimodal-molecular-representations-from-noisy-labels",
+      "section": "quick",
+      "title_en": "MOLAR: Learning Multimodal Molecular Representations from Noisy Labels",
+      "authors": "Yingxu Wang, Kunyu Zhang, Nan Yin, Yu Li, Eran Segal",
+      "date": "2026-06-16",
+      "pdf": "https://arxiv.org/pdf/2606.18390v1",
+      "score": "7.0",
+      "evidence": "噪声感知的多模态分子表示学习，适用于计算虚拟筛选。",
+      "tldr": "分子性质预测中，训练标签常由实验、数据库或弱标注生成，存在固有噪声；直接将其视为可靠监督会引导模型记忆错误模式，且在多模态学习中，图与文本的对齐融合可能进一步传播噪声。为此，本文提出噪声感知框架MOLAR，解耦潜在干净属性推断与观测标签，让图与文本视图提供残差证据以构建干净属性分布，再经标签观测通道映射至有噪标签进行训练。在自然噪声与受控标签翻转多项基准上，MOLAR一致性优于典型基线方法。可视化分析还给出标签可靠性及模态证据的可解释诊断，为噪声鲁棒的多模态分子表示学习提供了有效且可解释的解决方案。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Motivation: Noisy labels are a common challenge in molecular property prediction because molecular annotations are often obtained from assays, curated databases, or weak annotation pipelines rather than directly observed clean biological states. Treating recorded labels as reliable supervision can cause models to memorize corrupted observations and learn misleading molecular evidence. In multimodal molecular representation learning, this issue can be amplified by graph-text fusion or alignment, which may propagate label-induced errors across modalities. Results: We propose MOLAR, a noise-aware framework for learning multimodal molecular representations from noisy labels. MOLAR separates latent clean-property inference from recorded-label observation: graph and text views contribute residual evidence to a clean-property distribution, and a categorical label-observation channel maps this distribution to recorded labels for training. This formulation derives posterior label reliability and modality-specific molecular evidence from the model. Experiments on naturally noisy molecular benchmarks and controlled label-flipping benchmarks show that MOLAR consistently outperforms representative baselines. Visualization analyses further show that MOLAR provides interpretable reliability and modality-evidence diagnostics.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/21/2606.16147v1-stitching-molecular-worlds-together-with-physics-coupled-diffusion-models",
+      "section": "quick",
+      "title_en": "Stitching Molecular Worlds Together with Physics-Coupled Diffusion Models",
+      "authors": "Yanbin Wang, Yajie Cai, Ming Chen",
+      "date": "2026-06-15",
+      "pdf": "https://arxiv.org/pdf/2606.16147v1",
+      "score": "6.0",
+      "evidence": "物理耦合扩散模型可用于复杂化学体系，辅助有机合成中的机理理解和理性设计",
+      "tldr": "复杂化学系统因多组分或大分子导致构象复杂性高，使结构建模高度困难。PICDiff框架将系统拆分为较简单子系统并独立训练扩散模型，在推理过程中通过显式键合与非键合相互作用耦合子系统模型。该方法成功用于肽-聚合物结合及聚合物构象采样，定量采样构象并模拟热力学。PICDiff为复杂化学系统建模提供了通用且实用的解决方案。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Complex chemical systems often contain multiple components or large molecules, giving rise to substantial chemical and conformational complexity. Modeling the structures of these systems is crucial for mechanistic understanding of chemical processes and rational design, but remains highly challenging for both conventional theoretical approaches and machine learning. Here, we introduce physical-interaction-coupled diffusion models (PICDiff), a framework that couples independently trained diffusion models for subsystems of a complex system through explicit bonded and nonbonded interactions during inference. PICDiff reduces the difficulty of applying generative models to chemically and conformationally complex systems by decomposing them into smaller subsystems that are less complex and more amenable to machine-learning-based modeling. Using peptide-polymer binding and polymer conformation sampling as examples, we demonstrate that PICDiff can quantitatively sample conformations and model the thermodynamics of complex chemical systems. These results show that PICDiff provides a general and practical approach for modeling complex chemical systems by combining learned models of simpler molecular subsystems through physical interactions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/21/2606.19547v1-multi-equalization-in-conceptual-density-functional-theory-beyond-electronegativity-equalization",
+      "section": "quick",
+      "title_en": "Multi-Equalization in Conceptual Density Functional Theory: Beyond Electronegativity Equalization",
+      "authors": "Jesús Sánchez-Márquez",
+      "date": "2026-06-17",
+      "pdf": "https://arxiv.org/pdf/2606.19547v1",
+      "score": "6.0",
+      "evidence": "发展了概念DFT的广义框架，可转移用于有机合成中的反应性分析",
+      "tldr": "在概念密度泛函理论中，传统电负性均衡仅基于化学势一阶描述，忽略高阶响应。本研究提出多均衡框架，通过能量与密度导数关联，实现化学硬度和福井指数等多种描述符的同时均衡。该框架给出了最优密度分区的构造算法，实现了局部硬度均衡，将局部反应性描述符约束为全局密度的泛函，从而在电荷均衡模型与形式密度泛函理论之间建立了深层联系。",
+      "tags": "query:caos-poly",
+      "abstract_en": "The electronegativity equalization principle provides a simple framework to describe charge redistribution, yet its conventional formulation is limited to a first-order description based on chemical potential equalization. In this work, we introduce 'multi-equalization,' a generalized framework that extends this concept by incorporating higher-order responses within Conceptual Density Functional Theory.   This approach represents molecules as sets of flexible electron density partitions, allowing different electronic descriptions (e.g., atomic densities or localized orbitals) to be treated within a unified formalism. We demonstrate that correlations between energy and density derivatives with respect to the number of electrons lead to the simultaneous equalization of multiple descriptors, including chemical hardness and Fukui indices.   A constructive algorithm is introduced to determine the optimal density partitions satisfying these multi-equalization conditions. This scheme provides a consistent description of both global charge transfer and local reactivity, overcoming the intrinsic limitations of traditional electronegativity equalization models. Notably, the inclusion of density response functions enables local hardness equalization, introducing spatial resolution into reactivity descriptions. Under multi-equalization, local reactivity descriptors become constrained functionals of the global electron density. This framework establishes a deeper connection between charge equalization models and formal density functional theory, offering a theoretically grounded route toward improved predictions of molecular reactivity.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

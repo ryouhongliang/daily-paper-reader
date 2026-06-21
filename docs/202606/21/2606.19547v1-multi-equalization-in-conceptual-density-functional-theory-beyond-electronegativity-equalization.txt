@@ -1,0 +1,10425 @@
+Title: Microsoft Word - Manuscript_12_06_26.docx
+
+URL Source: https://arxiv.org/pdf/2606.19547v1
+
+Published Time: Fri, 19 Jun 2026 00:10:17 GMT
+
+Number of Pages: 91
+
+Markdown Content:
+1
+
+# Multi-Equalization in Conceptual Density Functional 
+
+# Theory: Beyond Electronegativity Equalization. 
+
+Jesús Sánchez-Márquez 1. 
+
+> 1
+
+Departamento de Química-Física, Facultad de Ciencias, Campus Universitario Río San 
+
+Pedro, Universidad de Cádiz, 11510 Puerto Real, Cádiz, Spain. 
+
+*To whom correspondence should be addressed. E-mail: jesus.sanchezmarquez@uca.es 
+
+Abstract 
+
+The electronegativity equalization principle provides a simple framework to describe 
+
+charge redistribution in molecules, yet its conventional formulation is inherently limited 
+
+to a first-order description based on the equalization of the chemical potential. In this 
+
+work, we introduce a generalized framework, termed multi-equalization , which extends 
+
+this concept by incorporating higher-order responses of the electronic structure within the 
+
+context of Conceptual Density Functional Theory. 
+
+The proposed approach is based on a flexible representation of molecules as sets of 
+
+electron density partitions, allowing different electronic descriptions (e.g., atomic 
+
+densities or localized orbitals) to be treated within a unified formalism. Within this 
+
+framework, we demonstrate that correlations between energy derivatives and electron 
+
+density derivatives with respect to the number of electrons naturally lead to the 
+
+simultaneous equalization of multiple descriptors, including the chemical hardness and 
+
+Fukui indices. 
+
+A constructive algorithm is introduced to determine the ideal set of density partitions that 
+
+satisfies the multi-equalization conditions. This multi-equalization scheme provides a 
+
+consistent description of both global charge transfer and local reactivity, overcoming the 
+
+intrinsic limitations of traditional electronegativity equalization models. In particular, the 
+
+inclusion of density response functions enables the emergence of local hardness 
+
+equalization, introducing spatial resolution into the description of chemical reactivity. 
+
+Under multi-equalization, defined as the selection of an effective set of density partitions, 
+
+local reactivity descriptors become constrained functionals of the electron density 
+
+defining the global electronic state of the system, reflecting the imposed equalization 
+
+conditions. 
+
+The proposed framework establishes a deeper connection between charge equalization 
+
+models and the formal structure of density functional theory, offering a theoretically 
+
+grounded route toward improved predictions of molecular reactivity. 
+
+Keywords: Multi-equalization, Sanderson’s principle, electronegativity equalization 
+
+principle, reactivity descriptors, local electrophilicity, local hardness, conceptual-DFT, 
+
+UCA-Fukui. 2
+
+1. INTRODUCTION 
+
+1.1. Sanderson’s principle: Electronegativity Equalization. 
+
+In 1951, R. T. Sanderson [1] introduced the first proposal of the equalization principle, 
+
+in which he already assumes that electronegativity is equalised in the formation of the 
+
+bond, In 1970, Hooydaak and Z. Eeckhaut proposed its use in chemical bond 
+
+formation [2,3 ] and later, in 1988, Sanderson proposed some ideas [4] in relation with the 
+
+principle of equalization, about what happens when different atoms combine to form a 
+
+compound, namely that all the atoms adjust to the same intermediate electronegativity. 
+
+He also describes a mechanism by which this equalization can occur. Sanderson points 
+
+out that a widely used postulate of the principle of electronegativity equalization is that 
+
+the intermediate electronegativity within the compound is the geometric mean of all the 
+
+initial atomic electronegativities [5,6] . Finally, Parr [7,8] showed that electronegativity is the 
+
+negative of the chemical potential, so the equalization principle corresponds to the 
+
+equalization of the chemical potentials in a compound. 
+
+1.2. Global reactivity descriptors. Electrophilicity. 
+
+As is well known, the energy change ( E )[9] due to the electron transfer ( N ) satisfies 
+
+the equation Eq. (1) .
+
+> 2
+
+2
+
+1 NNE 
+
+
+
+ (1) 
+
+where 
+
+ and 
+
+ are the chemical potential (negative of the electronegativity) and 
+
+chemical hardness, respectively defined by    
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> N
+> E
+
+and    
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 2
+> 2
+> N
+> E
+
+, with  r
+
+ as the 
+
+external potential. The Hohenberg-Kohn theorem can be extended to the fractional 
+
+electron number [10] and the derivative discontinuity for conceptual DFT is discussed in 
+
+references [11,12] . Using the finite difference method and according to Mulliken [13-17] ,
+
+working formulas for 
+
+ and 
+
+may be given as:  EA IP  2
+
+1
+
+ and  EA IP 
+
+ , where 
+
+EA and IP are the electron affinity and the ionization energy. If the electrophile withdraws 
+
+enough charge [18,19] , it will be become saturated with electrons,   0dN dE , leading to the 
+
+maximum amount of electron charge:   
+
+> 
+> max N
+
+, and a total energy reduction:    
+
+> 
+> 22
+> min E
+
+. The electrophilicity index ( 
+
+) was introduced by Parr et al. [20-24] as the 
+
+stabilization energy when atoms or molecules in their ground states acquire Nmax 
+
+electronic charge from the environment. Finally, the new reactivity index, global 
+
+electrophilicity index or electrophilicity index ( 
+
+)[23] was proposed as: 
+
+
+
+
+
+ 2
+
+> 2
+
+ (2) 
+
+1.3. Previous models and correlations 
+
+In previous works, two independent models based on electronegativity equalization [26] 
+
+(cubic approximation of energy ) and an alternative operational formula for the Fukui 
+
+function [27] (derivative of the density with respect to the total number of electrons and 3
+
+parabolic approximation of density ) respectively, were developed to obtain local 
+
+derivatives of the energy and net charge with respect to the total number of electrons for 
+
+atoms in a molecule. Moreover, a model was developed to calculate reactivity descriptors 
+
+for natural bond orbitals [28] based on Lagrange’s multipliers [29] . Earlier work also studied 
+
+strong correlations between the derivatives of the local energy and net charge with respect 
+
+to the total number of electrons for the atoms in the molecule [30] . Subsequently, the ideas 
+
+of these models for the atoms in the molecule have been transferred to a model based on 
+
+natural bond orbitals [31] , obtaining a much more complete model that enables the 
+
+calculation of the aforementioned derivatives for the bond orbitals instead of the atoms. 
+
+Significant correlations were also found between the derivatives of the bond orbitals, 
+
+comparable to those obtained previously for the atoms of the molecule. The correlations 
+
+studied in that work were Eqs. (3-6) .
+
+bfa ii  ·
+
+ (3) 
+
+b
+
+a
+
+f 
+
+> i
+> i
+
+
+
+ (4) 
+
+    benergy of approx cubic Nadensity of approx parabolic N ii  .·. max max (5) 
+
+where  density of approx parabolic Ni .max 
+
+ is based on the model of reference [27] and 
+
+##  energy of approx cubic Ni .max 
+
+ is based on the model of reference [26] . And finally, 
+
+the correlation:  
+
+> b
+> a
+> N
+> i
+> i
+> 
+> max
+
+(6) 
+
+2. COMPUTATIONAL DETAILS 
+
+All the structures included in this study were optimized at B3LYP/6-31G(d) [32,33] 
+
+theory level using the Gaussian16 package [34] . The electronic densities used in the models 
+
+were calculated at the same level of computation for the neutral molecule, the cation and 
+
+anion through the Gaussian16 software. GaussView v5.0 [35] was used to make the *.cub 
+
+files of the Natural Hybrid Orbitals (NHOs) and Canonical Molecular Orbitals (CMOs) 
+
+(see Appendix I ) and the images of the molecular systems were generated with 
+
+Chemcraft [34] .
+
+To perform the necessary calculations to obtain the parameters of the models, a 
+
+computer code has been developed that has been integrated into an updated version of the 
+
+UCA-FUKUI computer software (https://d127.uca.es/software/UCA-FUKUI_v2.exe) [37] .
+
+As an example, Figures S1 and S2 (in the supporting information) show the access to the 
+
+corresponding calculation modules from the main program screen. Figures S3 and S4 
+
+show some calculation examples (CH 2CHCl) performed with the new code. 4
+
+3. RESULTS AND DISCUSSION 
+
+The first part of this section will present the results of making partition groupings to 
+
+obtain a set of partitions of smaller number of elements and how it affects the correlations 
+
+of the final set of partitions; it will be discussed using the atoms in molecules of a set of 
+
+representative molecules as an example. What these results try to show is the wide range 
+
+of validity that the correlations studied have, which, as will be seen in a later section, 
+
+gives an enormous field of application to the concept of multi-equalization that will be 
+
+defined later. We have not been able to demonstrate that the correlations presented are 
+
+general and valid for any ideal set of partitions that can be constructed, but we think that 
+
+they probably are (perhaps with some exceptions). In any case, the range of validity in 
+
+which they have been tested is wide enough to be very useful and we will continue 
+
+working on this aspect (see Future perspectives ). 
+
+The parameters of the models have been calculated for a representative sample of 
+
+molecules. To obtain a set with different functional groups (aldehyde, halogen, amine, 
+
+ester, carboxylic acid, amide, nitro, alcohol, thiol, -CN, and double bond) the following 
+
+molecules were selected: CH 2CHCN, CH 2CHOH, CH 3COOCH 3, CH 2CHNH 2, CH 2CHOCH 3, 
+
+> CH 2CHCHO, CH 2CHNO 2, CH 3CHSH, CH 2CHCl, CH 3COOH
+
+and CH 3CONH 2. This is the 
+
+same set of test molecules that was used in reference [30]. 
+
+3.1. Correlations between "partition sets". Partitions formed by sets of atoms in a 
+
+molecule. 
+
+An interesting and potentially important point, as can be seen in the "Concept of 
+
+multi-equalization" section, is the consequences of constructing new sets of partitions 
+
+starting from a set that already satisfies the correlations we have seen in previous works 
+
+for NBOs [31] or for atoms in molecules, [30] . Will the correlations of the original set still be 
+
+valid? Logically the total number of partitions in the final set will be smaller than in the 
+
+starting set and the dimensions of at least of some partitions will also change. Some of 
+
+the parameters that fulfil the correlations are clearly additive, such as 
+
+> i
+
+f , max 
+
+> i
+
+N and i
+
+> 
+
+, since they represent variations of charge or energy. In these cases, the variation 
+
+corresponding to the sum of two partitions should be the sum of the variations of these 
+
+partitions. This leads us to the conclusion that correlations of the type max 
+
+> i
+
+N vs max 
+
+> i
+
+N
+
+' or i 
+
+> 
+
+vs if should continue to hold even if a set is constructed where the final partitions 
+
+are combinations (i.e. sums) of the starting partitions. For example, in the case of if we 
+
+could start from the definition of finite lateral differences:  
+
+> N
+> i
+> N
+> ii
+
+NNf   1 (7)  
+
+> 1
+
+ N 
+
+> i
+> N
+> ii
+
+NNf (8) 
+
+and from the definition of the parameter   2/  iii fff for cases without degeneracy of 
+
+the frontier orbitals, which we have used in the previous calculations. Combining Eqs. 
+
+(7) and (8) we can obtain: 5
+
+#  11
+
+2
+
+1   N 
+
+> i
+> N
+> ii
+
+NNf (9) 
+
+If we consider partition 3p as the sum of partitions 1p and 2p , we have  
+
+> 1
+> 2
+> 1
+> 1
+> 1
+> 3
+> 
+
+ NNN NNN and 1 
+
+> 2
+> 1
+> 1
+> 1
+> 3
+> 
+
+ NNN NNN , where, 1
+
+> 3
+> N
+
+N and 1
+
+> 3
+> N
+
+N are the net charges 
+
+of the corresponding partitions. Considering that  1 
+
+> 3
+> 1
+> 33
+
+2
+
+1   NN NNf and expanding this 
+
+equality, we finally obtain: 
+
+#          21 
+
+> 1
+> 2
+> 1
+> 2
+> 1
+> 1
+> 1
+> 1
+> 1
+> 2
+> 1
+> 1
+> 1
+> 2
+> 1
+> 13
+
+2
+
+1
+
+2
+
+1
+
+2
+
+1 ffNNNNNNNNf NNNNNNNN   (10) 
+
+The following graphs show the results of grouping atoms in the set of molecules of 
+
+the sample. The grouping has been performed by types of atoms, that is, the atoms of the 
+
+same type have been added, for example, all the hydrogens, all the carbons, all the 
+
+oxygens, etc. and thus a new set of partitions has been formed for each molecule. For 
+
+these sets, the new 
+
+> i
+
+f and 
+
+> i
+
+f values have been obtained, then Eqs. (A7)-(A10) and 
+
+(A12)-(A14) of Appendix I have been applied by means of the calculation modules 
+
+implemented in UCA-FUKUI. We have checked if the correlations found in ref. [30] are 
+
+still fulfilled (using the parameters obtained from the model). Figure 1 (left) shows the 
+
+regression max 
+
+> i
+
+N vs max 
+
+> i
+
+N '. The coefficient of determination is 0.957, which is not 
+
+very different from the one obtained for the initial set ( R2=0.97). In any case, it shows a 
+
+very high correlation between the parameters max 
+
+> i
+
+N and max 
+
+> i
+
+N '.
+
+The remaining linear regressions ( Figure 1 - right and Figures 2, 3 ) also show very 
+
+high correlations (coefficients of determination greater than 0.95), which leads us to 
+
+believe that the partition sets we have constructed from the atoms in the molecule 
+
+maintain the correlations of the starting set. 6
+
+Figure 1 . Left) Regression '. max max  
+
+> ii
+
+Nvs N  obtained for atom groups by using the 
+
+sample set of molecules. Right) Regression ii fvs 
+
+
+
+ . obtained for atom groups by 
+
+using the sample set of molecules. 
+
+Figure 2 . Left) Regression ii fvs .· 1
+
+ obtained for atom groups by using the sample 
+
+set of molecules. Right) Regression   12 2. 
+
+ ii vs 
+
+
+
+
+
+ obtained for atom groups by 
+
+using the sample set of molecules. 
+
+Figure 3 . Regression   max 
+
+2. ii Nvs 
+
+
+
+ obtained for atom groups by using the 
+
+sample set of molecules. 
+
+3.2. Correlations between partition sets in larger molecules. 
+
+In this section, the reactivity index calculations have been studied as in section 3.1 ,
+
+but the sample set of molecules used is the series of increasing chain conjugated carbons 
+
+shown in Figure 4 . Figure 5 - left shows the linear regression of '. max max  
+
+> ii
+
+Nvs N 
+
+obtained for atom groups by using the sample set of molecules of Figure 4. Figure 5 – 
+
+right shows the linear regression of ii fvs   
+
+> 
+> .
+
+obtained for atom groups by using the 7
+
+new sample set of molecules. In addition, Figures 6 and 7 show the linear regressions  
+
+> ii
+
+fvs .· 1
+
+ ,   12 2. 
+
+ ii vs 
+
+
+
+
+
+ and   max 
+
+2. ii Nvs 
+
+
+
+ . The results obtained for this 
+
+new sample of molecules are equivalent to those obtained for the small-molecule sample 
+
+of the previous section, the studied correlations are fulfilled in this set of larger 
+
+molecules. 
+
+Figure 4. Sample set of test molecules: series of increasing chain of conjugated 
+
+carbons. 
+
+Figure 5 . Left) Regression '. max max  
+
+> ii
+
+Nvs N  obtained for atom groups by using the 
+
+sample set of molecules of Figure 4 . Right) Regression ii fvs 
+
+
+
+ . obtained for atom 
+
+groups by using the sample set of Figure 4 .8
+
+Figure 6 . Left) Regression ii fvs .· 1
+
+ obtained for atom groups by using the sample 
+
+set of molecules of Figure 4 . Right) Regression   12 2. 
+
+ ii vs 
+
+
+
+
+
+ obtained for atom 
+
+groups by using the sample set of molecules of Figure 4 .
+
+Figure 7 . Regression   max 
+
+2. ii Nvs 
+
+
+
+ obtained for atom groups by using the 
+
+sample set of molecules of Figure 4 .
+
+3.3. Density partitions formed by combinations of squared atomic or molecular 
+
+orbitals. 
+
+Appendix I (section A.1 in the supporting information) shows the method and the results 
+
+of the calculation of reactivity descriptors applied to the case of natural hybrid orbitals 
+
+(NHOs) and canonical molecular orbitals (CMOs), first describing the model used to 
+
+calculate these descriptors and then presenting a study of the possible correlations 
+
+between them. As can be seen in the Appendix I (sections A.2 and A.3 ), there are strong 
+
+indications that the correlations found in previous work for atoms in the molecule and 
+
+NBOs are also observed in NHOs and CMOs (and quite possibly not the only partitions). 
+
+With this in mind, it would be interesting to describe the partitions that can be formed 
+
+from these orbitals. To construct new density partition sets based on combinations of 
+
+squared atomic or molecular orbitals, we start from the following approximation: 
+
+    2
+
+##  i 
+
+> X
+> ii
+
+rr
+
+
+
+
+
+ (11) 
+
+where         ,,, rrrr CMO 
+
+> i
+> NBO
+> i
+> NHO
+> i
+> X
+> i
+
+
+
+
+
+
+
+  , and taking into account that 
+
+    2
+
+##    
+
+> i
+> X
+> ii
+
+rXr
+
+
+
+ (12) 
+
+where       rrr NN    
+
+> 
+> 
+> 1
+
+,       rrr NN 1  
+
+> 
+> 
+> 
+
+, X= NHO, NBO or CMO, and 
+
+> 
+> i
+
+X are the corresponding coefficients. Below, for 
+
+> i
+
+X coefficients, we will take the 
+
+symbology 
+
+> i
+
+C when CMO type orbitals are used, 
+
+> i
+
+B for NBOs and 
+
+> i
+
+H for NHOs. Also, 
+
+we will admit the approximations: 9
+
+   
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+> i
+> NHO
+> iij
+> CMO
+> j
+> i
+> NHO
+> iij
+> NBO
+> j
+> i
+> NBO
+> iij
+> CMO
+> j
+
+rHC r
+
+rHB r
+
+rBC r
+
+
+
+
+
+
+
+
+
+
+
+
+
+(13) 
+
+where ij BC , ij HB and ij HC are the coefficients of the corresponding developments. 
+
+Considering for example the Canonical orbitals and taking into account the 
+
+approximations of Eqs. (12) and (13) , we can obtain: 
+
+    
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+   
+
+    
+
+> 
+> 
+> 
+> iik
+> NBO
+> k
+> NBO
+> ikj ij
+> ji
+> NBO
+> iij j
+> ji
+> NBO
+> iij j
+
+rrBC BC rBC C
+
+rBC Cr
+
+
+
+
+
+
+
+
+
+
+
+> 22
+> 2
+
+(14) 
+
+If we integrate this equality 
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+
+> 
+> iik
+> NBO
+> k
+> NBO
+> ikj ij
+> ji
+> NBO
+> iij j
+
+drrBC BC drBC Cdr
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 22 (15) 
+
+Considering now that the  rNBO 
+
+> i
+
+ orbitals are orthogonal, Eq. (15) becomes: 
+
+          
+
+> ji
+> NBO
+> iij j
+
+drBC Cdr
+
+
+
+
+
+
+
+ 22 (16) 
+
+By integrating the approximation Eq. (12) where   ii BX , that is 
+
+    2
+
+##    
+
+> i
+> NBO
+> ii
+
+rBr
+
+
+
+ , we obtain: 
+
+    
+
+
+
+
+
+
+
+ drBdr i
+
+> NBO
+> ii
+> 2
+
+##     (17) 
+
+If we compare Eq. (16) with (17) we can see that: 
+
+#    
+
+> j
+> ij ji
+
+BC CB 2 (18) 
+
+and similarly, the following can be obtained: 
+
+#    
+
+> j
+> ij ji
+
+HB BH 2 (19) 
+
+Note that as the parameters 
+
+> i
+
+B , 
+
+> i
+
+C and 
+
+> i
+
+H have been defined, they correspond to the 
+
+> 
+> i
+
+f parameters that we have calculated with the UCA-FUKUI software in this and 
+
+previous works to study correlations between local derivatives. Using a nomenclature 
+
+closer to the one we have used previously, we would have: 
+
+#    
+
+> j
+> ij
+> CMO
+> j
+> NBO
+> i
+
+BC ff 2 (20) 
+
+and: 10 
+
+#    
+
+> j
+> ij
+> NBO
+> j
+> NHO
+> i
+
+HB ff 2 (21) 
+
+From the equalities Eqs. (20) and (21) , it can be noted that the same linear combination 
+
+of 2
+
+> ij
+
+BC or 2
+
+> ij
+
+HB values is the same for 
+
+> i
+
+f and 
+
+> i
+
+f , which we think is important for the 
+
+correlations, between derivatives that we have studied for the different types of orbitals, 
+
+to be fulfilled. For a set of partitions where each partition is formed by a linear 
+
+combination of a starting set (although, as will be seen in the next section, we will focus 
+
+on a particular type of combination consisting of the sum of some partitions of the starting 
+
+set), we would have a relation like this: 
+
+#    
+
+> j
+> ij
+> X
+> j
+> E
+> i
+
+EX ff 2 (22) 
+
+where " E" represents the final partition set and " X" represents the original or starting 
+
+partition set. Note that " X" can represent, for example, NHO, NBO or CMO and that we 
+
+have focused on sets of partitions " X" that we have studied previously and that satisfy the 
+
+correlations we have seen. The X
+
+> j
+
+f  values can be calculated for the starting set. If any 
+
+criterion was known to obtain the E
+
+> i
+
+f  values, as we will see in the next section, all that 
+
+remains would be to find the 2
+
+> ij
+
+EX values that satisfy the equalities Eq. (22) to determine 
+
+which combinations of the starting set that the partitions of the final set are obtained with. 
+
+3.3.1. Strategy to design a new partition set with better correlations between 
+
+reactivity descriptors. Examples of modified partition sets formed by canonical 
+
+molecular orbitals or natural hybrid orbitals. 
+
+In this section, we will outline a strategy for forming a new set of partitions that 
+
+consists of linear combinations of partitions from a starting set. The starting partitions are 
+
+typically atomic or molecular orbitals. The new set of partitions is designed to yield 
+
+improved linear regressions, with higher correlation than the initial set of partitions. To 
+
+select the partitions to be combined, we will use some specific criteria, which we will 
+
+describe in detail later in this section. We select combinations of partitions such that the 
+
+dual-descriptor  2
+
+> i
+
+f parameter approaches zero. The dual-descriptor parameter is the 
+
+final term in the expansion of one of the models used in calculating descriptors (see Eq. 
+
+A10 of Appendix I in the supporting information ). By minimizing this parameter, we 
+
+can improve the convergence of the expansion and significantly reduce the model error, 11 
+
+which in turn leads to improved correlations. We illustrate this approach using a detailed 
+
+example, and provide further justification in Section 3.4.1 .
+
+In exploring alternatives to the dual descriptor parameter, we considered using the 
+
+hypersoftness parameter i 
+
+> 
+
+, which is also the final term in the expansion of one of the 
+
+models used in calculating reactivity descriptors (see Eq. A11 of Appendix I in the 
+
+supporting information ). However, upon examining Figures S5-S13 and S41-S49 in 
+
+the supporting information , where we compared graphs B and C, we found that the  
+
+> max max
+
+'ii NN  errors followed the trend of  2
+
+> i
+
+f more closely than that of i 
+
+> 
+
+. We 
+
+believe that this is because the expansion given in Eq. (A10) in Appendix I is shorter 
+
+than the expansion in Eq. (A11) , and therefore has lower error 
+
+To illustrate the discussion of the previous section, we will use the occupied canonical 
+
+molecular orbitals (CMOs) obtained for the molecule CH 3CONH 2. In Figure 8 , we 
+
+present the max max 'ii NN  values calculated using the models described in Appendix 
+
+I, section A.1 , as well as the absolute values of the dual-descriptor parameters (  2
+
+> i
+
+f ), 
+
+which are defined in Eqs. (A9) and (A10) of Appendix I , and the hypersoftness 
+
+parameters ( i 
+
+> 
+
+), which are defined in Eqs. (A11) and (A12) of Appendix I . We chose 
+
+this example because it showed the worst correlation in the starting set (see Figures 9-A ,
+
+C, and E). In Figure 8-A , we observed that partitions 11, 14, 16, and 17 had the most 
+
+significant values, with corresponding dual-descriptor parameter values of 0.1966, -
+
+0.3845, -0.5355, and 0.5196, respectively. We then constructed two new partitions, 11+14 
+
+and 16+17, to replace the previous four, resulting in a total of 24 partitions (down from 
+
+26). Figure 9-B , D, and F show the improved correlations after the partition 
+
+modifications. As can be seen, the improvement is significant, with the coefficient of 
+
+determination increasing from approximately 0.2 to 0.95-0.96 in all cases. It is worth 
+
+noting that further improvements could be achieved by continuing to combine partitions 
+
+in a way that reduces the absolute values of the dual-descriptor parameter. 
+
+A) B) 12 
+
+Figure 8 . A) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. B) Comparison of  
+
+> max max
+
+'ii NN  and i
+
+ values. In both cases for the occupied CMOs of the 
+
+CH 3CONH 2 molecule. 
+
+A) Original set of partitions. B) Improved set of partitions. 
+
+C) Original set of partitions. D) Improved set of partitions. 
+
+E) Original set of partitions. F) Improved set of partitions. 13 
+
+Figure 9 . The following figures depict the regression results for the occupied CMOs of 
+
+the CH 3CONH 2 molecule: A) Regression '. max max  
+
+> ii
+
+Nvs N  , B) Regression 
+
+'. max max  
+
+> ii
+
+Nvs N  using the new set of partitions, C) Regression ii fvs .
+
+ ,
+
+D) Regression ii fvs .
+
+ with the new partition, E) Regression ii fvs .1
+
+ , and 
+
+F) Regression ii fvs .1
+
+ with the new partition. 
+
+Figure 10 - A and B display graphs similar to those in Figure 8 - A and B, except the 
+
+set of partitions has been modified as described above. The most notable difference in 
+
+Figure 10 is the scale. For example, the maximum value of the left axis in Figure 10 - A
+
+is 0.2 compared to 0.6 in Figure 8 - A, and for the right axis, it goes from 0.018 in Figure 
+
+10 - A to 0.08 in Figure 8 - A . A similar trend is observed in Figure 10 - B . The changes 
+
+in the set of partitions have led to lower values of local dual-descriptor and local 
+
+hypersoftness in absolute terms. These findings align with the improved correlations seen 
+
+in Figure 9 - B , D, and F.
+
+A) B) 
+
+Figure 10 . Comparison of partitions for CH 3CONH 2 molecule. A) Same parameters as 
+
+in Figure 8-A but for the new partition. B) Same parameters as in Figure 8-B but for 14 
+
+the new partition. The occupied CMOs of the molecule were used as partitions in all 
+
+cases. 
+
+To further illustrate this point, we will present two additional examples. As with the 
+
+previous case, we have chosen molecules with poor correlations. In the first example, we 
+
+examine the molecule CH 3COOH and use its natural hybrid orbitals (NHO) as partitions. 
+
+Similar to the previous example, we select partitions 3, 4, and 21 with the highest absolute 
+
+dual-descriptor values and combine them to form a new partition. This new partition 
+
+results in a substantial decrease in the absolute value of  2
+
+> i
+
+f . The results show a 
+
+significant improvement in correlations. For example, in the first case, the coefficient of 
+
+determination increased from 0.3842 to 0.8969 for the '. max max  
+
+> ii
+
+Nvs N  correlation, 
+
+from 0.2903 to 0.9375 for the ii fvs . 
+
+> 
+
+correlation, and from 0.3040 to 0.9997 for the  
+
+> ii
+
+fvs .1
+
+ correlation. In the second example, we used the canonical molecular orbitals 
+
+(CMO) of the molecule CH 3COOCH 3 as partitions. We identified three new partitions by 
+
+adding partitions 12+14, 20+21, and 26+28, respectively, based on the largest absolute  
+
+> 2
+> i
+
+f values. The resulting correlations were greatly improved, with the coefficient of 
+
+determination increasing from 0.130 to 0.956 for the '. max max  
+
+> ii
+
+Nvs N  correlation, from 
+
+0.1746 to 0.9641 for the ii fvs .
+
+ correlation, and from 0.1761 to 0.9662 for the  
+
+> ii
+
+fvs .1
+
+ correlation. It's worth noting that the correlations could be enhanced by 
+
+continuing to combine partitions in a manner that minimizes the absolute values of the 
+
+dual-descriptor parameter. 
+
+3.4 Multi-equalization concept. 
+
+In this work and in the previous ones, we have checked correlations Eqs. (3)-(5) in 
+
+several sets of very different partitions (atoms in molecules, NBOs, NHOs and CMOs) 
+
+and it has been possible to justify that if we group these partitions, we obtain a new set of 
+
+partitions where these correlations are most likely still fulfilled. Section 3.4.1 will first 
+
+explore a general partition set and justify the correlations observed above. Section 3.4.1 
+
+will define the concept of multi-equalization and specify the relations a multi-equalised 
+
+partition set must fulfill. The effect of multi-equalization on correlations will then be 
+
+studied using approximate models. In section 3.4.2 , the study will show that correlations 15 
+
+become exact relations in an ideal multi-equalised partition set, without the use of 
+
+approximations. 
+
+3.4.1. Justification of correlations using approximate models in NON-multi-
+
+equalized partitions. 
+
+To justify the correlation between i 
+
+> 
+
+and if we will start from Eq. (23) , which was 
+
+used in reference [27] 
+
+> 320
+
+6
+
+1
+
+2
+
+1 iiiiii NNNE 
+
+
+
+
+
+ (23) 
+
+But, for simplicity, we will truncate the cubic expansion to the first two terms ( Eq. 
+
+24 ), this approach is clearly very crude; it will only be used to justify the correlations 
+
+studied in this work. The hypersoftness i
+
+##  is the last term of this expansion, the value 
+
+of this term is closely related to the convergence of the expansion and the model error. 
+
+> 20
+
+2
+
+1 iiii NNE 
+
+
+
+ (24) 
+
+and therefore: 
+
+#   
+
+
+
+
+
+
+
+
+
+  2max max 0
+
+2
+
+1 iiii NN
+
+
+
+
+
+ (25) 
+
+In reference [27] we obtained an estimation of max 
+
+> i
+
+N like:   
+
+> 2
+> max
+> 2
+> max
+> max
+
+2
+
+1 NfNfN iii  (26) 
+
+where, max N is the global parameter corresponding to the maximum amount of 
+
+stabilizing charge and max  
+
+> iN
+
+the fraction of max N corresponding to each atom. 
+
+We will also truncate the expansion Eq. (26) (second model) to its first term ( Eq. 27 ), as 
+
+in the previous case, this approach is also very rude and will only be used to justify the 
+
+correlations studied in this work. In this case, the local parameter  2
+
+> i
+
+f is the last term of 
+
+this expansion, the value of this term is closely related to the convergence of the power 
+
+series and the model error. It is similar to what has been said about the hypersoftness after 
+
+Eq. (23) , but as we have seen in section 3.3.1 the quality of the correlations depends more 
+
+on parameter  2
+
+> i
+
+f than on parameter i 
+
+> 
+
+, probably because the expansion Eq. (26) is 
+
+shorter and for that reason the error committed in this expansion is greater.  
+
+> max
+> max
+
+NfN ii  (27) 
+
+Deriving Eq. (24) we get: 16  
+
+> ii
+
+N
+
+
+
+
+
+ 0 (28) 
+
+At the minimum of the energy curve, you get: 
+
+> max 0
+
+0 ii N
+
+
+
+ (29) 
+
+and: 
+
+> i
+> i
+
+N
+
+
+
+0 
+
+> max
+
+ (30) 
+
+Substituting Eqs. (27) and (30) on Eq. (25) we get: 
+
+##   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+> i
+> iiii
+
+NfNf
+
+
+
+
+
+
+
+
+
+ 
+
+> 0
+> max max
+> 0
+
+·
+
+2
+
+1 (31) 
+
+Simplifying:  
+
+> max
+> 0
+
+·
+
+2
+
+1 Nfii 
+
+
+
+ (32) 
+
+As is well known 
+
+
+
+0 
+
+> max
+
+N , and substituting this expression in Eq. (32) we finally 
+
+reach: 
+
+#   iii ff ··
+
+2
+
+> 20
+
+
+
+
+
+
+
+  (33) 
+
+Now, if we start from the correlation Eq. (5) and replace Eq. (30) and Eq. (27) we get: 
+
+> max
+> 0
+
+Nfi
+
+> i
+
+
+
+
+
+ (34) 
+
+It is well known that 
+
+
+
+0 
+
+> max
+
+N , and substituting this expression in Eq. (34) we get: 
+
+> i
+> i
+
+f
+
+
+
+
+
+ (35) 
+
+when replacing Eq. (30) in Eq. (25) you get: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+> 2
+> 00
+> 0
+
+2
+
+1
+
+> i
+> i
+> i
+> i
+
+
+
+
+
+
+
+
+
+
+
+
+
+ (36) 
+
+operating you get: 
+
+#    
+
+> ii
+> i
+
+
+
+
+
+
+
+
+
+
+
+> 2020
+
+2
+
+1
+
+ (37) 
+
+and simplifying: 
+
+#  
+
+> i
+> i
+
+
+
+
+
+ 
+
+ 2
+
+> 20
+
+(38) 17 
+
+Finally, clearing i 
+
+> 
+
+from Eq. (30) we get:  
+
+> max
+> 0
+> i
+> i
+
+N
+
+
+
+
+
+ (39) 
+
+now, replacing i 
+
+> 
+
+in Eq. (25) we get: 
+
+> max 0max 0
+
+2
+
+1 iii NN 
+
+
+
+
+
+ (40) 
+
+and simplifying: 
+
+> max
+
+2 ii N
+
+
+
+ (41) 
+
+Note that for these justifications to be valid, the  2 
+
+> if
+
+and i
+
+##  values must be negligible 
+
+This means that the correlations will be better fulfilled the smaller these values are, as 
+
+discussed in section 3.3.1 .
+
+3.4.2. Justification of correlations using the approximate models in an ideal set 
+
+of multi-equalised partitions .
+
+At this point, it seems interesting to propose the following idea: let us imagine that 
+
+by grouping partitions in a set we obtain another set of partitions where some of the 
+
+parameters that we calculate with the models are equalized, i.e., equal in all the partitions 
+
+of the set. For example, we could be talking about equalizing if or max 
+
+> i
+
+N or i 
+
+> 
+
+or i
+
+> 
+
+; in any case, the electronic chemical potential will always be equalized by Sanderson's 
+
+principle (electronegativity equalization principle). In the event that the previous 
+
+correlations are fulfilled we have an interesting effect. When equalizing a parameter ( if
+
+), in addition to the chemical potential, we will find that by effect of the correlations some 
+
+other parameters are equalized .
+
+Let's consider the following case; let's start from the parameters 
+
+> i
+
+f and 
+
+> i
+
+f of a set of 
+
+partitions (they can be atoms in a molecule or orbitals, as we have already seen). Let's 
+
+imagine that by grouping partitions we get another set (evidently, with less partitions) 
+
+where the following is simultaneously fulfilled: 
+
+> 
+> 
+
+
+
+
+
+> n
+> n
+
+fff
+
+fff
+
+
+
+ 
+
+> 21
+> 21
+
+(42) 
+
+where n is the number of partitions of the new set. Note that condition Eq. (42) leads to:     
+
+> 
+
+022 
+
+> 2
+> )2(
+> 1
+
+ nfff  (43) 
+
+and this makes the truncation of Eq. (27) exact. 18 
+
+Considering that 
+
+> i
+
+f and 
+
+> i
+
+f are normalized parameter sets and that the sum of the 
+
+> i
+
+f and 
+
+the 
+
+> i
+
+f values are equal to one, it can be concluded that 
+
+> i
+
+f = 
+
+> i
+
+f = n
+
+1 . Substituting these 
+
+values in Eq. (A7) (of Appendix I ) we obtain if = n
+
+1 . Equivalently, we substitute in Eq. 
+
+(A9) (of Appendix I ) and finally we obtain  2
+
+> i
+
+f = 0. 
+
+Substituting now the values obtained for if and  2
+
+> i
+
+f in Eq. (A10) (of Appendix I ), we 
+
+obtain n
+
+NN i  , and therefore n
+
+NN i 
+
+> max max
+
+ . In addition, substituting if and  2
+
+> i
+
+f
+
+in Eq. (A12) (of Appendix I ) we obtain: 
+
+#  
+
+#  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2
+
+2 
+
+> 2
+
+
+
+
+
+
+
+> 
+> 
+
+n
+
+n 
+
+> i
+> i
+
+(44) 
+
+In Eq. (44) it can be noted that the local hardness is inversely proportional to the Fukui 
+
+index (which in this case is 1/n), that the hypersoftness is inversely proportional to the 
+
+squared Fukui index and that it is closely related to Eq. (35) . Substituting the values 
+
+obtained for i
+
+ and i
+
+ of Eq. (44) in Eq. (A13) (of Appendix I ) we have: 
+
+     
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+> 2
+> 22
+> 4
+> 1
+> 21
+> 2
+> max
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> n
+> Ni
+
+(45) 
+
+In this last equation it can be noted that the local maximum charge variation is 
+
+proportional to the Fukui index (which in this case is 1/n) and is closely related to Eq. 
+
+(27) . Now if we substitute the value max 
+
+> i
+
+N obtained ( Eq. 45 ) in Eq. (A14) (of Appendix 
+
+I) we obtain: 
+
+     
+
+ 
+
+       
+
+ 
+
+ 
+
+     
+
+       
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 3
+> 2
+> 2
+> 2
+> 2
+> 2
+> 22
+> 4
+> 1
+> 2
+> 2
+> 6
+> 1
+> 2
+> 22
+> 4
+> 1
+> 2
+> 22
+> 1
+> 2
+> 22
+> 4
+> 1
+> 21
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> n
+> i
+
+(46) 
+
+Note that the latter equation is closely related to Eq. (33) . It can also be noted that the 
+
+local philicity is also proportional to the Fukui index (which in this case is equal to 1/n). 19 
+
+As a consequence, local philicity and maximum charge variation are proportional, and 
+
+both are inversely proportional to hardness. 
+
+Finally, if we substitute the values shown in Eq. (24) in Eq. (A11) (of Appendix I ) we 
+
+can obtain: 
+
+#        
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 322
+> 6
+> 1
+> 22
+> 11NNN
+> n
+> Ei
+
+
+
+
+
+
+
+
+
+
+
+ (47) 
+
+Eqs. (45) , (46) and (47) can be decomposed into a term n
+
+1 that multiplies another term 
+
+that only depends on global parameters and that is independent of the number of partitions 
+
+(n). In view of these results, it is easy to conclude that if Eq. (42) is satisfied all the 
+
+descriptors that we have calculated have the same value in any of the partitions. This leads 
+
+us to the conclusion that the correlations that we have studied are satisfied regardless of 
+
+the type of partitions used. 
+
+3.4.3. Demonstration that the above correlations become exact relationships in 
+
+a set of ideal multi-equalised partitions. 
+
+Until now, we have used approximate models to justify the correlations found in this 
+
+and previous works, but now we will see that, in the case of multi-equalised partitions, 
+
+the correlations are exact, for this we will introduce four statements with their 
+
+corresponding demonstrations. 
+
+Statement 1 . Equalisation of the electronic hardness in a set of " i" partitions, where the 
+
+Fukui indices and the dual descriptor indices are equalised. 
+
+Given a system of " i" partitions partially equalised such that the Fukui indices are 
+
+equalised: 
+
+> 
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N i
+
+21 (48) 
+
+where N1, N2, …, Ni are the charges corresponding to partitions 1, 2, ..., i, and N is the 
+
+total charge of the molecule being partitioned. The dual descriptor index is also equalised 
+
+as follows: 
+
+02
+
+> 2
+> 2
+> 2
+> 2
+> 2
+> 1
+> 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+> 
+> 
+> 
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N i
+
+ (49) 
+
+and the rest of the higher order derivatives are also equalised in the same way as the dual 
+
+descriptor index: 
+
+2;021 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ j
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N
+
+> j
+> i
+> j
+> j
+> j
+> j
+> j
+> 
+> 
+> 
+
+ (50) 
+
+then the electronic hardnesses of the partitions ( i 
+
+> 
+
+) are equalised in the form: 
+
+> i
+> i
+> i
+
+N
+
+E
+
+N
+
+E
+
+N
+
+E
+
+
+
+> 
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 2
+> 2
+> 2
+> 2
+> 2
+> 2
+> 2
+> 1
+> 1
+> 2
+
+ (51) 
+
+where iE is the energy corresponding to partition " i". 20 
+
+Demonstration 1 : We start from an infinite expansion of the charge variation of the 
+
+partition " i" of the form: 
+
+iN
+
+N
+
+N
+
+j
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N j 
+
+> j
+> i
+> j
+> ii
+> i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ;
+
+!
+
+1
+
+2
+
+1 2
+
+> 2
+> 2
+
+ (52) 
+
+taking into account the premises of the theorem, the infinite expansion is of the form: 
+
+iN
+
+N
+
+N
+
+N i 
+
+> i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ; (53) 
+
+taking into account Eq. (49) it can be obtained that iNNN  21 . If we now 
+
+perform an infinite expansion for the energy variation iE of partition " i" of the form: 
+
+iN
+
+N
+
+E
+
+j
+
+N
+
+N
+
+E
+
+N
+
+N
+
+E
+
+E j 
+
+> i
+> N
+> j
+> i
+> i
+> j
+> i
+> Ni
+> i
+> i
+> Ni
+> i
+> i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+
+;
+
+!
+
+1
+
+2
+
+1
+
+> 0
+> 2
+> 0
+> 2
+> 2
+> 0
+
+
+
+(54) 
+
+deriving this expansion, we obtain: 
+
+##  
+
+##   iN
+
+Nj
+
+N
+
+N
+
+N
+
+N
+
+N
+
+N
+
+E
+
+j
+
+N
+
+N
+
+E
+
+N
+
+E
+
+N
+
+E
+
+> j
+> i
+> N
+> j
+> i
+> i
+> j
+> i
+> Ni
+> i
+> i
+> Ni
+> i
+> i
+> j
+> i
+> N
+> j
+> i
+> i
+> j
+> i
+> Ni
+> i
+> Ni
+> i
+> i
+> i
+> i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
+;
+
+!1
+
+1
+
+2
+
+1
+
+!1
+
+1
+
+> 1
+> 0
+> 1
+> 1
+> 2
+> 0
+> 2
+> 2
+> 0
+> 0
+> 1
+> 0
+> 1
+> 1
+> 0
+> 2
+> 2
+> 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(55) 
+
+where 0
+
+> i
+
+ is the chemical potential of the " i" partition of the neutral molecule. According 
+
+to Sanderson's principle, once equilibrium is reached it is satisfied that 
+
+> i
+
+
+
+
+
+  21 , independently of the value iN , furthermore, as 
+
+> i
+
+NNN  21 we obtain that the functions are equal in all partitions: 
+
+     ii NNN 
+
+
+
+
+
+ 2211 . This leads to the fact that the derivatives of Eq. 
+
+(55) must be equal in all partitions, since the equality of chemical potentials holds for 
+
+arbitrary values of Δ N, the corresponding functional forms must be identical, which 
+
+implies the equality of their derivatives, then: 
+
+> 0
+> 2
+> 2
+> 0
+> 2
+> 2
+> 2
+> 2
+> 0
+> 2
+> 1
+> 1
+> 2
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+> Ni
+> i
+> NN
+
+N
+
+E
+
+N
+
+E
+
+N
+
+E  (56) 
+
+in other words, i
+
+
+
+
+
+  21 , the electronic hardnesses of the neutral molecule are 
+
+equalised (whenever the requirements of the statement are met). 
+
+Statement 2. Correlation between i
+
+ and if .
+
+If we start from a multi-equalised system where: 
+
+      022
+
+> 2
+> 2
+> 1
+> 21
+
+
+
+
+
+> i
+> i
+
+fff
+
+fff
+
+
+
+ (57) 
+
+where the parameters if are the local Fukui indices and the  2
+
+> i
+
+f are the dual descriptor 
+
+indices. Then it has to be fulfilled that ii f
+
+
+
+ .21 
+
+Demonstration 2 : Taking into account the starting assumptions and that the Fukui indices 
+
+are normalised of the form 1i
+
+> i
+
+f one can arrive at: 
+
+n
+
+fff i
+
+1 
+
+> 21
+
+  (58) 
+
+where " n" is the number of partitions. 
+
+On the other hand, from the previous statement it can be extracted that 
+
+> i
+
+
+
+
+
+  ... 21 , since i 
+
+> 
+
+is the depth of the curve  ii NE  in the partition " i", 
+
+and as already seen, the derivatives of Eq. (55) must be equal in all partitions, furthermore 
+
+Sanderson's principle guarantees that the first derivatives ( 0
+
+> i
+
+ ) are also equalised. 
+
+Finally, from the principle of conservation of energy it can be extracted that  i
+
+> i
+
+
+
+
+
+and as we have already seen that i   
+
+> 
+> 
+> ... 21
+
+, it can be obtained that n
+
+> i
+
+
+
+  . We 
+
+have already seen that n
+
+fi
+
+1
+
+ , then it must be fulfilled:  
+
+> ii
+
+f
+
+n 
+
+
+
+
+
+ 1 (59) 
+
+Note that the latter equation is closely related to Eqs. (33) and (46) .
+
+Statement 3 . Correlation between max 
+
+> i
+
+N and if .
+
+If we start from a multi-equalised system where Eqs. (57) are fulfilled, then it must be 
+
+fulfilled that ii fNN  max max 
+
+Demonstration 3 : from statement 1 it can be extracted that max max  
+
+> 2
+> max
+> 1
+
+... iNNN 
+
+, since max 
+
+> i
+
+N it is iN in the curve  ii NE  at the minimum of the curve and as 
+
+already seen, the derivatives of Eq. (55) must be equal in all partitions, furthermore 
+
+Sanderson's principle guarantees that the first derivatives ( 0
+
+> i
+
+ ) are also equalised. 
+
+On the other hand, from the conservation of charge it can be extracted that 
+
+#  i
+
+> i
+
+NN max max and as we have already seen that max max  
+
+> 2
+> max
+> 1
+
+... iNNN  , then 
+
+it can be obtained that n
+
+N
+
+Ni 
+
+> max
+> max
+
+
+
+ . We have already seen that n
+
+fi
+
+1
+
+ , then it must 
+
+be fulfilled:  
+
+> ii
+
+fN
+
+n
+
+NN  max max max 1 (60) 
+
+Note that the latter equation is closely related to Eqs. (27) and ( 45) .22 
+
+Statement 4 . Correlation between i
+
+ and if .
+
+If we start from a multi-equalised system where Eqs. (57) are satisfied, then it must be 
+
+satisfied that i 
+
+> i
+
+f
+
+
+
+ 
+
+Demonstration 4 : if we start from the infinite expansion Eq. (54) and carry out the sum 
+
+#  i
+
+> i
+
+EE we obtain: 
+
+> j
+> N
+> j
+> j
+> i
+> j
+> i
+> N
+> j
+> i
+> i
+> j
+> i
+> iii
+> i
+> i
+> j
+> i
+> N
+> j
+> i
+> i
+> j
+> i
+> Ni
+> i
+> i
+> Ni
+> i
+> i
+> i
+
+N
+
+N
+
+E
+
+j
+
+NN
+
+N
+
+N
+
+E
+
+j
+
+NN
+
+N
+
+N
+
+E
+
+j
+
+N
+
+N
+
+E
+
+N
+
+N
+
+E
+
+EE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+
+# 
+
+# 
+
+> 0
+> 2
+> 0
+> 2
+> 0
+> 2
+> 0
+> 2
+> 2
+> 0
+
+!
+
+1
+
+2
+
+1
+
+!
+
+1
+
+2
+
+1
+
+!
+
+1
+
+2
+
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(61) 
+
+grouping terms we obtain that   i 
+
+> ii
+
+NN 22
+
+
+
+ , in the first statement it was 
+
+concluded that i   
+
+> 
+> 
+> 21
+
+; then  i 
+
+> ii
+
+NN 22
+
+
+
+ . On the other hand we have 
+
+already seen that iNNN  21 ; then 22 
+
+> i
+> i
+> i
+
+NnN  , and furthermore by the 
+
+conservation of charges it must be fulfilled that iNnN  and therefore 222
+
+> i
+
+NnN 
+
+. This leads us to the conclusion that 
+
+nNn
+
+Nn
+
+N
+
+N i
+
+> i
+> i
+> i
+> i
+> i
+> i
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  22
+
+> 2
+> 2
+> 2
+
+(62) 
+
+as we have already seen that n
+
+fi
+
+1
+
+ it is easy to reach:  
+
+> i
+> i
+
+f
+
+
+
+  (63) 
+
+Note that the latter equation is closely related to Eqs. (35) and ( 44) . With the equalities 
+
+Eqs. (56) , (59) , (60) and (63) one can easily arrive at the correlations Eqs. (3)-(6) .
+
+As can be seen, a set of multi-equalized partitions presents a very large degree of 
+
+simplification in relation to the number of variables necessary to describe the reactivity 
+
+of the molecule. The values of all the local variables are the same in each of the partitions, 
+
+and they have strong correlations between them. Basically only a few global parameters 
+
+and the number of partitions ( n) are necessary to describe the reactivity of the system 
+
+since all the local parameters are perfectly determined. At the local level, only one 
+
+parameter remains that has different values in different partitions and that is the partition 
+
+size (i.e. the partition volumes if they remain independent in the multi-equalized set). It 
+
+is easy to connect the partition size with the partition reactivity by the concept of 23 
+
+electronic localization, all other parameters being equal. Smaller partitions will localize 
+
+more charge in the case of an attacker transferring electronic charge to the reactant in a 
+
+chemical reaction. Covalent bonding is known to be closely related to electronic 
+
+localization, so it is easy to think of a relationship between partition size and the tendency 
+
+to form covalent bonds. 
+
+3.4.4. Matrix form of the multi-equalization concept. 
+
+The concept of multi-equalization allows us to achieve a partition set where the main 
+
+local descriptors of reactivity (mainly the derivatives of the energy and the local charge 
+
+with regard to the number of electrons) coincide in all partitions. This is possibly an ideal 
+
+concept, and it is probably necessary to start from a set with infinite partitions to achieve 
+
+an accurately multi-equalized set of partitions, but we believe that qualitative results can 
+
+be obtained by an approximation to this set of partitions, as will be seen in one of the 
+
+examples presented in the following sections. 
+
+Finally, it has been seen that the combinations of multi-equalized partitions must fulfil 
+
+Eq. (42) , also taking into account Eq. (22) in its matrix form; we can summarize the 
+
+equations that the multi-equalized combinations must fulfil in: 
+
+> 1
+> 11
+> 22
+> 1
+> 2
+> 1
+> 2
+> 11
+
+1
+
+... 
+
+1
+
+... ... 
+
+... 
+
+... ... ... 
+
+... 
+
+> nx
+> E
+> n
+> E
+> X
+> m
+> X
+> nm n
+> n
+
+n
+
+n
+
+f
+
+f
+
+f
+
+f
+
+EX EX 
+
+EX EX 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+
+(64) 
+
+and 
+
+> 1
+> 11
+> 22
+> 1
+> 2
+> 1
+> 2
+> 11
+
+1
+
+... 
+
+1
+
+... ... 
+
+... 
+
+... ... ... 
+
+... 
+
+> nx
+> E
+> n
+> E
+> X
+> m
+> X
+> nm n
+> n
+
+n
+
+n
+
+f
+
+f
+
+f
+
+f
+
+EX EX 
+
+EX EX 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+
+(65) 
+
+where X corresponds with the set of starting partitions, E to the final multi-equalized set, 
+
+and the coefficients 2
+
+> ij
+
+EX determine the combinations of the starting partitions. For 
+
+example, in the case where the final partitions are obtained by grouping partitions from 
+
+the starting set, the coefficients 2
+
+> ij
+
+EX will have values "1" or "0", which can greatly 
+
+simplify the search process. 
+
+3.5. First examples of multi-equalization. 
+
+The first example to be discussed will be the benzene molecule ( Figure 11 - left ). 
+
+We will consider a multi-equalized partition set consisting of six partitions corresponding 
+
+to a carbon and its bonded hydrogen. It is evident that the six partitions considered are 
+
+symmetrically equivalent and the 
+
+> i
+
+f and 
+
+> i
+
+f values are all equal to 6
+
+1 . The overall values 24 
+
+obtained were (in a.u.) 
+
+ : -0.1434, 
+
+: 0.3938, max 
+
+N : 0.3642 and 
+
+#  : 0.0261. The 
+
+> i
+
+f
+
+and 
+
+> i
+
+f indices were entered in the UCA-FUKUI software and the values shown in Table 
+
+1 were obtained. As can be seen, the equalities that we obtained previously if = n
+
+1,  2
+
+> i
+
+f
+
+=0, n
+
+NNi 
+
+> max max
+
+ ; i , are verified, and in addition, taking into account the correlations 
+
+that we have verified previously, it can be seen that ii f
+
+
+
+ and iif
+
+ =
+
+. 
+
+> if
+
+ 2
+
+> i
+
+f max 
+
+> i
+
+N i
+
+ i
+
+ max 
+
+> i
+
+N ' i
+
+       
+
+> {C+H} 0.1667 0.0000 0.0607 2.3628 -0.4051 0.0610 0.0044
+
+Table 1 . Reactivity descriptors calculated for C 6H6, using a set of multi-equalized 6-
+
+elements partitions. The global values obtained were 
+
+ : -0.1434, 
+
+ : 0.3938, max 
+
+N :
+
+0.3642 and 
+
+#  : 0.0261 (in a.u.). 
+
+The second example we have studied is the CH 2CHCH 3 molecule ( Figure 11 -
+
+right ). Four partitions have been formed starting from the 9 atoms of the molecule and 
+
+we have grouped them as follows {C1, C 2+H 8, H 3+H 7+H 9, H4+H 5+C 6}. This new set has 
+
+the values 
+
+> i
+
+f and 
+
+> i
+
+f as close as could be obtained to the atomic values. This new set 
+
+was introduced in the UCA-FUKUI software and the values shown in Table 2 were 
+
+obtained. The 
+
+> i
+
+f and 
+
+> i
+
+f values are not equal to each other, but if they are compared with 
+
+the values of Table S1 of the Supporting Information, it is clear that the new set shows 
+
+much more equalized values than the original one. It is interesting to note that the 
+
+remaining parameters follow the same trend, as the descriptors in Table 2 are much more 
+
+equalized than those in Table S1 .   
+
+> C1C2+ H 8H3+ H 7+ H 9H4+ H 5+ C 6
+> 
+> i
+
+f 0.281 0.264 0.236 0.219 
+
+> 
+> i
+
+f 0.263 0.261 0.239 0.237     
+
+> if0.272 0.263 0.238 0.228
+
+ 2
+
+> i
+
+f -0.018 -0.003 0.003 0.018 
+
+> max
+> i
+
+N 0.065 0.063 0.057 0.055 
+
+> i
+
+ 1.753 1.811 2.000 2.096 
+
+> i
+
+ -0.481 -0.505 -0.510 -0.538 
+
+> max
+> i
+
+N ' 0.066 0.064 0.057 0.055 
+
+> i
+
+ 0.0037 0.0036 0.0033 0.0031 
+
+Volume: 81.22 107.54 108.33 136.76 25 
+
+Table 2. Reactivity descriptors calculated for CH 2CHCH 3 using a 4-elements 
+
+partition set, all the values are in a.u.. The global values obtained were (in a.u.) 
+
+ : -0.1139, 
+
+: 0.4756, max 
+
+N : 0.2396, and  
+
+> 
+
+: 0.0136. 
+
+Figure 11 . Left) Numbering corresponding to the benzene molecule in the 
+
+example. Right) Numbering corresponding to the example molecule 
+
+CH 2CHCH 3
+
+3.6. Partial multi-equalization. 
+
+If we restrict Eq. (42) to only a subset of partitions (the first a elements) of the 
+
+starting set (of m partitions), we obtain the equalities: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> X
+> n
+> X
+> a
+> X
+> n
+> X
+> a
+> E
+> a
+> E
+> X
+> m
+> X
+> b
+> X
+> b
+> X
+> ab
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+EX EX 
+
+EX EX 
+
+... 
+
+... 
+
+... 
+
+... 
+
+... 
+
+... 
+
+1... 00... 0
+
+... ... ... ... ... ... 
+
+0... 10... 0
+
+0... 0... 
+
+... ... ... ... ... ... 
+
+0... 0... 
+
+> 11
+> 1
+> 1
+> 1
+> 22
+> 11
+> 2
+> 11
+> 2
+> 11
+
+
+
+
+
+(66) 
+
+and 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> X
+> n
+> X
+> a
+> X
+> n
+> X
+> a
+> E
+> a
+> E
+> X
+> m
+> X
+> b
+> X
+> b
+> X
+> ab
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+f
+
+EX EX 
+
+EX EX 
+
+... 
+
+... 
+
+... 
+
+... 
+
+... 
+
+... 
+
+1... 00... 0
+
+... ... ... ... ... ... 
+
+0... 10... 0
+
+0... 0... 
+
+... ... ... ... ... ... 
+
+0... 0... 
+
+> 11
+> 1
+> 1
+> 1
+> 22
+> 11
+> 2
+> 11
+> 2
+> 11
+
+
+
+
+
+(67) 
+
+where X corresponds to the set of starting partitions and E to the final multi-equalised set 
+
+and 
+
+ is the value corresponding to the parameters E
+
+> i
+
+f  and E
+
+> i
+
+f  of the multi-equalized 
+
+partition subset. It can be verified that the correlations are still fulfilled in this subset since 
+
+substituting the calculated values E
+
+> i
+
+f  and E
+
+> i
+
+f  in Eqs. (A12) , (A13) , (A14) , (A11) and 
+
+(A10) of Appendix I we obtain results equivalent to Eqs. (44) , (45) , (46) and (47) .26 
+
+3.6.1. The simplest version of partial multi-equalization: multi-equalization of 
+
+two partitions into a set of three or more partitions. 
+
+This is the simplest example of partial multi-equalization that can be studied. It 
+
+consists of constructing two multi-equalized partitions within a set of three or more 
+
+partitions. Let us consider that the multi-equalized partitions are those corresponding to 
+
+indexes i=1 and i=2 (partitions p1 and p2 respectively), then   ifffii 21:2
+
+and   ifffii 21:2 . Note that in this case   or fi
+
+ need not be equal to 
+
+n1 . For the two partitions p1 and p2 to be multi-equalized, the following conditions must 
+
+be fulfilled: 
+
+
+
+
+
+
+
+
+
+> 
+> 
+> ´
+> 22
+> ´
+> 11
+
+ff
+
+ff (68) 
+
+where 
+
+ is an arbitrary value. Let's consider that there is no generation in the frontier 
+
+orbitals, in that case it is fulfilled: 
+
+##    
+
+> 
+
+0
+
+2
+
+1
+
+> 11
+> 2
+> 1
+> 111
+
+
+
+
+
+> 
+> 
+
+fff
+
+fff
+
+ (69) 
+
+On the other hand, taking into account Eq. (A10) (of Appendix I ) we can obtain:    
+
+> 
+> 1
+> 22
+> 222
+> 22
+> 111
+
+2
+
+1
+
+2
+
+1
+
+NNNfNfN
+
+NNfNfN
+
+
+
+
+
+
+
+ (70) 
+
+Since we have considered that there is no generation, we can reach: 
+
+##     
+
+> 2
+> 122
+> 2
+> 2
+> 1222
+
+0
+
+2
+
+1
+
+ffff
+
+ffff
+
+
+
+
+
+> 
+> 
+
+ (71) 
+
+and it can be written as follows:      
+
+> 22
+> 2
+> 2
+> 1
+> 21
+
+fff
+
+fff
+
+
+
+ (72) 
+
+then Eq. (70) can be written as follows:    
+
+> 22
+> 21
+
+2
+
+1 NfNfNN  (73) 
+
+Substituting  
+
+> 1f
+
+and ´ 
+
+> 1f
+
+in Eq. (A12) (of Appendix I ) we obtain: 
+
+#        
+
+#  
+
+> 
+
+
+
+
+
+ 
+
+> 1111
+> 2
+> 1
+> 2
+> 1
+> 1
+
+ffff
+
+ff
+
+
+
+
+
+
+
+
+
+ (74) 
+
+where 
+
+
+
+ , and 
+
+ are global parameters (and equal for i = 1 and i = 2). Substituting the 
+
+parameters with their value we obtain: 27 
+
+#        
+
+##   2 
+
+> 22
+> 1
+
+2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+> 
+
+(75) 
+
+and equivalently, we can finally obtain that 21
+
+
+
+  . Finally, substituting in Eqs. (A13) 
+
+and (A14) of Appendix I , we have also been able to verify that: 
+
+> max
+> 2
+> 2
+> 2
+> 2
+> 22
+> 1
+> 1
+> 2
+> 11max
+> 1
+
+22 NN 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ (76) 
+
+and that 
+
+##    
+
+##     2
+
+> 3max
+> 22
+> 2max
+> 22
+> max
+> 2
+> 3max
+> 11
+> 2max
+> 11
+> max
+> 11
+> 6
+> 1
+> 2
+> 1
+> 6
+> 1
+> 2
+> 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> NNN
+> NNN
+
+(77) 
+
+3.6.2 An example of partial multi-equalization: the molecule CH 2CHCN. 
+
+Scheme 1 shows the reaction of acronitrile with a protonated nucleophile, 
+
+cyanoethylation, is a process for the attachment of CH 2CH 2CN group to another organic 
+
+substrate. The method is used in the synthesis of organic compounds where protic 
+
+nucleophiles are alcohols, thiols, and amines [38-41] . A general mechanism for this type of 
+
+reaction can be seen in Scheme 1 . Table 3 shows the reactivity descriptors calculated for 
+
+CH 2CHCN using a 3-element partition set. The partitions have been formed in this way 
+
+so that the if , 
+
+> i
+
+f , 
+
+> i
+
+f values are as equalised as possible in two of the three sets. Note 
+
+that the index analysis only describes the first step of the reaction. The partitions that 
+
+obtain similar values are C 1+C 2 and C 6+N 7, similar reactivity would be expected from 
+
+these two sets in the first stage, as can be seen these sets can be related to the simultaneous 
+
+rupture of the C-C double bond and the C-N triple bond in the first stage of the reaction 
+
+mechanism. 
+
+Scheme 1 . Reaction of acronitrile with a protonated nucleophile HY:.   
+
+> C1+ C 2H3+ H 4+ H 5C6+ N 7
+> 
+> i
+
+f 0.4011 0.2064 0.3926 
+
+> 
+> i
+
+f 0.4132 0.2434 0.3434    
+
+> if0.4072 0.2249 0.3680
+
+ 2
+
+> i
+
+f 0.0121 0.0370 -0.0492 28 
+
+> max
+> i
+
+N 0.1695 0.0962 0.1481       
+
+> i
+> 1.0400 1.9076 1.1605
+> i
+> -0.5192 -0.5093 -0.4287
+> max
+> i
+
+N ' 0.1761 0.0930 0.1554    
+
+> i
+> 0.0152 0.0081 0.0135
+
+Volume: 213.64 188.75 286.55 
+
+Table 3 . Reactivity descriptors calculated for CH 2CHCN using a 3-elements partition 
+
+set, all the values are in a.u.. The global values obtained were (in a.u.) 
+
+ : -0.1751, 
+
+:
+
+0.4233, max 
+
+N : 0.4138, and  
+
+> 
+
+: 0.0362. The isovalue used to calculate the volume is 
+
+0.0004. 
+
+CONCLUSIONS 
+
+The concept of multi-equalization, which is based on the studied correlations and the 
+
+principle of equalization, has been introduced and justified, and the first examples have 
+
+been presented and analysed. It has also been demonstrated that in a set of multi-equalised 
+
+partitions, the correlations we have studied in this and previous works are fulfilled, 
+
+independently of the type of partitions studied. The conclusion that can be reached is that 
+
+the model used in this work to calculate reactivity descriptors provides approximate 
+
+correlations in the case of non-multi-equalised systems; however, it has been 
+
+demonstrated that for multi-equalised systems the correlations obtained are exact. What 
+
+has not yet been clarified is whether the correlations in non-multi-equalised systems are 
+
+not accurate because of the approximations of the model used or because the correlations 
+
+are not exact. We are inclined to think that the correlations have been masked by the 
+
+model approximations but that they are perfectly valid and the drastic simplification in 
+
+multi-equalised systems makes the model provide accurate values despite its 
+
+approximations. 
+
+The case of making groupings of atoms in molecules has also been studied. Groupings 
+
+have been made by atom type, adding atoms of the same type and thus forming a new set 
+
+of partitions for each molecule. The new sets also show very high correlations, of the 
+
+same order as the original partitions, which leads us to believe that the sets constructed 
+
+by grouping atoms in the molecule maintain the correlations of the starting set. 
+
+Finally, it has been shown that the concept of multi-equalization allows the number 
+
+of variables in the system under study to be drastically simplified. Basically, the 
+
+behaviour of the partitions is determined by a single variable, the size of the partition. 
+
+Many studies, in this context of work, focus on one or a few parameters to describe the 
+
+reactivity of chemical systems, ignoring the remaining variables to a great extent. Using 
+
+the concept of multi-equalization (an ideal set of partitions), the chemical behaviour of 
+
+the system can be described using a single variable but with the great advantage that the 
+
+remaining variables do not need to be considered because they are equalised .
+
+FUTURE PERSPECTIVES 
+
+We are currently developing a computer code, in the form of a calculation module, 
+
+which will be implemented in the UCA-FUKUI software. This software, starting from a 29 
+
+set of partitions (such as a set of orbitals) and the corresponding parameters, will allow 
+
+us to obtain a new set of partitions (logically with a smaller number of partitions) that is 
+
+as close as possible to the multi-equalised (an ideal set of partitions). As soon as the 
+
+program is running, we intend to study the set of example molecules we have discussed 
+
+in this work, looking for multi-equalised partition sets. 
+
+Furthermore we are also thinking of making new sets of partitions using the basin 
+
+analysis [42, 43 ] and using as starting functions the electron density, the spin density (in 
+
+radicals or ions), the Fukui or dual descriptor functions, the HOMO, LUMO orbitals, their 
+
+squares or linear combinations of these (such as those corresponding to the Fukui and 
+
+dual-descriptor function under the FMO approximation), the ALIE (average local 
+
+ionization energy), the ELF, or even the PES, using the Multiwfn software [44 ]. The study 
+
+with the new partition sets is focused on checking that the correlations found for the case 
+
+of atoms in molecules and the types of orbitals we have studied are fulfilled. 
+
+In reference [45] , the models used in this work were used to calculate reactivity 
+
+descriptors along the IRC . Currently, we are studying how the Multi-equalised concept 
+
+can be applied to partitions along the IRC of a chemical reaction, but with the inclusion 
+
+of terms representing the variation of the external field. Most interestingly, a set of 
+
+partitions remains Multi-equalised even if the total charge changes, indicating that the 
+
+effect of varying the external field can be observed in the deformation of the Multi-
+
+equalised set of partitions. There is a clear distinction here, as the load variation will affect 
+
+the global parameter values without deforming the Multi-equalised partition set, while 
+
+the external field variation will be the only factor affecting the deformation of the Multi-
+
+equalised partition set. 
+
+ACKNOWLEDGEMENTS 
+
+The calculations were performed using the computational facilities from the 
+
+supercomputational area of University of Cadiz and CICA (Centro Informático Científico 
+
+de Andalucía). 
+
+REFERENCES 
+
+[1] R. T. Sanderson, An Interpretation of Bond Lengths and a Classification of Bonds. 
+
+SCIENCE 1951 vol 114 670-672. 
+
+[2] G. Van Hooydonk and Z. Eeckhaut, On the Principle of Electronegativity 
+
+Equalization and its Usein the Theory of the Chemical Bond. Berichte der 
+
+Bunsengesellschaft für physikalische Chemie Vol 74, 4, 1970 , 323-326 
+
+https://doi.org/10.1002/bbpc.19700740405 
+
+[3] Van Hooydonk, G. Calculation of bond energies in diatomic molecules. Theoret. 
+
+Chim. Acta 22, 157–166 (1971). https://doi.org/10.1007/BF00537624 
+
+[4] R. T. Sanderson, Principles of Electronegativity, Journal of Chemical Education, 
+
+1988 , Volume 65, Number 2, 112-118. 
+
+[5] R. T. Sanderson. J. Chem. Educ. 1952 , 29,539544,1954.31,2-7,238-245. 30 
+
+[6] R. G. Parr, L. J. Bartalotti, J. Am. Chem. Soc. 1982 , 104, 3801-3803. 
+
+[7] R. G. Parr, R. A. Donnelly, M. Levy, W. E. Palke, J. Chem. Phys. 1978 , 68, 
+
+38013807. 
+
+[8] R. G. Parr, In Electron Distributions and the Chemical Bond; P. Cappens,: Hall. M. 
+
+6. Mullay, J. J. Am. Chem. Soc. 1984 ,106, 5842-5847. B.. Eds.; Pienun: 
+
+NewYork, 1982; pp95-1W. 
+
+[9] Parr R, Yang W (1989) Density-Functional Theory of Atoms and Molecules. 
+
+Oxford University Press 
+
+[10] Perdew JP, Parr RG, Levy M, Balduz JL, Jr. (1982) Density-functional theory for 
+
+fractional particle number: derivative discontinuities of the energy. Phys Rev Lett 
+
+49:1691-1694 
+
+[11] Yang WT, Zhang YK, Ayers PW (2000) Degenerate ground states and fractional 
+
+number of electrons in density and reduced density matrix functional theory. Phys 
+
+Rev Lett 84:5172-5175 
+
+[12] Ayers PW (2008) The continuity of the energy and other molecular properties 
+
+with respect to the number of electrons. J Math Chem 43:285-303 
+
+[13] Mulliken RS (1934) A New Electroaffinity Scale; Together with Data on Valence 
+
+States and on Valence Ionization Potentials and Electron Affinities J. Chem. Phys. 
+
+2 :782 
+
+[14] Iczkowski RP, Margrave JL (1961) Electronegativity J. Am. Chem. Soc. 83:3547-
+
+3551 
+
+[15] Sen KD, Jørgensen CK (1987) Electronegativity, Structure and Bonding 
+
+(Springer, Berlin, 
+
+[16] Pearson RG (1997) Chemical Hardness: Applications from Molecules to Solids. 
+
+Wiley-VCH, Weinheim, 
+
+[17] Geerlings P, De Proft F, Langenaeker W (2003) Conceptual Density Functional 
+
+Theory. Chem. Rev. 103:1793-1874 
+
+[18] Perdew JP, Parr RG, Levy M, Balduz JL, Jr. (1982) Density-functional theory for 
+
+fractional particle number: derivative discontinuities of the energy. Phys Rev Lett 
+
+49:1691-1694 
+
+[19] Yang WT, Zhang YK, Ayers PW (2000) Degenerate ground states and fractional 
+
+number of electrons in density and reduced density matrix functional theory. Phys 
+
+Rev Lett 84:5172-5175 31 
+
+[20] Parr RG, Szentpaly LV, Liu SB (1999) Electrophilicity Index. J. Am. Chem. Soc. 
+
+121:1922-1924 
+
+[21] Liu SB (2009) Electrophilicity. In: Chattaraj PK (ed) Chemical reactivity theory: 
+
+A density functional view. Taylor and Francis, Boca Raton, p 179 
+
+[22] Chattaraj PK, Giri S (2009) Electrophilicity index within a conceptual DFT 
+
+framework. Annual Reports of Progress in Chemistry C 105:13-39 
+
+[23] Chattaraj PK, Sarkar U, Roy DR (2006) Electrophilicity index. Chem Rev 
+
+106:2065-2091 
+
+[24] Chattaraj PK, Maiti B, Sarkar U (2003) Philicity: A unified treatment of chemical 
+
+reactivity and selectivity. J Phys Chem A 107:4973-4975 
+
+[25] Shubin Liu (2009) Chemical Reactivity Theory a Density Functional View, CRC 
+
+Press, Chapter 13 
+
+[26] J. Sánchez-Márquez, V. García, D. Zorrilla, M. Fernández. New insights in 
+
+conceptual DFT: New model for the calculation of local reactivity indices based 
+
+on the Sanderson's principle. Int J Quantum Chem. 2018 ; e25844. 
+
+[27] Sánchez-Márquez, J. New advances in conceptual-DFT: an alternative way to 
+
+calculate the fukui function. J. Mol. Mod. 2019 , 25 , 123. 
+
+[28] J. Sánchez-Márquez. Introducing new reactivity descriptors: “Bond reactivity 
+
+indices.” Comparison of the new definitions and atomic reactivity indices. J. 
+
+Chem. Phys. 145, 194105 (2016). 
+
+[29] R. Draper Norman, H. Smith, Applied Regression Analysis (third edition) Wiley 
+
+series in Probability and Stadistics, John Wiley & Sons; ISBN: 0-471-17082-8 
+
+[30] J. Sánchez-Márquez. Correlations between Fukui Indices and Reactivity 
+
+Descriptors. Based on Sanderson’s Principle. J. Phys. Chem. A 2019, 123, 
+
+8571−8582. 
+
+[31] Jesús Sánchez-Márquez, David Zorrilla Cuenca, Manuel Fernández Núñez, 
+
+Víctor García Hernández. Introducing a new model based on electronegativity 
+
+equalization principle for the analysis of the natural bond orbital reactivity in the 
+
+c-DFT background. Int J Quantum Chem. 2022; e26993. 
+
+https://doi.org/10.1002/qua.26993 32 
+
+[32] Becke, A.D. Density-functional thermochemistry. III The role of exact 
+
+exchange. J. Chem. Phys. 1993 , 98 , 5648-52. 
+
+[33] Frisch, M. J., Pople, J. A. and Binkley, J. S. Self-consistent molecular orbital 
+
+methods. 25. Supplementary functions for gaussian basis sets. J. Chem. Phys. 
+
+1984 , 80 , 3265-3269. 
+
+[34] Gaussian 16, Revision B.01, M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. 
+
+Scuseria, M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, G. A. 
+
+Petersson, H. Nakatsuji, X. Li, M. Caricato, A. V. Marenich, J. Bloino, B. G. 
+
+Janesko, R. Gomperts, B. Mennucci, H. P. Hratchian, J. V. Ortiz, A. F. Izmaylov, 
+
+J. L. Sonnenberg, D. Williams-Young, F. Ding, F. Lipparini, F. Egidi, J. Goings, 
+
+B. Peng, A. Petrone, T. Henderson, D. Ranasinghe, V. G. Zakrzewski, J. Gao, N. 
+
+Rega, G. Zheng, W. Liang, M. Hada, M. Ehara, K. Toyota, R. Fukuda, J. 
+
+Hasegawa, M. Ishida, T. Nakajima, Y. Honda, O. Kitao, H. Nakai, T. Vreven, K. 
+
+Throssell, J. A. Montgomery, Jr., J. E. Peralta, F. Ogliaro, M. J. Bearpark, J. J. 
+
+Heyd, E. N. Brothers, K. N. Kudin, V. N. Staroverov, T. A. Keith, R. Kobayashi, 
+
+J. Normand, K. Raghavachari, A. P. Rendell, J. C. Burant, S. S. Iyengar, J. 
+
+Tomasi, M. Cossi, J. M. Millam, M. Klene, C. Adamo, R. Cammi, J. W. 
+
+Ochterski, R. L. Martin, K. Morokuma, O. Farkas, J. B. Foresman, and D. J. Fox, 
+
+Gaussian, Inc., Wallingford CT, 2016. 
+
+[35] Gauss View 5.0. https://wiki.crc.nd.edu/w/images/d/d7/Gaussview-5-ref.pdf 
+
+[36] Zhurko G. A. Chemcraft - graphical program for visualization of quantum 
+
+chemistry computations. Ivanovo, Russia, 2005. https://chemcraftprog.com 
+
+[37] Sánchez-Márquez, J., Zorrilla, D., Sánchez-Coronilla, A.M., de los Santos, D., 
+
+Navas J., Fernández-Lorenzo, C., Alcántara, R. and Martín-Calleja, J. 
+
+Introducing UCA-FUKUI software: reactivity-index calculations. J. Mol. 
+
+Model. 2014 , 20 , 2492. 
+
+[38] J. Cymerman-Craig, M. Moyle. Organic Syntheses Collective 4, 205 (1963) 
+
+[39] S. A. Heininger. Organic Syntheses Collective 4, 146 (1963) 
+
+[40] T. E. Snider, D. L. Morris, K. C. Srivastava, K. D. Berlin. Organic Syntheses 
+
+Collective 6, 932 (1988) 
+
+[41] E. C. Horning, A. F. Finelli. Organic Syntheses Collective 4, 776 (1963) 
+
+[42] Biegler-König, F. (2000), Calculation of atomic integration data. J. Comput. 
+
+Chem., 21: 1040-1048. 33 
+
+> https://doi.org/10.1002/1096-987X(200009)21:12<1040::AID-JCC2>3.0.CO;2-8
+
+[43] Paul L. A. Popelier Fully Analytical Integration Over the 3D Volume Bounded 
+
+by the β Sphere in Topological Atoms J. Phys. Chem. A, 115, 45, 13169–13179 
+
+(2011) 
+
+[44] Tian Lu, Feiwu Chen, Multiwfn: A Multifunctional Wavefunction Analyzer, J. 
+
+Comput. Chem. 33, 580-592 (2012). 
+
+[45] Jesús Sánchez-Márquez, Himangshu Mondal, Shanti Gopal Patra, Alejandro 
+
+Morales-Bayuelo, Pratim Kumar Chattaraj. Local reactivity descriptors of the 
+
+important atoms in chelotropic reactions provide insight into their global 
+
+variants along the reaction path. Int J Quantum Chem. e27129 (2023). 
+
+https://doi.org/10.1002/qua.27129 34 
+
+# Multi-Equalization in Conceptual Density Functional 
+
+# Theory: Beyond Electronegativity Equalization. 
+
+Jesús Sánchez-Márquez 1. 
+
+> 1
+
+Departamento de Química-Física, Facultad de Ciencias, Campus Universitario Río San 
+
+Pedro, Universidad de Cádiz, 11510 Puerto Real, Cádiz, Spain. 
+
+*To whom correspondence should be addressed. E-mail: jesus.sanchezmarquez@uca.es 
+
+Supporting Information 
+
+Table of contents: 
+
+Appendix I. ................................................................................................................. p. 4 
+
+1.-UCA-FUKUI software: 
+
+Figure S1 ..................................................................................................................... p. 8 
+
+Figure S2 ................................................................................................................... p. 8 
+
+Figure S3 .................................................................................................................... p. 8 
+
+Figure S4 .................................................................................................................... p. 9 
+
+2.- Maximum local charge variations (obtained with a cubic expansion of the local 
+
+energy) versus the maximum local charge variations (achieved with a quadratic 
+
+expansion of the local charge variation) for NHOs: 
+
+Figure S5 CH 2CHCl ................................................................................................ p. 10 
+
+Figure S6 CH 2CHNH 2 ............................................................................................. p. 10 
+
+Figure S7 CH 3COOCH 3 .......................................................................................... p. 11 
+
+Figure S8 CH 2CHOCH 3 ......................................................................................... p. 11 
+
+Figure S9 CH 2CHCHO ............................................................................................ p. 12 
+
+Figure S10 CH 2CHNO 2 ........................................................................................... p. 12 
+
+Figure S11 CH 3CHSH ............................................................................................. p. 13 
+
+Figure S12 CH 3COOH ............................................................................................ p. 13 
+
+Figure S13 CH 3CONH 2 ........................................................................................... p. 14 
+
+3.- Local electrophilicities versus local Fukui indices for NHOs: 
+
+Figure S14 CH 2CHCl ................................................................................................p. 1 5
+
+Figure S15 CH 2CHNH 2 ........................................................................................... p. 15 
+
+Figure S16 CH 3COOCH 3 ........................................................................................ p. 16 
+
+Figure S17 CH 2CHOCH 3 ....................................................................................... p. 16 
+
+Figure S18 CH 2CHCHO .......................................................................................... p. 17 35 
+
+Figure S19 CH 2CHNO 2 ........................................................................................... p. 17 
+
+Figure S20 CH 3CHSH ............................................................................................. p. 18 
+
+Figure S21 CH 3COOH ............................................................................................ p. 18 
+
+Figure S22 CH 3CONH 2 ........................................................................................... p. 19 
+
+4.- Local values 
+
+i -1 versus the local Fukui indices for NHOs: 
+
+Figure S23 CH 2CHCl .............................................................................................. p. 20 
+
+Figure S24 CH 2CHNH 2 ........................................................................................... p. 20 
+
+Figure S25 CH 3COOCH 3 ........................................................................................ p. 21 
+
+Figure S26 CH 2CHOCH 3 ....................................................................................... p. 21 
+
+Figure S27 CH 2CHCHO .......................................................................................... p. 22 
+
+Figure S28 CH 2CHNO 2 ........................................................................................... p. 22 
+
+Figure S29 CH 3CHSH ............................................................................................. p. 23 
+
+Figure S30 CH 3COOH ............................................................................................ p. 23 
+
+Figure S31 CH 3CONH 2 ........................................................................................... p. 24 
+
+5.- Local values 
+
+i -1 versus the maximum local charge variations for NHOs: 
+
+Figure S32 CH 2CHCl .............................................................................................. p. 25 
+
+Figure S33 CH 2CHNH 2 ........................................................................................... p. 25 
+
+Figure S34 CH 3COOCH 3 ........................................................................................ p. 26 
+
+Figure S35 CH 2CHOCH 3 ....................................................................................... p. 26 
+
+Figure S36 CH 2CHCHO ............................................................................................ p. 27 
+
+Figure S37 CH 2CHNO 2 ........................................................................................... p. 27 
+
+Figure S38 CH 3CHSH ............................................................................................. p. 28 
+
+Figure S39 CH 3COOH ............................................................................................ p. 2 8
+
+Figure S40 CH 3CONH 2 ........................................................................................... p. 2 9
+
+6.- Maximum local charge variations (obtained with a cubic expansion of the local 
+
+energy) versus the maximum local charge variations (achieved with a quadratic 
+
+expansion of the local charge variation) for CMOs: 
+
+Figure S41 CH 2CHCl .............................................................................................. p. 34 
+
+Figure S42 CH 2CHNH 2 ........................................................................................... p. 35 
+
+Figure S43 CH 3COOCH 3 ........................................................................................ p. 36 
+
+Figure S44 CH 2CHOCH 3 ....................................................................................... p. 37 
+
+Figure S45 CH 2CHCHO .......................................................................................... p. 38 
+
+Figure S46 CH 2CHNO 2 ........................................................................................... p. 39 
+
+Figure S47 CH 3CHSH ............................................................................................. p. 40 
+
+Figure S48 CH 3COOH ............................................................................................ p. 41 
+
+Figure S49 CH 3CONH 2 ........................................................................................... p. 42 
+
+7.- Local electrophilicities versus local Fukui indices for CMOs: 
+
+Figure S50 CH 2CHCl ................................................................................................p . 43 
+
+Figure S51 CH 2CHNH 2 ........................................................................................... p. 43 
+
+Figure S52 CH 3COOCH 3 ........................................................................................ p. 44 
+
+Figure S53 CH 2CHOCH 3 ....................................................................................... p. 44 36 
+
+Figure S54 CH 2CHCHO .......................................................................................... p. 45 
+
+Figure S55 CH 2CHNO 2 ........................................................................................... p. 45 
+
+Figure S56 CH 3CHSH ............................................................................................. p. 46 
+
+Figure S57 CH 3COOH ............................................................................................ p. 46 
+
+Figure S58 CH 3CONH 2 ........................................................................................... p. 47 
+
+8.- Local values 
+
+i -1 versus the local Fukui indices for CMOs: 
+
+Figure S59 CH 2CHCl .............................................................................................. p. 48 
+
+Figure S60 CH 2CHNH 2 ........................................................................................... p. 48 
+
+Figure S61 CH 3COOCH 3 ........................................................................................ p. 49 
+
+Figure S62 CH 2CHOCH 3 ....................................................................................... p. 49 
+
+Figure S63 CH 2CHCHO .......................................................................................... p. 50 
+
+Figure S64 CH 2CHNO 2 ........................................................................................... p. 50 
+
+Figure S65 CH 3CHSH ............................................................................................. p. 51 
+
+Figure S66 CH 3COOH ............................................................................................ p. 51 
+
+Figure S67 CH 3CONH 2 ........................................................................................... p. 52 
+
+9.- Local values 
+
+i -1 versus the maximum local charge variations for CMOs: 
+
+Figure S68 CH 2CHCl .............................................................................................. p. 53 
+
+Figure S69 CH 2CHNH 2 ........................................................................................... p. 53 
+
+Figure S70 CH 3COOCH 3 ........................................................................................ p. 54 
+
+Figure S71 CH 2CHOCH 3 ....................................................................................... p. 54 
+
+Figure S72 CH 2CHCHO .......................................................................................... p. 55 
+
+Figure S73 CH 2CHNO 2 ........................................................................................... p. 55 
+
+Figure S74 CH 3CHSH ............................................................................................. p. 56 
+
+Figure S75 CH 3COOH ............................................................................................ p. 56 
+
+Figure S76 CH 3CONH 2 ........................................................................................... p. 57 
+
+10.- Tables: 
+
+Table S1 CH 2CHCH 3 ................................................................................................. p. 58 37 
+
+Appendix I. Partitions formed by atomic or molecular orbitals: natural hybrid 
+
+orbitals and canonical molecular orbitals. 
+
+In this appendix we will present the method to calculate reactivity descriptors for atomic 
+
+and molecular orbitals, the results of the derivative calculation applied to the case of 
+
+natural hybrid orbitals (NHO) and canonical molecular orbitals (CMO), and the 
+
+correlations found between the derivatives of the newly proposed models. As will be seen 
+
+in this appendix, there are strong indications that the correlations found in previous work 
+
+between reactivity descriptors for atoms in the molecule and NBOs can also be observed 
+
+in NHOs and CMOs. We first begin by describing the model used to calculate these 
+
+derivatives. 
+
+A.1. Calculation of reactivity descriptors for atomic and molecular orbitals 
+
+##   or fi
+
+ .
+
+In ref. [26] , a methodology was defined to obtain bond reactivity indices for NBOs (  
+
+> NBO
+> i
+
+f  and  NBO 
+
+> i
+
+f  ) based on the regression that supplies reactivity indices for bond 
+
+orbitals instead of the atoms in the molecule. Previous indices satisfy:  
+
+#  
+
+> 
+
+
+
+> orbitals all
+> i
+> NBO
+> i
+
+f
+
+> 1
+
+1
+
+and  
+
+#  
+
+> 
+
+
+
+> orbitals all
+> i
+> NBO
+> i
+
+f
+
+> 1
+
+1. Lagrange’s multipliers [27] were used to normalize the indices of Eq. 
+
+(A1) and we obtained: 
+
+         
+
+          MINIMUM frdrfrf
+
+MINIMUM frdrfrf
+
+> orbitals all
+> i
+> NBO
+> i
+> orbitals all
+> i
+> NBO
+> i
+> NBO
+> i
+> orbitals all
+> i
+> NBO
+> i
+> orbitals all
+> i
+> NBO
+> i
+> NBO
+> i
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 1
+> 2
+> 1
+> 2
+> 1
+> 2
+> 1
+> 2
+
+1
+
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+(A1) 
+
+The more general version that we have obtained based on Eq. (A1) and that has been used 
+
+to calculate indices corresponding to natural hybrid orbitals (NHO) and canonical 
+
+molecular orbitals (CMO), as can be seen in the Results and Discussion section, was: 
+
+          MINIMUM frdrfrf 
+
+> orbitals all
+> i
+> CMO NHO
+> i
+> orbitals all
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+     
+
+> 
+> 
+> 
+> 1
+> /
+> 2
+> 1
+> 2//
+
+1
+
+
+
+  (A2) 
+
+          MINIMUM frdrfrf 
+
+> orbitals all
+> i
+> CMO NHO
+> i
+> orbitals all
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+     
+
+> 
+> 
+> 
+> 1
+> /
+> 2
+> 1
+> 2//
+
+1
+
+
+
+  (A3) 
+
+In order to perform calculations of     or f CMO NHO 
+
+> i
+
+  
+
+> /
+
+, a computer code has been 
+
+created in the form of a calculation module that has been implemented in the UCA-
+
+FUKUI software (see section Computational details ). 
+
+A.1.1. Local charge derivatives with regards to the total number of electrons ( N). 
+
+If we start from a second-order approximation for the electron density as in Eq. (A4) ,38 
+
+      2
+
+> 2
+> 2
+
+2
+
+1 N
+
+N
+
+N
+
+N 
+
+> NN
+> N
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+
+
+
+
+
+ rr
+
+r (A4) 
+
+and substitute the values N = 1 (  r
+
+ N
+
+ ) and N = -1 (  r
+
+ N
+
+ ) in Eq. (A4) we can 
+
+obtain: 
+
+         
+
+           
+
+> 
+> 
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+> 
+> 
+> 2
+> 2
+> 1
+> 2
+> 2
+> 1
+
+2
+
+1
+
+2
+
+1
+
+NN
+
+NN
+
+> NN
+> NNN
+> NN
+> NNN
+
+rr
+
+rrr
+
+rr
+
+rrr (A5) 
+
+and by solving the system Eq. (A5) we obtain Eq. (A6) , where,  rf is the Fukui function 
+
+and    r2
+
+f is the dual-descriptor function. 
+
+         
+
+            rrrr
+
+r
+
+rrr
+
+r
+
+> 11
+> 2
+> 2
+> 2
+> 11
+
+2
+
+2
+
+1
+
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> NNN
+> N
+> NN
+> N
+
+f
+
+N
+
+f
+
+N
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+
+(A6) 
+
+Taking into account the     or f CMO NHO 
+
+> i
+
+  
+
+> /
+
+parameters of Eqs. (A2) and (A3) , and 
+
+operating in the same way as described in ref. [29] , the following can be obtained: 
+
+       
+
+##         
+
+> 
+
+       
+
+##       
+
+
+
+> 
+> 
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> orbitals all
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> N
+> orbitals all
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> N
+
+rff
+
+N
+
+f
+
+rff
+
+N
+
+f
+
+> 1
+> ///
+> 2
+> 2
+> 2
+> 1
+> ///
+
+2
+
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+> 
+
+r
+
+r
+
+r
+
+r
+
+(A7) 
+
+Considering that if and  2
+
+> i
+
+f are the contributions to the functions  rf and    rf 2
+
+respectively, corresponding to the " i" orbital, we can obtain the following:    
+
+> 
+
+##  CMO NHO  
+
+> i
+> CMO NHO
+> i
+> i
+> i
+
+ff
+
+N
+
+N
+
+f //
+
+2
+
+1  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+
+(A8)     
+
+> CMO NHO
+> i
+> CMO NHO
+> i
+> i
+> i
+
+ff
+
+N
+
+N
+
+f //  
+
+> 2
+> 2
+> )2(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> 
+
+(A9) 
+
+since the orbitals  rCMO NHO 
+
+> i
+
+/
+
+ are normalized and so their squared integral is one. Thus, 
+
+we can introduce the next approach: 
+
+> 2)2(
+
+2
+
+1 NfNfN iii  (A10) 
+
+where iN is the charge variation corresponding to orbital “ i”. 
+
+A.1.2. Local energy derivatives with regards to the total number of electrons. 
+
+To calculate the energy derivatives i
+
+ and i
+
+ of the “ i” orbital, as in ref. [29] the 
+
+starting point was the expansion: 39 
+
+> 32
+
+6
+
+1
+
+2
+
+1 iiiiii NNNE 
+
+
+
+
+
+ (A11) 
+
+and following a process similar to that used with atoms in molecules [24] , we can obtain: 
+
+#    
+
+#      
+
+#  
+
+       
+
+#  
+
+#    
+
+#      
+
+#  
+
+       
+
+#  CMO NHO 
+
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> CMO NHO
+> i
+> i
+
+ffff
+
+ff
+
+ffff
+
+ff
+
+> ////
+> //
+> ////
+> 2/2/
+
+2 
+
+> 
+> 
+> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(A12) 
+
+and the local parameters max 
+
+> i
+
+N and i
+
+ :
+
+> i
+> iii
+> i
+
+N
+
+
+
+
+
+
+
+
+
+ 2 
+
+> 2
+> max
+
+
+
+ (A13) 
+
+##     
+
+
+
+
+
+
+
+
+
+  3max 2max max 
+
+6
+
+1
+
+2
+
+1 iiiiii NNN
+
+
+
+
+
+
+
+ (A14) 
+
+A.2. Correlations found for the derivatives calculated for natural hybrid orbitals. 
+
+Table A1 shows the coefficients of determination ( R2) obtained in regressions Eqs. 
+
+(3)-(5) but using the values 
+
+> i
+
+f and 
+
+> i
+
+f , obtained for NHOs instead of NBOs. As can be 
+
+seen, the sample of molecules described above has been used. The Supporting 
+
+Information ( Figures S5-S40 ) presents the graphs of the correlations corresponding to 
+
+the coefficients of determination. The values obtained indicate that the correlations of 
+
+Eqs. (3)-(5) are fulfilled. 
+
+> i
+
+ vs if i
+
+ -1 vs if max 
+
+> i
+
+N vs max 
+
+> i
+
+N ' i
+
+ -1 vs max 
+
+> i
+
+N
+
+CH 2CHCN 0.997 0.997 0.993 0.999 
+
+CH 2CHOH 0.975 0.979 0.978 1.000 
+
+CH 2CHCl 0.942 0.945 0.963 1.000 
+
+CH 2CHNH 2 0.950 0.941 0.940 1.000 
+
+CH 3COOCH 3(***) 0.906 0.901 0.893 1.000 
+
+CH 2CHOCH 3 (*) 0.982 0.984 0.971 1.000 
+
+CH 2CHCHO (**) 0.953 0.955 0.929 1.000 
+
+CH 2CHNO 2 (**) 0.864 0.864 0.806 1.000 
+
+CH 3CHSH (**) 0.830 0.857 0.769 1.000 
+
+CH 3COOH (***) 0.869 0.885 0.866 1.000 
+
+CH 3CONH 2 (**) 0.796 0.797 0.773 0.994 
+
+(*) One outlier has been eliminated from the regression. 
+
+(**) two outliers have been eliminated from the regression. 
+
+(***) three outliers have been eliminated from the regression. 
+
+Table A1 . Determination coefficients ( R2) obtained for the regressions of NHO 
+
+parameters by using of the sample set of molecules. 40 
+
+A.3. Correlations found for the derivatives calculated for canonical molecular 
+
+orbitals. 
+
+Table A2 shows the coefficients of determination ( R2) obtained in regressions Eqs. 
+
+(3)-(5) but using the values obtained for CMOs instead of NBOs or NHOs. The graphs 
+
+corresponding to each of the coefficients of determination can be seen in the Supporting 
+
+Information ( Figures S41-S76 ). The values obtained indicate that the correlations of Eqs. 
+
+(3)-(5) are also fulfilled for this type of orbitals. 
+
+> i
+
+ vs if i
+
+ -1 vs if max 
+
+> i
+
+N vs max 
+
+> i
+
+N ' i
+
+ -1 vs max 
+
+> i
+
+N
+
+CH 2CHCN (*) 0.966 0.968 0.930 1.000 
+
+CH 2CHOH (*) 0.955 0.956 0.947 1.000 
+
+CH 2CHCl (*) 0.985 0.985 0.987 1.000 
+
+CH 2CHNH 2(*) 0.960 0.965 0.962 1.000 
+
+CH 3COOCH 3(***) 0.793 0.800 0.822 1.000 
+
+CH 2CHOCH 3(*) 0.950 0.947 0.933 1.000 
+
+CH 2CHCHO (*) 0.946 0.945 0.971 1.000 
+
+CH 2CHNO 2(*) 0.890 0.892 0.871 1.000 
+
+CH 3CHSH (*) 0.950 0.948 0.962 1.000 
+
+CH 3COOH (*) 0.961 0.959 0.937 1.000 
+
+CH 3CONH 2(**) 0.928 0.933 0.955 1.000 
+
+> (*) two outliers have been eliminated from the regression.
+> (**) three outliers have been eliminated from the regression.
+> (***) four outliers have been eliminated from the regression.
+
+Table A2 . Determination coefficients ( R2) obtained for the regressions of CMO 
+
+parameters by using of the sample set of molecules. 41 
+
+1.-UCA-FUKUI software: 
+
+Figure S1 . Main menu of the UCA-FUKUI software showing the calculation of local 
+
+Fukui indices and other parameters for NHOs/CMOs. 
+
+Figure S2 . Main menu of the UCA-FUKUI software showing the calculation of local 
+
+hardnesses and other parameters for NHOs/CMOs. 
+
+Figure S3 . Example of a screen of the UCA-FUKUI software showing the calculation 
+
+module for obtaining local Fukui indices and other parameters for NHOs of CH 2CHCl. 42 
+
+Figure S4 . Window of the UCA-FUKUI software showing the calculation module for 
+
+obtaining local hardnesses and other parameters for NHOs of CH 2CHCl. 43 
+
+2. Maximum local charge variations (obtained with a cubic expansion of 
+
+the local energy) versus the maximum local charge variations (achieved 
+
+with a quadratic expansion of the local charge variation): 
+
+A) 
+
+B) C) 
+
+Figure S5. A) Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. 
+
+C) Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 2CHCl molecule. 
+
+y = 0.9129x - 0.0003 
+
+R² = 0.9629 
+
+-0.01 
+
+0.00 
+
+0.01 
+
+0.02 
+
+0.03 
+
+0.04 
+
+0.05 
+
+0.06 
+
+0.07 
+
+0.08 
+
+0.09 
+
+-0.02 0.00 0.02 0.04 0.06 0.08 0.10 
+
+# ANmax vs ANmax  
+
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> 0.18
+> 0.20
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> 0.012
+> 0.014
+> 0.016
+> 0.018
+> |AN max -AN' max | and |fi(2)|
+> |ANmax-AN'max| |fi(2)|
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> 0.012
+> 0.014
+> 0.016
+> 0.018
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+
+|f i(2) | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+44 
+
+A) 
+
+B) C) 
+
+Figure S6. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). B) Comparison of max max 'ii NN  and  2
+
+if values. 
+
+C) Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 2CHNH 2 molecule. 
+
+y = 0.9208x - 0.0003 
+
+R² = 0.9399 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+0.025 
+
+0.03 
+
+-0.005 0 0.005 0.01 0.015 0.02 0.025 0.03 0.035 
+
+# ANmax vs ANmax 
+
+> 0.0
+> 0.0
+> 0.0
+> 0.0
+> 0.0
+> 0.1
+> 0.1
+> 0.1
+> 0.1
+> 0.1
+> 0.1
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> 0.007
+
+|AN max -AN' max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.50
+> 1.00
+> 1.50
+> 2.00
+> 2.50
+> 3.00
+> 3.50
+> 4.00
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> 0.007
+
+|AN max -AN' max | and |H. Softness(i)|  
+
+> |ANmax-AN'max| |H. Softness(i)|
+
+45 
+
+A) 
+
+B) C) 
+
+Figure S7. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Three outliers corresponding to NHOs 3,4 and 28 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+if values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 3COOCH 3 molecule. 
+
+y = 0.8835x - 2E-05 
+
+R² = 0.8929 
+
+-0.004 
+
+-0.002 
+
+0
+
+0.002 
+
+0.004 
+
+0.006 
+
+0.008 
+
+0.01 
+
+0.012 
+
+0.014 
+
+0.016 
+
+-0.01 0.00 0.01 0.01 0.02 0.02 
+
+ANmax vs ANmax 
+
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+> 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> 300
+> 350
+> 400
+> 450
+> 500
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+46 
+
+A) 
+
+B) C) 
+
+Figure S8. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation. An outlier corresponding to NHO 26 has been removed. 
+
+B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) Comparison of  
+
+> max max
+
+'ii NN  and i
+
+ values. In all cases for the NHOs of the 
+
+CH 2CHOCH 3 molecule. 
+
+y = 0.9513x - 0.0005 
+
+R² = 0.9715 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+0.025 
+
+0.03 
+
+0.035 
+
+0.04 
+
+0.045 
+
+-0.005 0 0.005 0.01 0.015 0.02 0.025 0.03 0.035 0.04 0.045 
+
+ANmax vs ANmax  
+
+> 0.0
+> 0.0
+> 0.0
+> 0.1
+> 0.1
+> 0.1
+> 0.1
+> 0.1
+> 0.2
+> 0.2
+> 0.2
+> 0.00
+> 0.00
+> 0.00
+> 0.01
+> 0.01
+> 0.01
+> 0.01
+> 0.01
+> 0.02
+> |AN imax -AN i'max | and |f i(2) |
+> |ANmax-AN'max| |fi(2)|
+
+0.0 
+
+2.0 
+
+4.0 
+
+0.000 
+
+0.010 
+
+0.020 |AN imax -AN i'max | and |H. 
+
+Softness(i)| 
+
+|ANmax-AN'max| 47 
+
+A) 
+
+B) C) 
+
+Figure S9. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to NHOs 16 and 24 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 2CHCHO molecule. 
+
+y = 0.7363x - 0.0004 
+
+R² = 0.9295 
+
+-0.02 
+
+0.00 
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+0.10 
+
+-0.02 0 0.02 0.04 0.06 0.08 0.1 0.12 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.1
+> 0.2
+> 0.2
+> 0.3
+> 0.3
+> 0.4
+> 0.4
+> 0.5
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0
+> 200
+> 400
+> 600
+> 800
+> 1000
+> 1200
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+48 
+
+A) 
+
+B) C) 
+
+Figure S10. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to NHOs 16 and 25 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+if values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 2CHNO 2 molecule. 
+
+y = 0.6597x - 0.0008 
+
+R² = 0.8064 
+
+-0.02 
+
+0
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+0.1 
+
+-0.02 0.00 0.02 0.04 0.06 0.08 0.10 0.12 
+
+ANmax vs ANmax 
+
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.07
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> 300
+> 350
+> 400
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.07
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |ANmax-AN'max| |H. Softness(i)|
+
+49 
+
+A) 
+
+B) C) 
+
+Figure S11. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to NHOs 24 and 25 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 3CH 2SH molecule. 
+
+y = 0.809x - 0.0006 
+
+R² = 0.7689 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+0.025 
+
+-0.005 0 0.005 0.01 0.015 0.02 0.025 0.03 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> 3.0
+> 3.5
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+50 
+
+A) 
+
+B) C) 
+
+Figure S12. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to NHOs 24 and 25 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+if values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+NHOs of the CH 3COOH molecule. 
+
+y = 0.8858x - 0.0005 
+
+R² = 0.8657 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+-0.005 0 0.005 0.01 0.015 0.02 0.025 
+
+ANmax vs ANmax 
+
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> 120
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+51 
+
+A) 
+
+B) C) 
+
+Figure S13. Linear regression of the maximum local charge variations (obtained with a 
+
+cubic expansion of the local energy) versus the maximum local charge variations 
+
+(achieved with a quadratic expansion of the local charge variation). Two outliers 
+
+corresponding to NHOs 12 and 20 have been removed. B) Comparison of 
+
+max max 'ii NN  and  2
+
+if values. C) Comparison of max max 'ii NN  and i
+
+
+
+values. In all cases for the NHOs of the CH 3CONH 2 molecule 
+
+y = 0.7343x - 0.0003 
+
+R² = 0.7729 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+0.025 
+
+-0.005 0 0.005 0.01 0.015 0.02 0.025 0.03 
+
+ANmax vs ANmax 
+
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0
+> 50
+> 100
+> 150
+> 200
+> 250
+> 300
+> 350
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+52 
+
+3. Local electrophilicities against local Fukui indices for NHOs: 
+
+Figure S14. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 2CHCl molecule. 
+
+Figure S15. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 2CHNH 2 molecule. 
+
+y = 0.0178x - 2E-05 
+
+R² = 0.942        
+
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+
+# Local electrophilicity vs Fukui index 
+
+y = 0.0063x + 7E-06 
+
+R² = 0.9502      
+
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> -0.05 0.00 0.05 0.10 0.15 0.20
+
+# Local electrophilicity vs Fukui index 53 
+
+Figure S16. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 3COOCH 3 molecule. Three outliers 
+
+corresponding to NHOs 3,4 and 28 have been removed. 
+
+Figure S17. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 2CHOCH 3 molecule. An outlier 
+
+corresponding to NHO 26 has been removed.           
+
+> y = 0.0156x - 8E-06
+> R² = 0.9063
+> -0.0004
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> -0.02 -0.01 0.00 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08
+
+Phillicities vs Fukui indices 
+
+Phillicities vs Fukui indices            
+
+> y=0.0094x - 1E-05
+> R2=0.9821
+> -0.001
+> 0.000
+> 0.001
+> 0.001
+> 0.002
+> 0.002
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+54 
+
+Figure S18. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 2CHCHO molecule. Two outliers 
+
+corresponding to NHOs 16 and 24 have been removed. 
+
+Figure S19. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 2CHNO 2 molecule. Two outliers 
+
+corresponding to NHOs 16 and 25 have been removed.       
+
+> y = 0.0292x - 9E-05
+> R² = 0.9531
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> 0.007
+> 0.008
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+Phillicities vs Fukui indices 
+
+y = 0.4003x - 0.002 
+
+R² = 0.8637       
+
+> -0.02
+> 0
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.1
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+Phillicities vs Fukui indices 55 
+
+Figure S20. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 3CHSH molecule. Two outliers 
+
+corresponding to NHOs 24 and 25 have been removed. 
+
+Figure S21. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 3COOH molecule. Three outliers 
+
+corresponding to NHOs 3, 4 and 21 have been removed. 
+
+Phillicities vs Fukui indices            
+
+> y=0.0128x - 3E-05
+> R2=0.83
+> 0.000
+> 0.000
+> 0.000
+> 0.000
+> 0.000
+> 0.001
+> 0.001
+> 0.001
+> 0.001
+> 0.001
+> -0.02 0.00 0.02 0.04 0.06 0.08 0.10
+
+Phillicities vs Fukui indices            
+
+> y=0.0162x - 4E-05
+> R2=0.8695
+> -0.0004
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> 0.0014
+> -0.02 0.00 0.02 0.04 0.06 0.08 0.10
+
+56 
+
+Figure S22. Linear regression of local electrophilicities against local Fukui 
+
+indices for the NHOs of the CH 3CONH 2 molecule. Two outliers 
+
+corresponding to NHOs 12 and 20 have been removed. 
+
+Phillicities vs Fukui indices             
+
+> y=0.0101x - 3E-05
+> R2=0.7967
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> 0.0014
+> -0.02 0.00 0.02 0.04 0.06 0.08 0.10 0.12
+
+57 
+
+4. Local 
+
+i -1 values versus the local Fukui indices: 
+
+Figure S23. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 2CHCl molecule. 
+
+Figure S24. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 2CHNH 2 molecule. 
+
+y = 1.9741x - 0.0019 
+
+R² = 0.9454        
+
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> 0.60
+> 0.70
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25 0.30
+
+# Hardness vs Fukui index 
+
+y = 1.9898x + 0.0006 
+
+R² = 0.9415      
+
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> -0.05 0.00 0.05 0.10 0.15 0.20
+
+# Hardness vs Fukui index 58 
+
+Figure S25. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 3COOCH 3 molecule. Three outliers 
+
+corresponding to NHOs 3,4 and 28 have been removed. 
+
+Figure S26. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 2CHOCH 3 molecule. An outlier 
+
+corresponding to NHO 26 has been removed.           
+
+> y = 1.8007x - 0.0002
+> R² = 0.9013
+> -0.04
+> -0.02
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> -0.02 -0.01 0.00 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08
+
+1/Hardness vs Fukui index       
+
+> y = 2.1543x - 0.0043
+> R² = 0.9836
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+1/Hardness vs Fukui index 59 
+
+Figure S27. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 2CHCHO molecule. Two outliers 
+
+corresponding to NHOs 16 and 24 have been removed. 
+
+Figure S28. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 2CHNO 2 molecule. Two outliers 
+
+corresponding to NHOs 16 and 25 have been removed.       
+
+> y = 2.1241x - 0.006
+> R² = 0.9551
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+1/Hardness vs Fukui index 
+
+y = 1.9661x - 0.0098 
+
+R² = 0.8637       
+
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+1/Hardness vs Fukui index 60 
+
+Figure S29. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 3CHSH molecule. Two outliers 
+
+corresponding to NHOs 24 and 25 have been removed. 
+
+Figure S30. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 3COOH molecule. Three outliers 
+
+corresponding to NHOs 3, 4 and 21 have been removed.       
+
+> y = 2.0109x - 0.0065
+> R² = 0.8572
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> -0.020 0.000 0.020 0.040 0.060 0.080 0.100
+
+1/Hardness vs Fukui index            
+
+> y = 1.7714x - 0.0038
+> R² = 0.885
+> -0.04
+> -0.02
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> -0.02 -0.01 0.00 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09
+
+1/Hardness vs Fukui index 61 
+
+Figure S31. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the NHOs of the CH 3CONH 2 molecule. Two outliers 
+
+corresponding to NHOs 12 and 20 have been removed.        
+
+> y = 0.0101x - 3E-05
+> R² = 0.7967
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> 0.0014
+> -0.02 00.02 0.04 0.06 0.08 0.1 0.12
+
+1/Hardness vs Fukui index 62 
+
+5. Local 
+
+i -1 values versus the maximum local charge variations: 
+
+Figure S32. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 2CHCl molecule. 
+
+Figure S33. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 2CHNH 2 molecule. 
+
+y = 7.4024x + 0.0006 
+
+R² = 1           
+
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> 0.60
+> 0.70
+> -0.01 0.00 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09
+
+# 1/Hardness vs ANmax 
+
+y = 12.594x + 4E-05 
+
+R² = 1        
+
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> -0.005 00.005 0.01 0.015 0.02 0.025 0.03
+
+# 1/Hardness vs ANmax 63 
+
+Figure S34. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NBOs of the CH 3COOCH 3 molecule. Three 
+
+outliers corresponding to NHOs 3,4 and 28 have been removed. 
+
+Figure S35. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 2CHOCH 3 molecule. An 
+
+outlier corresponding to NHO 26 has been removed.           
+
+> y = 7.5865x - 6E-05
+> R² = 1
+> -0.04
+> -0.02
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> -0.004 -0.002 00.002 0.004 0.006 0.008 0.01 0.012 0.014 0.016
+
+1/Hardness vs ANmax           
+
+> y = 10.775x + 0.0003
+> R² = 1
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> -0.005 00.005 0.01 0.015 0.02 0.025 0.03 0.035 0.04 0.045
+
+1/Hardness vs ANmax 64 
+
+Figure S36. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 2CHCHO molecule. Two 
+
+outliers corresponding to NHOs 16 and 24 have been removed. 
+
+Figure S37. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 2CHNO 2 molecule. Two 
+
+outliers corresponding to NHOs 16 and 25 have been removed.       
+
+> y = 5.9952x + 0.0003
+> R² = 1
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> -0.02 0.00 0.02 0.04 0.06 0.08 0.10
+
+1/Hardness vs ANmax 
+
+y = 4.9119x + 0.0002 
+
+R² = 1       
+
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> -0.02 00.02 0.04 0.06 0.08 0.1
+
+1/Hardness vs ANmax 65 
+
+Figure S38. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 3CHSH molecule. Two 
+
+outliers corresponding to NHOs 24 and 25 have been removed. 
+
+Figure S39. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 3COOH molecule. Three 
+
+outliers corresponding to NHOs 3, 4 and 21 have been removed.       
+
+> y = 8.7889x - 4E-05
+> R² = 1
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> -0.005 00.005 0.01 0.015 0.02 0.025
+
+1/Hardness vs ANmax      
+
+> y = 7.2946x - 3E-05
+> R² = 1
+> -0.04
+> -0.02
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> -0.005 00.005 0.01 0.015 0.02
+
+1/Hardness vs ANmax 66 
+
+Figure S40. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the NHOs of the CH 3CONH 2 molecule. Two 
+
+outliers corresponding to NHOs 12 and 20 have been removed.       
+
+> y = 0.0562x - 9E-06
+> R² = 0.9945
+> -0.0002
+> 0.0000
+> 0.0002
+> 0.0004
+> 0.0006
+> 0.0008
+> 0.0010
+> 0.0012
+> 0.0014
+> -0.005 00.005 0.01 0.015 0.02 0.025
+
+1/Hardness vs ANmax 67 
+
+6. Maximum local charge variations (obtained with a cubic expansion of 
+
+the local energy) versus the maximum local charge variations (achieved 
+
+with a quadratic expansion of the local charge variation) for CMOs: 
+
+A) 
+
+B) C) 
+
+Figure S41. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 16 and 17 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 2CHCl molecule. 
+
+y = 0.9668x + 0.0008 
+
+R² = 0.9867 
+
+-0.08 
+
+-0.06 
+
+-0.04 
+
+-0.02 
+
+0
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+-0.08 -0.06 -0.04 -0.02 0 0.02 0.04 0.06 0.08 
+
+ANmax vs ANmax   
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> |AN imax -AN i'max | and |fi(2)|
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0
+> 5
+> 10
+> 15
+> 20
+> 25
+> 30
+> |AN imax -AN i'max | and |H. Softness(i)|
+> |H. Softness(i)| |ANmax-AN'max|
+
+68 
+
+A) 
+
+B) C) 
+
+Figure S42. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 12 and 13 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 2CHNH 2 molecule. 
+
+y = 0.8598x - 0.0007 
+
+R² = 0.9624 
+
+-0.03 
+
+-0.02 
+
+-0.01 
+
+0
+
+0.01 
+
+0.02 
+
+0.03 
+
+0.04 
+
+-0.03 -0.02 -0.01 0 0.01 0.02 0.03 0.04 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.00
+> 0.01
+> 0.01
+> 0.02
+> 0.02
+> 0.03
+> 0.03
+> 0.04
+> 0.04
+> 0.05
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> 3.0
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |ANmax-AN'max| |H. Softness(i)|
+
+69 
+
+A) 
+
+B) C) 
+
+Figure S43. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Four outliers corresponding to CMOs 20, 21, 26 and 28 
+
+have been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f
+
+values. C) Comparison of max max 'ii NN  and i
+
+ values. In all cases 
+
+for the occupied CMOs of the CH 3COOCH 3 molecule. 
+
+y = 0.8275x + 2E-05 
+
+R² = 0.8217 
+
+-0.04 
+
+-0.02 
+
+0
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+0.1 
+
+-0.04 -0.02 0 0.02 0.04 0.06 0.08 0.1 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> 0.9
+> 1.0
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> 14
+> 16
+> 18
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+70 
+
+A) 
+
+B) C) 
+
+Figure S44. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 16 and 17 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 2CHOCH 3 molecule. 
+
+y = 0.9008x - 0.0001 
+
+R² = 0.9329 
+
+-0.02 
+
+-0.015 
+
+-0.01 
+
+-0.005 
+
+0
+
+0.005 
+
+0.01 
+
+0.015 
+
+0.02 
+
+0.025 
+
+0.03 
+
+-0.02 -0.015 -0.01 -0.005 0 0.005 0.01 0.015 0.02 0.025 0.03 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.07
+> 0.08
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> 2.5
+> 3.0
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+> 0.035
+> 0.040
+> 0.045
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |ANmax-AN'max| |H. Softness(i)|
+
+71 
+
+A) 
+
+B) C) 
+
+Figure S45. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 15 and 16 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 2CHCHO molecule. 
+
+y = 0.8696x + 0.004 
+
+R² = 0.9709 
+
+-0.04 
+
+-0.02 
+
+0
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+0.1 
+
+-0.04 -0.02 0 0.02 0.04 0.06 0.08 0.1 0.12 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> 0.18
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> 0.18
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> 120
+> 140
+> 160
+> 180
+> 200
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+72 
+
+A) 
+
+B) C) 
+
+Figure S46. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 19 and 20 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 2CHNO 2 molecule. 
+
+y = 0.796x - 0.0018 
+
+R² = 0.8713 
+
+-0.06 
+
+-0.04 
+
+-0.02 
+
+0
+
+0.02 
+
+0.04 
+
+0.06 
+
+0.08 
+
+0.1 
+
+0.12 
+
+-0.08 -0.06 -0.04 -0.02 0 0.02 0.04 0.06 0.08 0.1 0.12 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> 60
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |ANmax-AN'max| |H. Softness(i)|
+
+73 
+
+A) 
+
+B) C) 
+
+Figure S47. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 17 and 18 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 3CH 2SH molecule. 
+
+y = 0.8631x - 0.0002 
+
+R² = 0.9616 
+
+-0.05 
+
+-0.04 
+
+-0.03 
+
+-0.02 
+
+-0.01 
+
+0
+
+0.01 
+
+0.02 
+
+0.03 
+
+0.04 
+
+-0.06 -0.05 -0.04 -0.03 -0.02 -0.01 0 0.01 0.02 0.03 0.04 0.05 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0
+> 20
+> 40
+> 60
+> 80
+> 100
+> 120
+> 140
+> 160
+> 180
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+74 
+
+A) 
+
+B) C) 
+
+Figure S48. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Two outliers corresponding to CMOs 16 and 17 have 
+
+been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f values. C) 
+
+Comparison of max max 'ii NN  and i
+
+ values. In all cases for the 
+
+occupied CMOs of the CH 3COOH molecule. 
+
+y = 0.898x - 0.0002 
+
+R² = 0.9366 
+
+-0.03 
+
+-0.02 
+
+-0.01 
+
+0
+
+0.01 
+
+0.02 
+
+0.03 
+
+0.04 
+
+0.05 
+
+0.06 
+
+0.07 
+
+-0.03 -0.02 -0.01 0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.7
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0
+> 5
+> 10
+> 15
+> 20
+> 25
+> 30
+> 35
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+75 
+
+A) 
+
+B) C) 
+
+Figure S49. Linear regression of the maximum local charge variations 
+
+(obtained with a cubic expansion of the local energy) versus the maximum 
+
+local charge variations (achieved with a quadratic expansion of the local 
+
+charge variation). Three outliers corresponding to CMOs 11, 16 and 17 
+
+have been removed. B) Comparison of max max 'ii NN  and  2
+
+> i
+
+f
+
+values. C) Comparison of max max 'ii NN  and i
+
+ values. In all cases 
+
+for the occupied CMOs of the CH 3CONH 2 molecule. 
+
+y = 0.8247x + 1E-04 
+
+R² = 0.9555 
+
+-0.03 
+
+-0.02 
+
+-0.01 
+
+0
+
+0.01 
+
+0.02 
+
+0.03 
+
+0.04 
+
+-0.03 -0.02 -0.01 0 0.01 0.02 0.03 0.04 0.05 
+
+ANmax vs ANmax 
+
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.07
+> 0.08
+
+|AN imax -AN i'max | and |f i(2) | 
+
+> |ANmax-AN'max| |fi(2)|
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.06
+> 0.07
+> 0.08
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> 14
+> 16
+> 18
+
+|AN imax -AN i'max | and |H. Softness(i)|  
+
+> |H. Softness(i)| |ANmax-AN'max|
+
+76 
+
+7. Local electrophilicities against local Fukui indices: 
+
+Figure S50. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 2CHCl molecule. Two outliers 
+
+corresponding to CMOs 16 and 17 have been removed. 
+
+Figure S51. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 2CHNH 2 molecule. Two outliers 
+
+corresponding to CMOs 12 and 13 have been removed. 
+
+y = 0.0188x + 8E-05 
+
+R² = 0.9853       
+
+> -0.005
+> -0.004
+> -0.003
+> -0.002
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> -0.3 -0.2 -0.1 00.1 0.2 0.3
+
+Local electrophilicity vs. Fukui index 
+
+y = 0.0062x - 3E-05 
+
+R² = 0.9604         
+
+> -0.002
+> -0.001
+> -0.001
+> 0.000
+> 0.001
+> 0.001
+> 0.002
+> -0.15000 -0.10000 -0.05000 0.00000 0.05000 0.10000 0.15000 0.20000 0.25000
+
+Local electrophilicity vs. Fukui index 77 
+
+Figure S52. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 3COOCH 3 molecule. Four outliers 
+
+corresponding to CMOs 20, 21, 26 and 28 have been removed. 
+
+Figure S53. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 2CHOCH 3 molecule. Two outliers 
+
+corresponding to CMOs 16 and 17 have been removed. 
+
+y = 0.0145x - 2E-05 
+
+R² = 0.7929       
+
+> -0.003
+> -0.002
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> 0.007
+> -0.2 -0.1 00.1 0.2 0.3 0.4
+
+Local electrophilicity vs. Fukui index 
+
+y = 0.0085x - 1E-05 
+
+R² = 0.9497      
+
+> -0.001
+> -0.001
+> 0.000
+> 0.001
+> 0.001
+> 0.002
+> -0.10 -0.05 0.00 0.05 0.10 0.15
+
+Local electrophilicity vs. Fukui index 78 
+
+Figure S54. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 2CHCHO molecule. Two outliers 
+
+corresponding to CMOs 15 and 16 have been removed. 
+
+Figure S55. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 2CHNO 2 molecule. Two outliers 
+
+corresponding to CMOs 19 and 20 have been removed.        
+
+> y = 0.0311x + 0.0003
+> R² = 0.9456
+> -0.002
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> 0.006
+> 0.007
+> 0.008
+> -0.10 -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+Phillicities vs Fukui indices 
+
+y = 0.0422x - 0.0003 
+
+R² = 0.8904         
+
+> -0.006
+> -0.004
+> -0.002
+> 0.000
+> 0.002
+> 0.004
+> 0.006
+> 0.008
+> 0.010
+> 0.012
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2 0.25
+
+Local electrophilicity vs. Fukui index 79 
+
+Figure S56. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 3CHSH molecule. Two outliers 
+
+corresponding to CMOs 17 and 18 have been removed. 
+
+Figure S57. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 3COOH molecule. Two outliers 
+
+corresponding to NBOs 16 and 17 have been removed. 
+
+y = 0.0117x - 2E-07 
+
+R² = 0.9502          
+
+> -0.003
+> -0.002
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> -0.25 -0.2 -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2
+
+Local electrophilicity vs. Fukui index 
+
+y = 0.0169x - 2E-05 
+
+R² = 0.9608          
+
+> -0.002
+> -0.001
+> 0.000
+> 0.001
+> 0.002
+> 0.003
+> 0.004
+> 0.005
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2 0.25 0.3
+
+Local electrophilicity vs. Fukui index 80 
+
+Figure S58. Linear regression of local electrophilicities against local Fukui 
+
+indices for the CMOs of the CH 3CONH 2 molecule. Three outliers 
+
+corresponding to NBOs 11, 16 and 17 have been removed. 
+
+y = 0.0108x - 1E-05 
+
+R² = 0.9277        
+
+> -0.0015
+> -0.0010
+> -0.0005
+> 0.0000
+> 0.0005
+> 0.0010
+> 0.0015
+> 0.0020
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2
+
+Local electrophilicity vs. Fukui index 81 
+
+8. Local 
+
+i -1 values versus the local Fukui indices: 
+
+Figure S59. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 2CHCl molecule. Two outliers 
+
+corresponding to NBOs 16 and 17 have been removed. 
+
+Figure S60. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 2CHNH 2 molecule. Two outliers 
+
+corresponding to NBOs 12 and 13 have been removed. 
+
+y = 2.1014x + 0.0078 
+
+R² = 0.9851       
+
+> -0.60
+> -0.40
+> -0.20
+> 0.00
+> 0.20
+> 0.40
+> 0.60
+> -0.3 -0.2 -0.1 00.1 0.2 0.3
+
+1/Hardness vs. Fukui index 
+
+y = 1.9469x - 0.0079 
+
+R² = 0.9655       
+
+> -0.40
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> -0.15000 -0.10000 -0.05000 0.00000 0.05000 0.10000 0.15000 0.20000 0.25000
+
+1/Hardness vs. Fukui index 82 
+
+Figure S61. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 3COOCH 3molecule. Four outliers 
+
+corresponding to CMOs 20, 21, 26 and 28 have been removed. 
+
+Figure S62. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 2CHOCH 3 molecule. Two outliers 
+
+corresponding to CMOs 16 and 17 have been removed. 
+
+y = 1.6517x - 0.0013 
+
+R² = 0.8       
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> 0.60
+> 0.70
+> 0.80
+> -0.2 -0.1 00.1 0.2 0.3 0.4
+
+1/Hardness vs. Fukui index 
+
+y = 1.9982x - 0.0005 
+
+R² = 0.9472      
+
+> -0.20
+> -0.15
+> -0.10
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> -0.10 -0.05 0.00 0.05 0.10 0.15
+
+1/Hardness vs. Fukui index 83 
+
+Figure S63. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 2CHCHO molecule. Two outliers 
+
+corresponding to CMOs 15 and 16 have been removed. 
+
+Figure S64. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 2CHNO 2 molecule. Two outliers 
+
+corresponding to CMOs 19 and 20 have been removed.        
+
+> y = 2.2552x + 0.024
+> R² = 0.9452
+> -0.2
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> -0.10 -0.05 0.00 0.05 0.10 0.15 0.20 0.25
+
+1/Hardness vs Fukui index 
+
+y = 2.0715x - 0.013 
+
+R² = 0.8924         
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2 0.25
+
+1/Hardness vs. Fukui index 84 
+
+Figure S65. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 3CHSH molecule. Two outliers 
+
+corresponding to CMOs 17 and 18 have been removed. 
+
+Figure S66. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 3COOH molecule. Two outliers 
+
+corresponding to NBOs 16 and 17 have been removed. 
+
+y = 1.8155x + 0.0001 
+
+R² = 0.9485          
+
+> -0.50
+> -0.40
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> -0.25 -0.2 -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2
+
+1/Hardness vs. Fukui index 
+
+y = 1.803x - 0.0028 
+
+R² = 0.9593          
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2 0.25 0.3
+
+1/Hardness vs. Fukui index 85 
+
+Figure S67. Lineal regression for local 
+
+i -1 values versus the local Fukui 
+
+indices for the CMOs of the CH 3CONH 2 molecule Three outliers 
+
+corresponding to NBOs 11, 16 and 17 have been removed. 
+
+y = 1.7764x - 0.0022 
+
+R² = 0.9326        
+
+> -0.20
+> -0.15
+> -0.10
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> -0.15 -0.1 -0.05 00.05 0.1 0.15 0.2
+
+1/Hardness vs. Fukui index 86 
+
+9. Local 
+
+i -1 values versus the maximum local charge variations: 
+
+Figure S68. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 2CHCl molecule. Two 
+
+outliers corresponding to NBOs 16 and 17 have been removed. 
+
+Figure S69. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 2CHNH 2 molecule. Two 
+
+outliers corresponding to NBOs 12 and 13 have been removed. 
+
+y = 7.4502x - 3E-05 
+
+R² = 1         
+
+> -0.60
+> -0.40
+> -0.20
+> 0.00
+> 0.20
+> 0.40
+> 0.60
+> -0.08 -0.06 -0.04 -0.02 00.02 0.04 0.06 0.08
+
+1/Hardness vs. ANmax 
+
+y = 12.569x - 0.0002 
+
+R² = 1        
+
+> -0.40
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> -0.03 -0.02 -0.01 00.01 0.02 0.03 0.04
+
+1/Hardness vs. ANmax 87 
+
+Figure S70. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 3COOCH 3 molecule. Four 
+
+outliers corresponding to CMOs 20, 21, 26 and 28 have been removed. 
+
+Figure S71. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 2CHOCH 3 molecule. An 
+
+outlier corresponding to NBO 17 has been removed. Two outliers 
+
+corresponding to CMOs 16 and 17 have been removed. 
+
+y = 7.4745x - 5E-05 
+
+R² = 0.9999        
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> 0.60
+> 0.70
+> 0.80
+> -0.04 -0.02 00.02 0.04 0.06 0.08 0.1
+
+1/Hardness vs. ANmax 
+
+y = 10.801x + 8E-05 
+
+R² = 1           
+
+> -0.20
+> -0.15
+> -0.10
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> -0.02 -0.015 -0.01 -0.005 00.005 0.01 0.015 0.02 0.025 0.03
+
+1/Hardness vs. ANmax 88 
+
+Figure S72. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 2CHCHO molecule. Two 
+
+outliers corresponding to CMOs 15 and 16 have been removed. 
+
+Figure S73. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 2CHNO 2 molecule. Two 
+
+outliers corresponding to CMOs 19 and 20 have been removed.        
+
+> y = 6.0061x + 9E-06
+> R² = 1
+> -0.2
+> -0.1
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> -0.04 -0.02 00.02 0.04 0.06 0.08 0.1
+
+1/Hardness vs ANmax 
+
+y = 4.9281x - 0.0001 
+
+R² = 1          
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> -0.06 -0.04 -0.02 00.02 0.04 0.06 0.08 0.1 0.12
+
+1/Hardness vs. ANmax 89 
+
+Figure S74. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 3CHSH molecule. Two 
+
+outliers corresponding to CMOs 17 and 18 have been removed. 
+
+Figure S75. Lineal regression for local values 
+
+i -1 versus the maximum 
+
+local charge variations for the CMOs of the CH 3COOH molecule. Two 
+
+outliers corresponding to NBOs 16 and 17 have been removed. 
+
+y = 8.7876x + 6E-05 
+
+R² = 1          
+
+> -0.40
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> -0.05 -0.04 -0.03 -0.02 -0.01 00.01 0.02 0.03 0.04
+
+1/Hardness vs. ANmax 
+
+y = 7.2646x - 2E-05 
+
+R² = 1           
+
+> -0.30
+> -0.20
+> -0.10
+> 0.00
+> 0.10
+> 0.20
+> 0.30
+> 0.40
+> 0.50
+> -0.03 -0.02 -0.01 00.01 0.02 0.03 0.04 0.05 0.06 0.07
+
+1/Hardness vs. ANmax 90 
+
+Figure S76. Lineal regression for local values 
+
+i -1 versus the maximum local charge 
+
+variations for the CMOs of the CH 3CONH 2 molecule. Three outliers corresponding to 
+
+NBOs 11, 16 and 17 have been removed. 
+
+y = 9.097x - 0.0001 
+
+R² = 1       
+
+> -0.20
+> -0.15
+> -0.10
+> -0.05
+> 0.00
+> 0.05
+> 0.10
+> 0.15
+> 0.20
+> 0.25
+> 0.30
+> -0.02 -0.01 00.01 0.02 0.03 0.04
+
+1/Hardness vs. ANmax 91 
+
+10.-Tables: 
+
+C1 C2 H3 H4 H5 C6 H7 H8 H9
+
+> 
+> i
+
+f 0.281 0.224 0.084 0.081 0.074 0.063 0.076 0.040 0.076 
+
+> 
+> i
+
+f 0.263 0.223 0.097 0.094 0.086 0.057 0.071 0.038 0.071 
+
+> i
+
+f 0.272 0.224 0.090 0.088 0.080 0.060 0.074 0.039 0.074  
+
+> 2
+> i
+
+f -0.018 -0.002 0.012 0.013 0.012 -0.006 -0.005 -0.002 -0.005 
+
+> max
+> i
+
+N 0.065 0.054 0.022 0.021 0.020 0.014 0.018 0.009 0.018 
+
+> i
+
+ 1.753 2.127 5.316 5.491 5.997 7.995 6.463 12.166 6.464 
+
+> i
+
+ -0.481 -0.498 -0.541 -0.544 -0.544 -0.424 -0.446 -0.455 -0.446 
+
+> max
+> i
+
+N ' 0.066 0.054 0.022 0.021 0.019 0.014 0.018 0.009 0.018 
+
+> i
+
+ 0.0037 0.0031 0.0012 0.0012 0.0011 0.0008 0.0010 0.0005 0.0010 
+
+Volume  
+
+> (iso.:0.002)
+
+81.22 70.86 35.62 36.34 36.07 64.34 36.37 36.68 36.33 
+
+Volume  
+
+> (iso.:0.001)
+
+97.05 81.54 47.56 48.13 48.42 72.99 48.55 48.27 48.54 
+
+Volume  
+
+> (iso.:0.00004)
+
+118.38 94.92 66.83 66.56 67.15 83.44 67.52 65.94 67.58 
+
+Table S1. Reactivity descriptors calculated for CH 2CHCH 3 using the 9-
+
+element partition set, all the values are a.u .. The global values obtained were 
+
+(in a.u.) 
+
+ : -0.1139, 
+
+ : 0.4756, max 
+
+N : 0.2396, and 
+
+ : 0.0136.
