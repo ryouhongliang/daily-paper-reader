@@ -1,0 +1,258 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-23T23:41:23.164584+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 3,
+    "deep_cap": 6,
+    "deep_selected": 3,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2606.21002v1",
+      "source": "arxiv",
+      "title": "A Unified Generative Framework for Scalable Chemical Reaction Network Exploration",
+      "abstract": "Chemical reaction networks (CRNs) are crucial for understanding reaction mechanisms and guiding chemical synthesis, yet the computational exploration remains limited by the combinatorial growth of chemical space, the reliability of reaction path screening, and the cost of evaluating thermodynamic and kinetic properties. Here, we present ByteCRN, an end-to-end framework for computational CRN exploration that combines chemically informed reaction enumeration with generative transition state modeling. A key component of our framework is a generative rectified flow architecture for both transition state generation and reaction validation, where it maps reactant-product pairs to candidate transition state structures and verifies connectivity by mapping back to reactants and products. This unified generative strategy replaces the most expensive steps of conventional computational workflows, namely iterative transition state search and intrinsic reaction coordinate validation, within a complete CRN construction pipeline. ByteCRN delivers a 10--100-fold acceleration over traditional workflows while maintaining high predictive fidelity for individual reactions. At the network scale, it effectively prunes $\\sim$70-90% of the enumerated reactions, streamlining the exploration of complex reaction space. Its utility is illustrated through the discovery of novel pathways involving cyanoacetaldehyde and the successful modeling of the challenging $γ$-ketohydroperoxide network, demonstrating a practical, scalable approach to autonomous chemical exploration.",
+      "authors": [
+        "Zechang Sun",
+        "Chenxi Hu",
+        "Kailai Lin",
+        "Jin Li",
+        "Changsu Cao",
+        "Dingshun Lv",
+        "Ji Chen",
+        "Weiluo Ren",
+        "Hung Q. Pham"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-19T00:29:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.21002v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "presents ByteCRN for computational CRN exploration to guide chemical synthesis",
+      "llm_evidence_cn": "提出ByteCRN用于计算化学反应网络探索以指导化学合成",
+      "llm_evidence": "提出ByteCRN用于计算化学反应网络探索以指导化学合成",
+      "canonical_evidence": "提出ByteCRN用于计算化学反应网络探索以指导化学合成",
+      "llm_tldr_en": "To tackle combinatorial growth and cost in CRN exploration, ByteCRN combines reaction enumeration with generative transition state modeling using a rectified flow architecture, achieving efficient and scalable reaction mechanism elucidation for synthesis guidance.",
+      "llm_tldr_cn": "化学反应网络（CRN）探索对于理解反应机理和指导化学合成至关重要，但现有方法面临化学空间组合爆炸、路径筛选不可靠及热力学/动力学评估成本高的挑战。本文提出ByteCRN，一个端到端框架，将化学驱动的反应枚举与生成式过渡态建模相结合。其核心是一种生成矫正流架构，可从反应物-产物对生成候选过渡态并验证连通性。实验表明该方法能高效探索反应网络，为计算辅助有机合成提供了可扩展的新途径。",
+      "llm_tldr": "化学反应网络（CRN）探索对于理解反应机理和指导化学合成至关重要，但现有方法面临化学空间组合爆炸、路径筛选不可靠及热力学/动力学评估成本高的挑战。本文提出ByteCRN，一个端到端框架，将化学驱动的反应枚举与生成式过渡态建模相结合。其核心是一种生成矫正流架构，可从反应物-产物对生成候选过渡态并验证连通性。实验表明该方法能高效探索反应网络，为计算辅助有机合成提供了可扩展的新途径。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22926v1",
+      "source": "arxiv",
+      "title": "Reaction-Network-Level Discovery of Ammonia Synthesis Catalysts via Ten-Million-Scale Generative Exploration",
+      "abstract": "Catalyst discovery for ammonia synthesis is inherently a reaction-network challenge because catalytic performance is governed not by a single adsorbed intermediate, but by a surface's orchestrated compatibility with multiple distinct intermediates across competing dissociative and associative pathways. However, navigating ultra-large chemical spaces under such multi-intermediate constraints remains a formidable bottleneck for conventional screening workflows. Here, we report a reaction-network-level catalyst discovery framework driven by ten-million-scale generative exploration. By coupling adsorbate-specific generative Transformers with high-throughput machine learning potentials, we systematically map the structure-property landscapes of four critical intermediates (N*, NH*, NNH*, and HNNH*). Scale-dependent overlap analysis shows that the full four-intermediate compatibility space remains strongly under-sampled at conventional 105-106 generative scales, emerging exclusively under ten-million-scale exploration. By generating approximately 15 million configurations per adsorbate, followed by structural compression and machine-learning-potential predictions, we identified 279 highly potential target materials. This sparse compatibility space successfully recovers traditional Fe- and Ru-based motifs while uncovering previously unexplored catalyst families. Representative DFT calculations validate pathway-dependent mechanisms: Fe-V emerges as a dissociative-pathway lead by significantly lowering the initial N2 dissociation barrier, whereas Al-Pd-Zr efficiently stabilizes associative intermediates as an associative-pathway lead. These findings establish multi-intermediate reaction-network compatibility as a robust criterion for discovering advanced catalysts from multi-million generative chemical spaces.",
+      "authors": [
+        "Ruili Li",
+        "Rui Qi",
+        "Shuoqi Zhang",
+        "Qingli Tang",
+        "Qingqing Mao",
+        "Ritankar Das",
+        "Beien Zhu",
+        "Yi Gao"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "cond-mat.mtrl-sci"
+      ],
+      "published": "2026-06-22T07:03:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.22926v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Reaction-network-level virtual screening of ammonia synthesis catalysts via ten-million-scale generative exploration",
+      "llm_evidence_cn": "通过千万级生成探索对氨合成催化剂进行反应网络层面的虚拟筛选",
+      "llm_evidence": "通过千万级生成探索对氨合成催化剂进行反应网络层面的虚拟筛选",
+      "canonical_evidence": "通过千万级生成探索对氨合成催化剂进行反应网络层面的虚拟筛选",
+      "llm_tldr_en": "Proposes a catalyst discovery framework using generative Transformers and ML potentials to screen millions of candidates for ammonia synthesis. It addresses multi-intermediate constraints in reaction networks, enabling virtual screening of catalyst scaffolds.",
+      "llm_tldr_cn": "针对氨合成催化剂筛选需同时兼顾多个反应中间体与竞争路径的网络级难题，本文提出结合吸附物特异性生成Transformer与高通量机器学习势的千万级生成探索框架。该框架系统性映射结构-活性和结构-选择性关系，具备强大的催化剂虚拟筛选能力。此通用策略可迁移至有机合成中的催化剂和反应条件优化。",
+      "llm_tldr": "针对氨合成催化剂筛选需同时兼顾多个反应中间体与竞争路径的网络级难题，本文提出结合吸附物特异性生成Transformer与高通量机器学习势的千万级生成探索框架。该框架系统性映射结构-活性和结构-选择性关系，具备强大的催化剂虚拟筛选能力。此通用策略可迁移至有机合成中的催化剂和反应条件优化。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21370v1",
+      "source": "arxiv",
+      "title": "Computationally guided modifications of CviUPO to improve catalytic activity",
+      "abstract": "Unspecific peroxygenases (UPOs) are promising biocatalysts that selectively oxyfunctionalize saturated hydrocarbons using only hydrogen peroxide as a co-substrate. Peroxide-induced enzyme inactivation makes targeted enzyme engineering essential to mitigate this effect and also enhance catalytic performance. To meet this need, systematic approaches are used, including extensive database studies for rational enzyme design, as well as computational enzyme engineering. In this study, we followed the latter strategy and explored the possibility for computationally-guided modification of UPOs. Specifically, our focus was on uncovering the influence of active site amino acids on the catalytic activity of the enzyme CviUPO. Two mutations were introduced close to the active center, and the changes in the energy barriers leading to the activated complex were investigated in detail by Quantum Mechanics/Molecular Mechanics Nudged Elastic Band simulations. Our studies revealed that a change of the glutamic acid, assisting the catalytic cycle, by the shorter aspartic acid, leads to an increased reaction barrier, probably decreasing the catalytic activity of the enzyme. Exchanging the heme-anchoring cysteine group by a histidine exhibited promising behavior as the energy barriers decreased significantly. However, it is possible that the histidine modification also alters the reaction behavior of the peroxygenase, turning it into a peroxidase, an aspect that so far could not be confirmed beyond doubt. Simulations alone cannot conclusively determine whether substrate specificity and reactivity are maintained in the modifications tested. Nevertheless, our results highlight the importance of spin states and active pocket hydration for the catalytic reaction and demonstrate why a synergistic approach of theoretical predictions and experimental verifications is required for efficient enzyme engineering.",
+      "authors": [
+        "Hanna-Friederike Poggemann",
+        "Tim Dirks",
+        "Timo Jacob",
+        "Christoph Jung"
+      ],
+      "primary_category": "physics.bio-ph",
+      "categories": [
+        "physics.bio-ph"
+      ],
+      "published": "2026-06-19T12:21:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.21370v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "computationally guided enzyme engineering for catalyst activity improvement",
+      "llm_evidence_cn": "计算指导的酶工程改造以提高催化剂活性",
+      "llm_evidence": "计算指导的酶工程改造以提高催化剂活性",
+      "canonical_evidence": "计算指导的酶工程改造以提高催化剂活性",
+      "llm_tldr_en": "Uses computational enzyme engineering to identify beneficial mutations in CviUPO, improving catalytic activity of this peroxygenase for selective oxyfunctionalization.",
+      "llm_tldr_cn": "针对过氧合酶受H₂O₂失活的问题，采用计算酶工程策略分析活性位点氨基酸对催化活性的影响，通过引入特定突变提高了CviUPO的催化性能，为生物催化剂理性设计提供了范例。",
+      "llm_tldr": "针对过氧合酶受H₂O₂失活的问题，采用计算酶工程策略分析活性位点氨基酸对催化活性的影响，通过引入特定突变提高了CviUPO的催化性能，为生物催化剂理性设计提供了范例。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.17761v1",
+      "source": "arxiv",
+      "title": "Constrained Optimization Algorithms for Orbital Optimization in Quantum Chemistry",
+      "abstract": "We present a modular constrained-orbital-optimization framework for quantum chemistry. The formulation separates the correlated electronic-structure solver from the orbital optimizer: the solver supplies one- and two-particle reduced density matrices, while the molecular orbitals are updated on the orthonormality-constrained Stiefel manifold with an implicit steepest-descent algorithm. Because the orbital optimizer only requires reduced density matrices, MP2, CASCI, and DMRG can be treated within the same interface. For CASCI solvers, the approach is closely related to optimal-orbital full configuration interaction and CASSCF\\cite{helgaker_MulticonfigurationalSelfConsistentField_2000a}, but uses a solver-independent constrained-optimization update rather than CAS-specific orbital-rotation equations. When conventional CASSCF orbital-rotation iterations converge to higher-energy local solutions, CO-CAS can recover lower-energy stationary solutions. We also introduce a modified direct inversion in the iterative subspace procedure to accelerate macro-iteration convergence and a dynamical-weighting scheme to improve state-averaged excited-state calculations. Applications to LiF, H$_2$O, and pyrazine show that orbital optimization lowers energies relative to fixed-orbital MP2, CASCI, and DMRG references while improving convergence and potential-energy-curve smoothness.",
+      "authors": [
+        "Junzhe Zhang",
+        "Shuoyi Hu",
+        "Bing Gu"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-16T10:25:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.17761v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Orbital optimization algorithms enable more efficient DFT and electronic structure calculations, crucial for mechanistic studies.",
+      "llm_evidence_cn": "轨道优化算法提升 DFT 等电子结构计算效率，为机理研究提供关键计算工具。",
+      "llm_evidence": "轨道优化算法提升 DFT 等电子结构计算效率，为机理研究提供关键计算工具。",
+      "canonical_evidence": "轨道优化算法提升 DFT 等电子结构计算效率，为机理研究提供关键计算工具。",
+      "llm_tldr_en": "This paper presents a modular constrained-orbital-optimization framework that separates the electronic-structure solver from the orbital optimizer, enabling solver-agnostic orbital optimization for methods like MP2, CASCI, and DMRG.",
+      "llm_tldr_cn": "为解决量子化学中轨道优化依赖于特定电子结构求解器的局限性，提出一种模块化约束轨道优化框架。该框架将求解器与轨道优化器解耦，只需提供约化密度矩阵即可在施蒂弗尔流形上进行隐式最速下降优化。该方法统一了 MP2、CASCI 和 DMRG 等方法的轨道优化接口，与 CASSCF 密切相关但更具通用性。为相关电子结构计算提供了灵活高效的优化工具，可广泛用于 DFT 等机理研究。",
+      "llm_tldr": "为解决量子化学中轨道优化依赖于特定电子结构求解器的局限性，提出一种模块化约束轨道优化框架。该框架将求解器与轨道优化器解耦，只需提供约化密度矩阵即可在施蒂弗尔流形上进行隐式最速下降优化。该方法统一了 MP2、CASCI 和 DMRG 等方法的轨道优化接口，与 CASSCF 密切相关但更具通用性。为相关电子结构计算提供了灵活高效的优化工具，可广泛用于 DFT 等机理研究。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20906v1",
+      "source": "arxiv",
+      "title": "MMGNN: Multi-level, multi-color graph neural networks for molecular property prediction",
+      "abstract": "Molecular message-passing neural networks commonly propagate chemically diverse interactions through a single graph, which may mix interaction-specific signals and require deep propagation to capture long-range effects. We introduce the Multi-level, Multi-color Graph Neural Network (MMGNN), a hierarchical framework that decomposes a molecular graph into overlapping atom-type-pair-specific subgraphs while preserving atom-level resolution. MMGNN-2D constructs chemical-colored subgraphs from covalent connectivity, whereas MMGNN-3D constructs geometric-colored subgraphs from spatial proximity and augments their edges with distance, angular, and torsional descriptors. Both variants apply a shared communicative message-passing backbone to each subgraph and combine the resulting representations through atom-wise aggregation and molecular readout. We evaluated MMGNN on five classification and three regression benchmarks from MoleculeNet using common scaffold splits and five independent runs. MMGNN-2D achieved the highest macro-average AUC-ROC of 0.838 across the classification datasets and the lowest RMSE on ESOL (0.803). MMGNN-3D obtained the highest mean AUC-ROC on BBBP (0.956) and the lowest RMSE on FreeSolv (1.793), indicating complementary strengths of topological and geometric representations. Structural and leave-one-out analyses further illustrate how the subgraph decomposition affects learned representations and atom-type-pair sensitivities. These results support overlapping interaction-specific graph decomposition as a competitive strategy for molecular property prediction.",
+      "authors": [
+        "Trung Nguyen",
+        "Duc Duy Nguyen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "q-bio.MN"
+      ],
+      "published": "2026-06-18T20:03:35+00:00",
+      "link": "https://arxiv.org/pdf/2606.20906v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "MMGNN provides a general molecular property prediction method that can support computational synthesis tasks",
+      "llm_evidence_cn": "MMGNN提供通用的分子性质预测方法，可支持计算合成任务",
+      "llm_evidence": "MMGNN提供通用的分子性质预测方法，可支持计算合成任务",
+      "canonical_evidence": "MMGNN提供通用的分子性质预测方法，可支持计算合成任务",
+      "llm_tldr_en": "Introduces MMGNN, a multi-level, multi-color graph neural network that decomposes molecular graphs into interaction-specific subgraphs, achieving improved property prediction and providing a tool that can assist in computer-aided organic synthesis.",
+      "llm_tldr_cn": "现有分子消息传递网络常将多种化学相互作用混合传播，导致信号混杂且需深度传递以捕获长程效应。该工作提出多层级多色图神经网络MMGNN，将分子图分解为原子类型对特异的子图，在保留原子分辨率的同时分离不同相互作用信号，并在2D和3D分子表示上均取得优异性能。这一方法可准确预测分子性质，为计算辅助有机合成中的分子筛选与设计提供有力工具。",
+      "llm_tldr": "现有分子消息传递网络常将多种化学相互作用混合传播，导致信号混杂且需深度传递以捕获长程效应。该工作提出多层级多色图神经网络MMGNN，将分子图分解为原子类型对特异的子图，在保留原子分辨率的同时分离不同相互作用信号，并在2D和3D分子表示上均取得优异性能。这一方法可准确预测分子性质，为计算辅助有机合成中的分子筛选与设计提供有力工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-12-731935-v1",
+      "source": "biorxiv",
+      "title": "RetroMol: Parsing a shared encoding from natural products and their biosynthetic gene clusters",
+      "abstract": "Natural products such as polyketides and nonribosomal peptides (NRPs) are important sources of bioactive compounds, including many antibiotics. Many of them are assembled by modular enzyme complexes and further modified and diversified by tailoring reactions encoded by biosynthetic gene clusters (BGCs). Although natural products and their coding BGCs describe different data modalities of the same biochemical process, a unified language to jointly describe their biochemistry is lacking. Here we introduce a sequence-based representation of the core biosynthesis of modular natural products, which we call primary sequences, that bridges chemical structures and BGCs. We also present RetroMol, an algorithm that parses either natural product structures or their encoding BGCs into their primary sequences of natural product building blocks. RetroMol allows for similarity scoring between natural products and BGCs, enabling the retrieval of compounds, BGCs, and a combination of the two, based on their biosynthetic similarity. This can, for instance, be used to retrieve biosynthetically similar but structurally dissimilar compounds, or link natural products to candidate coding BGCs in large experimental datasets. We demonstrate the latter by rediscovering the nocardichelin B BGC as a proof of principle. We also exemplify the utility of biosynthetic similarity by showing various pairs of biosynthetically similar compounds with low structural similarity. Together, these results establish primary sequences as a shared biosynthetic encoding for natural product comparison and BGC prioritization.",
+      "authors": [
+        "Meijer, D.",
+        "Williams, S. E.",
+        "Terlouw, B.",
+        "Charusanti, P.",
+        "Kok, L.",
+        "Skinnider, M. A.",
+        "Weber, T.",
+        "van der Hooft, J. J. J.",
+        "Healy, A. R.",
+        "Medema, M. H."
+      ],
+      "primary_category": "bioinformatics",
+      "categories": [
+        "bioinformatics"
+      ],
+      "published": "2026-06-16T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.12.731935v1.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Parsing natural product structures and biosynthetic gene clusters aids computationally-assisted organic synthesis.",
+      "llm_evidence_cn": "解析天然产物结构及其生物合成基因簇，辅助计算辅助有机合成。",
+      "llm_evidence": "解析天然产物结构及其生物合成基因簇，辅助计算辅助有机合成。",
+      "canonical_evidence": "解析天然产物结构及其生物合成基因簇，辅助计算辅助有机合成。",
+      "llm_tldr_en": "RetroMol introduces a sequence-based representation that bridges chemical structures and biosynthetic gene clusters, enabling a unified language for modular natural products.",
+      "llm_tldr_cn": "天然产物及其生物合成基因簇描述同一生化过程的不同模态，但缺乏统一语言。本文提出模块化天然产物核心生物合成的序列化表示（初级序列），并开发 RetroMol 算法，可从天然产物结构或基因簇中解析该序列。该编码能连接化学与基因信息，为天然产物的生物合成逻辑挖掘和逆合成设计提供了通用计算框架，有助于理解多聚酮和非核糖体肽的组装规律。",
+      "llm_tldr": "天然产物及其生物合成基因簇描述同一生化过程的不同模态，但缺乏统一语言。本文提出模块化天然产物核心生物合成的序列化表示（初级序列），并开发 RetroMol 算法，可从天然产物结构或基因簇中解析该序列。该编码能连接化学与基因信息，为天然产物的生物合成逻辑挖掘和逆合成设计提供了通用计算框架，有助于理解多聚酮和非核糖体肽的组装规律。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

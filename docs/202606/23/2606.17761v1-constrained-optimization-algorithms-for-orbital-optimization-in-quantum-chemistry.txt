@@ -1,0 +1,1200 @@
+Title: Constrained Optimization Algorithms for Orbital Optimization in Quantum Chemistry
+
+URL Source: https://arxiv.org/pdf/2606.17761v1
+
+Published Time: Wed, 17 Jun 2026 00:59:51 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# Constrained Optimization Algorithms for Orbital Optimization in Quantum Chemistry 
+
+## Junzhe Zhang, Shuoyi Hu, and Bing Gu ∗
+
+Department of Chemistry and Department of Physics, Westlake University 
+
+E-mail: gubing@westlake.edu.cn 
+
+# Abstract 
+
+We present a modular constrained-orbital-optimization framework for quantum chem-istry. The formulation separates the correlated electronic-structure solver from the orbital opti-mizer: the solver supplies one- and two-particle reduced density matrices, while the molecular orbitals are updated on the orthonormality-constrained Stiefel manifold with an implicit steepest-descent algorithm. Because the or-bital optimizer only requires reduced density matrices, MP2, CASCI, and DMRG can be treated within the same interface. For CASCI solvers, the approach is closely related to optimal-orbital full configuration interaction and CASSCF, 1 but uses a solver-independent constrained-optimization update rather than CAS-specific orbital-rotation equations. When conventional CASSCF orbital-rotation itera-tions converge to higher-energy local solutions, CO-CAS can recover lower-energy stationary solutions. We also introduce a modified direct inversion in the iterative subspace procedure to accelerate macro-iteration convergence and a dynamical-weighting scheme to improve state-averaged excited-state calculations. Ap-plications to LiF, H 2O, and pyrazine show that orbital optimization lowers energies relative to fixed-orbital MP2, CASCI, and DMRG references while improving convergence and potential-energy-curve smoothness. 
+
+# 1 Introduction 
+
+A reliable description of ground and excited electronic states is essential for modeling chem-ical reactivity. For weakly correlated molecules near equilibrium, canonical Hartree–Fock or-bitals often provide a useful starting point for post-Hartree–Fock methods. Many chemically important processes, however, are poorly repre-sented in a fixed orbital basis. Bond breaking, photochemical relaxation, and conical inter-sections can require multiconfigurational wave-functions, and the exact wavefunction may re-main compact only when the orbitals are al-lowed to adapt to the correlated many-electron state. Orbital optimization provides this vari-ational flexibility by rotating the molecular or-bitals while preserving orthonormality. It can lower the total energy, improve the descrip-tion of correlation, reduce the number of im-portant configurations, and generate smoother potential energy curves. Orbital optimization is therefore not merely a technical refinement of a chosen electronic-structure method; it changes the effective variational space explored within a finite configuration expansion. The importance of orbital optimization is ev-ident across several electronic-structure meth-ods. In complete active space self-consistent field (CASSCF) theory, the wavefunction is written as a full configuration interaction ex-pansion within a selected active space, and both the configuration coefficients and molecu-lar orbitals are optimized variationally. 2–6 This simultaneous optimization makes CASSCF a 1
+
+> arXiv:2606.17761v1 [physics.chem-ph] 16 Jun 2026
+
+standard method for strongly correlated sys-tems because it treats near-degenerate config-urations on an equal footing. Dynamic cor-relation can then be added perturbatively, for example through CASPT2. 7–10 Similar motiva-tions appear in other orbital-optimized meth-ods. In orbital-optimized second-order Møller– Plesset perturbation theory (OOMP2), the or-bitals are optimized in the presence of pertur-bative correlation, 11–17 which can improve MP2 when canonical Hartree–Fock orbitals suffer from orbital instabilities, spin contamination, or symmetry breaking. In density matrix renor-malization group self-consistent field (DMRG-SCF), DMRG replaces the active-space full configuration interaction solver in a CASSCF-like optimization framework, 18,19 enabling ac-tive spaces much larger than those accessi-ble to conventional CASSCF. More recently, optimal-orbital selected full configuration inter-action has formulated orbital optimization from a resource-limited perspective: given a finite number of configurations or orbitals that can be treated exactly, one seeks the orbital sub-space that gives the lowest energy under this computational budget. 20 These methods share a common structure: the many-electron expan-sion is limited, and orbital optimization is used to make that finite expansion as expressive as possible. Orbital optimization can be approached with a variety of algorithms. 21 In conventional CASSCF implementations, the problem is commonly formulated in terms of orbital rotations between inactive, active, and virtual subspaces. Newton–Raphson 22 and super-CI algorithms 23 have been developed to solve the resulting nonlinear optimization problem and have achieved considerable practical success. These algorithms, however, are often closely tied to the CAS wavefunction form. This dependence is inconvenient when the same orbital-optimization strategy is to be used with different electronic-structure solvers, such as MP2, DMRG, or other correlated methods. A more general perspective is to formulate orbital optimization directly as a constrained optimization problem on the orthonormality manifold. In this formulation, the electronic solver and orbital optimizer can be separated: the solver supplies reduced density matrices (RDMs), while the optimizer updates the molecular orbitals subject to the orthonormal-ity constraint. This separation allows the two components to be developed independently and provides a unified interface for combining orbital optimization with multiple correlated electronic-structure methods. Motivated by this optimal-orbital perspec-tive, we present a modular constrained-orbital-optimization framework for selected subspaces of the full configuration space. The or-bital optimization is carried out with the im-plicit steepest descent (ISD) algorithm for orthogonality-constrained optimization. 24 The complete-active-space limit is included as aspecial case when I = I(n, m ). Start-ing from an initial set of molecular orbitals, here chosen as canonical Hartree–Fock or-bitals, an electronic-structure solver such as MP2, CASCI, 25,26 or DMRG 27–32 generates the one- and two-electron RDMs. These RDMs define the orbital-optimization objec-tive, and the molecular orbitals are updated with ISD under the orthonormality constraint. The electronic-structure calculation is then re-peated in the updated orbital basis, and the macro-iterations continue until convergence. For a CASCI solver, the resulting CO-CAS method should be interpreted as an alterna-tive orbital-optimization route within the same complete-active-space ansatz; although it does not change the exact variational minimum, it can converge to a lower-energy solution than a conventional CASSCF calculation when the latter is trapped at a higher-energy stationary point. The key point of this work is a modular constrained-orbital-optimization interface that decouples orbital updates from the correlated electronic solver. This allows MP2, CASCI, and DMRG to be treated within the same optimiza-tion framework using only the corresponding re-duced density matrices. We first combine ISD orbital optimization with MP2 (CO-MP2) and apply it to the LiF ground-state potential energy curve (PEC). CO-MP2 lowers the LiF ground-state energy by approximately 0.3 m Eh relative to MP2 near 2equilibrium and gives larger energy lowerings as the bond is stretched. We then combine ISD with CASCI (CO-CAS) and apply it to the ground- and excited-state PECs of LiF. With the 6-31G basis set, CO-CAS and CASSCF give similar ground-state PECs. With the larger aug-cc-pVDZ basis set, CO-CAS gives a smooth and physically reasonable PEC, whereas the CASSCF iterations converge to higher-energy solutions near equilibrium. We next apply CO-CAS to the ground-state energy of H 2O at its equilibrium geometry by varying the num-ber of active orbitals while keeping 10 active electrons fixed. With the cc-pVDZ basis set, CO-CAS yields lower energies than CASSCF by approximately 1 mEh for all tested active spaces. With the cc-pVQZ basis set, CO-CAS gives slightly higher energies for smaller ac-tive spaces, but as the number of active or-bitals increases, it again yields energies about 1 mEh lower than those from CASSCF. To accelerate macro-iteration convergence, we in-troduce a modified direct inversion in the it-erative subspace (DIIS) procedure, 33,34 which substantially reduces the number of CO-CAS macro-iterations. For excited states, dynami-cal weighting gives smoother PECs than state-averaged CO-CAS. Finally, we combine ISD with DMRG (CO-DMRG) for LiF and pyrazine ground-state PECs. CO-DMRG is lower than DMRG by approximately 0.09 Eh for LiF and 0.05 Eh for pyrazine. All codes are implemented in the open-source program PyQED .35 
+
+The article is organized as follows. In Section II, we formulate the constrained-orbital-optimization framework and separate it into two subproblems: the electronic-structure solver and ISD-based orbital optimization. Implementation details, including spin purifi-cation, convergence acceleration, and electronic overlap, are discussed in Section III. In Section IV, we apply the method to LiF, H 2O, pyrazine ground- and excited-state PECs and analyze convergence. Section V summarizes the main conclusions and discusses future extensions. Atomic units ℏ = e = me = 1 are used. 
+
+# 2 Theory 
+
+We first present the orbital-optimization problem in quantum chemistry. Throughout, 
+
+p, q, r, s denote generic molecular orbitals (MOs), i, j, k, l denote doubly occupied core orbitals, t, u, v, w denote active orbitals, and 
+
+a, b, c, d denote unoccupied virtual orbitals. 
+
+## 2.1 Orbital Optimization in Quantum Chemistry 
+
+The electronic Hamiltonian in a given set of or-thonormal molecular orbitals is given by 
+
+H = X
+
+> pq
+
+hpq ˆEpq + 12
+
+X
+
+> pqrs
+
+(pq |rs )ˆ epqrs (1) where hpq = ⟨p| − 12 ∇2 + veN (r)|q⟩ is the core Hamiltonian and (pq |rs ) is the electron-repulsion integral. The transition operators are defined as ˆEpq = P 
+
+> σ
+
+ˆc† 
+
+> pσ
+
+ˆcqσ with commuta-tion relation 
+
+h ˆEpq , ˆErs 
+
+i
+
+= ˆEps δqr − ˆErq δsp and 
+
+ˆepqrs = ˆEpq ˆErs − δps ˆEqr .36 
+
+It is interesting to note that the transition operators defined by ˆXP Q = |P ⟩ ⟨ Q|, where |P ⟩
+
+denotes an orthonormal many-body state of a system, satisfy the same commutation relation as the excitation operators. This suggests that there is a one-to-one mapping between an ar-bitrary Hilbert space of size N and an elec-tronic Fock space, subject to a constraint on the electron number ˆN = 1 .37 Such mapping can be used to transform a generic Hamiltonian to a coupled fermion-boson problem that can be tackled by many-body perturbation theory. 37 
+
+For wavefunction-based multireference quan-tum chemistry methods, such as complete ac-tive space configuration interaction (CASCI), the many-electron wavefunction is expanded as a linear combination of configurations, 
+
+|Ψ⟩I = X
+
+> I∈I
+
+cI |ΦI ⟩ (2) The choice of subspace, labeled by the set of binary strings I, defines the CI method. In the CASCI approach, the index set includes all con-figurations obtained by distributing n electrons 3among m preselected active orbitals. Abelian symmetries, such as electron number and total spin projection Sz , can be built into the index set. The electronic energy with orbital opti-mization is defined as 
+
+E = min  
+
+> U,c
+
+E[U, c; I]. (3) where U denotes the orbital-rotation matrix and c denotes the configuration coefficients. For fixed configuration coefficients, the orbital-dependent energy is 
+
+E[U; c] = X
+
+> pq
+
+hpq γpq Upp ′ Uqq ′
+
++12
+
+X
+
+> pqrs
+
+(pq |rs )Γ pqrs Upp ′ Uqq ′ Urr ′ Uss ′
+
+(4) where U is the orbital-rotation matrix. 
+
+γpq = ⟨Ψ| ˆEpq |Ψ⟩ (5) is the single-electron reduced density matrix (1-RDM) and 
+
+Γpqrs = ⟨Ψ|ˆepqrs |Ψ⟩ (6) is the two-electron reduced density matrix (2-RDM). The stationary conditions are 
+
+∂E [U, c]
+
+∂U = 0 
+
+∂E [U, c]
+
+∂c = 0 
+
+(7) The same idea is used for the other electronic-structure solvers discussed in Sections 2.3.1 and 2.3.3. 
+
+## 2.2 Constrained Orbital Op-timization with Implicit Steepest Descent 
+
+Orbital optimization can be viewed as an optimization problem with orthonormality constraints. Numerical algorithms for such constrained problems have advanced substan-tially in applied mathematics, 38–42 making them promising tools for quantum chemistry applications. Here we implement the implicit steepest de-scent algorithm of Ref. 24 for the orbital opti-mization. We briefly describe the ISD algo-rithm here and provide implementation details in Section 3.1. The optimization problem mini-mizes the electronic energy P4(U) ≡ E[U; c], a fourth-order polynomial of the rotation matrix 
+
+U
+
+L(U, Λ) = P4(U )− 12 Tr 
+
+
+
+Λ⊤
+
+
+
+U ⊤U − Ip
+
+
+
+(8) with the orthonormality constraint U ⊤U = I,where Λ is the Lagrange multiplier. Differenti-ating the Lagrangian with respect to U and Λ
+
+gives 
+
+∇U L(U, Λ) = G − U Λ = 0 , (9a) 
+
+∇ΛL(U, Λ) = U ⊤U − Ip = 0 . (9b) where G = ∇U P4(U ) is the Euclidean gradi-ent. Then U satisfies Eq. (9) with Lagrangian multiplier Λ = G⊤U . Defining 
+
+∇P4(U ) ≡ G−U G ⊤U and A(U ) ≡ GU ⊤−U G ⊤
+
+(10) then ∇P4(U ) = A(U )U , is a constraint-preserving gradient-like direction, the update generated by this direction is compatible with the orthonormality constraint U ⊤U = Ip.Standard gradient descent such as backward Euler method can iteratively update Uk on the manifold M
+
+Uk+1 = Uk − τk∇MP4(Uk+1 ) (11) Since the iterative process Eq. (11) is nonlin-ear, it is difficult to implement this approach. To simplify this problem, ∇MP4(Uk+1 ) can be approximated by 
+
+∇MP4(Uk+1 ) = A(Uk+1 )Uk+1 ≈ A(Uk)Uk+1 
+
+(12) Combining Eq. (11) and Eq. (12), yields the implicit gradient scheme 
+
+Uk+1 (τ ) = ( In + τkA(Uk)) −1Uk (13) where τ is the step size. Following Oviedo et 4al., 24 the Barzilai-Borwein step is used because it is known to greatly speed up the convergence of gradient-type methods. 43 Since Uk+1 may not satisfy the orthonormal condition in Eq. (9), it is projected back onto the manifold, defined as 
+
+π(U ) = arg min 
+
+> X∈St (n,p )
+
+∥U − X∥F (14) where ∥X∥F =
+
+q
+
+Tr X⊤X is the Frobenius norm. Eq. (14) finds the matrix in the Stiefel manifold closest to the given matrix under the Frobenius norm. For p ≤ n, the projection op-erator can be computed by the eigenvalue de-composition of U ⊤U = V DV ⊤, where D is a diagonal matrix containing the eigenvalues, 
+
+π(U ) = U V D −1/2V ⊤ (15) So given the kth-step point Uk ∈ St (n, p ) (the MO coefficients are Ck = C0Uk), the update is determined by 
+
+Uk+1 (τ ) = π (In + τkA(Uk)) −1Uk
+
+ (16) 
+
+## 2.3 Electronic Structure Solver 
+
+We consider three methods, including MP2, CAS and DMRG. 
+
+2.3.1 MP2 
+
+For the second order Møller–Plesset perturba-tion theory (MP2), the total Hamiltonian is written as 44 
+
+ˆH = ˆH(0) + ˆV (17) where ˆH(0) is zeroth-order Hamiltonian and ˆV
+
+is perturbation term. It uses the Hartree-Fock (HF) calculation as the starting point, 45 the zeroth-order Hamiltonian ˆH(0) is the summa-tion of Fock operators 
+
+ˆH(0) = X
+
+> r
+
+ˆF (r) = X
+
+> r
+
+ˆh(r)+ X
+
+> r,i
+
+h ˆJi(r) + ˆKi(r)
+
+i
+
+(18) where ˆh(r) is the one-electron kinetic and electron–nuclear attraction operator. The Coulomb and exchange operators for electron in orbital χi are defined by 
+
+ˆJi(r1)χj (r1) = 
+
+Z 
+
+dr2 χ∗ 
+
+> i
+
+(r2) 1
+
+|r12 |χi(r2)
+
+
+
+χj (r1),
+
+(19) 
+
+ˆKi(r1)χj (r1) = 
+
+Z 
+
+dr2 χ∗ 
+
+> i
+
+(r2) 1
+
+|r12 |χj (r2)
+
+
+
+χi(r1).
+
+(20) The MP2 correction energy is 
+
+E(2)  
+
+> MP
+
+= X
+
+> μ> 0
+
+V0μ
+
+> 2
+
+E0 − Eμ
+
+= 14
+
+> occ
+
+X
+
+> ij
+> vir
+
+X
+
+> ab
+
+(ia || jb ) 2
+
+ϵi + ϵj − ϵa − ϵb
+
+(21) where (ia || jb ) = ( ia |jb )−(ij |ab ). By Brillouin’s theorem, ⟨Φ0| ˆV |Φai ⟩ = 0 , so only doubly ex-cited configurations Φμ = Φ ab ij contribute to V0μ
+
+through the Slater–Condon rules. The MP2 amplitudes generate the 1- and 2-RDMs; de-tailed derivations are provided in the Support-ing Information, Section S1. For MP2 with con-strained orbital optimization (CO-MP2), the configuration coefficient is fixed by the single-reference configuration, so only Eq. (9a) needs to be considered. CO-MP2 is algorithmically different from fully variational OOMP2. In OOMP2, the MP2 Lagrangian or Hylleraas functional is optimized directly with respect to orbital rotations, using explicit orbital gradients and, in Newton-type implementations, orbital Hessians. 11–13 In con-trast, CO-MP2 keeps the MP2 RDMs fixed dur-ing each orbital-update step and rebuilds the MP2 amplitudes only after the macro-iteration. 
+
+2.3.2 CASCI 
+
+CASCI partitions the molecular orbitals into doubly occupied core orbitals, active orbitals, and unoccupied virtual orbitals. The CASCI wavefunction is built from the Slater determi-nants obtained by distributing all active elec-trons among the preselected active orbitals. Thus, the CASCI wavefunction is a linear combination of Slater determinants, |Ψ⟩ =P 
+
+> I
+
+cI |I⟩. For a given set of orbitals and CI 5coefficients, the total energy is 
+
+Etot = X
+
+> tu
+
+Ftu γtu + 12
+
+X
+
+> tuvw
+
+(tu |vw )Γ tuvw + Ecore 
+
+(22) where the closed-shell Fock matrix Ftu is de-fined as Ftu = htu + P
+
+> i
+
+2( tu |ii ) − (ti |iu ), and 
+
+Ecore is the core-electron energy. 
+
+γtu and Γtuvw are the active-space 1- and 2-RDMs. For fixed orbitals, they depend only on the CI coefficients and determinant basis. For a CASCI wavefunction, the RDMs in Eq. (5) and Eq. (6) read 
+
+γpq = X
+
+> I,J ∈I
+
+c∗ 
+
+> I
+
+cJ ⟨I| ˆEpq |J⟩ (23) 
+
+Γpqrs = X
+
+> I,J ∈I
+
+c∗ 
+
+> I
+
+cJ ⟨I|ˆepqrs |J⟩ (24) These RDMs are the inputs for constrained or-bital optimization in Section 2.2. The quanti-ties γtu and Γtuvw are derived in the Supporting Information, Section S2. CO-CAS is closely related to CASSCF be-cause both methods optimize orbitals in acomplete active space. The difference lies in the orbital-optimization strategy: conven-tional CASSCF solves coupled CI–orbital sta-tionarity conditions with CAS-specific orbital-rotation algorithms, 2,3 whereas CO-CAS fol-lows a general fixed-RDM procedure in which the CASCI RDMs are held fixed during each constrained ISD orbital update and regener-ated in the next macro-iteration. Thus, CO-CAS can be viewed as a solver-independent constrained-optimization alternative to conven-tional CASSCF. 
+
+2.3.3 DMRG 
+
+CASCI scales exponentially and therefore be-comes infeasible for large active spaces. In con-trast to CASCI, which performs exact diago-nalization over all active-space configurations, DMRG represents the many-electron wavefunc-tion with a compressed matrix product state (MPS) ansatz. 27,28,30,46–48 
+
+|Ψ⟩ = X
+
+> ai,n i
+
+An1 
+
+> 1a1
+
+An2 
+
+> a1a2
+
+...A nL 
+
+> an−11
+
+|n1n2...n L⟩ (25) where L is the number of sites and |n1n2...n L⟩ is an occupation-number vector. Each local basis state |ni⟩ is a spin-orbital occupation with two possibilities, |0⟩ and |1⟩. The tensor Ani 
+
+> αi−1αi
+
+has one physical index ni and two virtual indices 
+
+αi−1 and αi, whose dimensions are bounded by the bond dimension D. The MPS wavefunction becomes equivalent to full CI in the D → ∞ 
+
+limit. By analogy with Eq. (25), the Hamil-tonian can be expressed as a matrix product operator (MPO) 49 
+
+W = X
+
+> ni,n ′
+> i,b i
+
+W n1,n ′ 
+
+> 1
+> 1,b 1
+
+W n2,n ′ 
+
+> 2
+> b1,b 2
+
+...W nL,n ′
+
+> L
+> bL−1,1
+
+|n1n2...n L⟩ ⟨ n′
+
+> 1
+
+n′
+
+> 2
+
+...n ′
+
+> L
+
+|
+
+(26) where each MPO tensor W ni,n ′ 
+
+> i
+> bi−1,b i
+
+has two physi-cal indices ni, n ′ 
+
+> i
+
+and two virtual indices bi−1, b i.Combining Eq. (25) and Eq. (26), finding the ground state is equivalent to minimiz-ing the Lagrangian function L = ⟨Ψ| ˆH|Ψ⟩ − 
+
+λ  ⟨Ψ|Ψ⟩ − 1, with the stationary condition written with MPS/MPO language 
+
+∂L
+
+∂A ni∗
+
+> ai−1,a i
+
+= X
+
+> n′
+> i
+
+X
+
+> a′
+> i−1a′
+> ibi−1bi
+
+Lai−1a′ 
+
+> i−1
+> bi−1
+
+W ni,n ′ 
+
+> i
+> bi−1,b i
+
+Raia′ 
+
+> i
+> bi
+
+An′
+
+> i
+> a′
+> i−1,a ′
+> i
+
+− λ X
+
+> a′
+> i−1a′
+> i
+
+ΨLai−1a′ 
+
+> i−1
+
+ΨRaia′ 
+
+> i
+
+Ani
+
+> a′
+> i−1a′
+> i
+
+= 0 
+
+∂L
+
+∂λ = X
+
+> ai,a ′
+> i
+
+X
+
+> n1
+
+An1∗ 
+
+> 1,a 1
+
+An1
+
+> 1,a ′
+> 1
+
+ × ... ×
+
+X
+
+> ni
+
+Ani∗ 
+
+> ai−1,a i
+
+Ani
+
+> a′
+> i−1,a ′
+> i
+
+
+
+× ... ×
+
+X
+
+> nL
+
+AnL∗
+
+> aL−1,1
+
+AnL
+
+> a′
+> L−1,1
+
+ = 0 
+
+(27) 6where 
+
+Lai−1a′ 
+
+> i−1
+> bi−1
+
+= X
+
+> ai,b i,a ′
+> i
+
+ X
+
+> n1,n ′
+> 1
+
+An1∗ 
+
+> 1,a 1
+
+W n1,n ′ 
+
+> 1
+> 1,b 1
+
+An′
+
+> 1
+> 1,a ′
+> 1
+
+ × ... 
+
+×
+
+X
+
+> ni−1,n ′
+> i−1
+
+Ani−1∗ 
+
+> ai−2,a i−1
+
+W ni−1,n ′ 
+
+> i−1
+> bi−2,b i−1
+
+An′
+
+> i−1
+> a′
+> i−2,a ′
+> i−1
+
+
+
+Raia′ 
+
+> i
+> bi
+
+= X
+
+> ai,b i,a ′
+> i
+
+X
+
+> ni+1 ,n ′
+> i+1
+
+Ani+1 ∗ 
+
+> ai,a i+1
+
+W ni+1 ,n ′ 
+
+> i+1
+> bi,b i+1
+
+An′
+
+> i+1
+> a′
+> i,a ′
+> i+1
+
+
+
+× ... ×
+
+X
+
+> nL,n ′
+> L
+
+AnL∗
+
+> aL−1,1
+
+W nL,n ′
+
+> L
+> bL−1,1
+
+An′
+
+> L
+> a′
+> L−1,1
+
+
+
+ΨLai−1a′ 
+
+> i−1
+
+= X
+
+> ni
+
+
+
+Ani−1†...A n1†An1 ...A ni−1
+
+
+
+> ai−1,a ′
+> i−1
+
+ΨRaia′ 
+
+> i
+
+= X
+
+> ni
+
+
+
+Ani+1 ...A nL AnL†...A ni+1 †
+
+
+
+> a′
+> i,a i
+
+(28) This formulation allows the ground-state wavefunction to be solved variationally us-ing a sweeping algorithm that sequentially optimizes two local tensors Ani Ani+1 while keeping all other environmental tensors fixed. Effectively, this means that we solve a sequence of eigenvalue problems in reduced Hilbert spaces, whose final convergence accuracy is controlled by the bond dimension D. In our implement, we also apply abelian symmetry to MPS during the sweep, keeping the sector with target quantum number i.e. particle number and Sz .To combine DMRG with constrained or-bital optimization, the 1- and 2-RDMs are re-quired as inputs. In constrained-optimization DMRG (CO-DMRG), the MPS tensors Ani and molecular orbitals are optimized in alternating macro-iterations, analogous to the CAS station-arity conditions in Eq. (7). The one- and two-particle RDMs can be expressed as tensor con-tractions over the physical indices, 
+
+γpq = X 
+
+> {ni},{n′
+> j},σ
+
+An1 ...A ni ...A nL
+
+†An′ 
+
+> 1
+
+...A n′ 
+
+> j
+
+...A n′L
+
+⟨n1...n i...n L|c†
+
+> pσ
+
+cqσ |n′
+
+> 1
+
+...n ′ 
+
+> j
+
+...n ′
+
+> L
+
+⟩
+
+(29) and similarly for Γpqrs . A detailed derivation of the DMRG RDMs is provided in the Supporting Information, Section S3. CO-DMRG and DMRG-SCF both combine DMRG with orbital optimization and use DMRG 1- and 2-RDMs to update the orbitals, but they differ in the optimization strategy. In DMRG-SCF, the orbital rotations are usually formulated in close analogy to CASSCF: the DMRG solver replaces the FCI solver in the active space, and the orbitals are optimized self-consistently with respect to the DMRG active-space wave function. 18 In contrast, CO-DMRG follows a solver-independent fixed-RDM strategy in which the DMRG RDMs are held fixed during each constrained ISD orbital update and the DMRG wavefunction is recomputed in the next macro-iteration. 
+
+2.3.4 Excited States with State-Averaged and Dynamical-Weighting 
+
+For excited-state calculations, state averaging (SA) changes the orbital-optimization objective to the weighted average energy 
+
+ESA = X
+
+> α
+
+wαEα[U ] (30) where wα > 0 are the weights satisfying P 
+
+> α
+
+wα = 1. This simply amounts to the state-averaged reduced density matrices ¯γ =P 
+
+> α
+
+wαγα and ¯Γ = P 
+
+> α
+
+wαΓα .However, we found that the state-averaged (SA) method is not suitable for CO-CAS be-cause potential energy curves (PECs) in some bond-stretching problems given by SA-CO-CAS can become discontinuous, for example in the LiF bond-stretching calculation discussed below. To overcome this difficulty, we in-troduce a dynamical weighting (DW) scheme that can automatically change the weights dur-7ing the CO-CAS calculation and gives smooth PECs. The DW-CO-CAS energy is written as a weighted summation: 
+
+EDW =
+
+> N
+
+X
+
+> i
+
+ωi(ECAS )ECAS ,i (31) where ECAS is the ith state CAS energy and ωi
+
+is the ith state weight, which is related to CAS energy and sum over all N states included in the SA calculation. The expressions of weight 
+
+ωi are 
+
+ωi =
+
+
+
+1/W, i ≤ L, 1 − 3(∆ Ei,I /α )2
+
++ 2(∆ Ei,I /α )3/W, i > L, ∆Ei,I < α, 
+
+0, i > L, ∆Ei,I ≥ α. 
+
+(32) where the weight are set equal for the L low-est energy states and tapered to zero with a polynomial spline for the higher energy states, 
+
+∆Ei,I = ECAS ,i − ECAS ,I , ECAS ,I is the energy of a state of interest and α is the energy range of the spline taper. 
+
+# 3 Computational Methods 
+
+In this section, we describe the constrained-orbital-optimization algorithm and discuss im-plementation details, including spin purifica-tion, convergence acceleration, and electronic overlap. 
+
+## 3.1 Constrained Orbital Opti-mization with ISD 
+
+This section introduces the constrained orbital-optimization algorithm based on the implicit steepest descent (ISD) method. The implicit steepest descent (ISD) optimization procedure for minimizing P4(U ) under the orthogonality constraint U ⊤U = Ip can be summarized as fol-lows. 1. Choose an initial guess U0 ∈ St( n, p ), an initial step size τ > 0, lower and upper bounds 0 < τ m ≤ τM , and parameters 
+
+η ∈ [0 , 1) , ρ1, ϵ, δ ∈ (0 , 1) . Set Q0 = 1 ,
+
+C0 = P4(U0), and k = 0 .2. At the current iterate Uk, compute 
+
+∥∇ P4(Uk)∥F , where ∥A∥F = pTr[ AT A]
+
+is the Frobenius norm. If ∥∇ P4(Uk)∥F ≤
+
+ϵ, stop the algorithm. 3. Update the step size by τ = δτ until the nonmonotone line-search condition 
+
+P4(Y (τ )) ≤ Ck + ρ1τ ∂P 4[Uk]
+
+∂U k
+
+[ ˙Y (0)] (33) is satisfied, where ˙Y (0) = −∇ P4(Uk) and 
+
+Y (τ ) = π
+
+ In + τ A (Uk)−1 Uk
+
+
+
+.4. Update Uk+1 = Y (τ ).5. Calculate Qk+1 = ηQ k + 1 and Ck+1 =
+
+ηQ kCk + P4(Uk+1 )
+
+Qk+1 
+
+.6. Use Barzilai-Borwein step sizes (BB steps) to determine τ = τ ABB  
+
+> k+1
+
+. The definition of BB steps is 
+
+τ ABB k =
+
+
+
+∥Sk−1∥2
+
+> F
+
+⟨Sk−1, Y k−1⟩ , for odd k;
+
+⟨Sk−1, Y k−1⟩
+
+∥Yk−1∥2
+
+> F
+
+, for even k. 
+
+(34) where Sk−1 = Uk − Uk−1 and Yk−1 =
+
+∇P4(Uk) − ∇ P4(Uk−1). Set 
+
+τ = max {min {τ ABB  
+
+> k+1
+
+, τ M }, τ m}.
+
+7. Set k = k + 1 , repeat steps 2 − 7.
+
+## 3.2 Overall Workflow 
+
+The overall constrained orbital-optimization al-gorithm is as follows: 1. Set the iteration index k = 0 , perfrom a HF calculation to obtain the canonical molecular orbitals (MOs) C0.2. Calculate one-electron and two-electron integrals with MOs Ck.83. perform electronic structure calculation (MP2, CASCI, DMRG), get electronic en-ergy, CI coefficients ck and calculate 1-RDMs, 2-RDMs with ck.4. If the decay of energy is lower than given tolerance, the iterations converged and al-gorithm stopped. 5. Optimize the orbitals by the ISD algo-rithm, generate the orbital rotation ma-trix Uk, MOs are updated as Ck+1 =
+
+C0Uk.6. Set k = k + 1 and repeat steps 2 − 6.In the following, we discuss some details of the algorithm, i.e., spin purification, convergence acceleration with direct inversion in the iter-ative subspace (DIIS) and electronic overlap. 
+
+Spin Purification For Slater determinant-based implementation, the number of electrons and z-component of the total spin ˆSz quan-tum number can be easily fixed. Nevertheless, the eigenstates are not necessarily eigenstates of the total spin operator ˆS2 with ˆS = P 
+
+> i
+
+ˆSi.The total spin can be purified by adding an en-ergy penalty to the Hamiltonian. 50 For singlet states, we modify the Hamiltonian by 
+
+ˆHSP = ˆH + μˆS2 (35) where the energy panelty term with μ > 0 does not change the singlets S = 0 but increases the energy of S̸ = 0 . For non-singlet states, one possibility is 
+
+ˆHSP = ˆH + μ(ˆS2 − S(S + 1)) 2 (36) The total spin operator is 
+
+ˆS2 = X
+
+> i
+
+ˆS2 
+
+> i
+
++ X
+
+> i̸=j
+
+ˆSi · ˆSj (37) and the spin-squared operator is 
+
+ˆS2 
+
+> i
+
+= 34( ˆEii − ˆeii,ii ) (38) and the spin-spin interaction is 
+
+ˆSi · ˆSj = −12(ˆ eij,ji + 12 ˆeii,jj ), j ̸ = i (39) so ˆS2 = P 
+
+> p
+> 34
+
+ˆEpp − P
+
+> p,q
+> 12
+
+ ˆEpq,qp + 12 ˆEpp,qq 
+
+
+
+.
+
+Convergence Acceleration We introduce a modified DIIS method to speed the convergence of macro-iterations. We store a set of orbital ro-tation matrices {Uk} generated from the orbital optimization procedure at macro-iteration k. A set of residual matrices defined as 
+
+∆U k = U k+1 − U k (40) DIIS assumes that the final solution U f can be approximated as a linear combination of previ-ous guess matrices 
+
+U =
+
+> m
+
+X
+
+> i=1
+
+ciU i (41) where m is the number of matrices we choose to approximate the final solution. And ci are obtained by minimizing the associated residual matrices in a least-square case ⟨∆U |∆U ⟩
+
+∆U =
+
+> m
+
+X
+
+> i=1
+
+ci|∆U i| (42) with the normalization condition Pmi=1 ci = 1 .These requests can be satisfied by minimizing the following Lagrangian function 
+
+L = c†Bc − λ
+
+1 −
+
+> m
+
+X
+
+> i=1
+
+ci
+
+ (43) where c is coefficients of Eq. (41), B is the over-lap matrix Bij = ⟨∆U i|∆U j ⟩.The stationary conditions are 
+
+∂L
+
+∂c k
+
+= 2 
+
+> m
+
+X
+
+> i=1
+
+ciBki − λ = 0 
+
+∂L
+
+∂λ = 1 −
+
+> m
+
+X
+
+> i=1
+
+ci = 0 
+
+(44) 9Eq. (44) can be rewritten as a matrix equation 
+
+
+
+B11 · · · B1m −1
+
+... . . . ... ...
+
+Bm1 · · · Bmm −1
+
+−1 · · · −1 0
+
+
+
+c1
+
+...
+
+cm
+
+λ
+
+ =
+
+
+
+0
+
+...
+
+0
+
+−1
+
+
+
+Because a linear combination of U = Pmi=1 ciU i
+
+is not guaranteed to remain unitary isometric, we re-orthonormalizes it with polar decomposi-tion 
+
+Uorth = U
+
+
+
+U †U
+
+−1/2
+
+(45) 
+
+# 4 Results and Discussion 
+
+We demonstrate the performance of the constrained-orbital-optimization framework with tests designed to examine three comple-mentary aspects of the method. First, CO-MP2 is used to show that orbital optimization can improve a perturbative correlation treatment along the LiF bond-stretching coordinate rela-tive to conventional MP2. Second, CO-CAS is compared with conventional CASSCF to vali-date the constrained-optimization formulation in a complete active space and to examine the role of DIIS acceleration. Third, CO-DMRG is used to demonstrate that ISD orbital opti-mization can be coupled to a tensor-network solver and applied to both LiF and pyrazine. For all potential energy curves (PECs), the same basis set and active space are used for the optimized and unoptimized calculations in each comparison, so that the energy differences directly reflect the effect of orbital optimization. 
+
+## 4.1 CO-MP2: Orbital Opti-mization Improves MP2 for Stretched LiF 
+
+We first use CO-MP2 to calculate the LiF ground-state PEC with the 6-31G basis set, as shown in Fig. 1. Along the LiF stretching co-ordinate, the correlation energy increases from 0.013 Eh at 2.2 a0 to 0.036 Eh at 8.2 a0, indicat-ing that correlation effects become increasingly important as the bond is stretched. CO-MP2 and MP2 give PECs with similar shapes, but CO-MP2 consistently lowers the energy. Near equilibrium, the improvement is modest: CO-MP2 is lower than MP2 by ap-proximately 3 × 10 −4 Eh, as expected because canonical HF orbitals already provide a reason-able zeroth-order reference in this region. In the bond-stretching region, the lowering becomes larger and reaches 0.015 Eh at 8.2 a0. This behavior shows that as the bond is stretched and static correlation becomes more important, the single-reference HF orbital basis becomes less optimal. These results indicate that con-strained orbital optimization does not qualita-tively change the MP2 PEC in the weakly cor-related region, but it systematically improves the energy as static-correlation increases. 2 4 6 8
+
+> Bond length (Bohr)
+> 8.00
+> 7.95
+> 7.90
+> 7.85
+> Energy (Hartree)  MP2
+> CO-MP2
+> HF
+
+Figure 1: LiF ground-state potential energy curves calculated with CO-MP2 and MP2 using the 6-31G basis set. 
+
+## 4.2 CO-CAS: CASSCF Bench-mark, DIIS Acceleration, and Excited States 
+
+We next combine constrained orbital optimiza-tion with a CASCI solver, denoted CO-CAS, and apply it to the LiF ground-state poten-tial energy curve Fig. 2. A CAS(6,6) active space is used, and the results are compared with CASSCF. For the 6-31G basis set, CO-CAS is in ex-cellent agreement with the CASSCF potential-energy curve, with energy differences within ap-proximately 1 mEh. This agreement validates 10 the constrained-optimization formulation in the complete-active-space limit. The behavior is different for the larger aug-cc-pVDZ basis set. In this case, the CO-CAS curve remains smooth and gives a physically reason-able equilibrium region, whereas the CASSCF calculation converges to a higher-energy solu-tion near equilibrium. This suggests that the CASSCF iteration can be trapped at an un-favorable local stationary point for this sys-tem. In contrast, CO-CAS updates the orbital rotation through ISD on the orthogonality-constrained manifold. This behavior is con-sistent with previous studies of optimal-orbital selected full configuration interaction showing that direct constrained optimization of the or-bital subspace can yield lower energies than conventional CASSCF-type orbital updates in some cases. 2 3 4 5 6
+
+> 107.01
+> 106.98
+> 106.95
+> 106.92
+> 106.89
+> CO-CAS (6,6)
+> CASSCF (6,6)
+> Bond length (Bohr)
+> Energy (Hartree)
+
+(a) 6-31G basis set 2 3 4 5 6
+
+> 107.04
+> 107.01
+> 106.98
+> 106.95
+> 106.92
+> CO-CAS (6,6)
+> CASSCF (6,6)
+> Bond length (Bohr)
+> Energy (Hartree)
+
+(b) aug-cc-pVDZ basis set 
+
+Figure 2: LiF ground-state PECs calculated with CO-CAS(6,6) and CASSCF(6,6) using the 6-31G and aug-cc-pVDZ basis sets. Next, we calculate the water molecule at its equilibrium geometry, with an OH bond length of 1.84345 a0 and an HOH bond angle of 110.6 ◦.Using 10 active electrons, we vary the number of active orbitals and compare the ground-state energies obtained from CO-CAS and CASSCF with the cc-pVDZ and cc-pVQZ basis sets. The results are summarized in Table 1. For the cc-pVDZ basis set, CO-CAS gives lower energies than CASSCF for all active spaces considered. In most cases, the energy lowering is approximately 1 mEh; larger differ-ences are found for the 16- and 18-orbital ac-tive spaces, where CO-CAS lowers the energy by about 3 mEh and 2 mEh, respectively. For the cc-pVQZ basis set, CO-CAS gives slightly higher energies than CASSCF for the smallest active space. As the number of active orbitals increases, however, CO-CAS again becomes energetically more favorable, yielding ground-state energies lower than those of CASSCF by approximately 1 mEh.The different behavior of CO-CAS and CASSCF can be explained by their distinct orbital-optimization formulations. In conven-tional CASSCF, the molecular orbitals and CI coefficients are optimized variationally within a predefined inactive-active-virtual partition. The orbital update is achieved with the ro-tations between different orbital subspaces that are nonredundant; rotations within the same subspace are redundant. As a result, the CASSCF orbital optimization primarily adjusts the boundaries between the inactive, active, and virtual subspaces, while the CI coefficients are optimized within the resulting CAS expansion. When the active space is compact and chemically well defined, this orbital-rotation optimization is well suited to refine the active orbitals and usually provides a robust description. CO-CAS follows a different optimization route. For a fixed set of orbitals, the CASCI step determines the CI coefficients and the cor-responding reduced density matrices (RDMs). The molecular orbitals (MOs) are then op-timized directly under the orthonormality constraint using the implicit steepest descent (ISD) algorithm. In this formulation, the MO coefficients are treated as a point on the Stiefel manifold, and the ISD update follows a descent 11 Table 1: Comparison of CO-CAS and CASSCF ground state (GS) energies for H 2Ounder the cc-pVDZ and cc-pVQZ basis set with 10 active electrons CO-CAS CASSCF orbs GS energy (Eh) GS energy (Eh) ∆E (m Eh)
+
+basis set cc-pVDZ 12 −76 .174388 −76 .173179 −1.209 
+
+13 −76 .189831 −76 .188643 −1.188 
+
+14 −76 .203885 −76 .202739 −1.146 
+
+15 −76 .223270 −76 .222155 −1.115 
+
+16 −76 .228129 −76 .224526 −3.603 
+
+17 −76 .230603 −76 .229384 −1.219 
+
+18 −76 .233653 −76 .231255 −2.398 
+
+basis set cc-pVQZ 12 −76 .230799 −76 .235160 4.361 
+
+13 −76 .237225 −76 .235698 −1.527 
+
+14 −76 .257789 −76 .256436 −1.353 
+
+direction while preserving orbital orthonor-mality through projection-based constrained optimization. Thus, rather than updating only the nonredundant orbital rotations associated with a predefined subspace partition, CO-CAS directly searches for an orthonormal orbital set that lowers the CASCI energy. This distinction becomes more important as the active space is enlarged. For small active spaces, the number of orbital degrees of free-dom is limited, and the quality of the result is dominated by the initial chemical choice of the active orbitals. In this regime, the additional ISD-based orbital optimization in CO-CAS may not necessarily improve upon CASSCF, which is consistent with the slightly higher CO-CAS energies observed for the cc-pVQZ basis with 12 active orbitals. As more active orbitals are included, however, the active-virtual boundary becomes less sharply defined and the coupling between orbital optimization and static corre-lation becomes stronger. The orthogonality-constrained ISD optimization in CO-CAS can adapt the molecular orbitals more effectively to the correlated CASCI wave function, allow-ing the enlarged active space to be exploited more efficiently and give lower energies than CASSCF. To assess convergence, we compare LiF CO-CAS ground-state energy calculations at a bond length of 1.5 a0 with and without DIIS, as shown in Fig. 3. The maximum number of macro-iterations is set to 200. DIIS greatly ac-celerates CO-CAS convergence. Without DIIS, only the 6-31G calculation converges within the maximum number of macro-iterations. With DIIS, all tested basis sets converge within 50 macro-iterations. The improvement is signifi-cant because each macro-iteration is dominated by solving the electronic-structure problem and constructing the RDMs. Reducing the number of macro-iterations therefore directly improves the practical efficiency of the method. We then examine the excited-state perfor-mance of CO-CAS(6,6)/6-31G for LiF. Fig. 4 compares the ground and first excited states ob-tained from state-averaged CO-CAS (SA-CO-CAS), dynamically weighted CO-CAS (DW-CO-CAS), and state-averaged CASSCF (SA-CASSCF). Although state averaging is widely used for excited-state orbital optimization, the SA-CO-CAS PECs show noticeable fluctua-tions along the bond-stretching coordinate. The DW-CO-CAS curves are smoother and more closely follow the shape of the SA-CASSCF reference. At the same time, DW-CO-12 0 10 20 30 40 50 106.2 
+
+> 106.0
+> 105.8
+> 105.6
+> 105.4
+> STO-6G
+> cc-pVDZ
+> 6-31G
+> cc-pVTZ
+> Number of macro-iterations
+> Energy (Hartree)
+
+(a) Without DIIS 0 10 20 30 40 50 106.2 
+
+> 106.0
+> 105.8
+> 105.6
+> 105.4
+> STO-6G
+> cc-pVDZ
+> 6-31G
+> cc-pVTZ
+> Number of macro-iterations
+> Energy (Hartree)
+
+(b) With DIIS 
+
+Figure 3: Convergence of LiF CO-CAS ground-state energy calculations with and without DIIS for different basis sets. The maximum number of macro-iterations is 200. CAS yields lower energies than SA-CASSCF for both states: the ground-state energy is lowered by approximately 10 m Eh, while the first ex-cited state is lowered by approximately 1 m Eh.These results indicate that dynamical weight-ing provides a more flexible and stable orbital-optimization strategy for CO-CAS. 
+
+## 4.3 CO-DMRG 
+
+Finally, we couple the constrained orbital optimization algorithm to DMRG and com-pare CO-DMRG with DMRG calculations per-formed without orbital optimization. The first test is the LiF ground-state PEC using aCAS(6,6) active space and the 6-31G basis set, shown in Fig. 5. At all geometries, the two curves retain similar overall shapes, but CO-DMRG yields lower energies than the DMRG 2.4 2.8 3.2 3.6 
+
+> Bond length (Bohr)
+> 106.9
+> 106.8
+> 106.7
+> 106.6
+> 106.5
+> Energy (Hartree)
+> DW-CO-CAS(6,6) S 0
+> SA-CO-CAS(6,6) S 0
+> SA-CASSCF(6,6) S 0
+> DW-CO-CAS(6,6) S 1
+> SA-CO-CAS(6,6) S 1
+> SA-CASSCF(6,6) S 1
+
+Figure 4: LiF ground- and first-excited-state PECs calculated with different methods using the 6-31G basis set and a CAS(6,6) subspace. DW-CO-CAS denotes dynamically weighted constrained optimization configuration interaction, SA-CO-CAS denotes state-averaged constrained optimization configuration interaction, and SA-CASSCF denotes state-averaged complete active space self-consistent field. calculation. The energy lowering is approxi-mately 90 mEh over most of the curve, except at a bond length of 2 a0, where the lowering is approximately 30 mEh.We also apply CO-DMRG to pyrazine along the Q10 a vibrational mode; 51 the resulting PEC is shown in Fig. 6. Similar to the LiF case, CO-DMRG gives lower energies than DMRG at all geometries. At Q10 a = 0 , the energy dif-ference is 0.042 Eh, and it increases with the displacement, reaching approximately 0.055 Eh
+
+at Q10 a = ±6. This trend indicates that or-bital optimization becomes increasingly benefi-cial as the molecular geometry moves away from the reference structure. The optimized orbitals adapt to the changing electronic structure, al-lowing the fixed-active-space DMRG wavefunc-tion to recover additional correlation energy. Fig. 7 compares the convergence of CO-DMRG calculations with and without DIIS for several basis sets. In contrast to the CO-CAS case, DIIS has a smaller and less sys-tematic effect on CO-DMRG convergence. For 13 2 3 4 5 6 7 
+
+> 107.0
+> 106.9
+> 106.8
+> 106.7 CO-DMRG-CAS (6,6)
+> DMRG-CAS (6,6)
+> Bond length (Bohr)
+> Energy (Hartree)
+
+Figure 5: LiF ground-state energies as a function of bond length calculated with CO-DMRG and DMRG in a CAS(6,6) active space with the 6-31G basis set. the STO-6G basis set, the calculation converges in two macro-iterations with or without DIIS. DIIS slightly accelerates convergence for the cc-pVDZ and aug-cc-pVDZ basis sets, but it slows convergence for cc-pVTZ in the present tests. Therefore, DIIS is clearly beneficial for CO-CAS but should be used more cautiously for CO-DMRG, where the convergence behav-ior also depends on the DMRG solver accuracy, bond dimension, and sweep convergence. 
+
+# 5 Conclusions 
+
+We have presented a modular constrained-orbital-optimization framework for orbital opti-mization in quantum chemistry. The optimiza-tion is formulated as an alternating procedure consisting of two subproblems. The first sub-problem solves the electronic structure prob-lem in the current molecular orbitals, for which different solvers, including MP2, CASCI, and DMRG, can be employed. The second sub-problem optimizes the molecular orbitals un-der the orthonormality constraint using the im-plicit steepest descent algorithm. This formu-lation separates the electronic structure solver from the orbital optimization and therefore pro-vides a flexible interface for combining orbital optimization with different correlated wave-function methods. Numerically, we applied the framework to ground- and excited-state potential energy 
+
+Figure 6: Pyrazine potential energy curve along the Q10 a mode calculated with CO-DMRG and DMRG in a CAS(6,6) active space with the 6-31G basis set. The white, grey, and blue spheres represent hydrogen, carbon, and nitrogen atoms, respectively. The arrows indicate the vibrational displacement vectors along the Q10 a mode. curves of LiF and to ground-state calculations of pyrazine and H2O. For LiF, CO-MP2 gives energies lower than conventional MP2, especially in the bond-stretching region where correlation becomes more important. CO-CAS gives results comparable to CASSCF with the 6-31G basis set and provides a smoother, lower-energy potential energy curve than the CASSCF solution obtained with the aug-cc-pVDZ basis set over the tested geometry range. For excited states, the dynamical-weighting CO-CAS scheme gives potential energy curves consistent in shape with state-averaged CASSCF while yielding lower energies. We also found that the modified DIIS procedure substantially accelerates the convergence of CO-CAS macro-iterations. For H 2O, CO-CAS gives lower energies than CASSCF with the cc-pVDZ basis set for all tested active spaces, and with the cc-pVQZ basis set it also yields lower energies when sufficiently large active spaces are used. In the DMRG calculations, CO-DMRG consistently lowers the energies relative to DMRG calculations performed in the initial Hartree–Fock orbital basis for both LiF and pyrazine, demonstrating that orbital optimization can improve the compact-ness and energetic quality of fixed-subspace 14 0 2 4 6 8 10 12 14 
+
+> 106.0
+> 105.8
+> 105.6
+> STO-6G (without DIIS)
+> cc-pVDZ (without DIIS)
+> STO-6G (with DIIS)
+> cc-pVDZ (with DIIS)
+> aug-cc-pVDZ (without DIIS)
+> cc-pVTZ (without DIIS)
+> aug-cc-pVDZ (with DIIS)
+> cc-pVTZ (with DIIS)
+> Number of macro-iterations
+> Energy (Hartree)
+
+Figure 7: Convergence of LiF CO-DMRG ground-state energy calculations with and without DIIS for different basis sets. tensor-network wavefunctions. These results demonstrate that ISD-based constrained orbital optimization is a useful and general strategy for correlated electronic-structure methods. The method is not re-stricted to a specific wavefunction ansatz; rather, it can be combined with different elec-tronic solvers as long as the required reduced density matrices are available. In this sense, the present formulation provides a unified frame-work for improving finite-subspace electronic-structure calculations under a fixed computa-tional budget. Future work will focus on im-proving excited-state weighting strategies and extending the approach to photochemical and photophysical processes involving strong static correlation. 
+
+# Acknowledgements 
+
+We thank Dr. William James Glover for point-ing out the dynamic weighting. 
+
+# Funding 
+
+This work is supported by the National Nat-ural Science Foundation of China (Grant No. 22473090 and 92356310). 
+
+# Supporting Information 
+
+Detailed derivations of the MP2, CASCI, and DMRG reduced density matrices are provided in the Supporting Information. 
+
+# Data and Software Availabil-ity 
+
+The data underlying this study are available in the Supporting Information as a compressed archive file, data.zip . The scripts and code used to generate and analyze the results are available on GitHub. 
+
+# References 
+
+(1) Helgaker, T.; Jørgensen, P.; Olsen, J. 
+
+Molecular Electronic-Structure Theory ;John Wiley & Sons, Ltd, 2000; Chapter 12, pp 598–647. (2) Kreplin, D. A.; Knowles, P. J.; Werner, H.-J. Second-Order MCSCF Optimization Revisited. I. Improved Algorithms for Fast and Robust Second-Order CASSCF Con-vergence. J. Chem. Phys. 2019 , 150 ,194106. (3) Kreplin, D. A.; Knowles, P. J.; Werner, H.-J. MCSCF Optimization Revisited. II. Combined First- and Second-Order Or-bital Optimization for Large Molecules. J. Chem. Phys. 2020 , 152 , 074102. (4) Kudin, K. N.; Scuseria, G. E.; Cancès, E. A Black-Box Self-Consistent Field Con-vergence Algorithm: One Step Closer. J. Chem. Phys. 2002 , 116 , 8255–8261. (5) Werner, H.-J.; Meyer, W. A Quadrat-ically Convergent MCSCF Method for the Simultaneous Optimization of Several States. J. Chem. Phys. 1981 , 74 , 5794– 5801. (6) Werner, H.-J.; Meyer, W. A Quadrati-cally Convergent Multiconfiguration–Self-consistent Field Method with Simultane-15 ous Optimization of Orbitals and CI Co-efficients. J. Chem. Phys. 1980 , 73 , 2342– 2356. (7) Andersson, K.; Malmqvist, P.-Å.; Roos, B. O. Second-Order Perturba-tion Theory with a Complete Active Space Self-Consistent Field Reference Function. J. Chem. Phys. 1992 , 96 ,1218–1226. (8) Angeli, C.; Cimiraglia, R.; Malrieu, J.-P. N -Electron Valence State Perturba-tion Theory: A Fast Implementation of the Strongly Contracted Variant. Chem-ical Physics Letters 2001 , 350 , 297–305. (9) Angeli, C.; Borini, S.; Cestari, M.; Cimi-raglia, R. A Quasidegenerate Formulation of the Second Order N-Electron Valence State Perturbation Theory Approach. J. Chem. Phys. 2004 , 121 , 4043–4049. (10) Finley, J.; Malmqvist, P.-Å.; Roos, B. O.; Serrano-Andrés, L. The Multi-State CASPT2 Method. Chemical Physics Letters 1998 , 288 , 299–306. (11) Lochan, R. C.; Head-Gordon, M. Orbital-Optimized Opposite-Spin Scaled Second-Order Correlation: An Economical Method to Improve the Description of Open-Shell Molecules. J. Chem. Phys. 
+
+2007 , 126 , 164101. (12) Lee, J.; Head-Gordon, M. Regularized Orbital-Optimized Second-Order Møller– Plesset Perturbation Theory: A Reliable Fifth-Order-Scaling Electron Correlation Model with Orbital Energy Dependent Regularizers. J. Chem. Theory Comput. 
+
+2018 , 14 , 5203–5219. (13) Bozkaya, U.; Turney, J. M.; Yam-aguchi, Y.; Schaefer, H. F.; Sher-rill, C. D. Quadratically Convergent Al-gorithm for Orbital Optimization in the Orbital-Optimized Coupled-Cluster Dou-bles Method and in Orbital-Optimized Second-Order Møller-Plesset Perturbation Theory. J. Chem. Phys. 2011 , 135 ,104103. (14) Bozkaya, U.; Sherrill, C. D. Orbital-Optimized MP2.5 and Its Analytic Gradi-ents: Approaching CCSD(T) Quality for Noncovalent Interactions. J. Chem. Phys. 
+
+2014 , 141 , 204105. (15) Bozkaya, U.; Sherrill, C. D. Analytic En-ergy Gradients for the Orbital-Optimized Second-Order Møller–Plesset Perturba-tion Theory. J. Chem. Phys. 2013 , 138 ,184103. (16) Bozkaya, U. Orbital-Optimized MP3 and MP2.5 with Density-Fitting and Cholesky Decomposition Approximations. J. Chem. Theory Comput. 2016 , 12 , 1179–1188. (17) Kossmann, S.; Neese, F. Correlated Ab Initio Spin Densities for Larger Molecules: Orbital-Optimized Spin-Component-Scaled MP2 Method. J. Phys. Chem. A 
+
+2010 , 114 , 11768–11781. (18) Zgid, D.; Nooijen, M. The Density Matrix Renormalization Group Self-Consistent Field Method: Orbital Optimization with the Density Matrix Renormalization Group Method in the Active Space. J. Chem. Phys. 2008 , 128 , 144116. (19) Ghosh, D.; Hachmann, J.; Yanai, T.; Chan, G. K.-L. Orbital Optimization in the Density Matrix Renormalization Group, with Applications to Polyenes and 
+
+β-Carotene. J. Chem. Phys. 2008 , 128 ,144117. (20) Li, Y.; Lu, J. Optimal Orbital Selection for Full Configuration Interaction (Op-tOrbFCI): Pursuing the Basis Set Limit under a Budget. J. Chem. Theory Com-put. 2020 , 16 , 6207–6221. (21) Sun, Q.; Zhang, X.; Banerjee, S.; Bao, P.; Barbry, M.; Blunt, N. S.; Bog-danov, N. A.; Booth, G. H.; Chen, J.; Cui, Z.-H.; Eriksen, J. J.; Gao, Y.; Guo, S.; Hermann, J.; Hermes, M. R.; Koh, K.; Koval, P.; Lehtola, S.; Li, Z.; Liu, J.; Mardirossian, N.; McClain, J. D.; Motta, M.; Mussard, B.; Pham, H. Q.; 16 Pulkin, A.; Purwanto, W.; Robin-son, P. J.; Ronca, E.; Sayfutyarova, E. R.; Scheurer, M.; Schurkus, H. F.; Smith, J. E. T.; Sun, C.; Sun, S.-N.; Upadhyay, S.; Wagner, L. K.; Wang, X.; White, A.; Whitfield, J. D.; Williamson, M. J.; Wouters, S.; Yang, J.; Yu, J. M.; Zhu, T.; Berkelbach, T. C.; Sharma, S.; Sokolov, A. Y.; Chan, G. K.-L. Recent De-velopments in the PySCF Program Pack-age. J. Chem. Phys. 2020 , 153 , 024109. (22) Siegbahn, P. E. M.; Almlöf, J.; Heiberg, A.; Roos, B. O. The Complete Active Space SCF (CASSCF) Method in a Newton–Raphson Formulation with Application to the HNO Molecule. J. Chem. Phys. 1981 , 74 , 2384–2396. (23) Roos, B. O. The Complete Active Space SCF Method in a Fock-Matrix-Based Super-CI Formulation. Interna-tional Journal of Quantum Chemistry 
+
+1980 , 18 , 175–189. (24) Oviedo, H. Implicit Steepest Descent Al-gorithm for Optimization with Orthogo-nality Constraints. Optim Lett 2022 , 16 ,1773–1797. (25) Knowles, P. J.; Handy, N. C. A New Determinant-Based Full Configuration In-teraction Method. Chemical Physics Let-ters 1984 , 111 , 315–321. (26) Olsen, J.; Roos, B. O.; Jo/rgensen, P.; Jensen, H. J. A. Determinant Based Configuration Interaction Algorithms for Complete and Restricted Configuration Interaction Spaces. J. Chem. Phys. 1988 ,
+
+89 , 2185–2192. (27) White, S. R. Density Matrix Formulation for Quantum Renormalization Groups. 
+
+Phys. Rev. Lett. 1992 , 69 , 2863–2866. (28) White, S. R. Density-Matrix Algorithms for Quantum Renormalization Groups. 
+
+Phys. Rev. B 1993 , 48 , 10345–10356. (29) Chan, G. K.-L.; Keselman, A.; Nakatani, N.; Li, Z.; White, S. R. Matrix Product Operators, Matrix Prod-uct States, and Ab Initio Density Matrix Renormalization Group Algorithms. J. Chem. Phys. 2016 , 145 , 014102. (30) Chan, G. K.-L.; Sharma, S. The Density Matrix Renormalization Group in Quan-tum Chemistry. Annual Review of Physi-cal Chemistry 2011 , 62 , 465–481. (31) Wouters, S.; Van Neck, D. The Density Matrix Renormalization Group for Ab Ini-tio Quantum Chemistry. Eur. Phys. J. D 
+
+2014 , 68 , 272. (32) Zhai, H.; Larsson, H. R.; Lee, S.; Cui, Z.-H.; Zhu, T.; Sun, C.; Peng, L.; Peng, R.; Liao, K.; Tölle, J.; Yang, J.; Li, S.; Chan, G. K.-L. Block2: A Comprehen-sive Open Source Framework to Develop and Apply State-of-the-Art DMRG Algo-rithms in Electronic Structure and Be-yond. J. Chem. Phys. 2023 , 159 , 234801. (33) Pulay, P. Convergence Acceleration of It-erative Sequences. the Case of Scf Itera-tion. Chemical Physics Letters 1980 , 73 ,393–398. (34) Pulay, P. Improved SCF Convergence Acceleration. Journal of Computational Chemistry 1982 , 3, 556–560. (35) Xie, Y.; Zhu, X.; Gu, B. PyQED: APython Framework for Ab Initio Geomet-ric Quantum Dynamics †. Chin. J. Chem. Phys. 2026 , 39 , 159–170. (36) Belcher, L. Gradients and Non-Adiabatic Derivative Coupling Terms for Spin-Orbit Wavefunctions. 2011 , 227. (37) Gu, B. Toward Collective Chemistry un-der Strong Light-Matter Coupling. J. Phys. Chem. Lett. 2025 , 16 , 317–323. (38) Jiang, B.; Dai, Y.-H. A Framework of Constraint Preserving Update Schemes for Optimization on Stiefel Manifold. Math. Program. 2015 , 153 , 535–575. 17 (39) Wen, Z.; Yin, W. A Feasible Method for Optimization with Orthogonality Con-straints. Math. Program. 2013 , 142 , 397– 434. (40) Huang, W.; Absil, P.-A.; Gallivan, K. A. A Riemannian BFGS method without dif-ferentiated retraction for nonconvex opti-mization problems. SIAM Journal on Op-timization 2018 , 28 , 470–495. (41) Absil, P.-A.; Mahony, R.; Sepulchre, R. 
+
+Optimization algorithms on matrix man-ifolds ; Princeton University Press, 2008. (42) Nocedal, J., Wright, S. J., Eds. Numerical Optimization ; Springer: New York, NY, 1999; pp 100–133. (43) Barzilai, J.; Borwein, J. M. Two-Point Step Size Gradient Methods. IMA J Nu-mer Anal 1988 , 8, 141–148. (44) Szabo, A.; Ostlund, N. S. Modern quan-tum chemistry: introduction to advanced electronic structure theory ; Courier Cor-poration, 2012. (45) Helgaker, T.; Jørgensen, P.; Olsen, J. 
+
+Molecular Electronic-Structure Theory ;John Wiley & Sons, Ltd, 2000; Chapter 10, pp 433–522. (46) Schollwöck, U. The Density-Matrix Renormalization Group in the Age of Matrix Product States. Annals of Physics 
+
+2011 , 326 , 96–192. (47) Chan, G. K.-L. An Algorithm for Large Scale Density Matrix Renormalization Group Calculations. J. Chem. Phys. 
+
+2004 , 120 , 3172–3178. (48) Chan, G. K.-L.; Head-Gordon, M. Highly Correlated Calculations with a Polyno-mial Cost Algorithm: A Study of the Density Matrix Renormalization Group. 
+
+J. Chem. Phys. 2002 , 116 , 4462–4476. (49) Ren, J.; Li, W.; Jiang, T.; Shuai, Z. A General Automatic Method for Opti-mal Construction of Matrix Product Op-erators Using Bipartite Graph Theory. J. Chem. Phys. 2020 , 153 , 084118. (50) Weser, O.; Liebermann, N.; Kats, D.; Alavi, A.; Li Manni, G. Spin Purification in Full-CI Quantum Monte Carlo via a First-Order Penalty Approach. J. Phys. Chem. A 2022 , 126 , 2050–2060. (51) Shiozaki, T.; Woywod, C.; Werner, H.-J. Pyrazine Excited States Revisited Us-ing the Extended Multi-State Complete Active Space Second-Order Perturbation Method. Phys. Chem. Chem. Phys. 2013 ,
+
+15 , 262–269. 18
