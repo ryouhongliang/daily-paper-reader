@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-21T23:00:40.236101+00:00",
-  "updated_date": "20260621",
+  "generated_at": "2026-06-23T00:00:52.455563+00:00",
+  "updated_date": "20260622",
   "carryover_days": 9,
   "tag_states": {
     "CAOS-Poly": {
-      "updated_date": "20260621",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": []
     }
