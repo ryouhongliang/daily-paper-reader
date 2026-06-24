@@ -6,40 +6,34 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-23
-- 运行时间：2026-06-23 23:46:50 UTC
+- 最新运行日期：2026-06-24
+- 运行时间：2026-06-24 23:11:21 UTC
 - 运行状态：成功
-- 本次总论文数：6
-- 精读区：3
-- 速读区：3
+- 本次总论文数：4
+- 精读区：2
+- 速读区：2
 
 ### 今日简报（AI）
-今日精选化学前沿：两篇高分论文构建统一生成框架，从百万级反应网络中直接挖掘氨合成催化剂。
-最值得关注的突破是用生成式AI大规模探索反应网络，首次实现网络级别催化剂发现。
-想跟进AI化学，可从反应网络生成模型入手，关注数据集与评估指标的设计。
-- 详情：[/202606/23/README](/202606/23/README)
+今日精选4篇AI赋能药物研发与化学合成前沿论文，重点解读了路线生成与DNA编码库设计。
+Ariadne项目用提示条件引导合成路线规划，JEDEL实现零样本DNA编码库智能筛选，双突破直指早期研发降本增效。
+建议从业者关注条件生成与零样本学习在分子设计中的落地路径，可优先复现这两项技术框架。
+- 详情：[/202606/24/README](/202606/24/README)
 
 ### 精读区论文标签
-1. [A Unified Generative Framework for Scalable Chemical Reaction Network Exploration](/202606/23/2606.21002v1-a-unified-generative-framework-for-scalable-chemical-reaction-network-exploration)  
+1. [Project Ariadne: Prompt-Conditioned Route Generation for Synthesis Planning](/202606/24/2606.24184v1-project-ariadne-prompt-conditioned-route-generation-for-synthesis-planning)  
    标签：评分：9.0/10、query:caos-poly
-   evidence：提出ByteCRN用于计算化学反应网络探索以指导化学合成
-2. [Reaction-Network-Level Discovery of Ammonia Synthesis Catalysts via Ten-Million-Scale Generative Exploration](/202606/23/2606.22926v1-reaction-network-level-discovery-of-ammonia-synthesis-catalysts-via-ten-million-scale-generative-exploration)  
-   标签：评分：9.0/10、query:caos-poly
-   evidence：通过千万级生成探索对氨合成催化剂进行反应网络层面的虚拟筛选
-3. [Computationally guided modifications of CviUPO to improve catalytic activity](/202606/23/2606.21370v1-computationally-guided-modifications-of-cviupo-to-improve-catalytic-activity)  
+   evidence：逆合成规划直接路线生成，是计算辅助有机合成的核心任务
+2. [JEDEL: Zero-Shot DNA-Encoded Library Design for Early-Stage Drug Discovery](/202606/24/2606.23745v1-jedel-zero-shot-dna-encoded-library-design-for-early-stage-drug-discovery)  
    标签：评分：8.0/10、query:caos-poly
-   evidence：计算指导的酶工程改造以提高催化剂活性
+   evidence：从药效团表征生成合成就绪的DNA编码库，确保分子可实验实现
 
 ### 速读区论文标签
-1. [Constrained Optimization Algorithms for Orbital Optimization in Quantum Chemistry](/202606/23/2606.17761v1-constrained-optimization-algorithms-for-orbital-optimization-in-quantum-chemistry)  
+1. [Retrieval-Augmented Multimodal Learning for Enzyme-Substrate Interaction Prediction Under Low-Homology Shift](/202606/24/2606.22823v1-retrieval-augmented-multimodal-learning-for-enzyme-substrate-interaction-prediction-under-low-homology-shift)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：轨道优化算法提升 DFT 等电子结构计算效率，为机理研究提供关键计算工具。
-2. [RetroMol: Parsing a shared encoding from natural products and their biosynthetic gene clusters](/202606/23/biorxiv-10-64898-2026-06-12-731935-v1-retromol-parsing-a-shared-encoding-from-natural-products-and-their-biosynthetic-gene-clusters)  
+   evidence：预测酶-底物相互作用用于生物催化剂筛选
+2. [Synergizing Physically Constrained MCMC and Chemical-Informed Gaussian Processes for Reaction Network Discovery](/202606/24/2606.23757v1-synergizing-physically-constrained-mcmc-and-chemical-informed-gaussian-processes-for-reaction-network-discovery)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：解析天然产物结构及其生物合成基因簇，辅助计算辅助有机合成。
-3. [MMGNN: Multi-level, multi-color graph neural networks for molecular property prediction](/202606/23/2606.20906v1-mmgnn-multi-level-multi-color-graph-neural-networks-for-molecular-property-prediction)  
-   标签：评分：6.0/10、query:caos-poly
-   evidence：MMGNN提供通用的分子性质预测方法，可支持计算合成任务
+   evidence：利用物理约束MCMC从动力学数据中发现反应网络
 
 
 <div class="dpr-home-promo-card">

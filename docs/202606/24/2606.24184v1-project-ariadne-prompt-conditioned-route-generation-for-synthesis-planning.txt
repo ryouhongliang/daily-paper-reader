@@ -1,0 +1,382 @@
+Title: Project Ariadne: Prompt-Conditioned Route Generation for Synthesis Planning
+
+URL Source: https://arxiv.org/pdf/2606.24184v1
+
+Published Time: Wed, 24 Jun 2026 00:37:29 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+# Project Ariadne: Prompt-Conditioned Route Generation for Synthesis Planning 
+
+Anton Morgunov* 
+
+Yale University 
+
+anton@ischemist.com 
+
+Victor Batista 
+
+Yale University 
+
+victor.batista@yale.edu 
+
+## Abstract 
+
+Retrosynthetic planning seeks to connect a target molecule to commercially avail-able starting materials through a multistep route. Classical planners construct such routes by iteratively applying single-step reaction models within a search procedure; constrained variants often require specialized algorithms or architectural changes. Direct route generation reframes retrosynthesis as sequence generation, but existing direct-generation methods still train separate models for different plan-ning specifications. We introduce Ariadne, a decoder-only route generator that represents the target, optional constraints, and route in one prompt-completion se-quence. On the RetroCast/PaRoutes mkt-cnv-160 benchmark family, one 24-layer checkpoint follows route-depth and required-starting-material prompts: adding the corresponding prompt fields raises Solv-0 by 13.7 points for depth constraints and 31.2 points for required-leaf constraints. Ariadne also improves over DESP, a bidi-rectional search planner, on required-leaf Top-10 and Solv-0 in 24 GPU-minutes versus 6.8 GPU-hours. On standard reconstruction, Ariadne is comparable to DMS Explorer XL at about half the reported inference time. Across additional target-only benchmarks, Ariadne’s clearest gains are on route-holdout reconstruction, whereas AiZynthFinder MCTS remains stronger on several Solv-0 comparisons. These results extend sequence generation from specialist retrosynthesis models to prompt-conditioned structural route generation. We release the codebase and train-ing scripts to support further work, but do not introduce Tier-1–3 route checkers; those remain the main bottleneck before models of this kind can become useful to experimental chemists. 
+
+## 1 Introduction 
+
+Machine learning is expected to significantly accelerate, if not revolutionize, the often decades-long and billion-dollar process of drug discovery. A persistent bottleneck during hit-to-lead and lead optimization stages is a simple question: can this molecule be easily made? [ 1] While significant effort has been put into attempts to answer that question directly by training synthetic accessibility predictors [ 2– 5], an emerging consensus is that the only truly reliable measure of synthesizability is the explicit construction of a synthesis plan connecting a desired target to a set of commercially available building blocks [ 6, 7]. This synthesis plan can be constructed in either direction: by starting from building blocks through synthesis-aware forward design [ 8 –11 ], or by applying retrosynthetic analysis to the target molecule [12]. The prevalent approach to multistep retrosynthetic planning is built from two components: a single-step reaction predictor that is applied iteratively to the target molecule and resulting precursor candidates, and a search algorithm prioritizing the most promising branches of the resulting search space [ 13 –31 ]. Hybrid systems keep explicit search but add learned, retrieval-based, or language-model guidance to steer expansion and pruning [ 32 – 40 ]. An emerging alternative is direct generation of the synthesis plan represented as a single string [ 41 – 49 ]. For example, Shee et al. trained a series 
+
+Preprint. Under review. 
+
+> arXiv:2606.24184v1 [cs.LG] 23 Jun 2026
+
+of encoder-decoder transformers to "translate" a SMILES specification of the target compound into a stringified (via depth-first search) representation of the multistep route. These DirectMultiStep models were also extended to constrained versions of retrosynthetic planning, such as finding a route with a specified starting-material structure or desired route depth, but each such problem required training a specialist model. In this work, we extend the DirectMultiStep sequence formulation from separately trained encoder-decoder models to a single decoder-only task language for route generation. Ariadne represents the target, optional planning constraints, and route in one sequence, so the same checkpoint can be queried with different task specifications at inference time. As a proof of concept, we study target-only reconstruction together with route-depth and required starting-material prompts. We evaluate these outputs within the existing Solv-N and RetroCast framework, using route reconstruction and constraint-aware Solv-0 to test whether generated routes satisfy benchmark specifications [ 7 , 50 , 51 ]. These metrics evaluate the structural route plan: the reaction topology, stock termination, and prompt-specified constraints. Direct experimental use would require additional quantitative planning layers, such as reaction plausibility assessment, condition prediction, procedure generation, and higher-tier executability checks discussed in the Solv-N framework [7]. 
+
+## 2 Preliminaries 
+
+2.1 Definitions 
+
+A retrosynthetic route is a sequence of reactions working backward from a target molecule to a set of proposed starting materials (or leaves ). All models discussed herein inherit ambiguities from their patent-derived training data, which may not distinguish core reactants from auxiliary reagents 
+
+and may omit reaction conditions (e.g., solvent, temperature). A predicted route is therefore not a complete experimental protocol but a high-level topological plan, the validity of which rests on an unevaluated assumption that viable conditions exist for each transformation. 
+
+2.2 Evaluation 
+
+We distinguish the generation prompt , which is supplied to Ariadne before decoding, from the scoring task , which defines the constraints used by RetroCast during evaluation. This distinction lets us ask, for example, how target-only generations score under the stricter required-leaf task, or how required-leaf prompts behave when scored under the standard target-only task. We report two complementary metric sets. First, we report Tier-0 validity, which is the share of targets that have at least one route where all reactions are Tier-0 valid, and Solv-0, which is the share of targets that have at least one Tier-0-valid route that satisfies the scoring task constraints [ 7]. For 
+
+mkt-cnv-160 , the scoring task constraint is simply termination in the ASKCOS Buyables stock of commercially available compounds [ 29 , 52 ]. For mkt-cnv-160-leaf , the scoring task constraint is stock termination together with the presence of a specified starting material among the leaves. For 
+
+mkt-cnv-160-depth , it is stock termination together with the requested route depth. Additional target-only benchmarks use the same RetroCast convention: mkt- benchmarks are scored with ASKCOS Buyables, whereas ref- benchmarks are scored with the patent-derived PaRoutes stocks distributed with the benchmark definitions. In the absence of established Tier-1–3 validity checking protocols, and following the proposed separation of method development from introduction of new evaluation metrics [ 7, 51 ], we report benchmark route reconstruction as a proxy metric of route quality. We use the standard RetroCast implementation of scoring and report Top-K accuracy, that is, whether a reference route was produced within the first K candidates. 
+
+2.3 Data Representation 
+
+Ariadne is a decoder-only transformer trained on stringified representations of synthesis planning tasks. Each training example is a rooted S-expression (see Fig. 1) with two parts: a problem specification and the route that solves it: 
+
+(task (spec ...) (route ...)) 
+
+2F              
+
+> F
+> O
+> Cl
+> F
+> Br
+> Cl
+> Br Br
+> F
+> HO
+> Cl
+> O
+> B
+> O
+> O
+> F
+> OBOH
+> OH
+> F
+> OBr
+> {
+> "smiles": " CC(C)(C=C(F)Cc1ccc(F)c(Oc2ccccc2)c1)c1ccc(Cl)cc1 ",
+> "children": [
+> {
+> "smiles": "OB(O)c1ccc(F)c(Oc2ccccc2)c1",
+> "children": [
+> {"smiles": "Fc1ccc(Br)cc1Oc1ccccc1"},
+> {"smiles": " COB(OC)OC "}
+> ]
+> },
+> {
+> "smiles": "CC(C)(C=C(F)CBr)c1ccc(Cl)cc1",
+> "children": [
+> {"smiles": "BrBr"},
+> {"smiles": "CC(C)(C=C(F)CO)c1ccc(Cl)cc1"}
+> ]
+> }
+> ]
+> }
+> CC(C)(C=C(F)Cc1ccc(F)c(Oc2ccccc2)c1)c1ccc(Cl)cc1 +COB(OC)OC <sos>
+> (task
+> (spec
+> (query (mol CC(C)(C=C(F)Cc1ccc(F)c(Oc2ccccc2)c1)c1ccc(Cl)cc1 ))
+> (route_depth 2)
+> (required_leaves (mol COB(OC)OC ))
+> )
+> (route
+> (reaction
+> (mol CC(C)(C=C(F)Cc1ccc(F)c(Oc2ccccc2)c1)c1ccc(Cl)cc1 )
+> (children
+> (reaction (mol OB(O)c1ccc(F)c(Oc2ccccc2)c1)
+> (children
+> (leaf (mol Fc1ccc(Br)cc1Oc1ccccc1))
+> (leaf (mol COB(OC)OC ))
+> )
+> )
+> (reaction (mol CC(C)(C=C(F)CBr)c1ccc(Cl)cc1)
+> (children
+> (leaf (mol BrBr))
+> (leaf (mol CC(C)(C=C(F)CO)c1ccc(Cl)cc1))
+> )
+> )
+> )
+> )
+> )
+> )
+> <eos>
+> ENCODER DECODER
+> DECODER
+> abc
+
+Figure 1: Data representation shift from DirectMultiStep to Ariadne. (a) DirectMultiStep treats multistep retrosynthesis as sequence translation from target molecule (and optionally appended constraints) to a synthesis plan. (b) The skeletal structure of the route encoded in (a) and (c). (c) 
+
+Ariadne represents the same problem as one decoder-only task sequence containing both the prompt-side specification and the route-side answer. where spec contains the prompt-side information and route contains the target route tree. The spec 
+
+contains a target molecule represented as (query (mol ...)) and any optional constraints. A route is represented recursively. A leaf node is written as (leaf (mol ...)) . A reaction node is written as (reaction (mol ...) (children ...)) , where the children are precursor routes. The same route can be converted into different training sequences by changing only the spec block. In the simplest target-only mode, denoted T, the specification contains only the target molecule. In TL , it also contains route_depth . In TSd , it contains one required starting material, chosen from the deepest leaf of the route. In TLSd , it contains both route depth and that required starting material. During training we also generate TSe and TLSe sequences in which the required-leaf field is instantiated once for each route leaf. Here d denotes the deepest leaf and e denotes enumeration over leaves; the TSd and TLSd evaluation prompts select the deepest-leaf instance from the corresponding enumerated training variants. The field is named required_leaves because the representation supports multiple required starting materials, but all constrained experiments in this work use one required starting material. These variants let one model see the same route distribution under different amounts of information and naturally offset underrepresentation of longer routes: a longer route typically has more leaves and therefore contributes more leaf-conditioned sequences. Training data also augments task sequences by permuting sibling order in the route section. We generate three deterministic permutations: one that permutes children recursively, one that permutes only the root children, and one that permutes the deepest branching node. We tokenize this representation with a small S-expression-aware tokenizer. Parentheses and struc-tural labels such as task , spec , query , route , reaction , leaf , children , route_depth , and 
+
+required_leaves are atomic tokens. SMILES are then split character-wise. During training, the prompt portion is masked out of the loss; the model is trained to generate the route side of the sequence conditioned on the specification. 
+
+2.4 Training Data 
+
+All Ariadne models were trained on the v2026-05-12 canonical split of the PaRoutes dataset preprocessed with RetroCast. RetroCast provides two versions: a route holdout, which guarantees that no route from the test set is represented as-is in the training set, and a reaction holdout, which guarantees that no test-route reaction appears in any training route after RetroCast canonicalization. 
+
+v2026-05-12-route is equivalent to the training set used in the original DirectMultiStep work. 
+
+v2026-05-12-reaction follows the stricter filtering proposed by Xuan-Vu et al., who argued that route-based filtering leads to unfair data leakage. 
+
+## 3 Results and Discussion 
+
+DirectMultiStep showed that target-only and constrained retrosynthesis can be written as sequence-to-sequence problems, but each task variant (e.g. unidirectional and bidirectional search) required 3Scoring task Model Generation prompt / setting Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Time                                                                     
+
+> depth Ariadne 24L T100.0% 76.9% 23.8% 42.5% [35.0, 50.0] 19.4 min
+> depth Ariadne 24L TL 100.0% 90.6% 26.9% 46.2% [38.8, 53.8] 19.3 min
+> leaf DESP retro_sd 100 iter 87.5% 49.4% 12.5% 13.8% [8.8, 19.4] 1.1 hr
+> leaf DESP retro_sd 500 iter 97.5% 60.0% 15.0% 16.2% [10.6, 21.9] 5.5 hr
+> leaf DESP f2e 100 iter 91.9% 61.9% 15.6% 16.9% [11.2, 23.1] 1.4 hr
+> leaf DESP f2e 500 iter 98.8% 71.2% 16.2% 17.5% [11.9, 23.8] 6.8 hr
+> leaf Ariadne 24L T100.0% 50.0% 13.8% 26.2% [19.4, 33.1] 19.4 min
+> leaf Ariadne 24L TSd 96.2% 81.2% 18.8% 37.5% [30.0, 45.0] 24.0 min
+
+Table 1: Constraint-aware evaluation on the mkt-cnv-160-depth and mkt-cnv-160-leaf scoring tasks. Ariadne rows use the 24-layer model trained on the v2026-05-12-reaction split at the 14B-token checkpoint with beam size 50. T is target-only prompting, TL adds the requested route depth, and TSd adds the benchmark-specified required starting material to the generation prompt. Top-10 CI gives the 95% bootstrap interval. a separate model. Ariadne pushes that idea one step further: the target and optional constraints are prompt fields, and a single route generator completes the prompt with a synthesis tree. The 
+
+mkt-cnv-160 benchmark family gives a controlled test of this interface because it keeps the same 160 targets while changing only the route constraints. The base task requires stock termination in ASKCOS Buyables; the depth variant additionally fixes route depth, and the leaf variant additionally fixes one starting material that must appear among the route leaves. 
+
+3.1 One checkpoint handles multiple planning specifications 
+
+Table 1 isolates constraint following by holding the Ariadne checkpoint and generation procedure fixed while changing the generation prompt. The target-only T rows generate unconstrained candidates and score them under the stricter depth or leaf scoring tasks, giving the baseline rate at which generation already satisfies the added requirement. The constrained rows include the corresponding field in the generation prompt before decoding. On the depth benchmark, adding the requested depth with the TL prompt raises Solv-0 from 76.9% to 90.6%. On the required-leaf benchmark, adding the benchmark-specified required starting material with the TSd prompt raises Solv-0 from 50.0% to 81.2% and Top-10 reconstruction from 26.2% to 37.5%. The required-leaf benchmark also gives a direct comparison to DESP [ 35 ], a bidirectional search planner built for target-plus-starting-material constraints. With the TSd prompt, Ariadne reaches 37.5% Top-10 and 81.2% Solv-0 in 24 GPU-minutes. The best DESP setting reaches 17.5% Top-10 and 71.2% Solv-0 in 6.8 GPU-hours. A paired bootstrap comparison on Top-10 gives Ariadne a +20.0-point advantage, with 95% CI [10.6, 28.8]. Ariadne therefore improves both Top-10 and Solv-0 while using about 17 × less GPU time. 
+
+3.2 The unified model preserves standard route reconstruction 
+
+We also evaluate whether the unified planner remains competitive on the standard target-only task. Table 2 reports public SynthArena baselines together with local runs on the matched v2026-05-12 
+
+training splits. On the stricter reaction holdout, Ariadne 24L is comparable to retrained MCTS on route reconstruction: 22.5% versus 19.4% Top-1 and 42.5% versus 35.0% Top-10 (paired bootstrap 95% CI for the Top-10 difference: [-0.6, 15.6]). MCTS remains stronger on Solv-0 (92.5% versus 81.2%) and faster at inference (10.9 versus 19.4 minutes). On the route holdout, which is the closest comparison to the original DirectMultiStep split, Ariadne 24L (15.8 M parameters) reaches 38.1% Top-1 and 59.4% Top-10, which is comparable to the DMS Explorer XL (50 M parameters) Top-10 result of 57.5% while reducing generation time from 47.6 to 23.9 minutes. 
+
+3.3 Route and reaction holdouts separate chemistry generalization from planning ability 
+
+Table 2 shows how the same planners behave on the reaction and route holdouts, giving two comple-mentary views of reaction coverage and route assembly. The reaction holdout removes every reaction from the benchmark routes, so success is a stricter proxy for both route planning and generalization beyond the exact single-step reactions present in training. The route holdout removes exact bench-mark routes but can leave their component reactions (if they’re present in other routes) in training, giving a cleaner read on whether a planner can assemble covered transformations into the reference 4Model Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Time                                                   
+
+> Reprinted from RetroCast/SynthArena
+> AiZynthFinder MCTS –98.1% 21.3% 41.3% –17.8 min DMS Explorer XL –96.3% 33.8% 57.5% –47.6 min
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 100.0% 92.5% 19.4% 35.0% [28.1, 42.5] 10.9 min Ariadne 12L 100.0% 74.4% 15.6% 31.9% [25.0, 39.4] 10.1 min Ariadne 24L 100.0% 81.2% 22.5% 42.5% [35.0, 50.0] 19.4 min
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 100.0% 93.1% 23.8% 40.6% [33.1, 48.1] 10.5 min Ariadne 12L 100.0% 87.5% 27.5% 47.5% [40.0, 55.0] 11.8 min Ariadne 24L 100.0% 95.6% 38.1% 59.4% [51.9, 66.9] 23.9 min
+
+Table 2: mkt-cnv-160 Top-K reconstruction and Solv-0 (stock termination) results. Public AiZyn-thFinder MCTS and DMS Explorer XL values are taken from the SynthArena leaderboard. Ariadne 12L rows use the 20B-token checkpoint, and Ariadne 24L rows use the 14B-token checkpoint. AiZyn-thFinder runs use 100 MCTS iterations and maximum search depth 6. Top-10 CI gives the 95% bootstrap interval for newly evaluated rows. route. Moving from the reaction holdout to the route holdout, MCTS Top-10 rises modestly from 35.0% to 40.6%, whereas Ariadne 24L rises from 42.5% to 59.4%. On the route holdout itself, the paired Top-10 comparison gives Ariadne a +18.8-point advantage over MCTS, with 95% CI [10.6, 26.9]. On mkt-cnv-160 , these comparisons indicate that additional single-step reaction coverage translates into larger route-level gains for Ariadne than for MCTS. The same trend appears in Solv-0, which rises from 92.5% to 93.1% for MCTS and from 81.2% to 95.6% for Ariadne 24L. The additional commercial-stock benchmark gives the same picture: on mkt-lin-500 , Ariadne improves Top-10 on both holdouts and all route-holdout reconstruction metrics, while MCTS remains a strong Solv-0 baseline (Table S1). 
+
+3.4 Reference-stock benchmarks expose stock-conditioning limits 
+
+A current limitation of Ariadne is that generation cannot yet be conditioned on an arbitrary user-specified stock set. Such stock control is central to practical planning, where the useful terminal set may include in-house building blocks in addition to commercially available compounds. Search-based planners can enforce this constraint during expansion; the present Ariadne model can only be filtered against the desired stock after generation. The ref-* benchmarks expose this limitation by replacing ASKCOS Buyables with PaRoutes reference stocks: ref-cnv-400 and ref-lin-600 use n5 , and 
+
+ref-lng-84 uses combined n1 /n5 stocks (Tables S2–S4). On route holdouts, Ariadne reaches 68.2% Solv-0 on ref-cnv-400 and 74.8% on ref-lin-600 , be-low the MCTS values of 85.2% and 83.2%. The reaction holdouts widen the gap: 33.0% versus 76.5% on ref-cnv-400 , and 55.8% versus 78.8% on ref-lin-600 . Although Ariadne remains competi-tive on route-holdout Top-10 reconstruction, these results indicate that arbitrary-stock conditioning is an important area for future research. 
+
+3.5 Larger models recover deeper routes more often 
+
+Table 3 shows that scaling Ariadne improves reconstruction of deeper routes, especially on the route holdout. On the reaction holdout, deeper routes remain difficult for every method: MCTS falls from 57.5% at depth 2 to 17.5% at depth 5, and Ariadne 24L falls from 67.5% to 20.0%. On the route holdout, the profile changes more substantially for Ariadne than for MCTS. MCTS still declines with depth, while Ariadne 24L reaches 45.0% Top-10 at depth 4 and 52.5% at depth 5. Within the limits of the 40-target strata, this is consistent with additional scale helping Ariadne turn better reaction coverage into longer-range route reconstruction. 5Model Depth 2 Depth 3 Depth 4 Depth 5 
+
+Training on v2026-05-12-reaction 
+
+AiZynthFinder MCTS 57.5% [42.5, 72.5] 42.5% [27.5, 57.5] 22.5% [10.0, 35.0] 17.5% [7.5, 30.0] Ariadne 12L 47.5% [32.5, 62.5] 40.0% [25.0, 55.0] 20.0% [7.5, 32.5] 20.0% [7.5, 32.5] 
+
+Ariadne 24L 67.5% [52.5, 82.5] 52.5% [37.5, 67.5] 30.0% [17.5, 45.0] 20.0% [7.5, 32.5] 
+
+Training on v2026-05-12-route 
+
+AiZynthFinder MCTS 60.0% [45.0, 75.0] 45.0% [30.0, 60.0] 30.0% [17.5, 45.0] 27.5% [15.0, 42.5] Ariadne 12L 57.5% [42.5, 72.5] 50.0% [35.0, 65.0] 32.5% [17.5, 47.5] 50.0% [35.0, 65.0] Ariadne 24L 75.0% [60.0, 87.5] 65.0% [50.0, 80.0] 45.0% [30.0, 60.0] 52.5% [37.5, 67.5] 
+
+Table 3: mkt-cnv-160 Top-10 route reconstruction accuracy by reference route depth for local runs. Ariadne 12L rows use the 20B-token checkpoint, and Ariadne 24L rows use the 14B-token checkpoint. Each depth stratum contains 40 targets. Values are reported as mean with 95% bootstrap interval.                                                           
+
+> Model Root T1 Route |root T1 Root T10 Route |root T10 Prefix-1 T10 Prefix-2 T10 Prefix-3 T10 Distinct roots
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 41.2% 47.0% 62.5% 56.0% 62.5% 40.0% 35.0% 2.831 Ariadne 12L 28.1% 55.6% 46.9% 68.0% 46.9% 34.4% 31.2% 2.056 Ariadne 24L 48.1% 46.8% 60.0% 70.8% 60.0% 46.9% 43.1% 2.075
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 44.4% 53.5% 63.7% 63.7% 63.7% 46.9% 41.9% 2.950 Ariadne 12L 38.8% 71.0% 57.5% 82.6% 57.5% 50.0% 48.8% 2.444 Ariadne 24L 54.4% 70.1% 70.0% 84.8% 70.0% 61.3% 60.6% 2.631
+
+Table 4: mkt-cnv-160 reconstruction diagnostics. Ariadne 12L rows use the 20B-token checkpoint, and Ariadne 24L rows use the 14B-token checkpoint. Root columns measure recovery of the reference root reaction at the indicated K. Route |root columns measure full-route recovery among targets whose root reaction was recovered at the same K. Prefix columns report Top-10 reconstruction of reference route prefixes of depth 1, 2, and 3. Mean distinct roots is computed over the Top-10 candidates. 
+
+3.6 The first disconnection is the main bottleneck 
+
+Table 4 separates recovery of the root reaction from recovery of the full route conditional on getting the root right. For MCTS, these quantities are similar; on the route split, both root Top-10 and route |root Top-10 are 63.7%. In contrast, for Ariadne route |root Top-10 is consistently higher than root Top-10, with the largest gaps on the reaction split and for smaller models. For example, Ariadne 12L on the reaction split reaches 46.9% root Top-10 but 68.0% route |root 
+
+Top-10, indicating that the main limitation is choosing the first disconnection rather than completing the route once that choice is correct. 
+
+3.7 Beam search mainly improves root selection 
+
+To interpret the beam-50 results used above, we sweep beam width on mkt-lin-500 and ask whether larger beams improve route completion itself or mainly increase the chance of sampling the correct first disconnection (Table S5). Increasing the beam from 1 to 50 raises root Top-10 from 17.4% to 63.0% on the reaction holdout and from 22.0% to 72.4% on the route holdout. Conditional route recovery changes much less: route |root Top-10 remains between 57.5% and 64.4% on the reaction holdout and between 70.1% and 72.7% on the route holdout. The gains in Solv-0 and Top-10 reconstruction therefore come mainly from improved root selection; on the reaction holdout, Solv-0 increases from 33.8% to 90.4% and Top-10 increases from 10.0% to 37.2%. Prompt fields that improve root selection, or dynamic beam allocation based on target complexity or search progress, may reduce decoding time while preserving high Solv-0. Developing such decoding strategies is an area for future work. 
+
+3.8 Prefix-LM attention does not improve prompted generation 
+
+DirectMultiStep used an encoder-decoder architecture, so the route decoder attended to a bidirectional representation of the complete task specification. This makes it natural to ask whether Ariadne should recover that property with Prefix-LM attention [ 53 ], which allows bidirectional attention within the prompt while keeping route generation causal. Table 5 shows no overall benefit from restoring 6Attention Prompt Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10                                                  
+
+> Training prompts: T-TL-TLSe-TSe ; 24-layer model
+> causal T100.0% 81.2% 22.5% 42.5% [35.0, 50.0] 60.0% 70.8% causal TL 100.0% 90.6% 26.9% 46.2% [38.8, 53.8] 66.9% 69.2% causal TSd 96.2% 81.2% 18.8% 37.5% [30.0, 45.0] 55.6% 67.4% prefix T100.0% 80.6% 13.8% 29.4% [22.5, 36.3] 43.8% 67.1% prefix TL 99.4% 86.9% 18.8% 33.8% [26.9, 41.2] 50.6% 66.7% prefix TSd 85.0% 70.0% 7.5% 18.1% [12.5, 24.4] 28.1% 64.4%
+
+Table 5: mkt-cnv-160 attention-mask ablation using standard stock-termination scoring. Causal models use ordinary left-to-right attention for all tokens. Prefix models allow bidirectional attention within the generation prompt while keeping route generation causal. Here TL and TSd add prompt fields before decoding, but RetroCast scoring still uses the standard stock-termination task rather than the constrained depth or leaf scoring tasks in Table 1. Top-10 CI gives the 95% bootstrap interval. For the causal TL and TSd rows, Solv-0 coincides with the corresponding constrained rows in Table 1 because the stock-terminated successes also satisfy the prompted constraint. bidirectional attention within the prompt. In the 24-layer T-TL-TLSe-TSe comparison, fully causal attention gives higher Top-1, Top-10, and root-recovery values for every evaluated prompt. It also gives higher route |root Top-10 for all three evaluated prompts. We therefore use the simpler fully causal attention mask for Ariadne. 
+
+## 4 Conclusion 
+
+Ariadne shows that direct multistep route generation can be formulated as prompt-conditioned decoding rather than as a collection of separately trained specialist models. In one 24-layer checkpoint, the same target/constraint/route language supports target-only reconstruction, route-depth prompts, and required-starting-material prompts. On the mkt-cnv-160 benchmark family, this checkpoint follows the added constraint fields, remains competitive with DirectMultiStep Explorer XL on standard reconstruction, and exceeds the evaluated DESP settings on required-leaf Top-10 and Solv-0 while using 17x less GPU time. Whenever route termination depends on in-house compounds rather than off-the-shelf buyables, a planner must be able to condition on an arbitrary stock set. The ref-* benchmarks instantiate this setting by replacing ASKCOS Buyables with custom stocks derived from reference-route leaves. MCTS receives those stocks during search and correspondingly reaches 85.2% Solv-0 on the 
+
+ref-cnv-400 route holdout. Because the present Ariadne model can only be filtered against those stocks after decoding, its Solv-0 on the same task is only 68.2%. To understand why Ariadne is competitive on reference-route reconstruction, we report diagnostics that separate recovery of the first disconnection from recovery of the rest of the route. These diagnos-tics show that Ariadne often reconstructs the rest of the route correctly once the first disconnection is recovered. The beam-width sweep on mkt-lin-500 points to the same mechanism: increasing beam width mainly increases the probability of recovering that first disconnection, which then raises root-reaction Top-10, Solv-0, and Top-10 reconstruction. Together with the stock-conditioning results above, this identifies stock-aware prompting and more reliable first-disconnection selection as important areas for further research. 
+
+## 5 Outlook 
+
+This work should not be interpreted as an attempt to replace MCTS or explicit search more generally. Rather, in the spirit of the bitter lesson [ 7, 54 ], explicit search and direct generation appear to offer complementary scaling axes: search provides direct control over stock termination and other hard constraints, while learned generators can amortize recurring route structure into faster prompt-conditioned inference. One natural next step is therefore to use search to generate constraint-satisfying trajectories and distill those trajectories into direct generators. For Ariadne specifically, the immediate model-side extensions are arbitrary-stock prompting, prompt fields or decoding policies that improve root selection, dynamic beam allocation based on target complexity or search progress, and speculative decoding [ 45 ]. On the evaluation side, Solv-0 and Top-K reconstruction evaluate structural route 7plans under Tier-0 checks, so the field needs standardized Tier-1–3 validation protocols before performance on these benchmarks can be translated into claims about experimentally executable synthesis. We release the codebase and full training scripts so that Ariadne can serve as a reproducible baseline for these directions. 
+
+## 6 Implementation Details 
+
+6.1 Model 
+
+In addition to switching from an encoder-decoder setup in DirectMultiStep to a decoder-only archi-tecture for Ariadne, we also updated the implementation of transformer blocks (see Table 6). The implemented model is a pre-normalization decoder with token embeddings, RMSNorm, rotary position embeddings, multi-head self-attention, and SwiGLU feed-forward blocks. The runs reported here use dense feed-forward layers. The code also supports sparse mixture-of-experts blocks, but those are not used for the main results. We vary model scale mainly by layer count while holding hidden size at 256 and using eight attention heads. This results in 7.9 M parameters for the 12 layer model and 15.8 M for the 24 layer model. For reference, DMS Explorer XL has 50 M parameters [ 44 ].               
+
+> Choice DirectMultiStep Ariadne Architecture Encoder-decoder translation [44, 55]. Decoder-only language modeling. Position embedding Learned absolute embeddings [55]. RoPE [56]. Normalization LayerNorm [57]. RMSNorm [58]. Normalization order Post-LN residual blocks [55]. Pre-LN residual blocks [59]. Feed-forward block ReLU/GELU MLP [55, 60]. SwiGLU MLP [61, 62]. Optimizer AdamW [63]. Muon with Moonshot scaling for dense matrices, AdamW elsewhere [63–65].
+
+Table 6: Main implementation differences between DirectMultiStep and Ariadne. 
+
+6.2 Training 
+
+The supervised objective is next-token cross entropy on the route part of the sequence. Prompt tokens and padding tokens are masked out of the labels. Training uses Hugging Face Accelerate for device placement, gradient accumulation, checkpointing, and mixed precision. The main runs use one GPU per run with bfloat16 autocast on supported accelerators. Dense two-dimensional transformer weights are optimized with Muon using Moonshot update scaling. Embeddings, output head, normalization parameters, and other residual parameters use AdamW-style groups. Gradients are clipped to unit norm. Learning-rate schedules, logging, validation, checkpointing, and budget accounting are token-based rather than epoch-based. We use length bucketing to reduce computational costs associated with excessive padding, resulting in a roughly 12 × speedup. 
+
+6.3 Generation 
+
+Generation uses deterministic batched beam search with a KV cache [ 66 ]. The prompt is the task specification plus the start of the route wrapper and ends immediately after the children token in that incomplete wrapper. The prompt is run once, cached key/value states are expanded across beams, and subsequent decoding steps feed only the newest token. After each beam update, the cache is reordered to match the surviving beams. All reported Ariadne generations use beam size 50, length penalty 0.5, and a 1200-token generation limit; decoding stops earlier when all beams emit <eos> .
+
+6.4 Evaluation 
+
+We use the standard RetroCast v0.7.x implementations of Solv-N and route reconstruction scoring defined in Preliminaries [ 51 ]. Ariadne supplies raw generated candidate routes, but parsing, canoni-calization, constraint filtering, duplicate removal, and Top-K reconstruction are all performed by the 8RetroCast scoring pipeline [ 51 ]. Failed parses are preserved as failed candidate slots, so they fail Tier-0 validity and cannot contribute to Solv-0 or reconstruction. DMS Explorer XL results in Table 2 are reprinted from RetroCast/SynthArena, where sequence-based DirectMultiStep runs were performed on Lambda Labs NVIDIA A100 40 GB GPUs [ 51 ]. For comparability, Ariadne and DESP evaluations in this work were run on separate clean single-GPU Lambda Labs A100 40 GB instances. The MCTS rows use AWS EC2 c7i.xlarge CPU instances, matching the RetroCast/SynthArena protocol for search-based planners [ 51 ]. Reported times are planning or generation wall-clock times for the corresponding planner runs. 
+
+## 7 Data and Software Availability 
+
+Code for processing the dataset, implementing the model architecture, and running training, gen-eration, and evaluation is available under the MIT License at https://github.com/ischemist/ project-ariadne .
+
+## Conflict of Interest 
+
+The authors declare no conflict of interest. 
+
+## 8 Acknowledgments 
+
+The authors acknowledge a generous allocation of high-performance computing time from NERSC. The development of the methodology was supported by the NSF CCI grant (VSB, Award Number 2124511). This research was also supported in part by Lambda, Inc. 
+
+## References 
+
+[1] Connor W Coley, Pankaj Daga, Marco De Vivo, Willem Jespers, Ashutosh S Jogalekar, S Roy Kimura, Lucien Koenekoop, Anne-Grete Märtson, Timothy R Newhouse, Soumya Ray, Riccardo Saba-tini, David C Thompson, and Woody Sherman. Grand challenges for predictive modeling in small molecule drug discovery. ChemRxiv , 2026(0304), 2026. doi: 10.26434/chemrxiv.15000615/v1. URL 
+
+https://chemrxiv.org/doi/abs/10.26434/chemrxiv.15000615/v1 .[2] Peter Ertl and Ansgar Schuffenhauer. Estimation of synthetic accessibility score of drug-like molecules based on molecular complexity and fragment contributions. Journal of Cheminformatics , 1(1):8, 2009. ISSN 1758-2946. doi: 10.1186/1758-2946-1-8. URL https://doi.org/10.1186/1758-2946-1-8 .[3] Connor W. Coley, Luke Rogers, William H. Green, and Klavs F. Jensen. Scscore: Synthetic complexity learned from a reaction corpus. Journal of Chemical Information and Modeling , 58(2):252–261, 2018. doi: 10.1021/acs.jcim.7b00622. URL https://doi.org/10.1021/acs.jcim.7b00622 . PMID: 29309147. [4] Amol Thakkar, Veronika Chadimová, Esben Jannik Bjerrum, Ola Engkvist, and Jean-Louis Reymond. Retrosynthetic accessibility score (RAscore) – rapid machine learned synthesizability classification from AI driven retrosynthetic planning. Chemical Science , 12:3339 – 3349, 2020. URL https://api. semanticscholar.org/CorpusID:233621461 .[5] Milan Voršilák, Michał Koláˇ r, Ivan ˇ Cmelo, and Daniel Svozil. Syba: Bayesian estimation of synthetic accessibility of organic compounds. Journal of Cheminformatics , 12(1):35, 2020. ISSN 1758-2946. doi: 10.1186/s13321-020-00439-2. URL https://doi.org/10.1186/s13321-020-00439-2 .[6] Maud Parrot, Hamza Tajmouati, Vinicius Barros Ribeiro da Silva, Brian Ross Atwood, Robin Fourcade, Yann Gaston-Mathé, Nicolas Do Huu, and Quentin Perron. Integrating synthetic accessibility with AI-based generative drug design. Journal of Cheminformatics , 15, 2021. URL https://api.semanticscholar. org/CorpusID:245417923 .[7] Anton Morgunov, Yu Shee, Alexander V Soudackov, and Victor S Batista. The syntax of matter: Synthesis planning as the foundation of generative chemistry. ChemRxiv , 2026(0421), 2026. doi: 10.26434/chemrxiv. 15001278/v3. URL https://chemrxiv.org/doi/abs/10.26434/chemrxiv.15001278/v3 .
+
+9[8] Michał Koziarski, Andrei Rekesh, Dmytro Shevchuk, Almer van der Sloot, Piotr Gai´ nski, Yoshua Bengio, Cheng-Hao Liu, Mike Tyers, and Robert A. Batey. RGFN: Synthesizable molecular gen-eration using GFlowNets. In Advances in Neural Information Processing Systems , volume 37, pages 46908–46955. Neural Information Processing Systems Foundation, Inc., 2024. doi: 10. 52202/079017-1488. URL https://proceedings.neurips.cc/paper_files/paper/2024/hash/ 53704142f230054140418ecd8857f391-Abstract-Conference.html .[9] Zygimantas Jocys, Zhanxing Zhu, Henriette M. G. Willems, and Katayoun Farrahi. Synthformer: Equiv-ariant pharmacophore-based generation of synthesizable molecules for ligand-based drug design. Ar-tificial Intelligence in the Life Sciences , 9:100148, 2026. doi: 10.1016/j.ailsci.2025.100148. URL 
+
+https://doi.org/10.1016/j.ailsci.2025.100148 .[10] Seonghwan Seo, Minsu Kim, Tony Shen, Martin Ester, Jinkyoo Park, Sungsoo Ahn, and Woo Youn Kim. Generative flows on synthetic pathway for drug design, 2025. URL https://arxiv.org/abs/2410. 04542 .[11] Shitong Luo and Connor W. Coley. Efficient and programmable exploration of synthesizable chemical space, 2025. URL https://arxiv.org/abs/2512.00384 .[12] E. J. Corey and W. Todd Wipke. Computer-assisted design of complex organic syntheses: Pathways for molecular synthesis can be devised with a computer and equipment for graphical communication. 
+
+Science , 166(3902):178–192, 1969. ISSN 0036-8075, 1095-9203. doi: 10.1126/science.166.3902.178. URL https://www.science.org/doi/10.1126/science.166.3902.178 .[13] Marwin H. S. Segler, Mike Preuss, and Mark P. Waller. Planning chemical syntheses with deep neural networks and symbolic AI. Nature , 555(7698):604–610, 2018. ISSN 1476-4687. doi: 10.1038/nature25978. URL https://doi.org/10.1038/nature25978 .[14] Akihiro Kishimoto, Beat Buesser, Bei Chen, and Adi Botea. Depth-first proof-number search with heuristic edge cost and application to chemical synthesis planning. In H. Wallach, H. Larochelle, A. Beygelzimer, F. d'Alché-Buc, E. Fox, and R. Garnett, editors, Advances in Neural Information Processing Systems ,volume 32. Curran Associates, Inc., 2019. URL https://proceedings.neurips.cc/paper_files/ paper/2019/file/4fc28b7093b135c21c7183ac07e928a6-Paper.pdf .[15] John S. Schreck, Connor W. Coley, and Kyle J. M. Bishop. Learning retrosynthetic planning through simulated experience. ACS Central Science , 5(6):970–981, 2019. doi: 10.1021/acscentsci.9b00055. [16] Xiaoxue Wang, Yujie Qian, Hanyu Gao, Connor W. Coley, Yiming Mo, Regina Barzilay, and Klavs F. Jensen. Towards efficient discovery of green synthetic pathways with monte carlo tree search and reinforcement learning. Chem. Sci. , 11:10959–10972, 2020. doi: 10.1039/D0SC04184J. URL http: //dx.doi.org/10.1039/D0SC04184J .[17] Binghong Chen, Chengtao Li, Hanjun Dai, and Le Song. Retro*: Learning retrosynthetic planning with neural guided A* search. In Proceedings of the 37th International Conference on Machine Learning ,volume 119 of Proceedings of Machine Learning Research , pages 1608–1616. PMLR, 2020. URL 
+
+https://proceedings.mlr.press/v119/chen20k.html .[18] Samuel Genheden, Amol Thakkar, Veronika Chadimová, Jean-Louis Reymond, Ola Engkvist, and Esben Bjerrum. AiZynthFinder: a fast, robust and flexible open-source software for retrosynthetic planning. 
+
+Journal of Cheminformatics , 12(1):70, 2020. ISSN 1758-2946. doi: 10.1186/s13321-020-00472-1. URL 
+
+https://doi.org/10.1186/s13321-020-00472-1 .[19] Yemin Yu, Ying Wei, Kun Kuang, Zhengxing Huang, Huaxiu Yao, and Fei Wu. Grasp: Navigating retrosyn-thetic planning with goal-driven policy. In S. Koyejo, S. Mohamed, A. Agarwal, D. Belgrave, K. Cho, and A. Oh, editors, Advances in Neural Information Processing Systems , volume 35, pages 10257–10268. Cur-ran Associates, Inc., 2022. URL https://proceedings.neurips.cc/paper_files/paper/2022/ file/42beaab8aa8da1c77581609a61eced93-Paper-Conference.pdf .[20] Shufang Xie, Rui Yan, Peng Han, Yingce Xia, Lijun Wu, Chenjuan Guo, Bin Yang, and Tao Qin. Retrograph: Retrosynthetic planning with graph search. In Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining , KDD ’22, pages 2120–2129, New York, NY, USA, 2022. Association for Computing Machinery. ISBN 9781450393850. doi: 10.1145/3534678.3539446. URL https://doi.org/10.1145/3534678.3539446 .[21] Siqi Hong, Hankz Hankui Zhuo, Kebing Jin, Guang Shao, and Zhanwen Zhou. Retrosynthetic planning with experience-guided monte carlo tree search. Communications Chemistry , 6(1):120, 2023. doi: 10.1038/s42004-023-00911-8. URL https://doi.org/10.1038/s42004-023-00911-8 .
+
+10 [22] Guoqing Liu, Di Xue, Shufang Xie, Yingce Xia, Austin Tripp, Krzysztof Maziarz, Marwin H. S. Segler, Tao Qin, Zongzhang Zhang, and Tie-Yan Liu. Retrosynthetic planning with dual value networks. In 
+
+International Conference on Machine Learning , 2023. URL https://api.semanticscholar.org/ CorpusID:256416110 .[23] Yan Zhang, Xiao He, Shuanhu Gao, Aimin Zhou, and Hao Hao. Evolutionary retrosynthetic route planning [research frontier]. IEEE Computational Intelligence Magazine , 19:58–72, 2023. URL https: //api.semanticscholar.org/CorpusID:271115363 .[24] Dengwei Zhao, Shikui Tu, and Lei Xu. Efficient retrosynthetic planning with MCTS exploration en-hanced A* search. Communications Chemistry , 7, 2024. URL https://api.semanticscholar.org/ CorpusID:268252759 .[25] Austin Tripp, Krzysztof Maziarz, Sarah Lewis, Marwin Segler, and José Miguel Hernández-Lobato. Retro-fallback: retrosynthetic planning in an uncertain world, 2024. URL https://arxiv.org/abs/2310. 09270 .[26] Jiasheng Guo, Chenning Yu, Kenan Li, Yijian Zhang, Guoqiang Wang, Shuhua Li, and Hao Dong. Retrosynthesis zero: Self-improving global synthesis planning using reinforcement learning. Journal of chemical theory and computation , 2024. URL https://api.semanticscholar.org/CorpusID: 269771006 .[27] Ton M Blackshaw, Joseph C. Davies, Kristian T Spoerer, and Jonathan D. Hirst. Enhancing Monte Carlo Tree Search for retrosynthesis. Journal of Chemical Information and Modeling , 65:6537 – 6546, 2025. URL https://api.semanticscholar.org/CorpusID:279328860 .[28] Xuefeng Zhang, Haowei Lin, Muhan Zhang, Yuan Zhou, and Jianzhu Ma. A data-driven group retrosyn-thesis planning model inspired by neurosymbolic programming. Nature Communications , 16(1):192, 2025. doi: 10.1038/s41467-024-55374-9. URL https://doi.org/10.1038/s41467-024-55374-9 .[29] Jihye Roh, Joonyoung F. Joung, Kevin Yu, Zhengkai Tu, G. Logan Bartholomew, Omar A. Santiago-Reyes, Mun Hong Fong, Richmond Sarpong, Sarah E. Reisman, and Connor W. Coley. Higher-level strategies for computer-aided retrosynthesis. ACS Central Science , 12(3):345–357, 2026. doi: 10.1021/acscentsci. 5c02014. URL https://doi.org/10.1021/acscentsci.5c02014 .[30] Tagir Akhmetshin, Dmitry Zankov, Philippe Gantzer, Dmitry Babadeev, Anna Pinigina, Timur Madzhidov, and Alexandre Varnek. Synplanner: An end-to-end tool for synthesis planning. Journal of Chemical Information and Modeling , 65(1):15–21, 2025. doi: 10.1021/acs.jcim.4c02004. [31] Mianchu Wang and Giovanni Montana. Retrosynthesis planning via worst-path policy optimisation in tree-structured mdps, 2025. URL https://arxiv.org/abs/2509.10504 .[32] Shoichi Ishida, Kei Terayama, Ryosuke Kojima, Kiyosei Takasu, and Yasushi Okuno. AI-driven synthetic route design incorporated with retrosynthesis knowledge. Journal of Chemical Information and Modeling ,62(6):1357–1367, 2022. doi: 10.1021/acs.jcim.1c01074. [33] Milo Roucairol and Tristan Cazenave. Comparing search algorithms on the retrosynthesis problem. 
+
+Molecular Informatics , 43, 2024. URL https://api.semanticscholar.org/CorpusID:253882602 .[34] Gang Liu, Michael Sun, Wojciech Matusik, Meng Jiang, and Jie Chen. Multimodal large language models for inverse molecular design with retrosynthetic planning, 2024. URL https://arxiv.org/abs/2410. 04223 .[35] Kevin Yu, Jihye Roh, Ziang Li, Wenhao Gao, Runzhong Wang, and Connor W. Coley. Double-ended synthesis planning with goal-constrained bidirectional search. In Advances in Neural Information Pro-cessing Systems , volume 37, pages 112919–112949. Neural Information Processing Systems Foundation, Inc., 2024. doi: 10.52202/079017-3588. URL https://proceedings.neurips.cc/paper_files/ paper/2024/hash/cd091a4d8e97157d32940428f902c7b0-Abstract-Conference.html .[36] Krzysztof Maziarz, Guoqing Liu, Hubert Misztela, Austin Tripp, Junren Li, Aleksei Kornev, Piotr Gai´ nski, Holger Hoefling, Mike Fortunato, Rishi Gupta, and Marwin Segler. Chemist-aligned retrosynthesis by ensembling diverse inductive bias models, 2025. URL https://arxiv.org/abs/2412.05269 .[37] Frazier N. Baker, Daniel Adu-Ampratwum, Reza Averly, Botao Yu, Huan Sun, and Xia Ning. LARC: Towards human-level constrained retrosynthesis planning through an agentic framework. In Proceedings of AI for Accelerated Research Symposium , volume 3 of EPiC Series in Technology , pages 153–176. EasyChair, 2026. doi: 10.29007/z3hb. URL https://easychair.org/publications/paper/SMVW .
+
+11 [38] Nguyen Xuan-Vu, Daniel Armstrong, Milena Wehrbach, Andres M. Bran, Zlatko Jonˇ cev, and Philippe Schwaller. Synthelite: Chemist-aligned and feasibility-aware synthesis planning with LLMs, 2025. URL 
+
+https://arxiv.org/abs/2512.16424 .[39] Xiaozhuang Song, Xuanhao Pan, Xinjian Zhao, Hangting Ye, Shufei Zhang, Jian Tang, and Tianshu Yu. AOT*: Efficient synthesis planning via LLM-empowered AND-OR tree search, 2025. URL https: //arxiv.org/abs/2509.20988 .[40] Piotr Gai´ nski, Michał Koziarski, Krzysztof Maziarz, Marwin Segler, Jacek Tabor, and Marek ´ Smieja. Diverse and feasible retrosynthesis using GFlowNets. Information Sciences , 714:122194, 2025. doi: 10.1016/j.ins.2025.122194. URL https://doi.org/10.1016/j.ins.2025.122194 .[41] Philippe Schwaller, Riccardo Petraglia, Valerio Zullo, Vishnu H. Nair, Rico Häuselmann, Riccardo Pisoni, Costas Bekas, Anna Iuliano, and Teodoro Laino. Predicting retrosynthetic pathways using transformer-based models and a hyper-graph exploration strategy. Chemical Science , 11:3316 – 3325, 2020. URL 
+
+https://api.semanticscholar.org/CorpusID:216332642 .[42] Kangjie Lin, Youjun Xu, Jianfeng Pei, and Luhua Lai. Automatic retrosynthetic route planning using template-free models. Chemical Science , 11:3355 – 3364, 2020. URL https://api.semanticscholar. org/CorpusID:268816571 .[43] David Kreutter and Jean-Louis Reymond. Multistep retrosynthesis combining a disconnection aware triple transformer loop with a route penalty score guided tree search. Chemical Science , 14:9959 – 9969, 2023. URL https://api.semanticscholar.org/CorpusID:261488982 .[44] Yu Shee, Anton Morgunov, Haote Li, and Victor S. Batista. DirectMultiStep: Direct route generation for multistep retrosynthesis. Journal of Chemical Information and Modeling , 65(8):3903–3914, 2025. doi: 10.1021/acs.jcim.4c01982. [45] Natalia Andronova, Mikhail Andronov, Jürgen Schmidhuber, Michael Wand, and Djork-Arné Clevert. Fast and scalable retrosynthetic planning with a transformer neural network and speculative beam search. 
+
+Digital Discovery , 5:1783–1793, 2026. doi: 10.1039/D5DD00573F. URL http://dx.doi.org/10. 1039/D5DD00573F .[46] Kunyang Sun, Dorian Bagni, Joseph M. Cavanagh, Yingze Wang, Jacob M. Sawyer, Bo Zhou, Andrew Gritsevskiy, Oufan Zhang, and Teresa Head-Gordon. Synllama: Generating synthesizable molecules and their analogs with large language models. ACS Central Science , 11(11):2108–2120, 2025. doi: 10.1021/acscentsci.5c01285. [47] Nguyen Xuan-Vu, Daniel P Armstrong, Zlatko Jonˇ cev, and Philippe Schwaller. TempRe: Template generation for single and direct multi-step retrosynthesis, 2025. URL https://arxiv.org/abs/2507. 21762 .[48] Haorui Wang, Jeff Guo, Lingkai Kong, Rampi Ramprasad, Philippe Schwaller, Yuanqi Du, and Chao Zhang. LLM-augmented chemical synthesis and design decision programs, 2025. URL https://arxiv. org/abs/2505.07027 .[49] Emma Granqvist, Rocío Mercado, and Samuel Genheden. Retrosynformer: planning multi-step chemical synthesis routes via a decision transformer. Digital Discovery , 5:348–362, 2026. doi: 10.1039/D5DD00153F. URL http://dx.doi.org/10.1039/D5DD00153F .[50] Samuel Genheden and Esben Bjerrum. PaRoutes: towards a framework for benchmarking retrosynthesis route predictions. Digital Discovery , 1:527–539, 2022. doi: 10.1039/D2DD00015F. URL http: //dx.doi.org/10.1039/D2DD00015F .[51] Anton Morgunov and Victor S. Batista. Procrustean bed for AI-driven retrosynthesis: A unified framework for reproducible evaluation, 2025. URL https://arxiv.org/abs/2512.07079 .[52] Zhengkai Tu, Sourabh J. Choure, Mun Hong Fong, Jihye Roh, Itai Levin, Kevin Yu, Joonyoung F. Joung, Nathan Morgan, Shih-Cheng Li, Xiaoqi Sun, Huiqian Lin, Mark Murnin, Jordan P. Liles, Thomas J. Struble, Michael E. Fortunato, Mengjie Liu, William H. Green, Klavs F. Jensen, and Connor W. Coley. ASKCOS: Open-source, data-driven synthesis planning. Accounts of Chemical Research , 58(11):1764–1775, 2025. doi: 10.1021/acs.accounts.5c00155. [53] Li Dong, Nan Yang, Wenhui Wang, Furu Wei, Xiaodong Liu, Yu Wang, Jianfeng Gao, Ming Zhou, and Hsiao-Wuen Hon. Unified language model pre-training for natural language understanding and generation. In Advances in Neural Information Processing Systems , volume 32, 2019. URL https://proceedings. neurips.cc/paper/2019/hash/c20bb2d9a50d5ac1f713f8b34d9aac5a-Abstract.html .
+
+12 [54] Richard S. Sutton. The bitter lesson, 2019. URL http://www.incompleteideas.net/IncIdeas/ BitterLesson.html .[55] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. In I. Guyon, U. Von Luxburg, S. Bengio, H. Wallach, R. Fergus, S. Vishwanathan, and R. Garnett, editors, Advances in Neural Information Processing Systems ,volume 30. Curran Associates, Inc., 2017. URL https://proceedings.neurips.cc/paper_files/ paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf .[56] Jianlin Su, Murtadha Ahmed, Yu Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu. Roformer: Enhanced transformer with rotary position embedding. Neurocomputing , 568:127063, 2024. doi: 10.1016/j.neucom. 2023.127063. URL https://doi.org/10.1016/j.neucom.2023.127063 .[57] Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E. Hinton. Layer normalization, 2016. URL https: //arxiv.org/abs/1607.06450 .[58] Biao Zhang and Rico Sennrich. Root mean square layer normalization. In H. Wallach, H. Larochelle, A. Beygelzimer, F. d'Alché-Buc, E. Fox, and R. Garnett, editors, Advances in Neural Information Processing Systems , volume 32. Curran Associates, Inc., 2019. URL https://proceedings.neurips.cc/paper_ files/paper/2019/file/1e8a19426224ca89e83cef47f1e7f53b-Paper.pdf .[59] Ruibin Xiong, Yunchang Yang, Di He, Kai Zheng, Shuxin Zheng, Chen Xing, Huishuai Zhang, Yanyan Lan, Liwei Wang, and Tie-Yan Liu. On layer normalization in the transformer architecture. In Pro-ceedings of the 37th International Conference on Machine Learning, ICML 2020, 13-18 July 2020, Virtual Event , Proceedings of Machine Learning Research, pages 10524–10533. PMLR, 2020. URL 
+
+http://proceedings.mlr.press/v119/xiong20b.html .[60] Dan Hendrycks and Kevin Gimpel. Gaussian error linear units (gelus), 2016. URL https://arxiv.org/ abs/1606.08415 .[61] Noam Shazeer. Glu variants improve transformer, 2020. URL https://arxiv.org/abs/2002.05202 .[62] Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, Aurelien Rodriguez, Armand Joulin, Edouard Grave, and Guillaume Lample. Llama: Open and efficient foundation language models, 2023. URL 
+
+https://arxiv.org/abs/2302.13971 .[63] Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In 7th International Conference on Learning Representations, ICLR 2019, New Orleans, LA, USA, May 6-9, 2019 . OpenReview.net, 2019. URL https://openreview.net/forum?id=Bkg6RiCqY7 .[64] Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You, Franz Cesista, Laker Newhouse, and Jeremy Bern-stein. Muon: An optimizer for hidden layers in neural networks, 2024. URL https://kellerjordan. github.io/posts/muon/ .[65] Jingyuan Liu, Jianlin Su, Xingcheng Yao, Zhejun Jiang, Guokun Lai, Yulun Du, Yidao Qin, Weixin Xu, Enzhe Lu, Junjie Yan, Yanru Chen, Huabin Zheng, Yibo Liu, Shaowei Liu, Bohong Yin, Weiran He, Han Zhu, Yuzhi Wang, Jianzhou Wang, Mengnan Dong, Zheng Zhang, Yongsheng Kang, Hao Zhang, Xinran Xu, Yutao Zhang, Yuxin Wu, Xinyu Zhou, and Zhilin Yang. Muon is scalable for LLM training, 2025. URL https://arxiv.org/abs/2502.16982 .[66] Reiner Pope, Sholto Douglas, Aakanksha Chowdhery, Jacob Devlin, James Bradbury, Anselm Levskaya, Jonathan Heek, Kefan Xiao, Shivani Agrawal, and Jeff Dean. Efficiently scaling transformer inference. 
+
+CoRR , abs/2211.05102, 2022. doi: 10.48550/ARXIV.2211.05102. URL https://doi.org/10.48550/ arXiv.2211.05102 .
+
+13 Supporting Information 
+
+The Supporting Information reports additional target-only evaluations that contextualize the main 
+
+mkt-cnv-160 results. Tables S1–S4 extend the Ariadne versus AiZynthFinder MCTS comparison to mkt-lin-500 , ref-cnv-400 , ref-lin-600 , and ref-lng-84 , with paired confidence intervals for Solv-0, Top-1, Top-10, root recovery, and route recovery conditional on the root. Table S5 reports the mkt-lin-500 beam-size sweep for the 24-layer Ariadne checkpoint. 
+
+Supplementary Tables S1–S4 These tables report the full target-only benchmark suite beyond 
+
+mkt-cnv-160 . Table S1 evaluates the commercial-stock linear benchmark. Tables S2, S3, and S4 evaluate the reference-stock convergent, linear, and long-route benchmarks. 
+
+Supplementary Table S5 Table S5 reports the effect of beam size on mkt-lin-500 for the 24-layer Ariadne checkpoint.                                                         
+
+> Model Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10 Time
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 100.0% 92.4% 17.2% 30.6% [26.6, 34.6] 56.6% 54.1% 48.4 min Ariadne 24L 100.0% 90.4% 18.8% 37.2% [33.0, 41.4] 63.0% 59.0% 1.0 hr
+> Paired 95% CI (Ariadne–MCTS) [-5.2, +1.4] [-1.8, +5.0] [+2.2, +10.8] –[+1.2, +11.6] [-1.0, +10.9] –
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 100.0% 92.6% 18.6% 33.6% [29.4, 37.8] 58.8% 57.1% 48.1 min Ariadne 24L 100.0% 96.4% 29.4% 52.6% [48.2, 57.0] 72.4% 72.7% 1.1 hr
+> Paired 95% CI (Ariadne–MCTS) [+1.4, +6.2] [+6.4, +15.2] [+14.0, +23.8] –[+8.8, +18.4] [+9.5, +21.6] –
+
+Table S1: Additional mkt-lin-500 results. Ariadne uses the 24-layer checkpoint with target-only prompting and beam size 50. AiZynthFinder uses 100 MCTS iterations and maximum search depth 10. Top-10 CI gives the 95% bootstrap interval. Root T10 measures recovery of the reference root reaction, and Route |root T10 measures full-route recovery among targets whose root reaction was recovered. Paired CI rows compare Ariadne with AiZynthFinder MCTS: intervals containing zero indicate no significant difference, positive intervals favor Ariadne, and negative intervals favor AiZynthFinder MCTS.                                                         
+
+> Model Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10 Time
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 100.0% 76.5% 16.8% 24.5% [20.2, 28.7] 54.8% 44.7% 1.3 hr Ariadne 24L 100.0% 33.0% 8.0% 9.8% [7.0, 12.8] 18.0% 54.2% 1.0 hr
+> Paired 95% CI (Ariadne–MCTS) [-49.0, -37.8] [-12.5, -5.0] [-19.0, -10.5] –[-42.2, -31.5] [-2.8, +21.7] –
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 100.0% 85.2% 23.8% 36.2% [31.5, 41.0] 63.2% 57.3% 1.1 hr Ariadne 24L 100.0% 68.2% 30.5% 41.5% [36.8, 46.2] 49.8% 83.4% 1.1 hr
+> Paired 95% CI (Ariadne–MCTS) [-22.2, -12.0] [+2.0, +11.5] [-0.3, +10.7] –[-19.5, -7.8] [+18.8, +33.3] –
+
+Table S2: Additional ref-cnv-400 results. Ariadne uses the 24-layer checkpoint with target-only prompting and beam size 50. AiZynthFinder uses 100 MCTS iterations and maximum search depth 10. Top-10 CI gives the 95% bootstrap interval. Root T10 measures recovery of the reference root reaction, and Route |root T10 measures full-route recovery among targets whose root reaction was recovered. Paired CI rows compare Ariadne with AiZynthFinder MCTS: intervals containing zero indicate no significant difference, positive intervals favor Ariadne, and negative intervals favor AiZynthFinder MCTS. 14 Model Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10 Time                                                 
+
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 100.0% 78.8% 10.5% 19.5% [16.3, 22.7] 47.2% 41.3% 1.5 hr Ariadne 24L 100.0% 55.8% 13.2% 21.0% [17.7, 24.3] 36.8% 57.0% 1.5 hr
+> Paired 95% CI (Ariadne–MCTS) [-27.5, -18.5] [-0.3, +5.7] [-2.3, +5.3] –[-15.5, -5.2] [+7.8, +23.5] –
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 100.0% 83.2% 14.2% 26.3% [22.8, 29.8] 49.7% 53.0% 1.5 hr Ariadne 24L 100.0% 74.8% 26.0% 40.0% [36.2, 44.0] 55.3% 72.3% 1.6 hr
+> Paired 95% CI (Ariadne–MCTS) [-12.3, -4.3] [+7.8, +15.7] [+9.3, +18.0] –[+0.8, +10.5] [+12.7, +25.7] –
+
+Table S3: Additional ref-lin-600 results. Ariadne uses the 24-layer checkpoint with target-only prompting and beam size 50. AiZynthFinder uses 100 MCTS iterations and maximum search depth 10. Top-10 CI gives the 95% bootstrap interval. Root T10 measures recovery of the reference root reaction, and Route |root T10 measures full-route recovery among targets whose root reaction was recovered. Paired CI rows compare Ariadne with AiZynthFinder MCTS: intervals containing zero indicate no significant difference, positive intervals favor Ariadne, and negative intervals favor AiZynthFinder MCTS.                                                         
+
+> Model Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10 Time
+> Training on v2026-05-12-reaction
+> AiZynthFinder MCTS 100.0% 59.5% 0.0% 0.0% [0.0, 0.0] 27.4% 0.0% 15.0 min Ariadne 24L 100.0% 35.7% 0.0% 2.4% [0.0, 6.0] 22.6% 10.5% 17.0 min
+> Paired 95% CI (Ariadne–MCTS) [-38.1, -9.5] [+0.0, +0.0] [+0.0, +6.0] –[-17.9, +7.1] [+0.0, +26.7] –
+> Training on v2026-05-12-route
+> AiZynthFinder MCTS 100.0% 70.2% 0.0% 4.8% [1.2, 9.5] 45.2% 10.5% 13.3 min Ariadne 24L 100.0% 66.7% 31.0% 44.0% [33.3, 54.8] 53.6% 82.2% 21.0 min
+> Paired 95% CI (Ariadne–MCTS) [-15.5, +8.3] [+21.4, +40.5] [+27.4, +51.2] –[-3.6, +20.2] [+56.5, +85.4] –
+
+Table S4: Additional ref-lng-84 results. Ariadne uses the 24-layer checkpoint with target-only prompting and beam size 50. AiZynthFinder uses 100 MCTS iterations and maximum search depth 10. Top-10 CI gives the 95% bootstrap interval. Root T10 measures recovery of the reference root reaction, and Route |root T10 measures full-route recovery among targets whose root reaction was recovered. Paired CI rows compare Ariadne with AiZynthFinder MCTS: intervals containing zero indicate no significant difference, positive intervals favor Ariadne, and negative intervals favor AiZynthFinder MCTS. 
+
+Beam size Tier-0 valid Solv-0 Top-1 Top-10 Top-10 CI Root T10 Route |root T10 Time 
+
+Training on v2026-05-12-reaction 
+
+1 98.2% 33.8% 10.0% 10.0% [7.4, 12.8] 17.4% 57.5% 25.4 min 5 99.4% 57.6% 17.0% 21.0% [17.4, 24.8] 32.6% 64.4% 37.4 min 10 99.8% 69.0% 18.2% 26.0% [22.2, 30.0] 42.0% 61.9% 43.4 min 20 100.0% 78.4% 19.2% 31.2% [27.2, 35.2] 52.2% 59.8% 49.3 min 30 100.0% 85.2% 19.0% 34.0% [29.8, 38.0] 58.0% 58.6% 54.3 min 50 100.0% 90.4% 18.8% 37.2% [33.0, 41.4] 63.0% 59.0% 1.0 hr 
+
+Training on v2026-05-12-route 
+
+1 97.0% 42.2% 15.6% 15.6% [12.4, 18.8] 22.0% 70.9% 30.2 min 5 99.6% 74.0% 26.4% 32.4% [28.4, 36.6] 46.2% 70.1% 42.7 min 10 99.8% 82.0% 27.8% 38.0% [33.8, 42.2] 53.6% 70.9% 49.0 min 20 100.0% 89.2% 29.2% 45.8% [41.4, 50.2] 63.8% 71.8% 54.7 min 30 100.0% 93.4% 29.4% 48.2% [43.8, 52.6] 68.4% 70.5% 59.7 min 50 100.0% 96.4% 29.4% 52.6% [48.2, 57.0] 72.4% 72.7% 1.1 hr 
+
+Table S5: mkt-lin-500 beam-size sweep for the 24-layer Ariadne checkpoint with target-only prompting. Top-10 CI gives the 95% bootstrap interval. Root T10 measures recovery of the reference root reaction, and Route |root T10 measures full-route recovery among targets whose root reaction was recovered. 15

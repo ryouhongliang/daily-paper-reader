@@ -1,0 +1,69 @@
+{
+  "label": "2026-06-24",
+  "date": "2026-06-24",
+  "generated_at": "2026-06-24T23:11:30",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202606/24/2606.24184v1-project-ariadne-prompt-conditioned-route-generation-for-synthesis-planning",
+      "section": "deep",
+      "title_en": "Project Ariadne: Prompt-Conditioned Route Generation for Synthesis Planning",
+      "authors": "Anton Morgunov, Victor S. Batista",
+      "date": "2026-06-23",
+      "pdf": "https://arxiv.org/pdf/2606.24184v1",
+      "score": "9.0",
+      "evidence": "逆合成规划直接路线生成，是计算辅助有机合成的核心任务",
+      "tldr": "逆合成规划中直接路线生成方法需为不同约束训练独立模型。Ariadne提出将目标、约束和路线统一为提示-完成序列，由单个解码器模型处理。在RetroCast/PaRoutes上，提示约束使Solv-0上升13.7-31.2点，且推理和训练效率优于DESP等。该工作将序列生成扩展至提示条件结构化路线生成，并开源代码以推动研究，但路线验证仍是关键瓶颈。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Retrosynthetic planning seeks to connect a target molecule to commercially available starting materials through a multistep route. Classical planners construct such routes by iteratively applying single-step reaction models within a search procedure; constrained variants often require specialized algorithms or architectural changes. Direct route generation reframes retrosynthesis as sequence generation, but existing direct-generation methods still train separate models for different planning specifications. We introduce Ariadne, a decoder-only route generator that represents the target, optional constraints, and route in one prompt-completion sequence. On the RetroCast/PaRoutes mkt-cnv-160 benchmark family, one 24-layer checkpoint follows route-depth and required-starting-material prompts: adding the corresponding prompt fields raises Solv-0 by 13.7 points for depth constraints and 31.2 points for required-leaf constraints. Ariadne also improves over DESP, a bidirectional search planner, on required-leaf Top-10 and Solv-0 in 24 GPU-minutes versus 6.8 GPU-hours. On standard reconstruction, Ariadne is comparable to DMS Explorer XL at about half the reported inference time. Across additional target-only benchmarks, Ariadne's clearest gains are on route-holdout reconstruction, whereas AiZynthFinder MCTS remains stronger on several Solv-0 comparisons. These results extend sequence generation from specialist retrosynthesis models to prompt-conditioned structural route generation. We release the codebase and training scripts to support further work, but do not introduce Tier-1--3 route checkers; those remain the main bottleneck before models of this kind can become useful to experimental chemists.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/24/2606.23745v1-jedel-zero-shot-dna-encoded-library-design-for-early-stage-drug-discovery",
+      "section": "deep",
+      "title_en": "JEDEL: Zero-Shot DNA-Encoded Library Design for Early-Stage Drug Discovery",
+      "authors": "Zygimantas Jocys, Zhanxing Zhu, Henriette M. G. Willems, Katayoun Farrahi",
+      "date": "2026-06-21",
+      "pdf": "https://arxiv.org/pdf/2606.23745v1",
+      "score": "8.0",
+      "evidence": "从药效团表征生成合成就绪的DNA编码库，确保分子可实验实现",
+      "tldr": "传统DNA编码文库设计依赖虚拟分子生成，合成可行性难以保障。JEDEL框架从活性配体三维药效团表征直接生成合成可及的文库，学习药效团几何与分子结构的预测对准，并解码为使用可购买砌块的组合合成路线。在18个蛋白靶点上，零样本生成的聚焦文库在结合亲和力、药效团恢复和样本效率方面均超越随机和多样性基线。该工作推动了从虚拟分子设计到实验可部署文库设计的转变。",
+      "tags": "query:caos-poly",
+      "abstract_en": "We present JEDEL, a framework for generating synthesis-ready DNA-encoded libraries (DELs) directly from three-dimensional pharmacophore representations of active ligands. JEDEL is the first model to map pharmacophore interaction patterns to actionable, scalable synthesis instructions, enabling the design of targeted libraries comprising potentially millions of molecules. Unlike existing generative approaches that produce virtual compounds requiring downstream synthesis planning, JEDEL operates within the space of purchasable building blocks and validated reactions, ensuring that every output is experimentally realizable by construction. JEDEL learns a predictive alignment between pharmacophore geometry and molecular structure and decodes this into combinatorial synthesis routes at scale. Across 18 protein targets, it generates focused libraries that outperform random and diversity-based baselines in predicted binding affinity, pharmacophore recovery, and sample efficiency, without target-specific retraining. JEDEL enables a shift from virtual molecule generation to experimentally deployable library design.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/24/2606.22823v1-retrieval-augmented-multimodal-learning-for-enzyme-substrate-interaction-prediction-under-low-homology-shift",
+      "section": "quick",
+      "title_en": "Retrieval-Augmented Multimodal Learning for Enzyme-Substrate Interaction Prediction Under Low-Homology Shift",
+      "authors": "Chen Liu, Bingxin Zhou, Xinyuan Wang, Ming Li, Guisheng Fan, Liang Hong",
+      "date": "2026-06-22",
+      "pdf": "https://arxiv.org/pdf/2606.22823v1",
+      "score": "7.0",
+      "evidence": "预测酶-底物相互作用用于生物催化剂筛选",
+      "tldr": "酶底物相互作用预测面临稀疏正监督和低同源性分布偏移挑战。RAMMESI提出检索增强多模态框架，通过方向性跨模态交互与自适应融合学习酶-底物对表示，并引入不平衡感知加权BCE应对稀疏监督。推理时检索邻近酶，重组上下文证据聚合预测。实验显示，在两个基准上RAMMESI性能一致优越，低序列身份区域优势显著。检索模块还能即插即用提升多种方法鲁棒性。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Enzyme substrate interaction (ESI) prediction is a fundamental computational task for biocatalyst discovery and reaction screening in large biochemical spaces. In practical settings, ESI prediction is challenged by sparse positive supervision and low-homology distribution shift, where test enzymes share limited sequence identity with those observed during training. To address these challenges, we propose RAMMESI, a retrieval-augmented multimodal framework for robust ESI prediction. RAMMESI learns explicit pairwise enzyme-substrate representations through directional cross-modal interaction modeling and adaptive fusion. To enhance robustness, RAMMESI retrieves neighboring enzymes at inference time, recombines them with the query substrate, and aggregates the resulting pairwise predictions as contextual evidence. To improve learning under sparse positive supervision, we further adopt an imbalance-aware weighted-BCE objective. Experiments on two ESI benchmarks under sequence-identity-aware splits demonstrate that RAMMESI achieves consistently strong performance, with particular advantages in more challenging low-identity regimes. In addition, the retrieval module improves multiple ESI backbones in a plug-and-play manner, suggesting that retrieval provides a general mechanism for improving robustness under homology shift.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/24/2606.23757v1-synergizing-physically-constrained-mcmc-and-chemical-informed-gaussian-processes-for-reaction-network-discovery",
+      "section": "quick",
+      "title_en": "Synergizing Physically Constrained MCMC and Chemical-Informed Gaussian Processes for Reaction Network Discovery",
+      "authors": "Runzhe Liu, Zihao Wang, Wenbo Yang, Shengyang Tao",
+      "date": "2026-06-22",
+      "pdf": "https://arxiv.org/pdf/2606.23757v1",
+      "score": "7.0",
+      "evidence": "利用物理约束MCMC从动力学数据中发现反应网络",
+      "tldr": "从稀疏含噪化学时序数据发现反应网络方程，面临拓扑与动力参数紧密耦合的挑战。本文提出PC-MCMC-CIGP灰盒工作流，融合尖峰-平板MCMC采样、守恒与热力学筛选及化学信息高斯过程残差模型，用于不确定性感知的参数校准与实验设计。在H2+Br2基准上，区分了基元自由基路径与现象学拟合；苯乙烯环氧化优化提升产率12.5%。采集策略对比显示，PC-EI抑制低产率建议，EI准则取得最佳性能。通过物理约束与主动学习，该框架为反应网络发现提供了高效可靠途径。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Extracting interpretable governing equations from sparse, noisy chemical time-series data remains difficult because discrete reaction topology and continuous kinetic parameters are tightly coupled. We present PC-MCMC-CIGP, a reproducible gray-box workflow that combines spike-and-slab topology sampling, hard conservation and thermodynamic screening, and a Chemical-Informed Gaussian Process (CIGP) residual model for parameter calibration and experimental design. The methodological contribution is not a new MCMC or GP family in isolation; rather, it is the integration of these components into a physically constrained workflow with explicit uncertainty-aware acquisition choices. On the H2 + Br2 benchmark, the constrained sampler distinguishes elementary radical pathways from deceptive phenomenological fits in our experiments. On styrene epoxidation, the CIGP optimization loop improves final yield by 12.5% over the reported GP-BO baseline. A new 10-seed acquisition study shows that EI, GWU, PC-EI, uncertainty sampling, discrepancy hunting, and random search have different trade-offs: PC-EI substantially reduces low-yield BO suggestions, while EI-style criteria give the strongest final-yield performance.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
