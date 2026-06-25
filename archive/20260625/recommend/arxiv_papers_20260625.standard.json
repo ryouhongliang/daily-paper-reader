@@ -1,0 +1,137 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-25T23:18:30.491606+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 2,
+    "quick_skim_target": 11,
+    "quick_selected": 2
+  },
+  "deep_dive": [
+    {
+      "id": "2606.22677v1",
+      "source": "arxiv",
+      "title": "Selectivity in tip-induced skeletal editing via heteroatom substitution",
+      "abstract": "Skeletal editing enables precise structural modifications of molecules at late stages of a synthetic sequence, with applications in drug discovery and materials science. We recently demonstrated skeletal editing on the single-molecule scale. Voltage pulses applied by the tip of a scanning probe microscope to an oxygen-containing seven-membered heterocycle led to both oxygen deletion and ring-contraction rearrangement reactions. An open question is whether selective skeletal editing of a heterocyclic core can be achieved by an appropriate choice of the heteroatom. Here, we show that tip-induced reactions of an analogous sulfur-containing seven-membered ring results in sulfur deletion in virtually all cases. Our results demonstrate that the combination of tip-induced chemistry and heteroatom selection in the molecular design is a powerful strategy for single-molecule skeletal editing, with the potential to enable diverse structural transformations of heterocyclic frameworks.",
+      "authors": [
+        "Shantanu Mishra",
+        "Rasmus Svensson",
+        "Valentina Malave",
+        "Florian Albrecht",
+        "Manuel Vilas-Varela",
+        "Henrik Grönbeck",
+        "Leo Gross",
+        "Diego Peña"
+      ],
+      "primary_category": "cond-mat.mes-hall",
+      "categories": [
+        "cond-mat.mes-hall"
+      ],
+      "published": "2026-06-21T21:33:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.22677v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "demonstrates selective skeletal editing of heterocyclic cores, a late-stage synthetic methodology",
+      "llm_evidence_cn": "展示了对杂环核心的选择性骨架编辑，一种后期合成方法",
+      "llm_evidence": "展示了对杂环核心的选择性骨架编辑，一种后期合成方法",
+      "canonical_evidence": "展示了对杂环核心的选择性骨架编辑，一种后期合成方法",
+      "llm_tldr_en": "Using scanning probe microscopy, the paper shows that heteroatom substitution (O to S) in a seven-membered ring determines the selectivity of tip-induced skeletal editing, enabling precise structural modifications.",
+      "llm_tldr_cn": "针对单分子骨架编辑中选择性控制的问题，本研究通过扫描探针显微镜针尖施加电压脉冲，探索了含氧与含硫七元杂环的骨架编辑反应。结果显示，氧杂环发生氧删除与缩环重排，而硫杂环几乎全部仅发生硫删除，表明杂原子选择可决定性调控骨架编辑路径。该发现为后期合成修饰提供了一种高选择性的策略，并深化了对分子尺度反应机理的理解。",
+      "llm_tldr": "针对单分子骨架编辑中选择性控制的问题，本研究通过扫描探针显微镜针尖施加电压脉冲，探索了含氧与含硫七元杂环的骨架编辑反应。结果显示，氧杂环发生氧删除与缩环重排，而硫杂环几乎全部仅发生硫删除，表明杂原子选择可决定性调控骨架编辑路径。该发现为后期合成修饰提供了一种高选择性的策略，并深化了对分子尺度反应机理的理解。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Organic Synthesis",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.24983v1",
+      "source": "arxiv",
+      "title": "ConSolv: Solvent-Conditional Machine Learning Implicit Solvent Potential",
+      "abstract": "Implicit solvent machine learning potentials (MLPs) offer a powerful route to bridging the gap between accuracy and efficiency in molecular simulations. However, existing models have largely focused on aqueous environments, overlooking the diverse and important roles of non-aqueous solvents in areas such as organic synthesis and battery technology. Here, we present ConSolv, a solvent-conditional MLP architecture that explicitly incorporates solvent effects on solute interactions through an attention-based solvent-embedding block. By combining experimental solvation free energy data with ab initio data, we train a single implicit solvent MLP that is transferable across 66 common organic solvents. ConSolv outperforms classical explicit solvent methods and selected ab initio implicit solvent approaches across multiple solvation free energy benchmarks, and demonstrates generalization to unseen solvents. Beyond solvation free energies, the model shows close agreement with experimental nuclear magnetic resonance (NMR) data for $γ$-fluorohydrin molecules in chloroform. ConSolv's architecture is readily extensible to broader chemical spaces and alternative training strategies, while its attention-based design supports explainable artificial intelligence (AI) analysis that can help elucidate complex, solvent-dependent molecular interactions.",
+      "authors": [
+        "Linying Zhang",
+        "Julija Zavadlav"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "cs.LG"
+      ],
+      "published": "2026-06-23T13:59:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.24983v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "implicit solvent MLP for 66 common organic solvents, enabling accurate simulations for organic synthesis reactions",
+      "llm_evidence_cn": "适用于66种常见有机溶剂的隐式溶剂机器学习势，可实现有机合成反应的精确模拟",
+      "llm_evidence": "适用于66种常见有机溶剂的隐式溶剂机器学习势，可实现有机合成反应的精确模拟",
+      "canonical_evidence": "适用于66种常见有机溶剂的隐式溶剂机器学习势，可实现有机合成反应的精确模拟",
+      "llm_tldr_en": "ConSolv provides a transferable solvent-conditional MLP for 66 organic solvents, outperforming classical explicit solvent in efficiency and gas-to-solvation free energy accuracy, directly useful for simulating reaction mechanisms.",
+      "llm_tldr_cn": "ConSolv提出了一种可迁移的溶剂条件隐式溶剂机器学习势，覆盖66种有机溶剂，在效率和气相至溶剂化自由能精度上优于经典显式方法，可直接用于反应机理模拟。",
+      "llm_tldr": "ConSolv提出了一种可迁移的溶剂条件隐式溶剂机器学习势，覆盖66种有机溶剂，在效率和气相至溶剂化自由能精度上优于经典显式方法，可直接用于反应机理模拟。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-23-733994-v1",
+      "source": "biorxiv",
+      "title": "Integrating Machine-learning and Ultra-high-throughput Screening for Enzyme spaces exploration",
+      "abstract": "The systematic navigation of biocatalyst space is constrained by elusive structure-activity rules and a lack of evolutionary history. Here, we present IMUSE, a strategy integrating machine learning with ultra-high-throughput screening. By screening millions of droplet-encapsulated de novo enzymes, we generated massive synthetic sequence-structure datasets to train models that capture their complex fitness landscapes and biophysical principles. These models effectively guide functional exploration across both sequence and novel structure spaces. IMUSE identified synergistic triple mutations yielding ~5-fold activity improvements and discovered active second-generation designs with novel catalytic pockets, boosting the experimental success rate >4.9-fold (~30%). This work demonstrates how synthetic fitness landscapes bridge the data gap in de novo enzyme space, transforming stochastic search into deterministic navigation to unlock highly proficient biocatalysts beyond natural boundaries.",
+      "authors": [
+        "Ke, Y.",
+        "Zhang, Y.",
+        "Fang, M.",
+        "Zhao, J.",
+        "Zhu, H.",
+        "Xu, Z.",
+        "Cao, L."
+      ],
+      "primary_category": "biochemistry",
+      "categories": [
+        "biochemistry"
+      ],
+      "published": "2026-06-24T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.23.733994v1.full.pdf",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "integrates ML with ultrahigh-throughput screening to guide exploration of enzyme catalyst space, identifying novel catalytic pockets",
+      "llm_evidence_cn": "结合机器学习与超高通量筛选，指导酶催化剂空间的探索，发现新型催化口袋",
+      "llm_evidence": "结合机器学习与超高通量筛选，指导酶催化剂空间的探索，发现新型催化口袋",
+      "canonical_evidence": "结合机器学习与超高通量筛选，指导酶催化剂空间的探索，发现新型催化口袋",
+      "llm_tldr_en": "IMUSE combines ML and droplet-based ultrahigh-throughput screening to explore enzyme biocatalyst space, achieving 5-fold activity improvement and discovering novel catalytic pocket designs.",
+      "llm_tldr_cn": "IMUSE通过整合机器学习与基于微滴的超高通量筛选，探索酶生物催化剂空间，实现了约5倍的活性提升并发现了具有新型催化口袋的二代设计。",
+      "llm_tldr": "IMUSE通过整合机器学习与基于微滴的超高通量筛选，探索酶生物催化剂空间，实现了约5倍的活性提升并发现了具有新型催化口袋的二代设计。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "computational virtual screening of reaction conditions and catalyst scaffolds",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

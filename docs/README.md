@@ -6,34 +6,31 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-24
-- 运行时间：2026-06-24 23:11:21 UTC
+- 最新运行日期：2026-06-25
+- 运行时间：2026-06-25 23:22:15 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：2
+- 本次总论文数：3
+- 精读区：1
 - 速读区：2
 
 ### 今日简报（AI）
-今日精选4篇AI赋能药物研发与化学合成前沿论文，重点解读了路线生成与DNA编码库设计。
-Ariadne项目用提示条件引导合成路线规划，JEDEL实现零样本DNA编码库智能筛选，双突破直指早期研发降本增效。
-建议从业者关注条件生成与零样本学习在分子设计中的落地路径，可优先复现这两项技术框架。
-- 详情：[/202606/24/README](/202606/24/README)
+今日精读一篇分子骨架编辑的选择性研究，并速览机器学习辅助溶剂模型与酶空间探索两篇论文。  
+最值得关注的是针尖诱导单原子替换实现精准骨架编辑的机制，以及机器学习如何为溶剂环境建模和酶序列空间搜索提速。  
+推荐读者优先从骨架编辑那篇入手，再根据兴趣扩展到计算工具或酶工程应用。
+- 详情：[/202606/25/README](/202606/25/README)
 
 ### 精读区论文标签
-1. [Project Ariadne: Prompt-Conditioned Route Generation for Synthesis Planning](/202606/24/2606.24184v1-project-ariadne-prompt-conditioned-route-generation-for-synthesis-planning)  
-   标签：评分：9.0/10、query:caos-poly
-   evidence：逆合成规划直接路线生成，是计算辅助有机合成的核心任务
-2. [JEDEL: Zero-Shot DNA-Encoded Library Design for Early-Stage Drug Discovery](/202606/24/2606.23745v1-jedel-zero-shot-dna-encoded-library-design-for-early-stage-drug-discovery)  
+1. [Selectivity in tip-induced skeletal editing via heteroatom substitution](/202606/25/2606.22677v1-selectivity-in-tip-induced-skeletal-editing-via-heteroatom-substitution)  
    标签：评分：8.0/10、query:caos-poly
-   evidence：从药效团表征生成合成就绪的DNA编码库，确保分子可实验实现
+   evidence：展示了对杂环核心的选择性骨架编辑，一种后期合成方法
 
 ### 速读区论文标签
-1. [Retrieval-Augmented Multimodal Learning for Enzyme-Substrate Interaction Prediction Under Low-Homology Shift](/202606/24/2606.22823v1-retrieval-augmented-multimodal-learning-for-enzyme-substrate-interaction-prediction-under-low-homology-shift)  
+1. [ConSolv: Solvent-Conditional Machine Learning Implicit Solvent Potential](/202606/25/2606.24983v1-consolv-solvent-conditional-machine-learning-implicit-solvent-potential)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：预测酶-底物相互作用用于生物催化剂筛选
-2. [Synergizing Physically Constrained MCMC and Chemical-Informed Gaussian Processes for Reaction Network Discovery](/202606/24/2606.23757v1-synergizing-physically-constrained-mcmc-and-chemical-informed-gaussian-processes-for-reaction-network-discovery)  
+   evidence：适用于66种常见有机溶剂的隐式溶剂机器学习势，可实现有机合成反应的精确模拟
+2. [Integrating Machine-learning and Ultra-high-throughput Screening for Enzyme spaces exploration](/202606/25/biorxiv-10-64898-2026-06-23-733994-v1-integrating-machine-learning-and-ultra-high-throughput-screening-for-enzyme-spaces-exploration)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：利用物理约束MCMC从动力学数据中发现反应网络
+   evidence：结合机器学习与超高通量筛选，指导酶催化剂空间的探索，发现新型催化口袋
 
 
 <div class="dpr-home-promo-card">

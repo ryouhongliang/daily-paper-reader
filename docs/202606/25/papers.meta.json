@@ -1,0 +1,54 @@
+{
+  "label": "2026-06-25",
+  "date": "2026-06-25",
+  "generated_at": "2026-06-25T23:22:23",
+  "count": 3,
+  "papers": [
+    {
+      "paper_id": "202606/25/2606.22677v1-selectivity-in-tip-induced-skeletal-editing-via-heteroatom-substitution",
+      "section": "deep",
+      "title_en": "Selectivity in tip-induced skeletal editing via heteroatom substitution",
+      "authors": "Shantanu Mishra, Rasmus Svensson, Valentina Malave, Florian Albrecht, Manuel Vilas-Varela, Henrik Grönbeck, Leo Gross, Diego Peña",
+      "date": "2026-06-21",
+      "pdf": "https://arxiv.org/pdf/2606.22677v1",
+      "score": "8.0",
+      "evidence": "展示了对杂环核心的选择性骨架编辑，一种后期合成方法",
+      "tldr": "骨架编辑能在合成后期对分子结构进行精准修饰，在药物开发和材料科学中具有重要意义。然而，在单分子尺度实现选择性骨架编辑仍是一个难题，特别是杂环核心中杂原子对反应路径的影响机制不明。近期研究表明，扫描探针显微镜针尖施加电压脉冲可诱导含氧七元杂环发生氧删除与环收缩重排，但选择性差。本研究将杂原子从氧替换为硫，采用相同针尖诱导条件，对含硫七元杂环进行反应，结果发现硫删除反应在几乎所有事件中占主导，与含氧环产生氧删除和重排的混合结果形成鲜明对比，选择性显著提升。这一突破证实杂原子种类是调控反应选择性的关键因素，为结合针尖化学与分子设计的单分子骨架编辑策略提供了依据，有望推动杂环框架的多样化结构转变。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Skeletal editing enables precise structural modifications of molecules at late stages of a synthetic sequence, with applications in drug discovery and materials science. We recently demonstrated skeletal editing on the single-molecule scale. Voltage pulses applied by the tip of a scanning probe microscope to an oxygen-containing seven-membered heterocycle led to both oxygen deletion and ring-contraction rearrangement reactions. An open question is whether selective skeletal editing of a heterocyclic core can be achieved by an appropriate choice of the heteroatom. Here, we show that tip-induced reactions of an analogous sulfur-containing seven-membered ring results in sulfur deletion in virtually all cases. Our results demonstrate that the combination of tip-induced chemistry and heteroatom selection in the molecular design is a powerful strategy for single-molecule skeletal editing, with the potential to enable diverse structural transformations of heterocyclic frameworks.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/25/2606.24983v1-consolv-solvent-conditional-machine-learning-implicit-solvent-potential",
+      "section": "quick",
+      "title_en": "ConSolv: Solvent-Conditional Machine Learning Implicit Solvent Potential",
+      "authors": "Linying Zhang, Julija Zavadlav",
+      "date": "2026-06-23",
+      "pdf": "https://arxiv.org/pdf/2606.24983v1",
+      "score": "7.0",
+      "evidence": "适用于66种常见有机溶剂的隐式溶剂机器学习势，可实现有机合成反应的精确模拟",
+      "tldr": "当前隐式溶剂机器学习势多聚焦水体系，忽视有机合成与电池等非水溶剂的关键作用。ConSolv借助注意力嵌入溶剂，结合实验溶剂化自由能与ab initio数据训练单一势。模型在66种溶剂中表现优异，超越经典方法，泛化至新溶剂，并匹配NMR实验数据。其可扩展架构与注意力可解释性为阐明溶剂依赖性分子相互作用提供新工具。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Implicit solvent machine learning potentials (MLPs) offer a powerful route to bridging the gap between accuracy and efficiency in molecular simulations. However, existing models have largely focused on aqueous environments, overlooking the diverse and important roles of non-aqueous solvents in areas such as organic synthesis and battery technology. Here, we present ConSolv, a solvent-conditional MLP architecture that explicitly incorporates solvent effects on solute interactions through an attention-based solvent-embedding block. By combining experimental solvation free energy data with ab initio data, we train a single implicit solvent MLP that is transferable across 66 common organic solvents. ConSolv outperforms classical explicit solvent methods and selected ab initio implicit solvent approaches across multiple solvation free energy benchmarks, and demonstrates generalization to unseen solvents. Beyond solvation free energies, the model shows close agreement with experimental nuclear magnetic resonance (NMR) data for $γ$-fluorohydrin molecules in chloroform. ConSolv's architecture is readily extensible to broader chemical spaces and alternative training strategies, while its attention-based design supports explainable artificial intelligence (AI) analysis that can help elucidate complex, solvent-dependent molecular interactions.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/25/biorxiv-10-64898-2026-06-23-733994-v1-integrating-machine-learning-and-ultra-high-throughput-screening-for-enzyme-spaces-exploration",
+      "section": "quick",
+      "title_en": "Integrating Machine-learning and Ultra-high-throughput Screening for Enzyme spaces exploration",
+      "authors": "Ke, Y., Zhang, Y., Fang, M., Zhao, J., Zhu, H., Xu, Z., Cao, L.",
+      "date": "2026-06-24",
+      "pdf": "https://www.biorxiv.org/content/10.64898/2026.06.23.733994v1.full.pdf",
+      "score": "7.0",
+      "evidence": "结合机器学习与超高通量筛选，指导酶催化剂空间的探索，发现新型催化口袋",
+      "tldr": "酶生物催化剂空间的系统探索受限于构效关系模糊与进化历史缺失。本研究提出IMUSE策略，整合机器学习与超高通量筛选，通过筛选数百万微滴包封的从头酶，生成大规模合成序列-结构数据以训练模型捕捉复杂适应度景观。该策略发现协同三突变使活性提升约5倍，并成功设计具有新型催化口袋的第二代酶，实验成功率提升逾4.9倍（约30%）。此工作表明合成适应度景观可桥接数据缺口，将随机搜索转化为确定性导航，突破天然酶界限。",
+      "tags": "query:caos-poly",
+      "abstract_en": "The systematic navigation of biocatalyst space is constrained by elusive structure-activity rules and a lack of evolutionary history. Here, we present IMUSE, a strategy integrating machine learning with ultra-high-throughput screening. By screening millions of droplet-encapsulated de novo enzymes, we generated massive synthetic sequence-structure datasets to train models that capture their complex fitness landscapes and biophysical principles. These models effectively guide functional exploration across both sequence and novel structure spaces. IMUSE identified synergistic triple mutations yielding ~5-fold activity improvements and discovered active second-generation designs with novel catalytic pockets, boosting the experimental success rate >4.9-fold (~30%). This work demonstrates how synthetic fitness landscapes bridge the data gap in de novo enzyme space, transforming stochastic search into deterministic navigation to unlock highly proficient biocatalysts beyond natural boundaries.",
+      "source": "biorxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
