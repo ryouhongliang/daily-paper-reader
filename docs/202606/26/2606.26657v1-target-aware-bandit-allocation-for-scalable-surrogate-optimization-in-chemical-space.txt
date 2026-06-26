@@ -1,0 +1,543 @@
+Title: Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space
+
+URL Source: https://arxiv.org/pdf/2606.26657v1
+
+Published Time: Fri, 26 Jun 2026 00:51:24 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+# Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Mohammad Haddadnia 1 2 3 Yuvan Chali 1 2 4 Abhilash Jayaraj 1 2 Constance Kraay 5 Joana Reis 1 2 
+
+Felix Strieth-Kalthoff 6 7 Haribabu Arthanari 1 2 
+
+# Abstract 
+
+Identifying high-utility candidates from massive discrete spaces under expensive evaluations is a recurring challenge across the sciences, with structure-based drug discovery as a prominent ex-ample. While surrogate-based optimization can increase sample efficiency by reducing the num-ber of expensive evaluations, modern molecular libraries have reached billions to trillions of com-pounds, making full-library surrogate inference itself a major computational bottleneck. We intro-duce B OBA, a bandit-guided surrogate optimiza-tion framework that eliminates full-library infer-ence by adaptively allocating computation across partitions of the action space. By treating parti-tions as arms in a multi-armed bandit, B OBA con-centrates inference and evaluations on empirically promising partitions while maintaining principled exploration. Experiments on real-world synthesis-on-demand libraries demonstrate that optimism-under-uncertainty bandits, combined with mean-ingful action space partitioning, are essential for effective allocation of inference and evaluations. Our findings reveal a tunable tradeoff between screening performance and surrogate inference cost, which supports practical optimization over current libraries, and establishes a viable route to ultra-large library virtual screening. 
+
+> 1
+
+Dana-Farber Cancer Institute, Boston, MA, USA 2Department of Biological Chemistry and Molecular Pharmacology, Harvard Medical School, Boston, MA, USA 3Department of Biostatis-tics, Harvard T.H. Chan School of Public Health, Boston, MA, USA 4Department of Chemistry, Yale University, New Haven, CT, USA 5Graduate Program in Biophysics, Harvard University, Cambridge, MA, USA 6University of Wuppertal, School of Math-ematics and Natural Sciences, Wuppertal, Germany 7University of Wuppertal, Interdisciplinary Center of Machine Learning and Data Analytics, Wuppertal, Germany. Correspondence to: Felix Strieth-Kalthoff <strieth-kalthoff@uni-wuppertal.de >, Haribabu Arthanari <hari arthanari@hms.harvard.edu >.
+
+Proceedings of the 43 rd International Conference on Machine Learning , Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s). 
+
+# 1. Introduction 
+
+The earliest stages of drug discovery are dominated by a large and resource-intensive search problem: finding molecules that potently and selectively engage a biological target, and can be advanced into therapeutic leads. This hit identification stage remains a major bottleneck in the drug discovery pipeline, both in terms of cost and time. Com-putational approaches offer a fast and inexpensive route to exploring diverse sets of candidates, and recent advances in algorithms, computing, and ultra-large compound libraries have renewed optimism about their impact (Lyu et al., 2019; Gorgulla et al., 2020; Grygorenko et al., 2020; Sadybekov et al., 2021; Eisenhuth et al., 2025). Importantly, costs increase sharply at each downstream stage of the drug dis-covery pipeline (Morgan et al., 2011), which makes the quality of early computational decisions disproportionately critical. Computational candidate selection in drug discovery is fun-damentally a discrete, sequential decision-making problem. Although the space of possible molecules is astronomically large, with estimates ranging from 10 60 –10 200 (Restrepo, 2022), only a small fraction can be practically synthesized from commercially available building blocks at reasonable cost (Papidocha et al., 2026). In silico drug discovery there-fore operates over large but finite libraries of synthetically accessible compounds (Shoichet, 2004), framing hit iden-tification as a search over a large but discrete action space under budget constraints. Active Learning (Settles, 2012) and Bayesian Optimiza-tion (Garnett et al., 2012; 2015; Jiang et al., 2018; Garnett, 2023) have become central tools for navigating these set-tings. While libraries have historically been evaluated ex-haustively using molecular docking, a physics-informed sim-ulation that estimates binding affinity between a molecule and a biological target, this strategy became prohibitively expensive as library sizes grew to billions of molecules. At the same time, recent studies have underscored the im-portance of screening larger and more structurally diverse libraries to increase true-hit rates and potency (Liu et al., 2025; Lyu et al., 2023; Gloriam, 2019). This need moti-vated surrogate-based optimization techniques that evaluate 1
+
+> arXiv:2606.26657v1 [cs.LG] 25 Jun 2026 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space
+
+only a small subset of candidates and use learned models to guide subsequent selection (Reker & Schneider, 2015; Pyzer-Knapp, 2018; Reker, 2019; Graff et al., 2021). Recent years have witnessed yet another regime shift. Ad-vances in make-on-demand chemistry have expanded acces-sible libraries from billions to trillions of molecules (Enam-ine Ltd.; Hoffmann & Gastreich, 2019; Warr et al., 2022; Gorgulla et al., 2023), altering the computational cost struc-ture. At these scales, cost is no longer dominated solely by expensive physics-informed evaluations. Instead, inference over the candidate set itself becomes a bottleneck: even a single forward pass of a surrogate model over the full library can be prohibitively expensive. This bottleneck violates a core assumption of standard active learning pipelines that surrogate inference is negligible relative to evaluation cost (Frazier, 2018; Garnett, 2023). This shift in the cost hierarchy reframes molecular discov-ery as a large-scale discrete decision-making problem under dual constraints on evaluation and inference. To address this challenge, we introduce B OBA (Bayesian Optimiza-tion with BAndits), which explicitly accounts for inference cost by combining structure-aware partitioning of the ac-tion space, bandit-based allocation across partitions, and surrogate-guided optimization within partitions. By decou-pling global and local search, B OBA enables efficient candi-date selection without exhaustive inference over the action space. Systematic benchmarks on real-world drug discov-ery data demonstrate the critical importance of a) bandit strategies which explicitly account for uncertainty, rather than relying randomized exploration, and b) a chemically sensible partitioning of action space. Our empirical results demonstrate a tunable tradeoff between optimization perfor-mance and inference cost, which allows the optimization efficiency of complete-inference BO to be largely retained, at substantially reduced inference cost. Scaling experiments up to approximately 10 8 molecules show that this tradeoff becomes increasingly favorable as library size grows, and a simple theoretical analysis identifies the number of par-titions as the key control parameter governing the balance between inference savings and bandit regret. These results lay the foundation for scaling to virtual libraries that contain billions to trillions of candidates. 
+
+# 2. Preliminaries 
+
+This section introduces the optimization setting considered in this work and reviews relevant concepts from Bayesian optimization and multi-armed bandits (MAB). 
+
+2.1. Virtual Screening as Large-Scale Discrete Optimization 
+
+We consider the problem of computational candidate selec-tion in virtual screening. Let X = {x1, . . . , x N } denote a finite library of candidate molecules, where N may range from millions to trillions. Each molecule x ∈ X is associ-ated with an unknown property of interest f (x) ∈ R, such as docking score, binding affinity, or experimental activity, which can only be accessed through an expensive evaluation (e.g., docking or wet-lab assay). The goal of virtual screening is to efficiently identify molecules with high values of f (x) using as few evalua-tions as possible, framing virtual screening as a discrete optimization problem, 
+
+x∗ = arg max 
+
+> x∈X
+
+f (x),
+
+under a limited evaluation budget T ≪ |X | .In addition to evaluation cost, we explicitly consider the computational cost of surrogate inference over X . In mod-ern make-on-demand settings, |X | is sufficiently large that exhaustive scoring of all candidates using a learned model is itself infeasible. We therefore distinguish between: (i) 
+
+evaluation cost , incurred when querying f (x), and (ii) infer-ence cost , incurred when computing surrogate predictions over subsets of X . This distinction is central to the problem setting addressed in this work. 
+
+2.2. Surrogate Modeling and Bayesian Optimization 
+
+Bayesian optimization (BO) addresses black-box optimiza-tion by maintaining a probabilistic surrogate model over f
+
+(Garnett, 2023). Given a dataset Dt = {(xi, y i)}ti=1 with 
+
+yi = f (xi) + ϵi, the surrogate defines a posterior predictive distribution 
+
+p(f (x) | D t),
+
+which is used to construct an acquisition function at(x) that balances exploration and exploitation. In discrete settings, BO typically proceeds by selecting 
+
+xt+1 = arg max  
+
+> x∈X
+
+at(x).
+
+Unless |X | is large, this step is commonly approximated by exhaustively evaluating at(x) over X . However, this assumption becomes invalid for ultra-large libraries, where surrogate inference over X constitutes a computational bot-tleneck. This computational barrier motivates algorithmic strategies that avoid full-library surrogate evaluations while retaining the benefits of Bayesian decision-making. 
+
+2.3. Multi-Armed Bandits 
+
+Multi-armed bandits (MAB) (Robbins, 1952; Lattimore & Szepesv ´ari, 2020) formalize sequential decision-making un-2Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+der uncertainty when limited resources must be allocated among competing alternatives. At each round t, an agent selects an arm k ∈ { 1, . . . , K } and observes a stochastic reward drawn from an unknown distribution associated with that arm. Bandit algorithms adaptively trade off exploration and exploitation to identify high-reward arms or to maxi-mize cumulative reward. In this work, each arm corresponds to a subspace of chemi-cal space, and the observed reward summarizes the utility of recent evaluations from that region. For the following discussion of Bandit policies, let ˆμk be the empirical mean reward of arm k, and nk the number of times arm k has been selected. 
+
+ϵ-Greedy selects the empirically best arm with probability 
+
+1 − ϵ, and explores by selecting an arm uniformly at random with probability ϵ. Although simple and computationally inexpensive, ϵ-greedy does not explicitly account for un-certainty, which can lead to inefficient allocation when the number of arms is large. 
+
+Softmax Sampling selects arms stochastically in propor-tion to their empirical mean rewards, 
+
+P (kt = k) ∝ exp( τ ˆμk, t −1),
+
+where τ > 0 is an inverse-temperature parameter controlling how strongly the distribution concentrates on high-reward arms. Softmax provides a smooth tradeoff between ex-ploration and exploitation, interpolating between uniform sampling and greedy selection. 
+
+Upper Confidence Bound (UCB1) selects arms optimisti-cally based on both empirical performance and uncertainty (Auer et al., 2002). At round t, UCB1 chooses the arm maximizing 
+
+ˆμk, t −1 + c
+
+s
+
+2 log tnk, t −1
+
+,
+
+where c > 0 controls the exploration–exploitation tradeoff. Formal definitions and implementation details are provided in Appendix A.3. 
+
+2.4. Partitioning Methods for Chemical Space 
+
+Let X = {x1, . . . , x N } denote a virtual library of molecules 
+
+xi. When partitioning such virtual libraries, we consider di-viding X into K disjoint subsets {X 1, . . . , XK }. Typically, such partitioning is performed in a molecular feature space induced by a representation ϕ(x) ∈ Rd, which can be either learned or engineered. 2.4.1. M OLECULAR FEATURES 
+
+Topological features encode molecular structure as graph-derived patterns capturing atom connectivity and substruc-tures (e.g. paths, cycles, and local neighborhoods). They of-ten provide sparse, discrete representations (“fingerprints”) optimized for similarity search. 
+
+Physicochemical descriptors are engineered low-dimensional features that summarize global molecular properties derived from the graph structure (e.g. molecular weight, hydrogen bond donor count, polarity, or solubility). They offer interpretable, physically meaningful signals, but may miss fine-grained structural detail. The full list of descriptors used in this work is provided in Appendix B. 
+
+Foundation model embeddings are dense, learned rep-resentations produced by deep neural networks pretrained on large molecular corpora using self-supervised objectives. Pre-trained networks can include graph neural networks and language models operating on SMILES, a string-based en-coding of the molecular graph structure. In this work, we focus on embeddings from the T5Chem model (Christofi-dellis et al., 2023), a chemistry-specific variant of the T5 architecture (Raffel et al., 2020) pretrained on large corpora of molecular structures and textual descriptions. Prior work has shown that these embeddings capture rich chemical diversity and improve performance in molecular property prediction and active learning compared to traditional fin-gerprints (Kristiadi et al., 2024). 2.4.2. P ARTITIONING TECHNIQUES 
+
+Feature-based stratification deterministically partitions molecules using fixed intervals along a small number of hand-crafted features, yielding axis-aligned regions in fea-ture space. This approach has previously been used to parti-tion ultra-large chemical libraries into chemically coherent regions for virtual screening (Gorgulla et al., 2023). 
+
+k-Means Clustering groups data by assigning points to the nearest of k learned centroids in feature space, optimized by minimizing within-cluster variance. 
+
+> K
+
+X
+
+> k=1
+
+X
+
+> x∈X k
+
+∥ϕ(x) − μk∥22,
+
+As a baseline, we construct unstructured subspaces by ran-domly permuting X and dividing it into K equally sized bins. This randomization removes all chemical structure while preserving cluster sizes, isolating the effect of mean-ingful space decomposition. 3Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# 3. Method 
+
+Building on the preliminaries, we formalize the problem of surrogate-based discovery from ultra-large molecular libraries, and introduce the algorithmic framework of B OBA.We also summarize related works relevant to the method proposed herein. 
+
+3.1. Problem Setting 
+
+Given a large discrete library X , an unknown black-box function f (e.g. a docking score), and and a budget T on the number of function evaluations, we seek an algorithm that sequentially selects candidates C = {x1, . . . , x T } ⊂ X 
+
+under these constraints. At each time point t, we assume access to a molecular representation ϕ(x) ∈ Rd, and a parametric or nonparametric surrogate model trained on all previous observations Dt = {(xi, f (xi)) }ti=1 . Let Tm ⊂X denote the set of elements corresponding to the largest values of f .In this scenario, a design strategy should select candidates such that a) the number of top-m elements recovered (i.e., | C ∩ Tm |) is maximized. b) the number of surrogate inferences is minimized. 
+
+3.2. Formulation of B OBA
+
+BOBA integrates surrogate-based optimization with struc-tured allocation of inference and evaluation budgets. The fundamental concept entails decomposing X into K sub-sets {X 1, . . . , XK }, each of which serves as an arm in a multi-armed bandit problem. At each iteration, a bandit algorithm selects a subset Xk
+
+based on past observations. Pulling arm k triggers a local-ized optimization procedure within Xk: surrogate inference is performed only on this subset, an acquisition function is evaluated locally, and a small batch of B candidates is selected for expensive evaluation. The newly observed data are then added to Dt, and the surrogate is updated. Ulti-mately, the observed reward becomes an aggregate metric of the utility of recent evaluations from that subspace (e.g., average docking score) and is used to guide future allocation (see Algorithm 1). This perspective reframes large-library screening as a hier-archical decision problem: rather than repeatedly scoring all candidates, the algorithm first decides where in chemi-cal space to invest computational resources, and only then performs fine-grained surrogate-based selection within the chosen region. When subspaces differ in their intrinsic concentration of high-quality molecules, bandit algorithms provide a principled mechanism for identifying and exploit-
+
+Algorithm 1 BOBA: Bayesian Optimization with Bandits over Clustered Subspaces 
+
+Require: Library X ; expensive oracle f (·); featurizer ϕ(·);number of subspaces K; bandit algorithm B; surrogate model class M; acquisition function a(·); rounds T ;batch size B 
+
+> 1:
+
+Cluster X into K disjoint subspaces {X 1, . . . , XK }
+
+using features ϕ(x) 
+
+> 2:
+
+Initialize dataset D0 ← ∅ (or a small seed set)  
+
+> 3:
+
+Initialize bandit state for arms k ∈ { 1, . . . , K } in B 
+
+> 4:
+
+for t = 1 , . . . , T do  
+
+> 5:
+
+Select an arm (subspace) kt ← B (history ) 
+
+> 6:
+
+Fit/update a global surrogate Mt ∈ M on Dt−1 
+
+> 7:
+
+Localized inference: compute acquisition scores 
+
+{at(x)}x∈X kt using Mt 
+
+> 8:
+
+Select a batch: 
+
+Qt ← Top-B elements of Xkt by at(x) 
+
+> 9:
+
+Evaluate oracle: obtain yt(x) ← f (x) for all x ∈ Q t 
+
+> 10:
+
+Update dataset: Dt ← D t−1 ∪{ (x, y t(x)) : x ∈ Q t} 
+
+> 11:
+
+Compute arm reward (batch average): 
+
+rt ← 1
+
+> B
+
+P 
+
+> x∈Q t
+
+yt(x) 
+
+> 12:
+
+Update bandit state: B ← UPDATE (B, k t, r t) 
+
+> 13:
+
+end for  
+
+> 14:
+
+Output: arg max (x,y )∈D T (y)
+
+ing promising regions while continuing to explore uncer-tain ones. This formulation is central to B OBA, enabling adaptive, data-driven control over inference and evaluation budgets without requiring exhaustive scans of the action space. Within this work we perform extensive experimental bench-marks of B OBA: First, we evaluate different bandit al-gorithms and analyze their impact on optimization per-formance and sample efficiency. Second, we systemati-cally study the tradeoff between optimization performance and computational cost by varying the number and size of partitions, highlighting how granularity affects inference cost. Third, we examine how different choices of featur-ization and partitioning strategy influence optimization per-formance, comparing structured clustering approaches to random partitions. 
+
+3.3. Related Work 
+
+Active learning strategies are widely used in large-library virtual screening and have been reviewed extensively else-where.(Reker & Schneider, 2015) Here, we focus on prior work that combines active learning with explicit segmenta-tion of large molecular libraries. In general, virtual libraries are constructed by combinatorial enumeration from sets of synthetic precursors ( synthons ), and several approaches ex-ploit this structure to improve search efficiency. A common 4Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space   
+
+> Figure 1. Evaluation of Bandit algorithms, and observed tradeoff between performance and inference cost . ( Left ) Optimization trajectories of B OBAwith different Bandit algorithms as a function of the number of costly black-box evaluations. BO with full-library inference (maroon) is included as an upper boundary. Performance is quantified by the number of retrieved molecules from the top-100 candidates from the full library. ( Right ) Computational cost of the respective optimization runs, measured by the number of surrogate model inferences. All experiments are reported on the Enamine-5M library docked against CKB. Trajectories are shown as the mean over 5 independent runs from different seed populations. The shaded area indicates the standard error of the mean.
+
+strategy is to perform search within this low-dimensional discrete synthon space, which avoids explicit enumeration of the full library. This setting has been addressed using ac-tive learning approaches (Grigg et al., 2025; Kozyrev et al., 2025), as well as multi-armed bandit formulations (Klarich et al., 2024; Zhao et al., 2025). Relatedly, the synthon-based structure of virtual libraries has also been exploited for hi-erarchical coarse-to-fine retrieval of candidate molecules (Nazarova et al., 2025). Our work differs both in how structure is imposed on the search space and how this structure is exploited algorith-mically. Existing approaches typically operate over a fixed synthon-defined hierarchical organization of the library. In contrast, B OBA uses explicit molecular-structure-aware par-titioning, and combines it with bandit-based methods for dynamic allocation of sampling effort across partitions, and surrogate-based optimization for efficient candidate selec-tion within each partition. This combination allows the algorithm to adaptively balance exploration and exploita-tion across heterogeneous regions of the library, rather than committing to a predefined partitioning or a single level of resolution. The resulting search strategy uses target feed-back to allocate effort across learned molecular partitions, without requiring the fixed synthon-level hierarchy assumed by fragment-based search methods. 
+
+# 4. Benchmarking Experiments 
+
+We benchmark B OBA on virtual libraries derived from ultra-large chemical spaces, as complete ground-truth docking scores are available for these libraries. Specifically, we ran-domly selected 5 million compounds from an enumerated li-brary of approximately 69 billion molecules from E NAMINE 
+
+REAL (Enamine Ltd.; Gorgulla et al., 2023), which we refer to as E NAMINE -5M. In addition, we sampled an indepen-dent set of 3.9 million compounds from E NAMINE ’s S-class small-molecule database (Enamine Ltd.), which we refer to as E NAMINE -S-3.9M. Both libraries were exhaustively docked against the protein targets NEDD4 (PDB: 9HT9; Maspero et al., 2025), and CKB (PDB: 3B6R; Bong et al., 2008). In addition, we use a virtual library of 2M molecules from E NAMINE ’s HTS database (E NAMINE -HTS), which was docked against a Thymidylate Kinase (TMK) by (Graff et al., 2021). BOBA uses a feedforward neural network surrogate operat-ing on fixed molecular features, with uncertainties approxi-5Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+mated via a Linearized Laplace approximation (Daxberger et al., 2021) (see Appendix A.4 for more details). We addi-tionally evaluate alternative uncertainty estimators, includ-ing MC dropout (Gal & Ghahramani, 2016) and SWAG (Maddox et al., 2019) (see Appendix A.5 and Figure 7); these experiments support the use of the Laplace approxi-mation in all further experiments. After a single-round initialization with randomly drawn samples from all partitions, B OBA follows the algorithm outlined in Algorithm 1. From a bandit-selected partition, all molecules are scored by the neural network surrogate, and a batch of B candidates are selected using the Upper Confidence Bound as the acquisition function. Across all methods, we run T = 20 rounds of selection, with a batch size of B = 5 ,000 for a total of T B = 100 ,000 oracle evaluations. In the main text, we report optimization tra-jectories for the number of top-100 molecules from the full library that were found by the algorithm, which is motivated by budget constraints on downstream experimental valida-tion. Trajectories for the top-1000 and top-10000 molecules are provided in the Appendix C, specifically Figures 8, 9, and 10. 
+
+4.1. Bandit Exploration Strongly Impacts Screening Performance 
+
+We first examine how the choice of bandit algorithm af-fects optimization performance. Specifically, we evaluate 
+
+ϵ-greedy, softmax sampling, and UCB1 bandits across dif-ferent levels of exploration, and under variation of the gran-ularity of library partitions. The resulting optimization tra-jectories and inference cost estimates on the Enamine-5M library, docked against CKB, are shown in Figure 1. As an upper-bound estimate of optimization performance, we compare against standard BO with full-library inference. Empirically, we find that ϵ-greedy and softmax exhibit sub-stantial degradation of optimization performance as the number of library partitions increases. We attribute this behavior to the lack of principled uncertainty-guided ex-ploration in these methods, which can lead to premature over-exploitation of suboptimal partitions, or insufficient exploitation of optimal ones. UCB1 instead assigns an opti-mism bonus to under-sampled arms, so uncertain partitions remain eligible for selection even when their empirical re-wards are initially modest. Consistent with this mechanism, the per-arm selection frequencies in Appendix D, specif-ically Figure 11, show that UCB1 continues to allocate evaluations across multiple partitions throughout optimiza-tion, without collapsing onto a single early winner. Thus, UCB1 remains largely competitive with full-inference BO even at large numbers of partitions, recovering nearly the same number of top-100 ranked molecules at a substan-tially reduced inference cost. Notably, the trends remain unchanged when considering the top-1000 and top-10000 candidate molecules from the full library (see Appendix C, specifically Figures 8, 9, and 10). These results indicate that, particularly in regimes with many arms, optimism-based allocation is critical, which motivates the use of UCB1 in all subsequent experimental studies. Remarkably, even this relatively simple algorithm achieves strong performance, suggesting that more advanced uncertainty-aware bandit methods may offer additional ben-efits. However, their analysis is beyond the scope of this study. Finally, even for the UCB1 algorithm, we observe a tradeoff between optimization performance and inference cost. This trade-off can be tuned by the user through the choice of par-tition granularity (that is, the number of clusters), depending on the requirements of a specific use case. The role of K can be understood through a simple cost–regret decomposition. Partitioning reduces the cumulative surrogate inference cost from order N T to approximately N T /K , but increasing K
+
+also makes the bandit allocation problem harder because the algorithm must identify promising regions among more arms. Under a gap-free UCB-style regret term of order 
+
+˜O(√KT ), minimizing a weighted objective of inference cost and allocation regret yields the heuristic scaling for choosing K as K∗ ≍ N 2/3T 1/3. This analysis, detailed in Appendix E, formalizes why larger libraries can support finer partitions while still requiring a sublinear choice of K.
+
+4.2. Structured Subspaces are Critical 
+
+We next perform a systematic ablation to understand whether the gains of B OBA arise merely from partition-ing the library, a persistent partitioning scheme, or from the inherent library structure captured by clustering. 4.2.1. S TATIC BOBA VS . D YNAMIC PARTITIONING 
+
+First, we compare B OBA to an unstructured baseline in which, at each iteration, standard BO is applied to a uni-formly random subset of the library whose size matches the average cluster size in B OBA. Related subsampling strategies have been used in prior works to mitigate the cost of exhaustive surrogate inference (Wang-Henderson et al., 2023). Figure 2 shows that B OBA substantially outperforms ran-dom subsampling across all settings. While both meth-ods reduce inference cost to the same degree, subsampling repeatedly reallocates computation to arbitrary regions of chemical space. In contrast, B OBA defines persistent par-titions and uses bandit feedback to adaptively concentrate evaluations in empirically promising regions. These find-ings indicate that B OBA achieves significant optimization performance gains by identifying persistent partitions of the 6Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space     
+
+> Figure 2. Influence of static vs. dynamic partitioning. Opti-mization trajectories of B OBAwith UCB1 using K-Means-based partitions, compared to setting in which a partition for inference is randomly selected at each iteration. All experiments are reported on the Enamine-5M library docked against CKB. Trajectories are shown as the mean over 5 independent runs from different seed populations. The shaded area indicates the standard error of the mean.
+
+action space, and adaptively allocating resources to these partitions. 4.2.2. S TRUCTURED VS . R ANDOMLY ASSIGNED 
+
+PARTITIONS 
+
+Second, we investigate whether a static library partition-ing alone is sufficient to maintain competitive optimization performance at reduced inference budget. Therefore, we compare B OBA using K-means-based molecular clusters to a variant in which molecules are randomly assigned once to K equally sized, static subsets, which are then treated as arms by the same UCB1 algorithm. Both approaches use identical surrogates, acquisition functions, batch sizes, and bandit rules; they differ only in how the partitions are initially defined. As shown in Figure 3, replacing the structured partitions obtained via K-means clustering with random partitions leads to a substantial degradation in optimization perfor-mance. Although both methods maintain persistent parti-tions and operate under identical inference budgets, only structured clustering yields arms that are systematically enriched for high-quality candidates. Analysis of the distri-bution of targets across partitions (see Appendix F, specif-ically Figures 12, 13, and 14, for further details) confirms the presence of significant inter-partition variance in the case of clustering, which is a prerequisite for effective ex-ploration–exploitation across arms. These findings confirm that the effectiveness of B OBA depends critically on the chemical coherence of the partitions, rather than on a static partition of the library alone.     
+
+> Figure 3. Influence of the partitioning scheme. Optimization trajectories of B OBAwith UCB1 using either K-Means-based partitions, or randomly assigned partitions. All experiments are reported on the Enamine-5M library docked against CKB. Tra-jectories are shown as the mean over 5 independent runs from different seed populations. The shaded area indicates the standard error of the mean.
+
+4.3. Effect of Feature Space 
+
+Having established the necessity of structured partitioning for achieving competitive optimization performance at re-duced inference budget, we next evaluate how the molecular representation used to construct partitions impacts end-to-end B OBA performance. Therefore, we compare a feature space spanned by established physicochemical descriptors for drug discovery (Gorgulla et al., 2020) without further refinement, with the embedding space of a domain-specific language model (T5Chem). Figure 4 demonstrates that, across all values of K, B OBA
+
+constructed in T5Chem embedding space consistently out-performs B OBA constructed in unrefined physicochemical descriptor space, recovering substantially more top-ranked molecules under identical budgets. These findings suggest that clustering in T5Chem embedding space produces par-titions that are more closely aligned with the optimization objective, allowing the bandit to allocate more effectively across regions, while improving local surrogate generaliza-tion. In all experiments, the same molecular representation is used for both clustering and surrogate modeling. This de-sign choice ensures that the geometry used to define bandit arms is consistent with the geometry used for local acquisi-tion, avoiding discrepancies between global partitioning and local optimization. We therefore consider this the preferred default when the representation is sufficiently informative for the target task. At the same time, this design also im-plies that biases from a poorly aligned representation are propagated into both stages, motivating the partion-quality ablations discussed above. These conclusions align well with the findings by (Kristiadi et al., 2024), who reported that, even without task-specific fine-tuning, such embed-dings provide an effective molecular representation across different tasks. 7Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Overall, these results indicate that the effectiveness of B OBA
+
+is tightly coupled to the representational geometry of chem-ical space. While pre-trained molecular foundation models provide a robust starting point, we anticipate that integrat-ing domain expertise into task-specific feature spaces can further improve or accelerate optimization with B OBA.   
+
+> Figure 4. Effect of feature space on end-to-end B OBAper-formance. Optimization trajectories of B OBA, with partitions constructed using T5Chem language model embeddings, or us-ing unrefined physicochemical descriptors. All experiments are reported on the Enamine-5M library docked against CKB. Tra-jectories are shown as the mean over 5 independent runs from different seed populations. The shaded area indicates the standard error of the mean.
+
+4.4. Robustness Across Targets and Difficulty Regimes 
+
+Finally, we study the optimization behavior of B OBA with UCB1 on three additional tasks: the E NAMINE -HTS library docked against TMK (Graff et al., 2021), and the E NAMINE -S-3.9M library docked against CKB and NEDD4. The corresponding optimization trajectories, compared to BO with full-library inference as an upper-bound estimate, are shown in Figure 5. Qualitatively, we find that the trends discussed in the previ-ous sections are reproduced across tasks. As K increases, we observe a similar sublinear decay of optimization per-formance, indicating a feasible tradeoff between optimiza-tion performance and inference cost. Notably, the absolute optimization scores on the E NAMINE -S-3.9M library are substantially lower than those on the E NAMINE -5M (CKB) benchmark, both for the upper-bound estimate and, by exten-sion, for B OBA. This performance gap suggests that these tasks pose more challenging optimization problems. Indeed, analysis of the underlying library revealed a larger chemical diversity in the E NAMINE -S-3.9M library compared to the ENAMINE -5M library, which provides a possible explana-tion for the observed differences in absolute performance. These results demonstrate that BOBA’s performance– inference tradeoff and dependence on cluster granularity persist across targets and difficulty regimes, indicating that the framework generalizes beyond a single dataset or opti-mization landscape. 
+
+ENAMINE -S-3.9M (CKB) 
+
+ENAMINE -S-3.9M (NEDD4) 
+
+ENAMINE -HTS (TMK)     
+
+> Figure 5. BOBAacross targets and difficulty regimes. Opti-mization trajectories of B OBAon different optimization problems. Trajectories are shown as the mean over 5 independent runs from different seed populations. The shaded area indicates the standard error of the mean.
+
+4.5. Scaling to Larger Libraries 
+
+The preceding experiments evaluate B OBA in settings where exhaustive surrogate inference is still possible, which en-ables direct comparison against full-library BO. To test whether the observed tradeoff remains relevant at larger 8Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space         
+
+> Figure 6. Scalability of B OBAwith library size. Optimization performance of B OBArelative to full-library BO as the library size increases from approximately 10 5to 10 8molecules. Performance is measured as the area under the top-1000 retrieval curve and normalized by the AUC of the corresponding full-library BO run. All experiments use the ZINC library docked against AmpC, or subsets thereof.
+
+scale, we further evaluate B OBA on the ZINC library docked against AmpC (Lyu et al., 2019) using nested libraries of ap-proximately 10 5, 10 6, 10 7, and 10 8 molecules. For each li-brary size, we compare the area under the top-1000 retrieval curve for B OBA against the corresponding full-library BO run, normalizing the BO performance to one. As shown in Figure 6, B OBA’s relative performance does not deteriorate as the candidate library grows. Instead, for several partition granularities, the normalized AUC ap-proaches full-library BO at the largest tested scale. This trend is consistent with the core motivation of B OBA: as 
+
+N increases, full-library inference becomes increasingly costly, while localized inference over a selected partition remains controlled by the cluster granularity. The value of 
+
+K therefore acts as a user-facing knob that trades inference cost against the statistical difficulty of selecting among more arms. Appendix A.2 reports the corresponding wall-clock breakdown. 
+
+# 5. Conclusion and Outlook 
+
+Ultra-large make-on-demand libraries push surrogate-based optimization into a regime where surrogate inference and acquisition over the full candidate set can become as limit-ing as the expensive oracle itself. In this work, we introduce BOBA, a target-aware framework that avoids full-library inference by partitioning chemical space into persistent sub-spaces, and using a multi-armed bandit to allocate inference and evaluation to regions that empirically yield high-utility molecules. Benchmark experiments highlight the critical influence of both the bandit exploration strategy and the structure of the partitioning scheme. Optimism-under-uncertainty ban-dits combined with clustering on foundation model em-beddings consistently delivered robust performance across tasks, clearly outperforming clustering on unrefined physic-ochemical descriptors as well as unstructured baselines on randomized partitions. Looking forward, we anticipate that advances in bandit algorithms, particularly improved uncer-tainty quantification and rotting bandits to accommodate non-stationary partition rewards (Levine et al., 2017), will further enhance optimization performance. Coupling these methods with problem-specific, expert-refined molecular representations is a promising direction for further gains. Our findings further reveal a clear trade-off between opti-mization performance and inference cost. Empirical results across increasingly large libraries indicate that the decay in optimization performance with increasing numbers of partitions is sublinear, making it feasible for practitioners to select the number of partitions, and therefore the inference cost, according to problem-specific constraints. This behav-ior is supported by a simplified cost-regret analysis, which identifies the number of clusters as a natural control parame-ter and predicts an optimal granularity that grows sublinearly with library size. While partitioning very large libraries introduces additional computational cost, the employed al-gorithm scales as O(nkid ), dominated by the library size 
+
+n, and constitutes a one-time processing expense that can be reused across targets. Assessing how broadly these re-sults generalize across even larger libraries and more diverse targets remains the focus of ongoing work. Overall, this study represents a step toward principled decision-making at billion- to trillion-scale, in chemical discovery and other large discrete search problems, where both evaluation and inference are costly. 
+
+# 6. Limitations 
+
+The current implementation and empirical evaluation of BOBA are restricted to settings in which the virtual library is explicitly enumerable, and in which featurization and clus-tering of the full library remain computationally tractable. Conceptually, however, the proposed framework does not rely on explicit enumeration of candidate molecules. The combination of library partitioning, bandit-driven allocation of sampling effort across partitions, and surrogate modeling for candidate selection could instead be applied directly in synthon space. This extension would avoid the need for full library enumeration and global featurization. Instead, enumeration, featurization, and inference would be required only for global subsamples or small, tractable partitions. We leave the implementation and systematic benchmarking of this synthon-level formulation to future work. 9Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# Acknowledgements 
+
+The authors thank Dr. Michael Emanuel for helpful discus-sions and Dr. Christoph Gorgulla for providing the Enamine-5M library. Y.C. acknowledges support from the BCMP Scholars Summer Undergraduate Research Program at Har-vard Medical School. C.K. was supported by a Hertz Foun-dation Fellowship and previously by NIH/NIGMS Molecu-lar Biophysics Training Grant T32 GM008313. F.S.-K. ac-knowledges funding from the Deutsche Forschungsgemein-schaft (DFG) under the Priority Program 2363 “Molecular Machine Learning” (grant no. 497260357). H.A. acknowl-edges support from Pivotal Life Sciences and NIH grant R35 GM158220 (NIGMS). 
+
+# Impact Statement 
+
+This work aims to accelerate the identification of promising candidates from ultra-large discrete libraries, motivated by applications in early-stage drug discovery. By improving the efficiency of computational candidate selection, such methods may reduce the cost and time required to identify therapeutic leads, with potential downstream benefits for global healthcare. The proposed framework addresses a general class of large-scale discrete optimization problems, and may therefore be applicable beyond drug discovery, e. g. in materials design, catalyst discovery, or related scientific settings. The societal consequences of such applications de-pend on the specific use case, but could be relevant to areas like energy storage and conversion, sustainable materials development, or improved resource and materials cycles. At the same time, more efficient exploration of chemical space raises potential dual-use concerns. While the present approach is limited to computational prioritization and re-quires substantial expertise and experimental infrastructure to realize practical impact, responsible development and deployment are important considerations. 
+
+# References 
+
+Auer, P., Cesa-Bianchi, N., and Fischer, P. Finite-time analysis of the multiarmed bandit problem. Machine Learning , 47(2–3):235–256, 2002. doi: 10.1023/a: 1013689704352. URL http://dx.doi.org/10. 1023/A:1013689704352 .Bong, S. M., Moon, J. H., Nam, K. H., Lee, K. S., Chi, Y. M., and Hwang, K. Y. Structural studies of human brain-type creatine kinase complexed with the adp–mg2+no3-–creatine transition-state analogue com-plex. FEBS Letters , 582(28):3959–3965, 2008. doi: 10.1016/j.febslet.2008.10.039. URL http://dx.doi. org/10.1016/j.febslet.2008.10.039 .Christofidellis, D., Giannone, G., Born, J., Winther, O., Laino, T., and Manica, M. Unifying molecular and tex-tual representations via multi-task language modelling. In Proceedings of the 40th International Conference on Machine Learning (ICML 2023) , pp. 6140–6157. PMLR, 2023. doi: 10.48550/arXiv.2301.12586. URL http:// dx.doi.org/10.48550/arXiv.2301.12586 .Daxberger, E., Kristiadi, A., Immer, A., Eschenhagen, R., Bauer, M., and Hennig, P. Laplace redux – effortless bayesian deep learning. In Proceedings of the 35th In-ternational Conference on Neural Information Process-ing Systems (NeurIPS 2021) , pp. 20089 – 20103, Red Hook, NY, USA, 2021. Curran Associates Inc. doi: 10.48550/arXiv.2106.14806. URL http://dx.doi. org/10.48550/arXiv.2106.14806 .Eisenhuth, P., Liessmann, F., Moretti, R., and Meiler, J. Ultra-large library screening with an evolu-tionary algorithm in rosetta (revold). Communi-cations Chemistry , 8(1), 2025. doi: 10.1038/ s42004-025-01758-x. URL http://dx.doi.org/ 10.1038/s42004-025-01758-x .Enamine Ltd. Enamine REAL Database. URL https: //enamine.net/compound-collections/ real-compounds/real-database .Frazier, P. I. A tutorial on bayesian optimization. arXiv Preprint , 2018. doi: 10.48550/arXiv.1807.02811. URL 
+
+https://arxiv.org/abs/1807.02811 .Gal, Y. and Ghahramani, Z. Dropout as a bayesian approxi-mation: Representing model uncertainty in deep learning. In Balcan, M. F. and Weinberger, K. Q. (eds.), Proceed-ings of the 33rd International Conference on Machine Learning (ICML 2016) , volume 48, pp. 1050–1059, New York, New York, USA, 2016. PMLR. doi: 10.48550/ arXiv.1506.02142. URL https://proceedings. mlr.press/v48/gal16.html .Garnett, R. Bayesian Optimization . Cambridge University Press, 2023. URL https://bayesoptbook.com/ .Garnett, R., Krishnamurthy, Y., Xiong, X., Schneider, J., and Mann, R. Bayesian optimal active search and surveying. In Proceedings of the 29th International Conference on Machine Learning (ICML 2012) , pp. 843–850, Madison, WI, USA, 2012. Omnipress. doi: 10.48550/arXiv.1206.6406. URL http://dx.doi. org/10.48550/arXiv.1206.6406 .Garnett, R., G ¨artner, T., Vogt, M., and Bajorath, J. In-troducing the ‘active search’ method for iterative vir-tual screening. Journal of Computer-Aided Molec-ular Design , 29(4):305–314, 2015. doi: 10.1007/ s10822-015-9832-9. URL http://dx.doi.org/ 10.1007/s10822-015-9832-9 .10 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Gloriam, D. E. Bigger is better in virtual drug screens. 
+
+Nature , 566(7743):193–194, 2019. doi: 10.1038/ d41586-019-00145-6. URL http://dx.doi.org/ 10.1038/d41586-019-00145-6 .Gorgulla, C., Boeszoermenyi, A., Wang, Z.-F., Fischer, P. D., Coote, P. W., Padmanabha Das, K. M., Malets, Y. S., Radchenko, D. S., Moroz, Y. S., Scott, D. A., Fackeldey, K., Hoffmann, M., Iavniuk, I., Wagner, G., and Arthanari, H. An open-source drug discovery platform enables ultra-large virtual screens. Nature , 580(7805):663–668, 2020. doi: 10.1038/s41586-020-2117-z. URL http://dx. doi.org/10.1038/s41586-020-2117-z .Gorgulla, C., Cecchini, D., Nigam, A., Tang, M., Reis, J., Koop, M., Gottinger, A., Nicoll, C. R., Jayaraj, A., Cinaroglu, S. S., Torner, R., Seo, H.-S., Dhe-Paganon, S., Secker, C., Haddadnia, M., Malets, Y., Hasson, A., Das, K., Churion, K., Kim, J., Li, M., Kumar, A., Levin-Konigsberg, R., Choi, E.-B., Shapiro, G., Cox, H., Sebas-tian, L., Braithwaite, C., Bashyal, P., Radchenko, D. S., Kumar, A., Gehev, M., Aquilanti, P.-Y., Gabb, H., Alhos-sary, A., Wagner, G., Aspuru-Guzik, A., Moroz, Y. S., Kalodimos, C. G., Fackeldey, K., Mattevi, A., and Artha-nari, H. Ai-enhanced adaptive virtual screening platform enabling exploration of 69 billion molecules discovers structurally validated fsp1 inhibitors. bioRxiv Preprint ,2023. doi: 10.1101/2023.04.25.537981. URL http:// dx.doi.org/10.1101/2023.04.25.537981 .Graff, D. E., Shakhnovich, E. I., and Coley, C. W. Accel-erating high-throughput virtual screening through molec-ular pool-based active learning. Chemical Science , 12 (22):7866–7881, 2021. doi: 10.1039/d0sc06805e. URL 
+
+http://dx.doi.org/10.1039/D0SC06805E .Grigg, T. G., Burlage, M., Scott, O. B., Sydow, D., and Wilbraham, L. Active learning on synthons for molec-ular design. In ICLR 2025 Workshop on Generative and Experimental Perspectives for Biomolecular Design ,2025. URL https://openreview.net/forum? id=bLUw471nio .Grygorenko, O. O., Radchenko, D. S., Dziuba, I., Chup-rina, A., Gubina, K. E., and Moroz, Y. S. Generating multibillion chemical space of readily accessible screen-ing compounds. iScience , 23(11):101681, 2020. doi: 10.1016/j.isci.2020.101681. URL http://dx.doi. org/10.1016/j.isci.2020.101681 .Hoffmann, T. and Gastreich, M. The next level in chemical space navigation: going far beyond enu-merable compound libraries. Drug Discovery Today ,24(5):1148–1156, 2019. doi: 10.1016/j.drudis.2019. 02.013. URL http://dx.doi.org/10.1016/j. drudis.2019.02.013 .Jiang, S., Malkomes, G., Moseley, B., and Garnett, R. Effi-cient nonmyopic active search with applications in drug and materials discovery, 2018. URL https://arxiv. org/abs/1811.08871 .Kingma, D. P. and Ba, J. Adam: A method for stochas-tic optimization. In 3rd International Conference on Learning Representations (ICLR 2015) , 2015. doi: 10.48550/arXiv.1412.6980. URL http://dx.doi. org/10.48550/arXiv.1412.6980 .Klarich, K., Goldman, B., Kramer, T., Riley, P., and Walters, W. P. Thompson sampling – an efficient method for searching ultralarge synthesis on demand databases. Journal of Chemical Information and Mod-eling , 64(4):1158–1171, 2024. doi: 10.1021/acs.jcim. 3c01790. URL http://dx.doi.org/10.1021/ acs.jcim.3c01790 .Kozyrev, V., Sindt, F., and Rognan, D. Active learning to select the most suitable reagents and one-step organic chemistry reactions for prioritizing target-specific hits from ultralarge chemical spaces. Journal of Chemical Information and Modeling , 65(2):693–704, 2025. doi: 10. 1021/acs.jcim.4c02097. URL http://dx.doi.org/ 10.1021/acs.jcim.4c02097 .Kristiadi, A., Strieth-Kalthoff, F., Skreta, M., Poupart, P., Aspuru-Guzik, A., and Pleiss, G. A sober look at llms for material discovery: are they actually good for bayesian optimization over molecules? In Proceed-ings of the 41st International Conference on Machine Learning , ICML’24. JMLR.org, 2024. doi: 10.48550/ arXiv.2402.05015. URL http://dx.doi.org/10. 48550/arXiv.2402.05015 .Landrum, G., Tosco, P., Kelley, B., Rodriguez-Schmidt, R., Cosgrove, D., Riniker, S., Gedeck, P., Vianello, R., Schneider, N., Kawashima, E., N, D., Jones, G., Dalke, A., Cole, B., Swain, M., Turk, S., Savelyev, A., Vaucher, A., W ´ojcikowski, M., Take, I., Probst, D., Ujihara, K., Scalfani, V. F., Godin, G., Lehtivarjo, J., Pahl, A., Walker, R., Berenger, F., and Biggs, J. D. Rdkit (release 2023-03-2), 2023. URL https://zenodo.org/record/ 8053810 .Lattimore, T. and Szepesv ´ari, C. Bandit Algorithms .Cambridge University Press, 2020. doi: 10.1017/ 9781108571401. URL http://dx.doi.org/10. 1017/9781108571401 .Levine, N., Crammer, K., and Mannor, S. Rotting ban-dits. In Proceedings of the 31st International Confer-ence on Neural Information Processing Systems (NeurIPS 2017) , pp. 3077–3086, Red Hook, NY, USA, 2017. Curran Associates Inc. doi: 10.48550/arXiv.1702. 11 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+07274. URL http://dx.doi.org/10.48550/ arXiv.1702.07274 .Liu, F., Mailhot, O., Glenn, I. S., Vigneron, S. F., Bassim, V., Xu, X., Fonseca-Valencia, K., Smith, M. S., Rad-chenko, D. S., Fraser, J. S., Moroz, Y. S., Irwin, J. J., and Shoichet, B. K. The impact of library size and scale of testing on virtual screening. Nature Chemi-cal Biology , 21(7):1039–1045, 2025. doi: 10.1038/ s41589-024-01797-w. URL http://dx.doi.org/ 10.1038/s41589-024-01797-w .Loshchilov, I. and Hutter, F. SGDR: stochastic gradient de-scent with warm restarts. In 5th International Conference on Learning Representations (ICLR 2017) , 2017. doi: 10.48550/arXiv.1608.03983. URL http://dx.doi. org/10.48550/arXiv.1608.03983 .Lyu, J., Wang, S., Balius, T. E., Singh, I., Levit, A., Moroz, Y. S., O’Meara, M. J., Che, T., Algaa, E., Tolmachova, K., Tolmachev, A. A., Shoichet, B. K., Roth, B. L., and Irwin, J. J. Ultra-large library docking for discovering new chemotypes. Nature , 566(7743):224–229, 2019. doi: 10.1038/s41586-019-0917-9. URL http://dx.doi. org/10.1038/s41586-019-0917-9 .Lyu, J., Irwin, J. J., and Shoichet, B. K. Modeling the expansion of virtual screening libraries. Nature Chemical Biology , 19(6):712–718, 2023. doi: 10.1038/ s41589-022-01234-w. URL http://dx.doi.org/ 10.1038/s41589-022-01234-w .Maddox, W. J., Izmailov, P., Garipov, T., Vetrov, D. P., and Wilson, A. G. A simple baseline for Bayesian uncertainty in deep learning. In Proceedings of the 32nd International Conference on Neural Information Processing Systems (NeurIPS 2019) , pp. 13132–13143, 2019. doi: 10.48550/ arXiv.1902.02476. URL http://dx.doi.org/10. 48550/arXiv.1902.02476 .Maspero, E., Cappa, A., Weber, J., Trifir `o, P., Amici, R., Bruno, A., Fag `a, G., Cecatiello, V., Fattori, R., Leuzzi, B., Taibi, V., Meroni, G., Pasi, M., Romussi, A., Sar-tori, L., Villa, M., Vultaggio, S., Cir` o, M., Soffientini, P., Lombardo, L., Dahe, S., Bachi, A., Varasi, M., Rossi, M., Pasqualato, S., Mercurio, C., and Polo, S. Structure-based design of potent and selective inhibitors of the HECT lig-ase NEDD4. Communications Chemistry , 8(1), 2025. doi: 10.1038/s42004-025-01557-4. URL http://dx.doi. org/10.1038/s42004-025-01557-4 .Morgan, S., Grootendorst, P., Lexchin, J., Cunningham, C., and Greyson, D. The cost of drug development: A system-atic review. Health Policy , 100(1):4–17, 2011. doi: 10. 1016/j.healthpol.2010.12.002. URL http://dx.doi. org/10.1016/j.healthpol.2010.12.002 .Naik, M., Raichurkar, A., Bandodkar, B. S., Varun, B. V., Bhat, S., Kalkhambkar, R., Murugan, K., Menon, R., Bhat, J., Paul, B., Iyer, H., Hussein, S., Tucker, J. A., Vogtherr, M., Embrey, K. J., McMiken, H., Prasad, S., Gill, A., Ugarkar, B. G., Venkatraman, J., Read, J., and Panda, M. Structure guided lead generation for m. tuberculosis thymidylate kinase (mtb tmk): Discov-ery of 3-cyanopyridone and 1,6-naphthyridin-2-one as potent inhibitors. Journal of Medicinal Chemistry , 58 (2):753–766, 2015. doi: 10.1021/jm5012947. URL 
+
+https://doi.org/10.1021/jm5012947 .Nazarova, A. L., Sadybekov, A. V., Sadybekov, A. A., Pro-topopov, M., Radchenko, D. S., Moroz, Y. S., Tarkhanova, O. O., and Katritch, V. V-synthes2 - the next generation tool for structure-based virtual screening of giga-scale chemical spaces. ResearchSquare Preprint , 2025. doi: 10.21203/rs.3.rs-7782723/v1. URL http://dx.doi. org/10.21203/rs.3.rs-7782723/v1 .O’Boyle, N. M., Banck, M., James, C. A., Morley, C., Van-dermeersch, T., and Hutchison, G. R. Open babel: An open chemical toolbox. Journal of Cheminformatics , 3 (1), 2011. doi: 10.1186/1758-2946-3-33. URL http: //dx.doi.org/10.1186/1758-2946-3-33 .Papidocha, S. M., Burger, A., Bernales, V., and Aspuru-Guzik, A. The elephant in the lab: synthesizability in generative small-molecule design. Current Opinion in Chemical Engineering , 51:101217, 2026. doi: 10.1016/ j.coche.2025.101217. URL http://dx.doi.org/ 10.1016/j.coche.2025.101217 .Pyzer-Knapp, E. O. Bayesian optimization for accelerated drug discovery. IBM Journal of Research and Devel-opment , 62(6):2:1–2:7, 2018. doi: 10.1147/jrd.2018. 2881731. URL http://dx.doi.org/10.1147/ JRD.2018.2881731 .Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W., and Liu, P. J. Exploring the limits of transfer learning with a unified text-to-text transformer. Journal of Machine Learning Research ,21(140):1–67, 2020. doi: 10.48550/arXiv.1910.10683. URL http://jmlr.org/papers/v21/20-074. html .Reker, D. Practical considerations for active machine learn-ing in drug discovery. Drug Discovery Today: Tech-nologies , 32–33:73–79, 2019. doi: 10.1016/j.ddtec.2020. 06.001. URL http://dx.doi.org/10.1016/j. ddtec.2020.06.001 .Reker, D. and Schneider, G. Active-learning strategies in computer-assisted drug discovery. Drug Discovery Today , 20(4):458–465, 2015. doi: 10.1016/j.drudis.2014. 12 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+12.004. URL http://dx.doi.org/10.1016/j. drudis.2014.12.004 .Restrepo, G. Chemical space: limits, evolution and modelling of an object bigger than our universal li-brary. Digital Discovery , 1(5):568–585, 2022. doi: 10.1039/d2dd00030j. URL http://dx.doi.org/ 10.1039/D2DD00030J .Robbins, H. Some aspects of the sequential design of experiments. Bulletin of the American Mathemat-ical Society , 58(5):527–535, 1952. doi: 10.1090/ s0002-9904-1952-09620-8. URL http://dx.doi. org/10.1090/S0002-9904-1952-09620-8 .Sadybekov, A. A., Sadybekov, A. V., Liu, Y., Iliopoulos-Tsoutsouvas, C., Huang, X.-P., Pickett, J., Houser, B., Patel, N., Tran, N. K., Tong, F., Zvonok, N., Jain, M. K., Savych, O., Radchenko, D. S., Nikas, S. P., Petasis, N. A., Moroz, Y. S., Roth, B. L., Makriyan-nis, A., and Katritch, V. Synthon-based ligand discov-ery in virtual libraries of over 11 billion compounds. 
+
+Nature , 601(7893):452–459, 2021. doi: 10.1038/ s41586-021-04220-9. URL http://dx.doi.org/ 10.1038/s41586-021-04220-9 .Settles, B. Active Learning . Springer International Pub-lishing, 2012. doi: 10.1007/978-3-031-01560-1. URL http://dx.doi.org/10.1007/ 978-3-031-01560-1 .Shoichet, B. K. Virtual screening of chemical li-braries. Nature , 432(7019):862–865, 2004. doi: 10. 1038/nature03197. URL http://dx.doi.org/10. 1038/nature03197 .Wang-Henderson, M., Soyuer, B., Kassraie, P., Krause, A., and Bogunovic, I. Graph neural network powered bayesian optimization for large molecular spaces. In 
+
+ICML 2023 Workshop on Structured Probabilistic In-ference & Generative Modeling , 2023. URL https: //openreview.net/forum?id=QIrgM7uybw .Warr, W. A., Nicklaus, M. C., Nicolaou, C. A., and Rarey, M. Exploration of ultralarge compound collections for drug discovery. Journal of Chemical Information and Modeling , 62(9):2021–2034, 2022. doi: 10.1021/acs.jcim. 2c00224. URL http://dx.doi.org/10.1021/ acs.jcim.2c00224 .Yu, Y., Cai, C., Wang, J., Bo, Z., Zhu, Z., and Zheng, H. Uni-dock: Gpu-accelerated docking enables ultralarge virtual screening. Journal of Chemical Theory and Com-putation , 19(11):3336–3345, 2023. doi: 10.1021/acs.jctc. 2c01145. URL http://dx.doi.org/10.1021/ acs.jctc.2c01145 .Zhao, H., Nittinger, E., Yu, M. A., Gathiaka, S., Walters, W. P., and Tyrchan, C. Enhanced thompson sampling by roulette wheel selection for screening ultralarge combina-torial libraries. Journal of Cheminformatics , 17(1), 2025. doi: 10.1186/s13321-025-01105-1. URL http://dx. doi.org/10.1186/s13321-025-01105-1 .13 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# A. Additional Implementation Details 
+
+A.1. Fair Budgeting 
+
+Importantly, although clustering reduces the average search space per round from N to approximately N/K , we do not 
+
+reduce the batch size when using B OBA. One might consider evaluating only B/K molecules per iteration within each subspace and increasing the number of rounds accordingly; however, this would equalize the total number of surrogate inferences between B OBA and standard BO, obscuring the regime we aim to study. Instead, we fix both T and B across all methods. As a result, B OBA performs approximately K-fold fewer surrogate inferences than standard BO, directly exposing the tradeoff between inference cost and optimization performance. 
+
+A.2. Runtime Breakdown 
+
+To complement the inference-count analysis in the main text, Table 1 reports wall-clock measurements for preprocessing and optimization on the ZINC–AmpC scaling benchmark. The measurements separate one-time library preprocessing costs, namely embedding computation and clustering, from the repeated optimization loop. Embedding computation dominates total runtime, but this cost is amortized across downstream targets because the same molecular representations and partitions can be reused. Within a fixed optimization campaign, the dominant avoidable cost is surrogate inference, which is precisely the component reduced by restricting acquisition evaluation to the selected partition.                                                 
+
+> Dataset Emb. K= 5 K= 10 K= 25 K= 100 BO BoBa-5 BoBa-10 BoBa-25 BoBa-100 96M 12774 541 649 810 855 2720 2137 2258 2318 2267 10M 1281 88 89 96 99 469 361 286 321 319 1M 129 312 14 18 57 50 41 37 39
+> Table 1. Wall-clock runtime breakdown for the ZINC–AmpC scaling benchmark. All values are reported in seconds. “Emb.” denotes embedding computation, the columns labeled by Kdenote clustering/tranching time for the corresponding number of partitions, and the final columns report optimization-loop runtime for full-library BO and B OBA. Model training and inference were performed on an NVIDIA GH200 Grace Hopper chip.
+
+A.3. Multi-Armed Bandit Algorithms 
+
+In this work, each clustered subspace Xk is treated as an arm in a multi-armed bandit (MAB) problem. At iteration t,selecting arm k yields a scalar reward rk,t , defined as the average docking score of the batch evaluated from that subspace. We maintain, for each arm k, the number of times it has been selected nk(t) and its empirical mean reward 
+
+ˆμk(t) = 1
+
+nk(t) 
+
+> nk(t)
+
+X
+
+> i=1
+
+rk,i .
+
+Initialization. All algorithms use a single-round initialization strategy: the initial batch is distributed across arms, with 
+
+B/K molecules seeded from each partition when B is divisible by K. This seeding strategy initializes every arm without spending one full optimization round per arm, which is important when T is small relative to K.We consider the following bandit strategies. A.3.1. UCB1 Upper Confidence Bound (UCB1) selects the arm that maximizes an optimism-adjusted estimate of the mean reward (Auer et al., 2002): 
+
+kt = arg max 
+
+> k∈{ 1,...,K }
+
+"
+
+ˆμk(t − 1) + c
+
+s
+
+2 log tnk(t − 1) 
+
+#
+
+,
+
+where c > 0 is a tunable exploration constant (set to c = 1 in all experiments unless otherwise stated). Arms are initialized by the single-round seeding strategy described above before the UCB1 rule is applied. 14 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+A.3.2. ϵ-G REEDY 
+
+The ϵ-greedy strategy selects arms according to 
+
+kt =
+
+(
+
+arg max k ˆμk(t − 1) , with probability 1 − ϵ, 
+
+Uniform ({1, . . . , K }), with probability ϵ, 
+
+where ϵ ∈ [0 , 1] controls the exploration rate. We report results for multiple values of ϵ.A.3.3. S OFTMAX SAMPLING 
+
+Softmax (Boltzmann) exploration samples arms stochastically according to their empirical mean rewards: 
+
+P (kt = k) = exp( τ ˆμk(t − 1)) 
+
+PKj=1 exp( τ ˆμj (t − 1)) .
+
+Here τ > 0 is an inverse-temperature parameter controlling the sharpness of the distribution. Larger τ increasingly concentrates probability mass on the empirically best arm, while smaller τ approaches uniform sampling. Note that we parameterize softmax using exp( τ x ) rather than the more common exp( x/τ ); under this convention, larger τ corresponds to lower stochasticity. 
+
+A.4. Bayesian Optimization 
+
+All screening methods in this work, including standard Bayesian optimization and B OBA, are built on a common surrogate modeling and acquisition framework. This shared framework ensures that observed differences arise from the allocation strategy rather than from differences in modeling capacity. A.4.1. S URROGATE MODEL 
+
+We model the unknown objective function f (x) using Bayesian neural networks (BNNs) trained on the growing dataset 
+
+Dt = {(xi, y i)}ti=1 . Rather than performing fully Bayesian training, we adopt a post-hoc Laplace approximation to the posterior over network weights (Daxberger et al., 2021), which has recently been shown to provide accurate and computationally efficient uncertainty estimates for deep models. Concretely, we first train a deterministic neural network by minimizing mean squared error on Dt, which learns to predict docking scores from some given representation space ϕ(x) ∈ Rd. Let ˆθt denote the resulting parameters. We then approximate the posterior p(θ | D t) by a Gaussian centered at ˆθt with covariance given by the inverse Hessian of the negative log-likelihood, 
+
+p(θ | D t) ≈ N (ˆθt, H −1 
+
+> t
+
+),
+
+where Ht is estimated using a block-diagonal or Kronecker-factored approximation. This approximation yields a predictive distribution for each candidate molecule, 
+
+p(f (x) | D t) ≈ N (μt(x), σ 2 
+
+> t
+
+(x)) ,
+
+which provides both predictive means and calibrated epistemic uncertainties. Unless otherwise stated, the same surrogate architecture, training protocol, and Laplace approximation procedure are used across all experiments. A.4.2. A CQUISITION FUNCTION 
+
+Candidate selection is driven by the Upper Confidence Bound (UCB) acquisition function, 
+
+at(x) = μt(x) + βt σt(x),
+
+where μt(x) and σt(x) denote the predictive mean and standard deviation of the surrogate model, and βt > 0 controls the exploration–exploitation tradeoff. In standard Bayesian optimization, at(x) is evaluated over the entire library. In B OBA, the same acquisition function is used, but inference is restricted to the subspace selected by the bandit layer. Thus, all methods share identical local decision rules; only the scope of inference and the global allocation of computation differ. 15 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+A.4.3. T RAINING AND UPDATE PROTOCOL 
+
+The surrogate model is retrained (or warm-started and updated) at each iteration using all available observations in Dt.
+
+Model architecture. The surrogate model is a fully connected feedforward neural network with two hidden layers of sizes 512 and 128, respectively, and ReLU nonlinearities. The network maps molecular feature vectors to a scalar prediction of docking score. 
+
+Optimization. All networks are trained using the Adam optimizer (Kingma & Ba, 2015) with learning rate 1 × 10 −3 and weight decay 1 × 10 −4. We employ a cosine annealing learning rate schedule (Loshchilov & Hutter, 2017) over the course of training. Each surrogate update consists of 500 training epochs with a batch size of 8192. 
+
+Laplace approximation. After deterministic training, we construct a post-hoc Bayesian neural network using a Laplace approximation over the final layer weights. We use a last-layer Laplace approximation (Daxberger et al., 2021) and refine the posterior for an additional 100 post-hoc optimization epochs. Predictive means and uncertainties are obtained from this approximate posterior and used to compute UCB acquisition values. 
+
+A.5. Uncertainty Estimation Ablation 
+
+Because the acquisition function depends directly on predictive uncertainty, we evaluated whether the conclusions are specific to the Laplace approximation used in the main experiments. Figure 7 compares the Laplace approximation against SWAG (Maddox et al., 2019) and MC dropout (Gal & Ghahramani, 2016) for both full-library BO and B OBA across multiple libraries, targets, and values of K. Across these settings, the Laplace approximation provides the strongest or most consistent retrieval trajectories, particularly for full-library BO. The same qualitative trend is retained in B OBA, although performance varies more strongly across libraries and cluster granularities. These results support the use of the Laplace approximation as the default uncertainty estimator in the main benchmarks, while leaving more systematic uncertainty-calibration studies as a promising direction for future work. 16 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Figure 7. Effect of uncertainty estimation on optimization performance. Optimization trajectories for full-library BO and B OBA using Laplace approximation, SWAG, and MC dropout uncertainty estimates. Curves report retrieval of top-ranked candidates as a function of the number of molecules explored across E NAMINE -S-3.9M docked against NEDD4, E NAMINE -S-3.9M docked against CKB, and ENAMINE -5M docked against CKB. Columns correspond to different values of K.
+
+17 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# B. Physiochemical Descriptors 
+
+List of physiochemical properties used as heuristic features: aromatic proportion, aromatic ring count, atom count, bond count, chiral center count, doublebond stereoisomer count, electronegative atom count, formal charge, fraction of sp 3 carbon atoms, halogen atom count, hydrogen bond acceptor count, hydrogen bond donor count, heavy atom count, logD, logP, logS, molecular refractivity, molecular weight, negative charge count, nitrogen and oxygen atom count, positive charge count, Quantitative Estimate of Druglikeness (QED), ring count, rotatable bond count, sulfur atom count, Topological Polar Surface Area (TPSA). For the 5 million compounds, the properties were obtained from (Gorgulla et al., 2023). The quantitative properties were selected from all properties calculated in (Gorgulla et al., 2023). 18 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# C. Additional Results 
+
+Figure 8. Trajectories of top-1000 and top-10000 molecules recovered for the E NAMINE -5M library (CKB). 
+
+Figure 9. Trajectories of top-1000 and top-10000 molecules recovered for the E NAMINE -S-3.9M (CKB) library 
+
+19 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Figure 10. Trajectories of top-1000 and top-10000 molecules recovered for the E NAMINE -S-3.9M (NEDD4) library 
+
+# D. Arm Selection Frequencies 
+
+To assess whether UCB1 collapses onto a small number of initially high-reward partitions, we analyzed the fraction of selections assigned to each arm over the course of optimization. Figure 11 shows that UCB1 continues to distribute selections across multiple arms, even when the number of partitions is large. This behavior is consistent with the optimism bonus in UCB1, which keeps under-sampled partitions competitive until their empirical rewards are sufficiently well characterized. In the tested optimization budgets, we do not observe strong evidence of a winner’s curse in which one early high-performing arm monopolizes the campaign after its best candidates are depleted. 
+
+Figure 11. Per-arm selection frequencies for B OBA with UCB1. Each panel reports the fraction of selections assigned to each arm over optimization iterations, with arms color-coded by partition. Experiments are shown for E NAMINE -S-3.9M docked against NEDD4, ENAMINE -S-3.9M docked against CKB, and E NAMINE -5M docked against CKB, across K ∈ { 5, 10 , 25 , 100 }.
+
+20 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# E. Cost–Regret Tradeoff Analysis 
+
+This section provides a simplified theoretical analysis of the central cost–performance tradeoff in B OBA. The goal is not to fully model the molecular optimization problem, but to formalize the role of the number of clusters K as a control parameter. 
+
+Setup. Consider a library of size N partitioned into K approximately equal clusters. At each of T optimization rounds, full-library BO performs surrogate inference over all N candidates, whereas B OBA performs inference over approximately 
+
+N/K candidates after selecting one arm. Thus, up to constants and batch-size factors shared across methods, the cumulative inference cost of B OBA scales as 
+
+Cinf (K) ≍ N T K .
+
+Increasing K therefore reduces inference cost, but it also makes the bandit allocation problem harder because the algorithm must identify promising regions among more arms. 
+
+Bandit term. Under a standard stochastic bandit abstraction, the regret of UCB-type allocation over K arms admits gap-dependent logarithmic bounds and gap-free bounds of order 
+
+Rbandit (K, T ) = ˜O(√KT ),
+
+where logarithmic factors are suppressed. This term captures the loss from allocating rounds to suboptimal partitions before the bandit has confidently identified high-yield regions. The approximation ignores within-partition surrogate error and the mild non-stationarity induced by depletion of high-scoring candidates, but it isolates the effect of partition granularity. 
+
+Joint objective. Let λ > 0 denote the relative importance of inference cost compared with allocation regret. A simplified objective is 
+
+J(K) = λ N T K + √KT . 
+
+The first term decreases with K, while the second increases with K.Treating K as continuous, we can minimize J with respect to K by differentiation: 
+
+dJ dK = −λN T K −2 + 12
+
+√T K −1/2.
+
+Setting this derivative to zero yields 
+
+K3/2 = 2 λN √T , 
+
+and therefore 
+
+K∗ ≍ N 2/3T 1/3,
+
+up to constants and logarithmic factors. 
+
+Interpretation. This scaling law formalizes the empirical behavior observed in the main text. Larger libraries justify finer partitions because the inference savings from reducing the queried fraction of the library grow with N . At the same time, the optimal K grows sublinearly, reflecting the increasing statistical burden of choosing among many arms. In practice, the constant hidden in the scaling depends on hardware, surrogate architecture, batch size, cluster balance, target difficulty, and the quality of the molecular representation. The analysis should therefore be interpreted as a design principle rather than a prescription for a single universal value of K.21 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# F. Distribution of Docking Scores 
+
+Figure 12. Distribution of docking scores for CKB-5M inside each cluster for different values of K. Outliers not shown. 
+
+22 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Figure 13. Distribution of docking scores for CKB-3.9M inside each cluster for different values of K. Outliers not shown. 
+
+23 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+Figure 14. Distribution of docking scores for NEDD4-3.9M inside each cluster for different values of K. Outliers not shown. 
+
+24 Target-Aware Bandit Allocation for Scalable Surrogate Optimization in Chemical Space 
+
+# G. Physics-Based Docking 
+
+We randomly selected 5 million compounds from an enumerated library of 69 billion compounds from E NAMINE (Gorgulla et al., 2023). In addition, an independent set of 3.9 million compounds was randomly sampled from E NAMINE ’s S-class small-molecule database, which comprises approximately 3.9 billion unenumerated compounds, and retrieved in SMILES format. Only one stereoisomer or one tautomer was retained for each SMILES string to preserve database diversity. The compounds were then converted to three-dimensional structures and energy-minimized using RDKit (Landrum et al., 2023) and Open Babel (O’Boyle et al., 2011). The resulting library was subsequently docked against the target proteins with known active sites using the Uni-Dock small-molecule docking tool (Yu et al., 2023) on NVIDIA RTX 4500 Ada Generation GPUs. Specifically, we docked the libraries against the proteins CKB and NEDD4. CKB is a cytosolic phosphotransferase that buffers cellular energy by catalyzing the reversible transfer of a phosphate group between ATP and creatine, thereby helping maintain ATP levels during fluctuating energy demand. (Bong et al., 2008) NEDD4 is a HECT-family E3 ubiquitin ligase that recognizes substrates via WW domains and catalyzes ubiquitin transfer to regulate protein stability, trafficking, and signaling. (Maspero et al., 2025) We obtained docking scores against a Thymidylate Kinase (TMK) for the virtual library of 2M molecules from E NAMINE ’s HTS database (E NAMINE -HTS) from (Graff et al., 2021). TMK is a phosphotransferase that catalyzes the reversible transfer of a phosphate group from ATP to deoxythymidine monophosphate (dTMP), to form deoxythymidine diphosphate (dTDP) in the process of DNA synthesis. (Naik et al., 2015) 25
