@@ -1,0 +1,166 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-27T22:11:30.052143+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 3,
+    "quick_skim_target": 11,
+    "quick_selected": 3
+  },
+  "deep_dive": [
+    {
+      "id": "2606.22448v1",
+      "source": "arxiv",
+      "title": "Kinetics of template-directed multistate copolymerization",
+      "abstract": "We consider processes of template-directed multistate copolymerization by molecular machines such as polymerases or ribosomes, having multiple states of conformation or activation. We show that the kinetic equations of these processes can be exactly solved for the mean growth velocity, the sequence probabilities of the grown copy, and the local probabilities and fractions of monomeric units in the copy. Asymptotically, in the long-time limit, the kinetic equations are solved with a matrix factorization ansatz in terms of a backward iteration, forming an iterated matrix function system, and a complementary forward iteration, both running along the template sequence. The iterative method is very significantly faster than usual computational methods, as demonstrated with a numerical example.",
+      "authors": [
+        "Pierre Gaspard"
+      ],
+      "primary_category": "q-bio.QM",
+      "categories": [
+        "q-bio.QM",
+        "cond-mat.stat-mech"
+      ],
+      "published": "2026-06-21T11:46:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.22448v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "exact kinetic solution for template-directed copolymerization aids computationally-assisted synthesis of sequence-defined polymers",
+      "llm_evidence_cn": "模板引导共聚合的精确动力学解为序列定义聚合物的计算辅助合成提供支持",
+      "llm_evidence": "模板引导共聚合的精确动力学解为序列定义聚合物的计算辅助合成提供支持",
+      "canonical_evidence": "模板引导共聚合的精确动力学解为序列定义聚合物的计算辅助合成提供支持",
+      "llm_tldr_en": "Provides an exact matrix factorization method for solving kinetics of template-directed multistate copolymerization, enabling efficient sequence-probability and growth-velocity computation for polymer synthesis.",
+      "llm_tldr_cn": "针对分子机器（如聚合酶）进行的模板引导多状态共聚合过程，提出一种基于矩阵分解的迭代求解方法，能够精确计算生长速度和序列概率，显著快于传统计算方法，为序列可控聚合物的计算机辅助合成提供了定量工具。",
+      "llm_tldr": "针对分子机器（如聚合酶）进行的模板引导多状态共聚合过程，提出一种基于矩阵分解的迭代求解方法，能够精确计算生长速度和序列概率，显著快于传统计算方法，为序列可控聚合物的计算机辅助合成提供了定量工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.23253v1",
+      "source": "arxiv",
+      "title": "Reduced-Alphabet QUBO/Ising Formulation for Constraint-Driven Cyclic Peptide Sequence Design",
+      "abstract": "Cyclic peptide design requires balancing local residue preferences with constraints from ring-forming chemistry, residue spacing, topology, target compatibility, and developability. Here, we present a reduced-alphabet quadratic unconstrained binary optimization (QUBO)/Ising formulation for constraint-driven cyclic peptide sequence design. Amino acids are grouped into physicochemical or interaction-based residue classes, and peptide positions are represented by binary residue-class assignment variables. The objective combines one-hot sequence validity, cyclization constraints, optional target-compatibility terms, motif and composition rules, and coarse developability proxies. By modifying the relevant constraint terms, the same framework can represent head-to-tail, disulfide-bridged, stapled, and bicyclic peptide designs. A resource-aware eight-class alphabet motivated by MJ interaction-profile clustering is used as a default representation to balance coarse interaction-pattern preservation with encoding cost. The resulting QUBO/Ising objective is solver-agnostic and can be explored using classical or quantum-compatible binary optimization procedures. The model is intended as an early-stage search-space reduction and prioritization layer: it produces low-energy residue-class sequences rather than final molecular candidates, which require amino-acid decoding, cyclization-aware construction, and downstream structural or experimental validation.",
+      "authors": [
+        "Yan Zhou",
+        "Yuqi Wang",
+        "Xin Li"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "q-bio.BM"
+      ],
+      "published": "2026-06-22T12:34:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.23253v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "computationally driven design of cyclic peptide sequences under synthesis constraints",
+      "llm_evidence_cn": "计算驱动合成约束下的环肽序列设计",
+      "llm_evidence": "计算驱动合成约束下的环肽序列设计",
+      "canonical_evidence": "计算驱动合成约束下的环肽序列设计",
+      "llm_tldr_en": "This paper formulates cyclic peptide design as a reduced-alphabet QUBO/Ising optimization problem, integrating cyclization and developability constraints to enable efficient sequence generation for organic synthesis.",
+      "llm_tldr_cn": "针对环肽设计中合成与可开发性约束多、搜索空间大等难题，该工作将氨基酸分组为理化类别，构建约化字母表QUBO/伊辛模型，同时编码环化、基序及类药性约束，实现了可满足多目标的环肽序列高效计算设计。",
+      "llm_tldr": "针对环肽设计中合成与可开发性约束多、搜索空间大等难题，该工作将氨基酸分组为理化类别，构建约化字母表QUBO/伊辛模型，同时编码环化、基序及类药性约束，实现了可满足多目标的环肽序列高效计算设计。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.22377v1",
+      "source": "arxiv",
+      "title": "Multigrid Training for Molecular Generation using Graph Neural Networks",
+      "abstract": "Deep learning has demonstrated significant success for modeling biochemical molecular systems, where inputs are commonly represented as graphs or 3D grids. A major challenge is that computational cost scales with resolution, making full graph/grid computation of molecular densities expensive and often unstable. We introduce a multigrid training strategy that leverages low-resolution optimization to accelerate learning at higher resolution through parameter transfer across discretizations. For graph molecular representations, we progressively transfer parameters learned from a coarse graph to a sequence of increasingly finer graphs via biased random walk upsampling. For 3D molecular generation, we voxelize the molecular structures at multiple resolutions, pretrain a coarse-resolution conditional Variational Autoencoder (CVAE), and initialize a fine-resolution CVAE by transferring shape compatible convolutional parameters from the coarse model. Numerical experiments on receptor-conditioned 3D Ligand generation show that multigrid training accelerates convergence and improves generalization compared to training from scratch.",
+      "authors": [
+        "Zixuan Ling",
+        "Paula Mercurio",
+        "Di Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.NA"
+      ],
+      "published": "2026-06-21T07:56:31+00:00",
+      "link": "https://arxiv.org/pdf/2606.22377v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multigrid training accelerates molecular generation for drug design",
+      "llm_evidence_cn": "多分辨率训练加速药物设计中的分子生成",
+      "llm_evidence": "多分辨率训练加速药物设计中的分子生成",
+      "canonical_evidence": "多分辨率训练加速药物设计中的分子生成",
+      "llm_tldr_en": "This paper proposes a multigrid training strategy that transfers parameters from coarse to fine representations, accelerating molecular generation using graph neural networks and 3D methods.",
+      "llm_tldr_cn": "针对分子生成中高分辨率计算成本高的问题，该工作提出多分辨训练策略，通过从粗到细的参数迁移，加速图神经网络与3D方法的分子生成，为高效设计满足特定性质的分子提供了新途径。",
+      "llm_tldr": "针对分子生成中高分辨率计算成本高的问题，该工作提出多分辨训练策略，通过从粗到细的参数迁移，加速图神经网络与3D方法的分子生成，为高效设计满足特定性质的分子提供了新途径。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "Computationally-Assisted Organic Synthesis",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.25564v1",
+      "source": "arxiv",
+      "title": "Developing fast, accurate and spin pure calculations of organic diradical electronic structure",
+      "abstract": "Organic diradical molecules have emerged in recent years as highly promising candidates for next generation optoelectronic and quantum information technologies. As efforts continue to synthesise diradicals with unique photophysical properties, developing our theoretical understanding of their complex electronic structure is crucial to enable rational design strategies. However, existing computational tools struggle to properly describe the multi-reference character of diradical electronic states while also preserving a low computational scaling that enables fast calculations on large emissive diradicals. This work presents a new computational method, termed Diradical Extended Restricted Open-shell PPP (D-ExROPPP) theory, which we show yields accurate and spin-pure electronic states at a very low computational cost relative to existing approaches. This is achieved by implementing a novel, spin-adapted configuration interaction approach within the semi-empirical Pariser-Parr-Pople framework. D-ExROPPP is then used to study the electronic structure of three prototypical organic diradicals, and benchmarked against results from computationally intensive, post-Hartree-Fock methods. Excitation energies for these molecules are predicted that show a similar level of accuracy as high-level ab-initio calculations, while requiring up to five orders of magnitude less computational time. We further apply D-ExROPPP to a number of recently reported stable, emissive, organic diradicals. In the majority of cases, electronic transitions measured in experimental UV-vis spectra are reproduced with qualitative accuracy and the spin states involved can be reliably assigned. Together, these results establish D-ExROPPP as a promising new tool for efficiently predicting and interpreting the photophysics of organic diradical molecules.",
+      "authors": [
+        "Joseph T. Kielty",
+        "Hugh G. A. Burton",
+        "Timothy J. H. Hele"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-24T08:40:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.25564v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "fast electronic structure method for organic diradicals aids mechanistic understanding",
+      "llm_evidence_cn": "有机双自由基的快速电子结构方法辅助机理理解",
+      "llm_evidence": "有机双自由基的快速电子结构方法辅助机理理解",
+      "canonical_evidence": "有机双自由基的快速电子结构方法辅助机理理解",
+      "llm_tldr_en": "This paper develops D-ExROPPP theory, a fast and spin-pure computational method for organic diradicals, enabling accurate prediction of their complex electronic states for rational design in synthesis.",
+      "llm_tldr_cn": "针对有机双自由基多参考电子态描述精度与计算效率的矛盾，该工作提出D-ExROPPP方法，在保持低标度的同时实现自旋纯计算，为理解光物理机制及指导合成设计提供理论工具。",
+      "llm_tldr": "针对有机双自由基多参考电子态描述精度与计算效率的矛盾，该工作提出D-ExROPPP方法，在保持低标度的同时实现自旋纯计算，为理解光物理机制及指导合成设计提供理论工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

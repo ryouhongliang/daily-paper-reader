@@ -1,0 +1,1841 @@
+Title: Kinetics of template-directed multistate copolymerization
+
+URL Source: https://arxiv.org/pdf/2606.22448v1
+
+Published Time: Tue, 23 Jun 2026 02:09:28 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+## Kinetics of template-directed multistate copolymerization 
+
+Pierre Gaspard 
+
+Center for Nonlinear Phenomena and Complex Systems, Universit´ e Libre de Bruxelles (ULB), Code Postal 231, Campus Plaine, B-1050 Brussels, Belgium 
+
+We consider processes of template-directed multistate copolymerization by molecular machines such as polymerases or ribosomes, having multiple states of conformation or activation. We show that the kinetic equations of these processes can be exactly solved for the mean growth velocity, the sequence probabilities of the grown copy, and the local probabilities and fractions of monomeric units in the copy. Asymptotically, in the long-time limit, the kinetic equations are solved with a matrix factorization ansatz in terms of a backward iteration, forming an iterated matrix function system, and a complementary forward iteration, both running along the template sequence. The iterative method is very significantly faster than usual computational methods, as demonstrated with a numerical example. Keywords: DNA replication, transcription, and translation; polymerases and ribosomes; kinetic equations; iterated matrix function system. 
+
+I. INTRODUCTION 
+
+In our cells, genetic information is encoded at the molecular level in the form of DNA, which is transcribed into RNA and then translated into proteins. Beyond, it is transmitted from generation to generation upon DNA replication. The molecules of DNA, RNA, and proteins are copolymers, i.e., polymers composed of several types of monomeric units: the deoxyribonucleotides {A,C,G,T } for DNA, the nucleotides {A,C,G,U } for RNA, and twenty amino acids for proteins. In this regard, DNA replication, its transcription, and its translation are templated-directed copolymerization processes. These processes are catalyzed by molecular machines, which are DNA polymerases for replication, RNA polymerases for transcription, and ribosomes for translation. In general, these machines function by performing transitions between several conformational or activation states. For replication, the work by Johnson and coworkers has shown that high-fidelity DNA polymerases like that of virus T7 exhibit several distinct structural states, between which large changes in conformation occur, playing an important role in the discrimination between correct and incorrect base pairs [1, 2]. These nucleotide-induced confor-mational changes have been detected with fluorescence methods [3–5]. For transcription, ARN polymerases are known to have pathways into backtracking and forward-tracking translo-cation modes in addition to their main reaction pathway between their pre- and post-translocation states [6–9]. For translation, ribosomes utilize transitions between several conformational and activation states. A mechanochem-ical cycle of five states has been considered [10] to model the experimental observations of translation by single ribosomes [11]. In addition, two proofreading backward transitions have been discovered among these states [12, 13]. Therefore, these molecular machines typically function with transitions occurring in a network of internal states between every elongation step during the synthesis of the copolymer and the motion of the machine along the template. These internal states should thus be taken into account in the mathematical description of the kinetics of these machines, in addition to the heterogeneity of the template, which may form an arbitrary sequence of units containing genetic information. These aspects go beyond the description simplifying templated-directed copolymerization into free copolymeriza-tion, where the copy is reduced to a sequence of correct or incorrect (right or wrong) units [14–19]. For such free copolymerization processes, the exact asymptotic solution of the mathematical theory is given by a closed set of nonlinear equations, which has been confirmed in recent publications [20–22]. Furthermore, a method based on the theory of Markov stochastic processes has been proposed to deal with templated copolymerization with an arbitrarily complex network of reversible reactions [23, 24]. If the catalyst has only a single state, the heterogeneity of the tem-plate can be described exactly using iterated function systems [25], where a function is associated with each unit or codon of the template [26–28]. In this case, an equivalent theory based on a first-passage approach has been developed to study DNA polymerase fidelity [29, 30]. In the presence of multiple states of conformation or activation, the scheme should be generalized using a matrix formulation. The matrices allow us to describe the transitions between the distinct states of the catalyst. This approach was pioneered by Coleman and Fox for irreversible free polymerization processes [31–33] and shown to also give the exact asymptotic solution for reversible free and template-directed copolymerization processes [34, 35]. Here, our goal is to extend this approach to general multistate processes, in which all the transitions are possible from and to every internal states, and upon attachment or detachment of monomeric units to the copy sequence. We start from the mathematical formulation in terms of the kinetic equations, i.e., the master equations ruling the time 
+
+> arXiv:2606.22448v1 [q-bio.QM] 21 Jun 2026
+
+2evolution for the probabilities of finding the system formed by the catalyst, the template, and its copy into any one of its particular states. The master equations are linear and they can thus be solved using the methods of linear analysis. The master equations are defined in terms of the rates of the stochastic process we consider, which is a Markov jump process [36–38]. These rates depend on a certain number of monomeric units, which have already been incorporated at the growing tip of the copy, on the monomeric units of the template around the location of this tip, and on the internal states of the catalyst. The rates may also depend on the concentrations of monomers and other molecules activating the process, these molecular species being found in the solution surrounding the catalyst. Next, the master equations are solved with the methods of mathematical analysis to obtain, in particular, the mean growth velocity and the probabilities of possible sequences for the copy. In order to solve the master equations, they are first rewritten in a more compact matrix form, dealing with the multiple states of the catalyst. Next, a hierarchy of nested equations is deduced for the probabilities of the different possible subsequences at the growing tip of the copy. As soon as the length of these subsequences is longer than the number of monomeric units of the copy, on which the rates depend, the equations of the hierarchy are found to all have a similar structure. This key observation allows us to solve the hierarchy with a matrix factorization ansatz, as pioneered by Coleman and Fox [31–33]. Asymptotically, in the long-time limit, this ansatz leads to an iterated matrix function system (IMFS) running backward along the template. This backward iteration is combined with an associated forward iteration to obtain the exact solution for the mean growth velocity and the probabilities of the copy sequences. This method also applies to the stationary regime where the growth of the copy is stalled. The great advantage of the IMFS method is that it is more than a million times faster than the numerical simulation method based on Gillespie’s algorithm, while always giving the exact asymptotic solution of the problem. After this introduction, the paper is organized according to the following plan. Section II presents the mathematical formulation with the description of the stochastic process, the kinetic equations, the observable quantities, the different regimes of the process, and the matrix formulation. Section III gives the solutions of the kinetic equations, starting from the deduction of the hierarchy of nested equations for the probabilities of subsequences of longer and longer lengths at the growing tip of the copy, continuing with the decomposition of these equations into particular solutions according to the principle of superposition for solving linear equations. The matrix factorization ansatz is enunciated. The solution of the mathematical problem is given in terms of the backward and forward iterations, leading to expressions for the mean growth velocity, the sequence probabilities, and the local probabilities and fractions of the different types of monomeric units in the copy. The solution is also given in the stationary regime. In Section IV, the method is applied to a numerical example to confirm its accuracy and to show its efficiency. Section V presents the conclusion and perspectives. Appendix A gives the mathematical details leading to the exact asymptotic solution of the kinetic equations. Appendix B is devoted to the intermediate regime of sublinear growth in time of the copy. Appendix C summarizes the application of Gillespie’s algorithm to the numerical example of Section IV.   
+
+> II. THE MATHEMATICAL FRAMEWORK A. The template-directed process
+
+We consider the catalytic formation of a copolymer chain made from monomeric units ml ∈ { 1, 2, . . . , M } and growing along a given semi-infinite template sequence n1n2 · · · nlnl+1 · · · composed of units nl ∈ { 1, 2, . . . , N }. For instance, there are M = N = 4 nucleotides in DNA replication and transcription, while M = 20 amino acids and 
+
+N = 4 3 = 64 codons are involved in translation. The template sequence may be homogeneous (i.e., composed of a single unit type with nl = n for all l = 1 , 2, 3, . . . ), periodic with a prime period L (i.e., such that nl+L = nl for all l), or disordered (i.e., with an infinite period, in which case the template is aperiodic). In the latter case, the template sequence should be characterized by the probability distribution of its units. The template is a Bernoulli chain if the distribution factorizes as ν(n1n2 · · · nL) = ∏Ll=1 ν(nl)in terms of the unit fractions ν(n), or it may be a Markov chain of kth order. The template sequence remains invariant during the whole process. The synthesis of the copolymer chain is promoted by a catalyst, which may be in either one or another of multiple states i = 1 , 2, . . . , I , such as the conformational states of the molecular machine performing replication, transcription, or translation. If the process has some fidelity, the copolymer chain represents a copy of the template, which is imperfect due to possible errors in replication, transcription, or translation. The synthesized copolymer chain m1m2 · · · ml, its length l, and the state i of the catalyst change in time according to the following reactions 
+
+m1m2 · · · ml−1, i + ml
+
+n1 n2 · · · nl−1 nl nl+1 · · · 
+
+> wi→j
+> +ml,l
+
+⇋
+
+> wj→i
+> −ml,l
+
+m1m2 · · · ml−1ml, j n1 n2 · · · nl−1 nl nl+1 · · · (l ≥ 1; i, j ∈ { 1, 2, . . . , I }) , (1) 3and 
+
+m1m2 · · · ml−1ml, i n1 n2 · · · nl−1 nl nl+1 · · · 
+
+> wi→j
+> 0ml,l
+
+⇋
+
+> wj→i
+> 0ml,l
+
+m1m2 · · · ml−1ml, j n1 n2 · · · nl−1 nl nl+1 · · · (l ≥ 0; i 6 = j ∈ { 1, 2, . . . , I }) , (2) where wi→j 
+
+> +ml,l
+
+is the attachment rate of the monomeric unit ml to the copolymer chain m1m2 · · · ml−1 at the location l
+
+of the unit nl of the template, while the catalyst undergoes its internal transition i → j; wj→i 
+
+> −ml,l
+
+is the detachment rate of the unit ml from the copolymer chain upon the reverse transition j → i; and wi→j  
+
+> 0ml,l
+
+is the rate of the transition 
+
+i → j for the catalyst without any monomeric attachment or detachment. An attachment event increases the chain length by l → l + 1, a detachment event decreases it by l → l − 1, and the reaction events (2) do not change the length. The rates depend on the location l along the template sequence, i.e., on the template unit nl. We may also consider more general dependences of the rates on a larger template subsequence around the location l, such as nl−1nlnl+1 , or else. The rates also depend on the concentrations of monomers in the solution surrounding the catalyst and, possibly, on the concentrations of other species activating the process, like the protein EF-G activating the peptide elongation in addition to the monomers (i.e., the aminoacyl-tRNA-EF-Tu molecules) arriving at the ribosome [10]. In particular, the attachment rates wi→j 
+
+> +m,l
+
+are expected to vanish with the concentration cm of monomers m. The reactions proceed under low conversion conditions, meaning that the rates are low enough to maintain the pools of monomers in the surrounding solution, whereupon the rates can remain invariant during the whole process. Furthermore, the catalyst is assumed to stay bonded to the template. The copolymerization process starts with the following initiation steps: 
+
+i + m1
+
+n1 n2 n3 · · · 
+
+> wi→j
+> +m1,1
+
+⇋ 
+
+> wj→i
+> −m1,1
+
+m1, j n1 n2 n3 · · · (l = 1; i, j ∈ { 1, 2, . . . , I }) , (3) and 
+
+in1 n2 n3 · · · 
+
+> wi→j
+> 0∅,0
+
+⇋
+
+> wj→i
+> 0∅,0
+
+jn1 n2 n3 · · · (l = 0; i 6 = j ∈ { 1, 2, . . . , I }) , (4) defined with the rates wi→j 
+
+> ±m1,1
+
+and wi→j 
+
+> 0∅,0
+
+. We also assume that the copolymerization process has no termination steps. If the attachment rates are large enough with respect to the detachment rates, the copolymer chain grows without bound and its length increases on average in time, so that the catalyst has an infinite processivity along the semi-infinite template. Otherwise, the copolymer chain remains finite on average and there is no elongation. We note that simpler processes have been considered in Ref. [35], where wi→j 
+
+> ±m,l
+
+= 0 for i 6 = j and wi→j 
+
+> 0m,l
+
+is independent of the unit m. Here, we consider the more general processes without these simplifications. 
+
+B. The kinetic equations 
+
+For a single catalyst bonded to the template and the copy, the process is stochastic with random events of at-tachments, detachments, and internal transitions of the catalyst. These random events occur with the reaction rates given in Eqs. (1)-(2). The stochastic process is assumed to be a so-called Markov jump process [36–38]. For such a stochastic process, the system may be found with some probability in either one or another of the following system states: (∅, 0, i ) ; (m1, 1, i ) ; (m1m2, 2, i ) ; (m1m2m3, 3, i ) ; . . . ; (m1m2 · · · ml−1ml, l, i ) ; . . . (5) with ml ∈ { 1, 2, . . . , M }, l ∈ { 0, 1, 2, 3, . . . }, i ∈ { 1, 2, . . . , I }, ∅ denoting the state without any copy yet. We note that the system state (m1m2 · · · ml−1ml, l, i ) stands for m1m2 · · · ml−1ml, i n1 n2 · · · nl−1 nl nl+1 · · · (6) in Eqs. (1) and (2). In this system state, the copy chain has the length l and the catalyst is in its internal state i.The probability to find the system in this state at time t is denoted 
+
+Pt(m1 · · · ml, l, i ) ≡ Pt
+
+( m1 · · · ml, i n1 · · · nl nl+1 · · · 
+
+)
+
+. (7) 4The time evolution of these probabilities is ruled by the following infinite set of coupled linear ordinary differential equations: d
+
+dt Pt(m1 · · · ml, l, i ) = ∑
+
+> j
+
+wj→i 
+
+> +ml,l
+
+Pt(m1 · · · ml−1, l − 1, j )+ ∑
+
+> j
+
+∑
+
+> ml+1
+
+wj→i 
+
+> −ml+1 ,l +1
+
+Pt(m1 · · · mlml+1 , l + 1 , j )+ ∑ 
+
+> j(6=i)
+
+wj→i 
+
+> 0ml,l
+
+Pt(m1 · · · ml, l, j )
+
+−
+
+( ∑
+
+> j
+
+wi→j 
+
+> −ml,l
+
++ ∑
+
+> j
+
+∑
+
+> ml+1
+
+wi→j 
+
+> +ml+1 ,l +1
+
++ ∑ 
+
+> j(6=i)
+
+wi→j 
+
+> 0ml,l
+
+)
+
+Pt(m1 · · · ml, l, i ) (8) for l ≥ 0, where the positive terms are the gain terms and the negative ones the loss terms. Moreover, we suppose that wi→j 
+
+> ±∅ ,0
+
+= 0 in the equations for Pt(∅, 0, i ) with l = 0. As a consequence, probability conservation is satisfied, i.e., 
+
+> ∞
+
+∑
+
+> l=0
+> I
+
+∑
+
+> i=1
+
+∑
+
+> m1··· ml
+
+Pt(m1 · · · ml, l, i ) = 1 (9) for all time t.
+
+C. The observable quantities 
+
+For this stochastic process, several observable quantities can be defined to characterize the copolymer chain, its growth, and its sequence. 
+
+1. Length distribution, mean length, and mean growth velocity 
+
+The probability distribution of the copolymer length at time t is defined as 
+
+pt(l) ≡
+
+> I
+
+∑
+
+> i=1
+
+∑
+
+> m1··· ml
+
+Pt(m1 · · · ml, l, i ) , (10) which obeys the normalization condition ∑∞ 
+
+> l=0
+
+pt(l) = 1, in consistency with Eq. (9). The mean length of the copolymer chain at time t is thus given by 
+
+〈l〉t ≡
+
+> ∞
+
+∑
+
+> l=0
+
+l p t(l) . (11) Accordingly, the mean growth velocity can be defined as 
+
+v ≡ lim  
+
+> t→∞
+
+t−1 〈l〉t . (12) 
+
+2. The sequence probabilities 
+
+In the long-time limit, the probability to find the copy with the sequence m1 · · · ml given that its length is equal to l and the catalyst is found in any one of its internal states is defined as 
+
+μ(m1 · · · ml; l) ≡ lim 
+
+> t→∞
+> I
+
+∑
+
+> i=1
+
+Pt(m1 · · · ml, l, i )/p t(l) , (13) such that ∑ 
+
+> m1··· ml
+
+μ(m1 · · · ml; l) = 1. 5 
+
+> 3. The local probabilities of monomeric units in the copy
+
+As a consequence of Eq. (13), the probability to find the monomeric unit m = ml at the location l in a grown copy sequence is given by 
+
+μ(m; l) ≡ lim 
+
+> L→∞
+
+∑
+
+> m1··· ml−1
+
+∑
+
+> ml+1 ··· mL
+
+μ(m1 · · · ml−1m m l+1 · · · mL, L ) , (14) which is normalized according to ∑ 
+
+> m
+
+μ(m; l) = 1.  
+
+> 4. The mean fractions of monomeric units
+
+Therefore, the mean fraction of the monomeric unit m anywhere in an arbitrarily long copy sequence can be calculated as ¯μ(m) ≡ lim 
+
+> L→∞
+
+1
+
+L
+
+> L
+
+∑
+
+> l=1
+
+μ(m; l) , (15) satisfying the normalization condition, ∑ 
+
+> m
+
+¯μ(m) = 1.  
+
+> D. The different regimes of the process
+
+If the template is periodic, we may expect two generic regimes: (1) If the attachment rates are too small with respect to the detachment rates for generating the elongation of the copy chain, the mean length converges toward a finite and stationary value, lim t→∞ 〈l〉t = 〈l〉st . Consistently, the length distribution converges toward a stationary probability distribution, lim t→∞ pt(l) = pst (l), having a mean exponential decay with an exponent α: pst (l) ∼ exp( −αl ). This is the stationary regime. (2) If the attachment rates are large enough with respect to the detachment rates, there is elongation of the copy chain and its mean length increases linearly in time as 〈l〉t ≃ vt with a positive mean growth velocity v > 0. Correspondingly, the length distribution spreads toward arbitrarily large lengths, while becoming broader and broader. This is the regime of steady growth. If the template is disordered, we may also expect an intermediate regime between (1) and (2), where the mean length manifests a sublinear growth in time like 〈l〉t ∼ tγ with an exponent 0 < γ < 1 [39, 40]. This intermediate regime extends between the edge of the stationary regime (1), where the growth is stalled and γ = 0, and the threshold of steady growth, where γ = 1.  
+
+> E. Matrix formulation
+
+In order to deal more compactly with the multiple states i, j = 1 , 2, . . . , I of the catalyst, we adopt a matrix formulation. We introduce the following I × I matrix of rank one, composed of I identical columns, each containing the probabilities to find the catalyst in the states i = 1 , 2, . . . , I :
+
+Pt(m1 · · · ml, l ) ≡
+
+
+
+Pt(m1 · · · ml, l, 1) Pt(m1 · · · ml, l, 1) . . . Pt(m1 · · · ml, l, 1) 
+
+Pt(m1 · · · ml, l, 2) Pt(m1 · · · ml, l, 2) . . . Pt(m1 · · · ml, l, 2) ... ... . . . ...
+
+Pt(m1 · · · ml, l, I ) Pt(m1 · · · ml, l, I ) . . . Pt(m1 · · · ml, l, I )
+
+ , (16) such as its trace, tr Pt(m1 · · · ml, l ) = 
+
+> I
+
+∑
+
+> i=1
+
+Pt(m1 · · · ml, l, i ) , (17) 6gives the probability to find the copy sequence m1 · · · ml of length l and the catalyst in any one of its internal states. In this formulation, the equations (8) for i = 1 , 2, . . . , I read d
+
+dt Pt(m1 · · · ml, l ) = Wc+ml,l · Pt(m1 · · · ml−1, l − 1) + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Pt(m1 · · · mlml+1 , l + 1) +
+
+(
+
+W0 
+
+> ml,l
+
+− Wd 
+
+> −ml,l
+
+− ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 
+
+)
+
+· Pt(m1 · · · ml, l ) (18) in terms of the following I × I matrices defined with the rates: 
+
+Wc 
+
+> ±m,l
+
+≡
+
+
+
+w1→1 
+
+> ±m,l
+
+w2→1 
+
+> ±m,l
+
+. . . wI→1
+
+> ±m,l
+
+w1→2 
+
+> ±m,l
+
+w2→2 
+
+> ±m,l
+
+. . . wI→2
+
+> ±m,l
+
+... ... . . . ...
+
+w1→I 
+
+> ±m,l
+
+w2→I 
+
+> ±m,l
+
+. . . wI→I
+
+> ±m,l
+
+ , (19) 
+
+Wd 
+
+> ±m,l
+
+≡
+
+∑Ii=1 w1→i 
+
+> ±m,l
+
+0 . . . 00 ∑Ii=1 w2→i 
+
+> ±m,l
+
+. . . 0... ... . . . ...0 0 . . . ∑Ii=1 wI→i
+
+> ±m,l
+
+ , (20) and 
+
+W0 
+
+> m,l
+
+≡
+
+
+
+− ∑  
+
+> i(6=1)
+
+w1→i 
+
+> 0m,l
+
+w2→10m,l . . . wI→10m,l 
+
+w1→20m,l − ∑  
+
+> i(6=2)
+
+w2→20m,l . . . wI→20m,l 
+
+... ... . . . ...
+
+w1→I 
+
+> 0m,l
+
+w2→I 
+
+> 0m,l
+
+. . . − ∑  
+
+> i(6=I)
+
+wI→I
+
+> 0m,l
+
+ , (21) where ∑  
+
+> i(6=j)
+
+denotes the sum from i = 1 to i = I, omitting the term with i = j.
+
+III. THE SOLUTIONS OF THE KINETIC EQUATIONS A. The methods used to solve the kinetic equations 
+
+In order to solve the kinetic equations (8), we use their linearity, so that their general solutions can be expressed as linear superpositions of particular solutions. Moreover, we also use the assumptions that the attachment and detachment rates of the reactions (1) only depend on the monomeric unit that is attached or detached, but not on previously incorporated units and that the internal transition rates of the reactions (2) only depend on the ultimate monomeric unit of the copy chain. These characteristic features of the kinetic process that is here studied, lead to the factorization of the matrices (16) containing the sequence probabilities into products of matrices associated with each unit of the sequence. This matrix factorization was pioneered for irreversible multistate free copolymerization processes by Coleman and Fox [31–33] and later shown to extend to reversible processes [34, 35]. To give evidence for this factorization, the matrix form (18) of the kinetic equations are transformed into a hierarchy of nested equations for 
+
+Pt(l) ≡ ∑
+
+> m1··· ml
+
+Pt(m1 · · · ml, l ) , (22) 
+
+Pt(ml, l ) ≡ ∑
+
+> m1··· ml−1
+
+Pt(m1 · · · ml−1ml, l ) , (23) 
+
+Pt(ml−1ml, l ) ≡ ∑
+
+> m1··· ml−2
+
+Pt(m1 · · · ml−2ml−1ml, l ) , (24) ...7giving the probabilities of the subsequences {ml, m l−1ml, m l−2ml−1ml, . . . } at the growing tip of the copy. We note that the matrices (22), (23), (24), . . . satisfy the following successive identities 
+
+Pt(l) = ∑
+
+> ml
+
+Pt(ml, l ) , (25) 
+
+Pt(ml, l ) = ∑
+
+> ml−1
+
+Pt(ml−1ml, l ) , (26) 
+
+Pt(ml−1ml, l ) = ∑
+
+> ml−2
+
+Pt(ml−2ml−1ml, l ) , (27) ...so that the equations they obey are nested in the sense that the equation for any subsequence ml−r+1 · · · ml−1ml of length r can be deduced from the equations for longer subsequences ml−s+1 · · · ml−1ml with s > r by summing over 
+
+ml−s+1 · · · ml−r .Furthermore, we have that the length distribution is given by the trace 
+
+pt(l) = tr Pt(l) (28) of the first matrix (22) of the hierarchy. Solving their equations should thus provide the determination of the mean growth velocity. If the property of factorization holds, the equations for the matrices (22), (23), (24), . . . should all be solved together, which is the case as shown here below.  
+
+> B. Decomposition into particular solutions
+
+We consider particular solutions of the kinetic matrix equations (18) like Fourier modes of wave number q with an exponential dependence on time: 
+
+Pt(m, l ) ∼ esq t+ıql Gq (m, l ) (29) with m = ml−r+1 · · · ml−1ml (r = 1 , 2, 3, . . . ), −π < q ≤ +π, and ı ≡ √−1. We note that the quantities Gq (m, l )still depend on the location l, because the template is in general a disordered medium. In the regime of steady growth, the exponential rate sq should depend on the wave number according to 
+
+sq = −ı v q + o(q) , (30) where v is the mean growth velocity (12) and o(q) is a function of q such that lim q→0 o(q)/q = 0. Hence, we should have exp( sq t + ıql ) = exp[ ıq (l − vt ) + o(q)], which indeed represents a solution moving along the template with the mean velocity v.During elongation, the length distribution pt(l) broadens and spreads over longer and longer length scales. Therefore, in the long-time limit t → ∞ , the particular solutions (29) that contribute the most should have their wave number decreasing to zero, q → 0. In this regard, they can be expanded as 
+
+Gq (m, l ) = Ψl(m) + q Ψ′
+
+> l
+
+(m) + o(q) (31) with 
+
+Ψl(m) ≡ lim  
+
+> q→0
+
+Gq (m, l ) , (32) and 
+
+Ψ′
+
+> l
+
+(m) ≡ lim 
+
+> q→0
+
+d
+
+dq Gq (m, l ) . (33) 8Since Eqs. (25), (26), (27), . . . hold, we have that 
+
+Ψl = ∑
+
+> ml
+
+Ψl(ml) , (34) 
+
+Ψl(ml) = ∑
+
+> ml−1
+
+Ψl(ml−1ml) , (35) 
+
+Ψl(ml−1ml) = ∑
+
+> ml−2
+
+Ψl(ml−2ml−1ml) , (36) ...Similar relations hold for Ψ′
+
+> l
+
+, Ψ′
+
+> l
+
+(ml), . . . 
+
+The equations for Gq (l), Gq(ml, l ), . . . and Ψl, Ψl(ml), . . . are given and solved in Appendix A. 
+
+C. Matrix factorization 
+
+Since the attachment and detachment rates do not depend on previously incorporated monomeric units and the internal transition rates only depend on the ultimate monomeric unit of the copolymer chain, the following ansatz of matrix factorization is satisfied for the studied kinetic process, as proved in Appendix A: 
+
+Ψl(ml−r+1 · · · ml−1ml) = Yml,l · Yml−1,l −1 · · · Yml−r+1 ,l −r+1 · Ψl−r (r = 1 , 2, 3, . . . ) (37) in terms of some I × I matrices Ym,l , depending on the monomeric unit m that is found at the location l along the copy sequence. The factorization ansatz (37) is known to hold for simpler copolymerization processes than those of this study [31–35]. 
+
+D. The solution in the growth regime 
+
+1. The backward and forward iterations 
+
+The factorization ansatz (37) can be substituted into the equations for Ψl, Ψl(ml), . . . . As shown in Appendix A, we obtain the results: 
+
+Yml,l =
+
+(
+
+Vl − W0 
+
+> ml,l
+
++ Wd
+
+> −ml,l
+
+)−1
+
+· Wc+ml,l (38) in terms of the I × I matrices Vl, obeying the following backward iteration :
+
+Vl−1 = ∑
+
+> ml
+
+Wd+ml,l − ∑
+
+> ml
+
+Wc 
+
+> −ml,l
+
+·
+
+(
+
+Vl − W0 
+
+> ml,l
+
++ Wd
+
+> −ml,l
+
+)−1
+
+· Wc+ml,l (39) along the template sequence. Once the matrices Vl are known, the matrices Yml,l are also, because of Eq. (38), so that the quantities (37) are obtained. In particular, if we take Eq. (37) with r = 1, we have that 
+
+Ψl(ml) = Yml,l · Ψl−1 . (40) Inserting the latter relation into Eq. (34), we find the forward iteration :
+
+Ψl = Rl · Ψl−1 with Rl ≡ ∑
+
+> ml
+
+Yml,l (41) along the template. The forward iteration determines the following I × I matrices of rank one: 
+
+Ψl =
+
+
+
+ψ1 
+
+> l
+
+ψ1 
+
+> l
+
+. . . ψ1
+
+> l
+
+ψ2 
+
+> l
+
+ψ2 
+
+> l
+
+. . . ψ2
+
+> l
+
+... ... . . . ...
+
+ψIl ψIl . . . ψIl
+
+ . (42) 9The matrices Vl and Ψl obey the remarkable invariance property: tr( Vl−1 · Ψl−1) = tr( Vl · Ψl) ≡ C for l = 1 , 2, 3, . . . , (43) so that the quantity C is constant along the template. 
+
+2. The mean growth velocity 
+
+Having computed the matrices Vl and Ψl with the backward and forward iterations (39) and (41), respectively, the mean growth velocity (12) is given by 
+
+v = 1
+
+〈τl〉 , where τl = 1
+
+C tr Ψl (44) is the mean local dwell time of the catalyst at the location l of the template and 〈τl〉 ≡ lim L→∞ L−1 ∑Ll=1 τl is its statistical average, C being the constant defined in Eq. (43). The mean growth velocity is positive v > 0 if the growth is linear in time as 〈l〉t ≃ vt , but equal to zero v = 0 if the growth is sublinear in time like 〈l〉t ∼ tγ or if the growth is stalled. 
+
+3. The sequence probabilities 
+
+Using the factorization (37) and Eq. (17), the sequence probability (13) is given in the long-time limit by 
+
+μ(ml−r+1 · · · ml−1ml; l) = 1
+
+tr Ψl
+
+tr( Yml,l · Yml−1,l −1 · · · Yml−r+1 ,l −r+1 · Ψl−r ) for r = 1 , 2, 3, . . . (45) The normalization condition ∑ 
+
+> ml−r+1 ··· ml−1ml
+
+μ(ml−r+1 · · · ml−1ml; l) = 1 is satisfied, because of the forward itera-tion (41). 
+
+4. The local probabilities of monomeric units 
+
+The probability (14) of finding the monomeric unit m = ml at the location l along a template of length L can thus be computed with 
+
+μ(m; l) = lim 
+
+> L→∞
+
+1
+
+tr ΨL
+
+tr( Sl · Ym,l · Ψl−1) , (46) where the matrices 
+
+Sl ≡ RL · · · Rl+1 (47) are obtained by chain multiplication of the matrices Rl defined in Eq. (41) and using the fact that Ψl−1 = Rl−1 · · · R1 ·
+
+Ψ0. Subsequently, the mean fractions of monomeric units m ∈ { 1, 2, . . . , M } in the copy are given by Eq. (15). We note that the matrices (47) satisfy the recurrence Sl−1 = Sl · Rl, starting from SL = 1 (where 1 is the I × I
+
+identity matrix) and ending with S0 = RL · RL−1 · · · R1. Moreover, we have the property that Sl−1 · Ψl−1 = Sl · Ψl,so that ΨL = S0 · Ψ0.If we assume that the template is periodic of period L and if we consider the periodic boundary conditions ΨL = Ψ0,we infer that the matrix S0 should have an eigenvalue equal to one among its eigenvalues, i.e., the property that 
+
+S0 · Ψ0 = Ψ0. Under such circumstances, the process is propagative along the template and the copy grows as time increases. 
+
+5. Relations to the solutions for simpler processes 
+
+In summary, the backward and forward iterations (39) and (41) provide the exact asymptotic solution of the kinetic equations (8) ruling the stochastic process (1)-(2). 10 We note that, in the simpler processes where wi→j 
+
+> ±m,l
+
+= 0 for i 6 = j, the matrices (19) and (20) are equal to each other, so that the iterations (39) and (41) reduce to those of the template-directed multistate copolymerization processes of Ref. [35] with Wc 
+
+> ±m,l
+
+= Wd 
+
+> ±m,l
+
+≡ W±m,l . If the template is furthermore uniform (i.e., periodic of period L = 1), the equations reduce to those of the free multistate copolymerization processes studied in Ref. [34]. In the case where there is a single internal state (i.e., I = 1), the transition matrices (21) are equal to zero W0 
+
+> m,l
+
+= 0, so that all the matrices reduce to scalars. In particular, the matrices Vl reduce to the scalar quantities vl = xl = 1 /τ l
+
+and the backward iteration (39) becomes Eq. (3) of Ref. [26], while the matrices Ψl and Rl respectively reduce to the scalar quantities ψl and rl = ψl/ψ l−1 = vl−1/v l, which play a redundant role with respect to the local velocities vl. 
+
+> E. The solution in the stationary regime
+
+If the attachment rates are too small with respect to the detachment rates, the growth is stalled. In this stationary regime, the backward iteration converges toward matrices Vl of rank lower than their size I, such that det Vl = 0 and C = tr ( Vl · Ψl) = 0 for l = 1 , 2, 3, . . . , because the matrices Ψl have the form (42). Consequently, the mean growth velocity is equal to zero, v = 0, as it should. In this regime, the length distribution reaches stationarity and, according to Eq. (28), it is given by 
+
+pst (l) = lim  
+
+> t→∞
+
+tr Pt(l) = tr Ψl
+
+∑∞ 
+
+> l=1
+
+tr Ψl
+
+, (48) since the wave number vanishes ( q → 0) in the long-time limit ( t → ∞ ). Typically, the stationary length distribution decreases exponentially as pst (l) ∼ exp( −αl ) with a positive exponent 
+
+α > 0. This exponent goes to zero at the onset of growth, which is approached from the stationary regime when the attachment rates become larger and larger with respect to the detachment rates. Above the onset of growth, the mean length is no longer stationary and it increases with time. If the template is disordered, the increase of the mean length may be sublinear in time, growing as 〈l〉t ∼ tγ
+
+(0 < γ < 1), as explained in Appendix B. For larger values of the attachment rates, the increase can be linear in time going as 〈l〉t ≃ vt with a positive mean growth velocity v > 0. Under such circumstances, the onset of growth (where the growth is still stalled) corresponds to the value γ = 0 of the exponent γ and the threshold of linear growth to 
+
+γ = 1. The values of the rates are typically different at the onset of growth ( γ = 0) and at the threshold of linear growth ( γ = 1) if the template is disordered. Otherwise, if the template has a finite period, the regime of sublinear growth in time does not exist and the mean growth velocity directly becomes positive beyond the stationary regime where growth is stalled.  
+
+> IV. NUMERICAL EXAMPLE
+
+In this section, the method based on the backward and forward iterations (39) and (41) to solve the kinetic equa-tions (8) is compared to the method of numerical simulation with Gillespie’s algorithm for the corresponding stochastic process [41, 42]. The application of Gillespie’s algorithm to this template-directed multistate copolymerization process defined by the reactions (1) and (2) is summarized in Appendix C.  
+
+> A. The model
+
+The vehicle of this comparison is the following model with two types of monomeric units for the template and the copy ( M = N = 2) and a catalyst having two internal states ( I = 2). Furthermore, the dependence of the rates on the location l along the template is expressed in terms of the template unit nl, to which the copy unit ml is paired, i.e., the rates of the model are given by wi→j  
+
+> ±ml,l
+
+= wi→j  
+
+> ±ml,n l
+
+and wi→j 
+
+> 0ml,l
+
+= wi→j  
+
+> 0ml,n l
+
+. Moreover, the attachment rates are assumed to be proportional to the concentration of the monomer that is attached, while the detachment rates are not, and the transition rates are independent of the monomeric unit in the copy. The rates are thus taken to be 
+
+wi→j 
+
+> +m,n
+
+= ki→j 
+
+> +m,n
+
+cm , wi→j 
+
+> −m,n
+
+= ki→j 
+
+> −m,n
+
+, and wi→j 
+
+> 0m,n
+
+= ki→j 
+
+> 0,n
+
+(49) 11 for m, n = 1 , 2 and i, j = 1 , 2 with the following rate constants: 
+
+k1→1+1 ,1 = 3 , k1→1+1 ,2 = 2 , k1→1+2 ,1 = 5 , k1→1+2 ,2 = 4 , k1→2+1 ,1 = 1 , k1→2+1 ,2 = 2 , k1→2+2 ,1 = 2 , k1→2+2 ,2 = 5 ,k2→1+1 ,1 = 1 , k2→1+1 ,2 = 3 , k2→1+2 ,1 = 6 , k2→1+2 ,2 = 3 , k2→2+1 ,1 = 6 , k2→2+1 ,2 = 4 , k2→2+2 ,1 = 4 , k2→2+2 ,2 = 2 , (50) 
+
+k1→1 
+
+> −1,1
+
+= 2 , k1→1 
+
+> −1,2
+
+= 1 , k1→1 
+
+> −2,1
+
+= 2 , k1→1 
+
+> −2,2
+
+= 6 , k1→2 
+
+> −1,1
+
+= 4 , k1→2 
+
+> −1,2
+
+= 1 , k1→2 
+
+> −2,1
+
+= 3 , k1→2 
+
+> −2,2
+
+= 1 ,k2→1 
+
+> −1,1
+
+= 5 , k2→1 
+
+> −1,2
+
+= 2 , k2→1 
+
+> −2,1
+
+= 1 , k2→1 
+
+> −2,2
+
+= 1 , k2→2 
+
+> −1,1
+
+= 1 , k2→2 
+
+> −1,2
+
+= 2 , k2→2 
+
+> −2,1
+
+= 1 , k2→2 
+
+> −2,2
+
+= 3 , (51) 
+
+k1→20,1 = 4 , k1→20,2 = 1 , k2→10,1 = 2 , k2→10,2 = 3 . (52) These rates determine the matrices Wc
+
+> ±m,n
+
+, Wd
+
+> ±m,n
+
+, and W0 
+
+> n
+
+according to Eqs. (19), (20), and (21), respectively, where the subscript l is replaced with n = nl and I = 2. 
+
+B. The backward and forward iterations 
+
+Here, the backward iteration (39) is given by the iterated matrix function system (IMFS): 
+
+Vl−1 = Fnl (Vl) (53) in terms of the following system of two matrix functions, 
+
+Fn(V) ≡
+
+> 2
+
+∑
+
+> m=1
+
+Wd+m,n −
+
+> 2
+
+∑
+
+> m=1
+
+Wc 
+
+> −m,n
+
+·
+
+(
+
+V − W0 
+
+> n
+
++ Wd
+
+> −m,n
+
+)−1
+
+· Wc+m,n for n = 1 , 2 . (54) This iteration runs backward along the template sequence n1n2 · · · nl−1nl · · · , which is taken as a Bernoulli sequence with the probabilities ν(n) = 0 .5 for n = 1 , 2. Therefore, the 2 × 2 matrix Vl−1 is determined from the 2 × 2 matrix Vl,depending on the template unit nl ∈ { 1, 2} at the location l.If the template sequence is periodic with nl+L = nl for l = 1 , 2, . . . , L and, thus, forms a loop, numerical convergence can be achieved by running the backward iteration (53) several times around the loop. The number of passages around the loop is denoted Nloop . We note that this iteration converges exponentially fast in both the stationary and the growth regimes. The rate of exponential convergence of the iteration (53) vanishes at the edge of the stationary regime, where the growth of the copolymer chain is stalled. Otherwise, it is positive. After numerical convergence toward the sequence of 2 × 2 matrices {Vl}Ll=1 , the matrices (38) can be computed, which here read as follows, 
+
+Ym,l =
+
+(
+
+Vl − W0 
+
+> nl
+
++ Wd
+
+> −m,n l
+
+)−1
+
+· Wc+m,n l , (55) giving the matrices Rl ≡ ∑2 
+
+> m=1
+
+Ym,l of the forward iteration (41). The latter is run forward along the template sequence, starting from some initial condition Ψ0 and generating the sequence of 2 × 2 matrices {Ψl}Ll=1 . The matrices Ψl have the form (42) with I = 2 and they are thus of rank one. 
+
+C. The stationary regime 
+
+This regime exists if the monomer concentrations c1 and c2 are low enough for the attachment events to have a smaller rate than the detachment events. In this regime, the backward iteration (53)-(54) converges toward matrices of rank one such that 
+
+Vl =
+
+[ v1 
+
+> l
+
+−v2
+
+> l
+
+−v1 
+
+> l
+
+v2
+
+> l
+
+]
+
+with v1 
+
+> l
+
+= V 11  
+
+> l
+
+= −V 21  
+
+> l
+
+and v2 
+
+> l
+
+= V 22  
+
+> l
+
+= −V 12  
+
+> l
+
+. (56) Consequently, the mean growth velocity (44) is equal to zero because the matrices Ψl are also of rank one, but of the following form 
+
+Ψl =
+
+[ ψ1 
+
+> l
+
+ψ1
+
+> l
+
+ψ2 
+
+> l
+
+ψ2
+
+> l
+
+]
+
+, (57) so that C = tr( Vl · Ψl) = tr( Ψl · Vl) = 0. Therefore, the growth of the copy is stalled. 12 
+
+00.5 11.5 22.5 33.5 0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 
+
+> α
+
+c1 = c2               
+
+> 10 −5
+> 10 −4
+> 10 −3
+> 10 −2
+> 10 −1
+> 10 0
+> 0
+> c1=c2= 0.05
+> c1=c2= 0.10
+> c1=c2= 0.15
+> c1=c2= 0.20
+> c1=c2= 0.25
+> pst (l )
+
+l    
+
+> 10 20 30 40 50
+
+th. 
+
+num. 
+
+num. 
+
+FIG. 1: Exponent α of the exponential decrease of the stationary length distribution pst (l) versus equal monomer concentrations 
+
+c1 = c2. The dots depict the numerical results of Gillespie’s algorithm and the solid line the theoretical predictions from Eq. (48) and tr Ψl = ψ1 
+
+> l
+
++ ψ2 
+
+> l
+
+∼ exp( −αl ). The dots are obtained from the length distributions pst (l) shown in the inset. These distributions are computed in the stationary regime by simulating a long random trajectory l(t) with Nstep = 10 7 steps of Gillespie’s algorithm and counting how often the length is found at some value l during the simulation of the trajectory. The template is a Bernoulli sequence of probabilities ν(1) = ν(2) = 0 .5. 
+
+As a corollary, there is an exponential decrease such that tr Ψl ∼ exp( −αl ) with α > 0, giving the stationary length distribution (48). Figure 1 shows the exponent α of that distribution as a function of equal concentrations c1 = c2 for the two monomers. In Fig. 1, the solid line depicts the theoretical predictions of the iterative method and the dots the results of the numerical simulation with Gillespie’s algorithm. The inset of Fig. 1 gives several examples of stationary length distributions obtained with Gillespie’s algorithm, showing their exponential decrease as pst (l) ∼ exp( −αl ) on average. We observe the good agreement between the theoretical and numerical results. The exponent α decreases as the equal concentrations c1 = c2 increases, to vanish at the edge of the stationary regime, which thus extends over the following concentrations: the stationary regime: c1 = c2 < 0.2973 ± 0.0002 . (58) 
+
+D. The growth regime 
+
+In this regime, the backward iteration (53)-(54) converges toward matrices {Vl}Ll=1 of rank two. The matrix S0
+
+given by Eq. (47) with l = 0 has an eigenvalue equal to one, so that we have ΨL = Ψ0 = S0 · Ψ0 with 
+
+ψ10
+
+ψ20
+
+= S12 0
+
+1 − S11 0
+
+= 1 − S22 0
+
+S21 0
+
+and ψ10 + ψ20 = 1 . (59) Consequently, the growth of the copy becomes possible and the grown copy can be characterized by the statistics of the monomeric units composing its sequence. Figure 2 shows the mean growth velocity (12) and the mean fractions (15) of monomeric units m = 1 , 2 in the copy as functions of equal concentrations c1 = c2 for the two types of monomers in the solution surrounding the catalyst. We observe therein the onset of steady growth where v > 0, which exists for the following concentrations: the steady-growth regime: c1 = c2 > 0.2976 ± 0.0002 . (60) In Fig. 2, the dots are obtained with Gillespie’s algorithm and the solid lines are given by the iterative method, using Eq. (44) to compute the mean growth velocity and Eq. (15) with Eq. (46) for the fractions of the two types of monomeric 13 
+
+0246810 00.2 0.4 0.6 0.8 10 0.2 0.4 0.6 0.8 1
+
+c1 c2=
+
+v
+
+> v
+
+μ(1) −
+
+μ(2) −
+
+> μ(1),  μ(2) − −
+
+FIG. 2: The mean growth velocity and the mean fractions ¯ μ(1) and ¯ μ(2) of monomeric units in the grown copy versus equal monomer concentrations c1 = c2, showing how these quantities behave in the transition between the stationary and growth regimes. The template is a Bernoulli sequence of probabilities ν(1) = ν(2) = 0 .5 and length L = 10 4. The symbols are the numerical results of Gillespie’s algorithm with Nstat = 10 4 and the solid lines the theoretical predictions of the iterative method with Nloop = 10 2.
+
+units in the copy. We see in Fig. 2 that the mean growth velocity increases with the monomer concentrations, since the attachment rates are proportional to the concentrations according to Eq. (49), so that they increase with respect to the detachment rates, which stay constant. Here also, there is good agreement between the results of the iterative method and Gillespie’s algorithm. We note that, in the tiny interval 0 .2973 ± 0.0002 ≤ c1 = c2 ≤ 0.2976 ± 0.0002 in between the stationary and the steady-growth regimes (58) and (60), there is a regime a sublinear growth in time with 〈l〉t ∼ tγ , as confirmed with the calculation of the exponent γ in Appendix B, showing that 0 ≤ γ ≤ 1 in this interval of concentrations. 
+
+020 40 60 80 100 00.2 0.4 0.6 0.8 10 2 4 6 8 10 
+
+> v
+
+c1
+
+c2 = 5 
+
+v
+
+μ(1) −
+
+μ(2) −
+
+> μ(1),  μ(2) − −
+
+FIG. 3: The mean growth velocity and the mean fractions ¯ μ(1) and ¯ μ(2) of monomeric units in the grown copy versus the monomer concentration c1 for the fixed value c2 = 5 of the other monomer concentration. The template is a Bernoulli sequence of probabilities ν(1) = ν(2) = 0 .5 and length L = 10 3. The symbols are the numerical results of Gillespie’s algorithm with 
+
+Nstat = 10 4 and the solid lines the theoretical predictions of the iterative method with Nloop = 10 2.
+
+Figure 3 presents the same quantities as in Fig. 2, but now as a function of the concentration c1 of monomers of type 
+
+m = 1 for a fixed value of the other concentration c2 = 5. As the concentration c1 decreases to zero, the fraction ¯ μ(1) of the corresponding monomeric unit m = 1 in the copy also becomes equal to zero, while ¯ μ(2) = 1 − ¯μ(1) reaches the unit value. In the limit c1 = 0, the copy sequence is thus exclusively composed of units m = 2, as expected. Again, we observe the good agreement between the numerical results of Gillespie’s algorithm (depicted with dots) and the theoretical predictions of the iterative method (the solid lines). 14 Finally, Figs. 4 and 5 show the local probabilities of monomeric units μ(m; l) defined by Eq. (14) and the mean local dwell times τl of the catalyst as functions of the location l along the template for two different sets of monomer concentrations. The open symbols depict the results of Gillespie’s algorithm for a statistics over Nstat = 10 9 simulated copies. The theoretical predictions of the iterative method are plotted as crosses, pluses and filled diamonds. 
+
+0.3 0.4 0.5 0.6 0.7 μ(m; l)
+
+> 112212122121111111212121122221122112211121121211112
+
+m = 2 
+
+m = 1
+
+> num./th.
+
+0.015 0.016 0.017 0.018 100 110 120 130 140 150 τl
+
+l
+
+> num./th.
+
+c1 = c2 = 5 
+
+FIG. 4: The local probabilities μ(m; l) of monomeric units m = 1 and m = 2 (upper panel) and the mean local dwell times 
+
+τl (lower panel) versus the location l along the template sequence shown above the panels, for the monomer concentrations 
+
+c1 = c2 = 5. The template is a Bernoulli sequence of probabilities ν(1) = ν(2) = 0 .5 and length L = 10 3 . The numerical results of Gillespie’s algorithm with Nstat = 10 9 are depicted as open symbols (open circles and open squares for the local monomeric probabilities, open diamonds for the mean local dwell times) and the theoretical predictions of the iterative method with Nloop = 10 2 as crosses and pluses for the local monomeric probabilities and filled diamonds for the mean local dwell times. The iterative method with Nloop = 10 2 is 4 × 10 6 times faster than the numerical simulation using Gillespie’s algorithm with 
+
+Nstat = 10 9.
+
+In Fig. 4, the concentrations of both monomers are equal to each other, c1 = c2 = 5. For these concentrations and the model of rate constants (50)-(52), the copy sequence contains more monomeric units of type m = 2 than of type m = 1, on average. We observe clear correlations between the compositions of the copy and the template, the latter being given above the panels of the figure. We also observe particular structures in the sequences of local monomeric probabilities μ(m; l) and mean local dwell times τl, when there is a long subsequence of identical units in the template such as the subsequence 1111111 from l = 111 to l = 117. Contrary to the simplest expectation, the local monomeric probabilities and the mean local dwell times are not uniform along the subsequence, but presents some kind of relaxation toward uniformity at the beginning and the end of the subsequence, after and before switching from and to the other type m = 2 of monomeric units. This effect is explained by the fact that the local monomeric probabilities and the mean local dwell times are determined by the backward and forward iterations, running along the template and generating such structures in the successive values of the different quantities of interest. In Fig. 5, the concentration c1 = 8 of monomer m = 1 is taken to be larger than the concentration c2 = 3 of the other monomer m = 2, whereupon the local probabilities μ(m; l) are now larger for the monomeric units m = 1 than for the units m = 2. In this case, wee see that the mean local dwell times τl vary over a smaller interval of values than in Fig. 4. Structures similar as those in Fig. 4 are here also observed, but with much smaller amplitudes. There is excellent agreement between the results of both methods. The standard deviation between the numerical and theoretical values can be defined as ∆μ ≡
+
+{
+
+1
+
+L2 − L1
+
+> L2
+
+∑
+
+> l=L1
+
+[μnum (m; l) − μth (m; l)] 2
+
+}1/2
+
+(61) for either m = 1 or m = 2, since μ(1; l) + μ(2; l) = 1. The standard deviation (61) with L1 = 100 and L2 = 200 15 
+
+0.3 0.4 0.5 0.6 0.7 
+
+0.0162 0.0163 0.0164 0.0165 0.0166 100 110 120 130 140 150 μ(m; l)
+
+> 112212122121111111212121122221122112211121121211112
+
+m = 2 
+
+m = 1
+
+> num./th.
+> τl
+
+l
+
+> num./th.
+
+c1 = 8, c2 = 3 
+
+FIG. 5: The local probabilities μ(m; l) of monomeric units m = 1 and m = 2 (upper panel) and the mean local dwell times 
+
+τl (lower panel) versus the location l along the template sequence shown above the panels, for the monomer concentrations 
+
+c1 = 8 and c2 = 3. The template is a Bernoulli sequence of probabilities ν(1) = ν(2) = 0 .5 and length L = 10 3. The numerical results of Gillespie’s algorithm with Nstat = 10 9 are depicted as open symbols (open circles and open squares for the local monomeric probabilities, open diamonds for the mean local dwell times) and the theoretical predictions of the iterative method with Nloop = 10 2 as crosses and pluses for the local monomeric probabilities and filled diamonds for the mean local dwell times. The iterative method with Nloop = 10 2 is 4 × 10 6 times faster than the numerical simulation using Gillespie’s algorithm with 
+
+Nstat = 10 9.
+
+decreases as ∆μ ≃ 0.5 ± 0.1
+
+√Nstat 
+
+, (62) as the statistics used in the numerical simulation with Gillespie’s algorithm is increased from Nstat = 10 3 to Nstat =10 9. But, the point is that the theoretical values of the iterative method are obtained very much faster with only 
+
+Nloop = 10 2. Indeed, for the computation of the results plotted in Figs. 4 and 5, the iterative method is about 4 × 10 6
+
+times faster than the numerical simulation with Gillespie’s algorithm, demonstrating that the iterative method is extremely powerful in providing the exact asymptotic solution of the kinetic equations. 
+
+V. CONCLUSION AND PERSPECTIVES 
+
+In this paper, we developed the kinetic theory of the molecular machines performing DNA replication, transcrip-tion, and translation, which are the DNA and RNA polymerases and the ribosomes. In general, these machines have multiple states of conformation or activation and, thus, they catalyze processes of template-directed multistate copolymerization. Assuming that the rates depend on the internal states of the machine, on the location of the machine along the template, and on the monomeric unit that is attached to or detached from the copy, we show that the kinetic equations of such processes can be solved in the long-time limit to obtain exact formulas for the mean growth velocity, the probabilities of possible sequences of monomeric units composing the copy, and related probability distributions. Since the rates are assumed to be independent of monomeric units that have been previously incorporated in the copy, the kinetic equations can be exactly solved using the matrix factorization ansatz given by Eq. (37) in terms of the matrices (38), which are defined for every type of monomeric unit possibly found at a given location of the template. Consequently, the kinetic equations can be solved by running the iteration (39) backward along the template. This backward iteration forms an iterated matrix function system (IMFS), each iteration depending on the template 16 monomeric unit (or the group of template units) at the given location. The backward iteration is complemented by the forward iteration (41) in order to obtain the mean growth velocity, which is exactly given by the formula (44) with the constant (43). Furthermore, the sequence probabilities are provided by Eq. (45) and the local probabilities of monomeric units by Eq. (46). The detailed mathematical proof of these results is carried out in Appendix A. The IMFS forming the backward iteration can be solved with efficient methods of numerical computation along the template. The mean growth velocity is positive in the regime of steady growth, where the mean length of the copy increases linearly with time. If the template sequence is semi-infinite and disordered, there is the possibility for a sublinear growth in time of the copy, as explained in Appendix B. If the attachment rates are too small with respect to the detachment rates, the growth of the copy is stalled. In the latter regime, the stationary probability distribution of the length of the copy can also be calculated using the backward and forward iterations. The IMFS method is applied to a numerical example and its results are compared to those obtained by numerical simulations with Gillespie’s algorithm. The latter also gives exact results if the statistics is large enough. The comparison confirms that both methods provide exact values for the mean growth velocity and the local probabilities of monomeric units for the copy grown along a given template. In the stationary regime, good agreement is found for the exponent controlling the exponential decrease of the stationary length distribution (see Fig. 1). In the growth regime, there is also good agreement between the results of both methods for the mean growth velocity and the fractions of monomeric units in the copy (see Figs. 2 and 3), and an excellent agreement for the local probabilities of monomeric units in the copy and the mean local dwell times of the catalyst along a given template sequence, as shown in Figs. 4 and 5. To compute the results depicted in these figures, the IMFS method is more than a million times faster than the numerical simulation with Gillespie’s algorithm. Accordingly, the IMFS method presented in this paper not only provides the exactly asymptotic solution of the kinetic equations, but is also computationally much more efficient than other methods. In the companion paper [43], the IMFS method will be applied to the kinetics of the T7 DNA polymerase, which exhibits transitions between several conformational states during DNA replication, as the experimental observations show [1–5]. 
+
+> Acknowledgments
+
+The author thanks the Universit´ e libre de Bruxelles (ULB) for support.   
+
+> Appendix A: Solving the kinetic equations 1. Equations for the probability matrices (22), (23), (24), . . .
+
+Summing the matrix kinetic equations (18) over m1 · · · ml, we first deduce the equations for the probability matri-ces (22): d
+
+dt Pt(l) = ∑
+
+> ml
+
+Wc+ml,l · Pt(l − 1) + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Pt(ml+1 , l + 1) + ∑
+
+> ml
+
+(
+
+W0 
+
+> ml,l
+
+− Wd
+
+> −ml,l
+
+)
+
+· Pt(ml, l ) − ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 · Pt(l) . (A1) Next, summing the matrix kinetic equations (18) over m1 · · · ml−1, we get the equations for the probability matri-ces (23): d
+
+dt Pt(ml, l ) = Wc+ml,l · Pt(l − 1) + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Pt(mlml+1 , l + 1) +
+
+(
+
+W0 
+
+> ml,l
+
+− Wd 
+
+> −ml,l
+
+− ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 
+
+)
+
+· Pt(ml, l ) . (A2) Similarly, further equations with the same structure are found for the probability matrices (24), . . . 17 
+
+2. Equations for the particular solutions (29) 
+
+Inserting the expressions (29) for the particular solution into Eqs. (A1), (A2), . . . , we infer the following matrix equations for the modes of wave number q:
+
+sq Gq (l) = e−ıq ∑
+
+> ml
+
+Wc+ml,l · Gq(l − 1) + e +ıq ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Gq (ml+1 , l + 1) + ∑
+
+> ml
+
+(
+
+W0 
+
+> ml,l
+
+− Wd
+
+> −ml,l
+
+)
+
+· Gq(ml, l ) − ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 · Gq (l) , (A3) 
+
+sq Gq (ml, l ) = e −ıq Wc+ml,l · Gq (l − 1) + e +ıq ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Gq (mlml+1 , l + 1) +
+
+(
+
+W0 
+
+> ml,l
+
+− Wd 
+
+> −ml,l
+
+− ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 
+
+)
+
+· Gq (ml, l ) , (A4) and so on and so forth. 
+
+3. Proof of the matrix factorization (37) 
+
+Using the expansions (30) for sq and (31) for Gq, and taking the limit q → 0, Eqs. (A3), (A4), . . . yield the following equations for the quantities (32): 0 = ∑
+
+> ml
+
+Wc+ml,l · Ψl−1 + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Ψl+1 (ml+1 ) + ∑
+
+> ml
+
+(
+
+W0 
+
+> ml,l
+
+− Wd
+
+> −ml,l
+
+)
+
+· Ψl(ml) − ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 · Ψl , (A5) 0 = Wc+ml,l · Ψl−1 + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Ψl+1 (mlml+1 ) + 
+
+(
+
+W0 
+
+> ml,l
+
+− Wd 
+
+> −ml,l
+
+− ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 
+
+)
+
+· Ψl(ml) , (A6) etc. From Eq. (A6) on, all these matrix equations have a similar structure, so that they can be solved simultaneously using the factorization ansatz (37). Substituting this factorization into Eq. (A6) and supposing it holds for any Ψl−1,we find the following matrix equation for Yml,l :0 = Wc+ml,l +
+
+( ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Yml+1 ,l +1 + W0 
+
+> ml,l
+
+− Wd 
+
+> −ml,l
+
+− ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 
+
+)
+
+· Yml,l . (A7) Consequently, all the equations of the hierarchy beyond Eq. (A5) are solved as soon as Eq. (A7) is satisfied. 
+
+4. Proof of the backward iteration (39) 
+
+Now, if we define the following matrix, 
+
+Vl ≡ ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 − ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+· Yml+1 ,l +1 , (A8) and use it inside the parenthesis of Eq. (A7), the expression (38) for the matrix Yml,l is obtained after the inversion of Eq. (A7). Replacing l with l − 1 in Eq. (A8) and substituting therein the expression (38), we find the backward iteration (39). Therefore, all the equations of the hierarchy, starting from Eq. (A6) and going on for the quantities (37) are solved once the backward iteration (39) has computed the solutions for all the matrices Vl and Yml,l along the template. 18 
+
+5. Proof of Eq. (44) for the mean growth velocity 
+
+If we take the derivative of Eq. (A3) with respect to the wave number q and set q = 0, we get 
+
+−ı v Ψl = ∑
+
+> ml
+
+Wc+ml,l · ( − ı Ψl−1 + Ψ′
+
+> l−1
+
+) + ∑
+
+> ml+1
+
+Wc 
+
+> −ml+1 ,l +1
+
+·
+
+[
+
+ı Ψl+1 (ml+1 ) + Ψ′
+
+> l+1
+
+(ml+1 )
+
+]
+
++ ∑
+
+> ml
+
+(
+
+W0 
+
+> ml,l
+
+− Wd
+
+> −ml,l
+
+)
+
+· Ψ′
+
+> l
+
+(ml) − ∑
+
+> ml+1
+
+Wd+ml+1 ,l +1 · Ψ′ 
+
+> l
+
+(A9) in terms of the quantities (32) and (33). In order to deduce an expression for the mean growth velocity v, we first take the trace of Eq. (A9) and use the following identities satisfied by the matrices (19), (20), and (21): tr( W0 
+
+> m,l
+
+· X) = 0 (A10) and tr( Wc 
+
+> ±m,l
+
+· X) = tr( Wd 
+
+> ±m,l
+
+· X) (A11) for any I × I matrix of the form 
+
+X =
+
+
+
+x1 x1 . . . x1
+
+x2 x2 . . . x2
+
+... ... . . . ...
+
+xI xI . . . xI
+
+ , (A12) having I identical columns of size I.Next, we sum the trace of Eq. (A9) over the period L of the template, which allows us to replace the subscripts 
+
+l + 1 with l. Because the identities (A10) and (A11) hold with X = Ψ′
+
+> l
+
+(·), all the corresponding terms cancel and we find 
+
+v
+
+> L
+
+∑
+
+> l=1
+
+tr Ψl =
+
+> L
+
+∑
+
+> l=1
+
+∑
+
+> ml
+
+tr (Wc+ml,l · Ψl−1
+
+) −
+
+> L
+
+∑
+
+> l=1
+
+∑
+
+> ml
+
+tr [Wc 
+
+> −ml,l
+
+· Ψl(ml)] . (A13) If the identity (A11) for X = Ψl−1 is used together with Eq. (A8) after the substitution l → l − 1 and with Eq. (40), we find that the mean growth velocity is given by 
+
+v =
+
+∑Ll=1 tr (Vl−1 · Ψl−1
+
+)
+
+∑Ll=1 tr Ψl
+
+. (A14) Subsequently, the formula (44) for the mean growth velocity is obtained in the limit L → ∞ , if the invariance property (43) holds, which is proved in the next Subsection A 6. 
+
+6. Proof of the invariance property (43) 
+
+Now, Eq. (43) can be proved as follows. Using again Eq. (A8) with l → l − 1, we deduce tr( Vl−1 · Ψl−1) = ∑
+
+> ml
+
+tr [(Wd+ml,l − Wc 
+
+> −ml,l
+
+· Yml,l ) · Ψl−1
+
+]
+
+= ∑
+
+> ml
+
+tr [(Wc+ml,l − Wc 
+
+> −ml,l
+
+· Yml,l ) · Ψl−1
+
+]
+
+= ∑
+
+> ml
+
+tr [(Vl − W0 
+
+> ml,l
+
++ Wd 
+
+> −ml,l
+
+− Wc
+
+> −ml,l
+
+) · Ψl(ml)]
+
+= tr( Vl · Ψl) . (A15) From the first to the second line, we used the identity (A11) for X = Ψl−1; from the second to the third line, the expression (38) for Yml,l and the relation (40); and, finally, from the third to the fourth line, the identities (A10) and (A11) for X = Ψl(ml). Thus, the invariance property (43) is proved. 19 
+
+Appendix B: Time evolution of the length distribution 1. Equation for the length distribution 
+
+The equation for the length distribution (28) can be deduced by taking the trace of Eq. (A1) and using the identities (A10) and (A11) for X = Pt(·). We find that d
+
+dt pt(l) = al pt(l − 1) + bl+1 pt(l + 1) − (al+1 + bl) pt(l) (B1) with the following coefficients, 
+
+al ≡ 1
+
+tr Pt(l − 1) 
+
+∑
+
+> ml
+
+tr [Wc+ml,l · Pt(l − 1) ] , (B2) 
+
+bl ≡ 1
+
+tr Pt(l)
+
+∑
+
+> ml
+
+tr [Wc 
+
+> −ml,l
+
+· Pt(ml, l )] . (B3) In the long-time limit, the sequence probabilities evolve toward stationary distributions given by the expressions (37), so that these coefficients can be computed according to 
+
+al = 1
+
+tr Ψl−1
+
+∑
+
+> ml
+
+tr (Wc+ml,l · Ψl−1
+
+) , (B4) 
+
+bl = 1
+
+tr Ψl
+
+∑
+
+> ml
+
+tr (Wc 
+
+> −ml,l
+
+· Yml,l · Ψl−1
+
+) , (B5) in terms of the matrices Ψl given by the forward iteration (41) and the matrices Yml,l defined by Eq. (38) and calculated with the backward iteration (39). 
+
+2. The regime of sublinear growth in time 
+
+If the copolymer chain grows along a disordered template, its mean length may increase sublinearly in time as 
+
+〈l〉t ∼ tγ with an exponent 0 < γ < 1, which is the root of the following equation: 
+
+〈( bl
+
+al
+
+)γ 〉
+
+= 1 , (B6) as shown for random drifts in one-dimensional disordered media [39, 40] and for unistate templated-directed copoly-merization processes [27]. Therefore, the exponent γ can be computed using Eqs. (B4) and (B5) for the coefficients 
+
+al and bl.
+
+3. Application to the numerical example 
+
+The formula (B6) is applied to the numerical example of rate constants (50)-(52) for a template of length L = 10 4,finding the root of 〈(bl/a l)γ 〉 = L−1 ∑Ll=1 (bl/a l)γ = 1 as a function of the concentrations. In the case of Figs. 1 and 2, where the concentrations are equal, we find that 
+
+γ = 0 if c1 = c2 = 0 .2974 ± 0.0001 , (B7) 
+
+γ = 1 if c1 = c2 = 0 .2976 ± 0.0001 , (B8) which confirms the values (58) and (60) obtained in Section IV, up to numerical accuracy. A similar computation can be performed for other ranges of concentrations. For instance, we find for c2 = 0 .1 : γ = 0 if c1 = 0 .584 ± 0.005 , (B9) 
+
+γ = 1 if c1 = 0 .615 ± 0.005 , (B10) 20 and for c2 = 0 .01 : γ = 0 if c1 = 0 .732 ± 0.005 , (B11) 
+
+γ = 1 if c1 = 0 .792 ± 0.005 . (B12) Accordingly, a broader interval of sublinear growth in time is found if one of the monomer concentrations takes a relatively small fixed value. 
+
+Appendix C: Numerical simulation with Gillespie’s algorithm 
+
+The Markov jump stochastic process of reactions (1) and (2) can be exactly simulated with Gillespie’s numerical algorithm, which is of Monte Carlo type [41, 42]. The algorithm aims at generating a random trajectory of the process and, thus, a random copy of the template. At every step of the simulation, we may assume that, before the jump ω → ω′, the copy has the length l, its ultimate unit is ml, which is paired with the template unit nl, the next template unit is nl+1 , and the catalyst is found in its internal state i. One of the following seven possible jumps may occur: 1) & 2) the attachment of either the unit 
+
+ml+1 = 1 or ml+1 = 2 to the copy at the rate wi→i  
+
+> +ml+1 ,n l+1
+
+with the elongation l → l + 1 for the copy; 3) & 4) the attachment of either the unit ml+1 = 1 or ml+1 = 2 to the copy at the rate wi→j 
+
+> +ml+1 ,n l+1
+
+with the transition i → j 6 = i
+
+for the catalyst, and the elongation l → l + 1 for the copy; 5) the detachment of the unit ml from the copy at the rate 
+
+wi→i 
+
+> −ml,n l
+
+, so that l → l − 1; 6) the detachment of the unit ml from the copy at the rate wi→j 
+
+> −ml,n l
+
+with the transition 
+
+i → j 6 = i for the catalyst and l → l − 1; 7) the transition i → j 6 = i for the catalyst at the rate wi→j 
+
+> 0,n l
+
+without any attachment or detachment, so that l → l. For the initiation steps (3)-(4), there are only five possible jumps: 1) & 2) the attachment of either m1 = 1 or m1 = 2 without transition for the catalyst; 3) & 4) the attachment of either 
+
+m1 = 1 or m1 = 2 with the transition i → j 6 = i for the catalyst; 5) the transition i → j 6 = i without attachment. The random waiting time ∆ t(ω → ω′) before the jump ω → ω′ has the exponential probability density p(∆ t) = 
+
+T −1 exp( −∆t/ T ) with the parameter T =
+
+[ ∑ 
+
+> ω′
+
+w(ω → ω′)
+
+]−1
+
+, given by the inverse of the sum of the rates for the seven possible jumps. The random jump ω → ω′ occurs with the probability P(ω → ω′) = w(ω → ω′)/ ∑ 
+
+> ω′
+
+w(ω →
+
+ω′), given by the ratio of the corresponding rate over the sum of rates. The mean local dwell time τl of the catalyst of the template is given by the sum of all the random waiting times ∆t(ω → ω′) of the jumps occurring at the location l of the template when the copy has its length equal to l, and by averaging over a large enough statistical ensemble of Nstat random copies generated with Gillespie’s algorithm: 
+
+τl = 〈∑ 
+
+> ω:l
+
+∆t(ω → ω′)〉Nstat .Two uniform pseudorandom numbers are generated at every step: one for the random waiting time and the other for selecting a random jump among the seven possibilities. This is repeated over Nstep steps, taking Nstep = L equal to the length L of the template in order to keep the copy shorter than the template. The growth velocity of an individual random trajectory is computed as the length of the copy at the end of the Nstep steps divided by the sum of all the random waiting times generated during the simulation of the trajectory. The mean growth velocity is then given by averaging over the statistical ensemble of trajectories: v = 〈lNstep / ∑ 
+
+> Nstep
+
+∆t(ω → ω′)〉Nstat . In addition, the local monomeric probabilities μ(m; l) are also computed with the statistical ensemble of Nstat random copies. 
+
+[1] Y.-C. Tsai and K. A. Johnson, A new paradigm for DNA polymerase specificity , Biochem. 45 , 9675–9687 (2006). [2] K. A. Johnson, The kinetic and chemical mechanism of high-fidelity DNA polymerases , Biochim. Biophys. Acta 1804 ,1041–1048 (2010). [3] T. L. Dangerfield and K. A. Johnson, Optimized incorporation of an unnatural fluorescent amino acid affords measurement of conformational dynamics governing high-fidelity DNA replication , J. Biol. Chem. 295 , 17265–17820 (2020). [4] T. L. Dangerfield and K. A. Johnson, Conformational dynamics during high-fidelity DNA replication and translocation defined using a DNA polymerase with a fluorescent artificial amino acid , J. Biol. Chem. 296 , 100143 (2021). [5] T. L. Dangerfield, S. Kirmizialtin, and K. A. Johnson, Conformational dynamics during misincorporation and mismatch extension defined using a DNA polymerase with a fluorescent artificial amino acid , J. Biol. Chem. 298 , 101451 (2022). [6] L. Bai, A. Shundrovsky, and M. D. Wang, Sequence-dependent kinetic model for transcription elongation by RNA poly-merase , J. Mol. Biol. 344 , 335–349 (2004). [7] L. Bai, R. M. Fulbright, and M. D. Wang, Mechanochemical kinetics of transcription elongation , Phys. Rev. Lett. 98 ,068103 (2007). 21 
+
+[8] M. Dangkulwanich, T. Ishibashi, S. Liu, M. L. Kireeva, L. Lubkowska, M. Kashlev, and C. J. Bustamante, Complete dissection of transcription elongation reveals slow translocation of RNA polymerase II in a linear ratchet mechanism ,eLife 2, e00971 (2013). [9] T. Ishibashi, M. Dangkulwanich, Y. Coello, T. A. Lionberger, L. Lubkowska, A. S. Ponticelli, M. Kashlev, and C. Bus-tamante, Transcription factors IIS and IIF enhance transcription efficiency by differentially modifying RNA polymerase pausing dynamics , Proc. Natl. Acad. Sci. USA 111 , 3419–3424 (2014). [10] A. Garai, D. Chowdhury, D. Chowdhury, and T. V. Ramakrishnan, Stochastic kinetics of ribosomes: Single motor properties and collective behavior , Phys. Rev. E 80 , 011908 (2009). [11] J.-D. Wen, L. Lancaster, C. Hodges, A.-C. Zeri, S. H. Yoshimura, H. F. Noller, C. Bustamante, and I. Tinoco Jr, Following translation by single ribosomes one codon at a time , Nature 452 , 598–603 (2008). [12] K.-W. Ieong, ¨ U. Uzun, M. Selmer, and M. Ehrenberg, Two proofreading steps amplify the accuracy of genetic code trans-lation , Proc. Natl. Acad. Sci. USA 113 , 13744–13749 (2016). [13] A. B. Loveland, G. Demo, and A. A. Korostelev, Cryo-EM of elongating ribosome with EF-Tu •GTP elucidates tRNA proofreading , Nature 584 , 640–645 (2020). [14] C. H. Bennett, Dissipation-error tradeoff in proofreading , Biosystems 11 , 85–91 (1979). [15] D. Andrieux and P. Gaspard, Molecular information processing in nonequilibrium copolymerizations , J. Chem. Phys. 130 ,014901 (2009). [16] P. Gaspard and D. Andrieux, Kinetics and thermodynamics of first-order Markov chain copolymerization , J. Chem. Phys. 
+
+141 , 044908 (2014). [17] P. Sartori and S. Pigolotti, Thermodynamics of error correction , Phys. Rev. X 5, 041039 (2015). [18] P. Gaspard, Kinetics and thermodynamics of exonuclease-deficient DNA polymerases , Phys. Rev. E 93 , 042419 (2016). [19] P. Gaspard, Kinetics and thermodynamics of DNA polymerases with exonuclease proofreading , Phys. Rev. E 93 , 042420 (2016). [20] T. Midha, A. B. Kolomeisky, and O. A. Igoshin, Insights into error control mechanisms in biological processes: Copoly-merization and enzyme-kinetics revisited , J. Phys. Chem. B 128 , 5612–5622 (2024). [21] T. Midha, A. B. Kolomeisky, and O. A. Igoshin, Linear-decoupling enables accurate speed and accuracy predictions for copolymerization processes , J. Phys. Chem. Lett. 15 , 9361–9368 (2024). [22] D. F. Anderson, J. Ma, and P. Gagrani, Mathematical analysis for a class of stochastic copolymerization processes , Bull. Math. Biol. 88 , 15 (2026). [23] B. Qureshi, J. Juritz, J. M. Poulton, A. Beersing-Vasquez, and T. E. Ouldridge, A universal method for analyzing copolymer growth , J. Chem. Phys. 158 , 104906 (2023). [24] J. E. B. Guntoro, B. J. Qureshi, and T. E. Ouldridge, The interplay of heterogeneity and product detachment in templated polymer copying , J. Chem. Phys. 162 , 055103 (2025). [25] M. F. Barnsley and S. Demko, Iterated function systems and the global construction of fractals , Proc. R. Soc. Lond. A 399 ,243–275 (1985). [26] P. Gaspard, Template-directed copolymerization, random walks along disordered tracks, and fractals , Phys. Rev. Lett. 117 ,238101 (2016). [27] P. Gaspard, Kinetic theory and thermodynamics of template-directed copolymerization , J. Stat. Mech.: Th. Exp. 024003 (2017). [28] P. Gaspard, Iterated function systems for DNA replication , Phys. Rev. E 96 , 042403 (2017). [29] Q.-S. Li, P.-D. Zheng, Y.-G. Shu, Z.-C. Ou-Yang, and M. Li, Template-specific fidelity of DNA replication with high-order neighbor effects: A first-passage approach , Phys. Rev. E 100 , 012131 (2019). [30] Q.-S. Li, Y.-G. Shu, Z.-C. Ou-Yang, and M. Li, Kinetic assays of DNA polymerase fidelity: A theoretical perspective beyond Michaelis–Menten kinetics , Phys. Rev. E 104 , 014408 (2021). [31] B. D. Coleman and T. G. Fox, Multistate mechanism for homogeneous ionic polymerization. I. The diastereosequence distribution , J. Chem. Phys. 38 , 1065–1075 (1963). [32] B. D. Coleman and T. G Fox, Multistate mechanism for homogeneous ionic polymerization. II. The molecular weight distribution , J. Am. Chem. Soc. 85 , 1241–1244 (1963). [33] B. D. Coleman and T. G Fox, General theory of stationary random sequences with applications to the tacticity of polymers ,J. Polym. Sci. A 1, 3183–3197 (1963). [34] P. Gaspard, Multistate reversible copolymerization of non-Markovian chains under low conversion conditions , J. Chem. Phys. 150 , 164903 (2019). [35] P. Gaspard, Template-directed growth of copolymers , Chaos 30 , 043114 (2020). [36] N. G. van Kampen, Stochastic Processes in Physics and Chemistry (North-Holland, Amsterdam, 1981). [37] C. W. Gardiner, Handbook of Stochastic Methods for Physics, Chemistry and the Natural Sciences , 3rd edition (Springer, Berlin, 2004). [38] P. Schuster, Stochasticity in Processes: Fundamentals and Applications to Chemistry and Biology (Springer, Switzerland, 2016). [39] B. Derrida, Velocity and diffusion constant of a periodic one-dimensional hopping model , J. Stat. Phys. 31 , 433–450 (1983). [40] J.-P. Bouchaud and A. Georges, Anomalous diffusion in disordered media: Statistical mechanisms, models and physical applications , Phys. Reports 195 , 127–293 (1990). [41] D. T. Gillespie, A general method for numerically simulating the stochastic time evolution of coupled chemical reactions ,J. Comput. Phys. 22 , 403–434 (1976). 22 
+
+[42] D. T. Gillespie, Exact stochastic simulation of coupled chemical reactions , J. Phys. Chem. 81 , 2340–2361 (1977). [43] P. Gaspard, Kinetics of multistate DNA polymerases , companion paper, preprint (2026).

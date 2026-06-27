@@ -1,0 +1,4994 @@
+Title: Developing fast, accurate and spin pure calculations of organic diradical electronic structure
+
+URL Source: https://arxiv.org/pdf/2606.25564v1
+
+Published Time: Thu, 25 Jun 2026 00:48:01 GMT
+
+Number of Pages: 79
+
+Markdown Content:
+# Developing fast, accurate and spin pure calculations of organic diradical electronic structure 
+
+## Author: Joseph Kielty, Department of Chemistry, UCL 
+
+## joey.kielty.22@ucl.ac.uk 
+
+## Primary Supervisor: Dr. Tim Hele, Department of Chemistry, UCL 
+
+## t.hele@ucl.ac.uk 
+
+## Secondary Supervisor: Dr. Hugh Burton, Department of Chemistry, UCL 
+
+## h.burton@ucl.ac.uk 
+
+> arXiv:2606.25564v1 [physics.chem-ph] 24 Jun 2026
+
+# Abstract 
+
+Organic diradical molecules have emerged in recent years as highly promising candidates for next-generation optoelectronic and quantum information technologies. Hosting two unpaired electrons in nearly degenerate molecular orbitals, diradicals display unusual photophysical properties which are largely driven by the near-degeneracy of their low-lying singlet and triplet states. As efforts continue to synthesise diradicals with tailored photophysical properties, developing our theoretical understanding of their complex electronic structure is crucial to enable rational design strategies. However, existing computational tools struggle significantly with this task. Density functional theory, which is typically the workhorse of computational materials research, is largely ill-suited for describing the multi-reference character of diradical electronic states, making it prone to produce unphysical results that artificially mix states of different spin multiplicity. While a variety of high-level wavefunction-based methods do exist that offer a rigorous treatment of spin statistics, their high computational cost makes them inefficient for simulating the majority of emissive diradicals, which are typically composed of between 75 and 150 atoms. This work presents a new computational method developed to address this growing demand for accurate yet affordable simulations of diradical molecules. We show that this method, termed Diradical Extended Restricted Open-shell PPP (D-ExROPPP) theory, yields accurate and spin-pure electronic states at a very low computational cost relative to existing approaches. This is achieved by implementing a novel, spin-adapted configuration interaction approach within the semi-empirical Pariser-Parr-Pople framework. D-ExROPPP is then used to study the electronic structure of three prototypical organic diradicals, and benchmarked against results from computationally intensive, post-Hartree-Fock methods. Excitation energies for these molecules are predicted that show a similar level of accuracy as high-level ab-initio calculations, while requiring up to five orders of magnitude less computational time. We further apply D-ExROPPP to a number of recently reported stable, emissive, organic diradicals. In the majority of cases, electronic transitions measured in experimental UV-vis spectra are reproduced with high qualitative accuracy and the spin states involved can be reliably assigned. Together, these results establish D-ExROPPP as a promising new tool for efficiently predicting and interpreting the photophysics of organic diradical molecules. 1Contents 
+
+1 Introduction 32 Previously Published Work 4
+
+2.1 Electronic Properties of Diradicals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42.1.1 Chemical Structure and Bonding . . . . . . . . . . . . . . . . . . . . . . . . . . . 42.1.2 Photophysical Properties . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 72.2 Existing Computational Methods for Diradicals . . . . . . . . . . . . . . . . . . . . . . . 82.2.1 Density-Based Methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82.2.2 Wave function-Based Methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10 2.2.3 Semi-Empirical Methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11 2.3 Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12 
+
+3 Methodology 13 
+
+3.1 Diradical Molecular Orbitals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13 3.1.1 Open-Shell SCF Procedure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13 3.1.2 PPP Theory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16 3.2 Spin-Pure Diradical Excited States . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17 3.2.1 Constructing Configuration State Functions . . . . . . . . . . . . . . . . . . . . . 17 3.2.2 Configuration Interaction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22 3.2.3 Simulating Spectra . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23 
+
+4 Results and Discussion 24 
+
+4.1 Small and Medium-Sized Diradicals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24 4.2 Large emissive diradicals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31 
+
+5 Conclusion 36 6 Acknowledgements and Declaration of Contributions 38 7 Use of Generative AI Declaration 38 References 39 Appendix 48 
+
+21 Introduction 
+
+Organic diradical molecules have gained increasing relevance in the past several years, emerging as a promising class of molecules for a variety of applications. While the first stable organic diradical was discovered over 100 years ago 1, interest in the field has exploded since the discovery of synthetic pathways to highly stable, luminescent, organic diradicals 2–5 . Hosting two unpaired electrons, these large organic diradicals often have unique spin properties that allow for highly unconventional photophysical properties, including high internal photoluminescence quantum efficiencies and the control of emission properties by temperature and magnetic fields 6. This has drawn interest towards the development of diradical OLED technologies 7, and in particular molecular qubits that make use of organic diradical molecules 8,9 .Despite this rapidly growing interest, a significant gap remains between experimental advances and our theoretical understanding of diradical molecules and their emission properties. Existing computational methods face major challenges in modelling the highly-correlated electronic structure of these molecules, which typically are made up of 80 - 150 atoms. State-of-the-art multireference methods such as CASSCF and CASPT2 do well to capture electron correlation, but their poor scaling can make them prohibitively expensive for large molecules. Conversely, density-based methods such as time dependent density functional theory (TDDFT) are much more efficient but results often feature a high degree of spin contamination, making it difficult to assign spin states and obtain accurate energies. As research continues into the synthesis and characterisation of organic diradicals, there is a growing need for computational methods that can efficiently and reliably provide insight into their photophysical properties and so help to guide rational design efforts. This report introduces a novel computational method capable of predicting spin-pure excited electronic states of diradical molecules. We show that this method, termed Diradical Extended Restricted Open-Shell PPP theory (D-ExROPPP) can achieve an accuracy comparable to high-level multireference calculations in some cases, but at a fraction of the computational cost. We ensures spin-purity by constructing configuration state functions (CSFs) which form a basis for an extended configuration interaction approach that includes all single excitations with select double excitations across the 𝜋 orbitals (XCIS-D). The use of machine-learned Pariser-Parr-Pople (PPP) parameters further ensures the method maintains a low computational cost relative to ab-initio methods, while implicitly capturing features of electronic correlation. After establishing the methodology, D-ExROPPP is tested on a number of organic diradical molecules. We first run calculations on several small diradicals and compare results against those obtained with Complete Active Space Self-Consistent Field (CASSCF) and Generalised Multiconfigurational Quasi-Degenerate Perturbation Theory (GMC-QDPT). We then study a set of 14 recently presented large emissive diradicals, computing UV-vis absorption spectra and comparing predictions against experimental data and results from Spin-Flip Time-Dependent Density Functional Theory (SF-TDDFT). 32 Previously Published Work 
+
+## 2.1 Electronic Properties of Diradicals 
+
+2.1.1 Chemical Structure and Bonding 
+
+Diradical molecules are widely defined as open-shell molecules, possessing two degenerate or nearly degenerate singly occupied molecular orbitals (SOMOs) 10,11 . The presence of two unpaired electrons in diradical molecules lends itself to more complex spin states in both ground and excited electronic states. Diradical electronic structure has long been understood through the two-orbital two-electron model (TOTEM), which looks at the electronic configurations that arise from distributing of two electrons among two spatial orbitals (or four spin-orbitals) 10,11 . This model yields six possible electronic configurations, of which four have spin magnetic quantum number ( 𝑀 𝑠 ) of 0 (Fig. 1). Of these four, two are zwitterionic configurations and behave like closed-shell singlets, while the remaining two open-shell configurations are not eigenstates of the 𝑆 2 operator. Spin-adapted linear combinations of these four configurations yield the zwitterionic |1ZW ±⟩ states and the open-shell singlet |1OS ⟩ and triplet |3OS ⟩ states shown in Fig. 1. 
+
+Figure 1: Representations of the electronic configurations and spin-adapted electronic states that arise from the two-electron two-orbital model for describing diradical electronic structure. 𝐾 00 ′ represents the exchange energy between the two SOMOs, 0 and 0 ′. The energy difference between the |1OS ⟩ and |1ZW −⟩ states is given by Δ𝐸 = 𝐸 OS1 − 𝐸 ZW- = 𝐽 00 ′ + 2𝐾 00 ′ − 12 (𝐽 00 + 𝐽 0′0′ ), where 𝐽 𝑎𝑏 is the Coulomb energy between the MOs 𝑎 and 𝑏 . This figure shows the case where Δ𝐸 > 0, however, this depends on the molecule and it is possible to have Δ𝐸 < 0 or Δ𝐸 = 0. 4It is also important to consider the nature of the SOMOs themselves. In many cases, SOMOs are delocalised across the diradical molecule, meaning that the electron density associated with each unpaired electron is distributed over many atoms in the conjugated 𝜋 -system. However, it is possible to rotate SOMO coefficients such that each unpaired electron is mostly or fully localised on different atoms in the molecule. SOMOs that are localised in this way are often called generalised valence bond (GVB) orbitals 12,13 . Molecules in which GVB orbitals do not share electron density between any of the same atoms can be classified as disjoint, wheras molecules without this property are classed as non-disjoint 14 . Salem and Rowland showed in 1972 that the choice of delocalised versus localised SOMOs alters the description of the low-lying TOTEM electronic states 10 . For a given molecule, the |1OS ⟩ state formed from delocalised orbitals maps exactly to the zwitterionic state |1ZW −⟩ when formed from localised orbitals. Fig. 2 highlights this effect in the case of the widely studied cyclobutadiene (CBD) molecule. The exchange interaction 𝐾 00 ′
+
+will typically be very small between localised SOMOs, meaning that |1OS ⟩ and |3OS ⟩ will be close in energy. However, when SOMOs are delocalised 𝐾 00 ′ is expected to be much greater, meaning that |1ZW −⟩
+
+will typically be the lowest energy singlet state. 
+
+Figure 2: Energy level diagram highlighting the transformation between |1ZW −⟩ and |1OS ⟩ that occurs when transforming from the delocalised to the localised SOMOs of cylobutadiene. 𝜙 and 𝜒 represent localised and delocalised molecular orbitals respectively, and the algebraic transformation between the two sets is shown in grey. As in Fig. 1, the |1ZW −⟩ state is depicted as being lower in energy than |1OS ⟩ in the delocalised case, however, the relative energies of these states varies depending on the diradical molecule. A closely related class of molecules to diradicals are diradicaloids, which are loosely defined as molecules with an electronic structure that is intermediate between pure open-shell and closed-shell molecules 11 . This 5arises when a relatively small energy gap exists between the two molecular orbitals, meaning they behave both like the degenerate SOMOs of a pure diradical and the HOMO and LUMO of a pure closed-shell molecule. 
+
+Figure 3: Schematic to represent the transition from diradical to diradicaloid to closed shell molecule, inspired by that presented by Stuyver et al. 11 . 𝜖 0 and 𝜖 0′ represent the energies of orbitals 0 and 0’ respectively, where orbital 0 is lower in energy and orbital 0’ is higher in energy. Energies are shown relative to that of the open-shell triplet in order to highlight how the singlet energy becomes much lower than the triplet energy. Diradicaloids typically possess a singlet ground state which is somewhere in-between the |1ZW −⟩
+
+state of a pure-diradical and the doubly-occupied 𝑆 0 state of a closed-shell molecule (Fig. 3). In a pure diradical, 0 and 0’ are degenerate meaning |𝜓 0 ¯𝜓 0⟩ and |𝜓 0′ ¯𝜓 0′ ⟩ configurations have equal weighting in 
+
+|1ZW −⟩. As the 0’ orbital rises in energy relative to the 0 orbital, its weighting ( 𝐶 0′ ) slowly decreases until it eventually contributes very little to the |1ZW −⟩ state, which is now effectively described by the single 
+
+|𝜓 0 ¯𝜓 0⟩ configuration. We find 𝐶 0′ 
+
+> 𝐶 0
+
+indirectly characterises the degree of open- vs. closed-shell character, where 𝐶 0′ 
+
+> 𝐶 0
+
+= 1 indicates a pure-diradical and 𝐶 0′ 
+
+> 𝐶 0
+
+= 0 suggests that a molecule can be described as fully closed-shell. Since the 1970s, there have been many attempts to define a formal metric for a molecules ’diradical character’, which is typically expressed using the index 𝑦 ∈ [ 0, 1], where 𝑦 = 0 indicates purely closed-shell character and 𝑦 = 1 means that a molecule is a pure-diradical 15–20 . One of the most widely used formulations is given by Yamaguchi’s equation, presented in Eq. 1 where 𝑛 HONO and 𝑛 LUNO are the occupation numbers of the highest occupied and lowest unoccupied natural orbitals respectively calculated with a broken-symmetry 6unrestricted Hartree-Fock approach 21 .
+
+𝑦 0 = 1 − 2𝑇 0
+
+1 + 𝑇 20
+
+(1a) 
+
+𝑇 0 = 𝑛 HONO − 𝑛 LUNO 
+
+2 (1b) Despite the number of different approaches developed, estimating a molecules diradical character remains a theoretical challenge, meanwhile obtaining estimates from experiment is harder still. This may in part explain why the distinction between diradical and diradicaloid molecules is largely ill-defined across the literature, with the two terms sometimes being used interchangeably. 
+
+2.1.2 Photophysical Properties 
+
+To date, emissive diradical molecules are most commonly synthesised by coupling two monoradical molecules together with an aromatic linker 6. The most widely used radical precursor is the tris(2,4,6-trichlorophenyl)methyl (TTM) radical, from which a number of diradicals have been designed using a wide variety of linkers 8,22–30 . Closely related radicals M 2TTM as well as the PyBTM (pyridyl bis(2,4,6-trichlorophenyl)methyl) have also seen widespread use 2,4,5,31–34 .The open-shell electronic structure of organic diradicals typically gives these molecules unique photo-physical properties that have the potential to be harnessed in a number of novel technologies. One avenue that has garnered attention is the use of organic diradicals in a new generation of OLED devices 2,6,22 . In conventional closed-shell molecules, the excitation of a single electron will yield singlet and triplet excited states in a 1:3 ratio, meaning radiative decay (a.k.a. fluorescence) back to the ground singlet state is typi-cally limited to a maximum internal quantum efficiency (IQE) of 25% 35 . In contrast, the near-degeneracy of low-lying singlet and triplet electronic states in diradicals means that there exist many more spin-allowed, radiative pathways back to both singlet and triplet states. Research is ongoing to develop diradical OLEDs with much improved IQEs, and more widely to develop optoelectronic technologies that take advantage of favourable spin-statistics. However, most organic diradicals synthesised to date have shown modest photoluminescence quantum yields of around 1 − 2% 8,22,25,32,36 , highlighting the need for design strategies that are guided by an understanding of diradical electronic structure. The property that has perhaps attracted the most interest in organic luminescent diradicals is their capacity for magnetoluminescence and thermally activated emission 6. Many emissive diradicals feature very small singlet-triplet energy gaps ( |Δ𝐸 S-T | ≈ 1 − 10 meV), which is comparable to or smaller than 
+
+𝑘 B𝑇 at 298K. This means that the thermal populations of these states are highly sensitive to environmental 7conditions and can be manipulated with relative ease 2,4,22,33,34,37 .In the case of magnetoluminescence, external magnetic fields can be applied that couple directly to the open-shell triplet state, lifting the degeneracy between states with different 𝑀 𝑠 and decreasing the relative energy the 𝑀 𝑠 = −1 state 38 . The result is an increase in the equilibrium population of the |3OS ⟩
+
+state, meaning the intensity of emissive transitions arising from triplets is increased compared to those associated with singlet states. In 2023, this was observed by Kusamoto et. al after their synthesis of the THDBA-(PyBTM) 2 molecule. By applying a magnetic field, they were able to enhance the intensity of a 645nm emission peak by 22% while decreasing the intensity of a broad 750nm peak by 40% 33 . Asimilar phenomenon that several diradicals have been found to display is thermally activated emission, whereby temperature can be used to influence the relative populations of 𝑆 0 and 𝑇 0 states and thus change the intensities of emissive transitions noticeably 4,23 .Beyond their potential in optoelectronic devices, organic luminescent diradicals have recently emerged as promising candidates for molecular qubits in quantum information science. Solid-state qubit platforms, such as nitrogen-vacancy centres in diamond, have been heavily researched in recent years, but are limited by the restricted tunability of their optical and spin characteristics 9. Organic diradicals have attracted attention as potential alternatives, due to their high tuneability and relatively low cost 8. Near degenerate singlet and triplet low-lying states provide a convenient framework for spin-optical interfaces, enabling optical initialisation and read-out of spin states often through spin-selective intersystem crossing pathways 9. In 2023, Evans and co-workers exploited this in the diradical molecule (TTM-1Cz) 2-An, where the near-degeneracy of the singlet and triplet manifolds facilitated the generation of a high-spin quintet state upon photoexcitation, which could subsequently be optically read out 24 . Building on this, Wasielewski and co-workers established meta -TTM-Ph-TTM as an optically addressable molecular qubit in 2024, demonstrating that the spin-polarised ground state arising from the diradical electronic structure could be coherently manipulated and read out optically 8. Together, these results highlight the growing potential of organic diradicals as a chemically tuneable platform for quantum sensing technologies, where once again functionality relies on the precise characterisation of the energies and multiplicities of electronic states. 
+
+## 2.2 Existing Computational Methods for Diradicals 
+
+2.2.1 Density-Based Methods 
+
+Density functional theory (DFT) has long been the most widely used computational method across the chemical sciences. The use of exchange-correlation functionals ( 𝑉 𝑥𝑐 [𝜌 ]) to describe electron correlation decreases the computational cost and scaling of DFT compared to most other ab-initio methods, while still yielding sufficient qualitative accuracy for most applications. Time-dependent density functional theory (TD-DFT) can be seen as an extension of DFT that allows for prediction of excited electronic states through 8linear response theory. The computational cost of TD-DFT is also relatively low compared to other methods for predicting excitation energies, which largely explains its widespread use in the study of emissive diradical molecules and their photophysical properties 2,4,5,8,22,23,25–27,30,33,34,37 . However, the single-reference nature of DFT and TD-DFT limits the ability of these methods to reliably describe the electronic structure of diradical molecules. In almost all cases, DFT and TD-DFT are used with an unrestricted reference, meaning that the molecule’s 𝛼 and 𝛽 electrons are allowed to occupy orbitals with different spatial distributions. While this approach typically yields better energy estimates, the electronic states predicted, and particularly the excited states, are highly susceptible to spin contamination, whereby states of different multiplicity are mixed to yield wavefunctions of ill-defined total spin 39 . Consequently, even in cases where TD-DFT excitation energies are in good agreement with experimental results, the spin multiplicities of the underlying states often cannot be reliably determined and the interpretive value of results is limited. Additionally, the results of DFT and TD-DFT calculations are known to be sensitive to the choice of exchange-correlation functional, with no universally optimal choice having been established for studying diradicals 40,41 . A vast number of functionals have been developed over recent decades, with UB3LYP being the most widely adopted for use with emissive diradical molecules 2,4,5,8,22,23,25–27,30,33,34,37 .A wide variety of approaches have been developed to add multiconfigurational character into DFT and address the issue of spin-contamination. Created over forty years ago, broken symmetry DFT (BS-DFT) offers a way to mimic the open-shell singlet state in diradicals by localising 𝛼 and 𝛽 electrons in the HOMO onto opposite sites of the molecules 42,43 . This creates an artificial ’symmetry broken’ singlet state which can approximate the |1OS ⟩ state but is still spin-contaminated meaning it is coupled to triplet and higher multiplicity states 44 . Reasonably accurate Δ𝐸 S-T estimates can often be obtained regardless using spin-projection corrections such as that presented by Yamaguchi (Eq. 2), where ⟨𝑆 2T⟩, ⟨𝑆 2BS ⟩ are the expectation values of the total spin operator for the triplet and broken symmetry singlet states respectively 45 . Owing to their relative simplicity and low computational cost, broken-symmetry approaches remain a very popular way of approximating the multireference states of diradicals 4,8,22,23,25,27,30,33 . However, approximating spin-pure solutions through spin-projections of this kind has been shown to be unreliable in a variety of contexts including for organic molecules with high dynamic correlation 44,46–49 .
+
+Δ𝐸 S-T = 𝐸 S − 𝐸 T ≈ ⟨𝑆 2T⟩⟨𝑆 2T⟩ − ⟨ 𝑆 2BS ⟩ (𝐸 BS − 𝐸 𝑇 ) (2) Spin-flip time dependent density functional theory (SD-TDDFT) is another method that aims to ap-proximate multi-reference diradical states within the single-reference formalism of TD-DFT 50 . SF-TDDFT applies spin flips to a high-spin triplet reference determinant ( |↑↑⟩ ) to generate additional configurations (|↑↓⟩ , |↓↑⟩ ) that are then used in a typical TD-DFT treatment. This approach can recover a decent amount of the mulit-configurational character of low-lying diradical electronic states (often referred to as static correla-9tion), and can yield better estimates of Δ𝐸 S-T than broken symmetry approaches 51,52 . However, the addition of spin-flips increases the computational cost of the method and typically struggles to produce spin-purity in the higher-lying electronic states of diradicals, meaning spin-contamination and accuracy remain an issue 40 .This was addressed later by Ho Choi and colleagues with their creation of mixed-reference spin-flip TDDFT (MRSF-TDDFT), which includes a second reference determinant |↓↓⟩ from which spin-flipped excitations can be generated 53,54 . This has been shown to generally improve the accuracy of Δ𝐸 S-T predictions for diradical molecules compared to SF-TDDFT and also mostly removes spin-contamination from low-lying electronic states 55 . The MRSF-TDDFT method in particular shows promise for characterising the excited states of large emissive diradicals, but has not yet widely been adopted, perhaps due in part to its increased computational cost compared to conventional TD-DFT or its broken symmetry equivalent. 
+
+2.2.2 Wave function-Based Methods 
+
+Looking beyond density-based methods, there exist a number of mature wavefunction-based methods which extend the single-reference Hartree-Fock formalism. Perhaps the most widely used of these are multiconfigurational self-consistent field (MCSCF) approaches, which express electronic states as a linear combination of many configurations, which are formed by distributing a defined number of electrons across a defined set of active MOs (Eq. 3). The coefficients of the linear expansion ( 𝑐 𝐼 ) and the molecular orbital coefficients are simultaneously optimised to minimise the energy of one or more electronic states, depending on whether a state-specific or state-averaged approach is used 56 . The most widely used MCSCF method is the complete active space self consistent field (CASSCF) method 57 , although others have been developed such as RASSCF (restricted active space SCF) which offer slightly more efficient computational scaling 58 .MCSCF methods are ideal for capturing multireference character, which has led to their frequent adoption for studying the electronic structure of small and medium-sized diradical and diradicaloid molecules 9,41,59,60 .
+
+|ΨMCSCF ⟩ =∑︁ 
+
+> 𝐼 ∈active
+
+𝑐 𝐼 |Φ𝐼 ⟩ (3) However, there are several drawbacks to MCSCF methods. Firstly, the accuracy of MCSCF results is highly dependent on an appropriate selection of active space 40,41,61 . For organic diradicals, the frontier 
+
+𝜋 orbitals are an obvious choice, however, for large diradicals it is typically unfeasible to include the all 
+
+𝜋 MOs in the active space. Additionally, the computational cost of MCSCF methods typically scale very poorly as the size of the active space and the molecule increase, making them much more expensive than density-based alternatives like TD-DFT for simulating large molecules. Finally, while MCSCF methods are excellent for recovering static correlation, they do very little to address short-range repulsive interactions between electrons known as dynamic correlation. It has been known since the 1980s that dynamic correlation is crucial to obtain a quantitatively and sometimes qualitatively accurate description of electronic states even 10 in small diradical molecules like cyclobutadiene 12,62,63 .There exist several methods that address the lack of dynamic correlation in MCSCF methods, which are broadly referred to as multi-reference perturbation theory (MRPT) methods. Examples of MRPT methods include CASPT2, which adds dynamic correlation into a CASSCF reference using second-order perturbation theory 64 , as well as N-Electron Valence State Pertubation Theory (NEVPT) and Generalised Multiconfig-urational Quasi-Degenerate Perturbation Theory (GMC-QDPT) 65,66 . These methods can typically capture a significant amount of the static and dynamic correlation present in diradicals, and often yield accurate predictions of singlet-triplet energy gaps 40,61 . However, adding perturbation theory on top of an already expensive MCSCF treatment often makes MRPT calculations prohibitively expensive for larger molecules including emissive diradicals. Alongside this these methods notoriously suffer from intruder state problems that can lead to divergent perturbation expansions 67 . A promising alternative to conventional MRPT meth-ods, called multiconfigurational pair-density functional theory (MC-PDFT), was presented by Gagliardi and coworkers in 2014 68 . MC-PDFT calculates the total electronic density from an MCSCF reference and then uses adapted versions of density functionals to add in dynamic correlation. This approach has been shown to estimate singlet-triplet gaps in organic diradicals with a similar accuracy to CASPT2, while being less computationally demanding 40,69 .
+
+2.2.3 Semi-Empirical Methods 
+
+A final class of methods to consider are semi-empirical methods, which use parameters derived from experimental data to approximate the one- and two-electron integrals needed in ab-initio methods. Of these semi-empirical formalisms, the most widely adopted for the description of organic diradicals is Parisier-Parr-Pople (PPP) theory 70–72 , which has been used since the 1950s to describe the electrons in the conjugated 
+
+𝜋 systems of aromatic hydrocarbons. The main advantage of PPP theory is its computational efficiency, largely arising from simplifications made in the calculation of two electron integrals, which is otherwise of the most time consuming steps of a conventional SCF procedure 73 .Several methods have been developed that combine PPP theory with configuration interaction (CI) and MCSCF methods in order to compute excited states for radical molecules. Like MCSCF methods, CI methods express electronic states as a linear combination of ground and excited electronic configurations, but skip the self-consistent optimisation of underlying MOs so are less computationally demanding. In 2024, Green and Hele created the Extended Restricted Open-shell PPP (ExROPPP) method for monoradicals by combining Maurice and Head-Gordon’s extended configuration interaction singles (XCIS) method with a PPP Hamiltonian, enabling UV-vis absorption energies and intensities to be predicted accuracy comparable to GMC-QDPT but at a fraction of the cost 74,75 . A similar approach was used by Di Maiolo et al. in their XCISDT-PPP method, which extended the CI basis to include double and triple excitations and again achieved qualitative agreement with CASPT2 for excitation energies of the monoradicals studied 76 .11 For diradicals specifically, Yuen-Zhou and colleagues presented a framework in 2024 for describing excited states of diradicals formed by coupling two monoradical ’monomers’, using a PPP Hamiltonian for each monomer and treating the linker as a perturbation 9. Configuration interaction was then used with a spin-pure basis of local (intra-monomer) excitations and charge transfer (inter-monomer) excitations. The resulting energies showed good agreement with CASSCF calculations across the states considered, although the framework is by construction restricted to diradicals that decompose cleanly into two separated monomers. More recently, Di Maiolo and coworkers developed a PPP-RASCI method which combines PPP theory with the restricted active space configuration interaction (RASCI) method 58,77 . This has been applied to provide insight into the electronic structure of organic diradicals proposed as spin-optical interfaces, and once again results were in good agreement with those from a full CASSCF/QD-NEVPT2 treatment 77,78 .
+
+## 2.3 Summary 
+
+In summary, organic diradical molecules possess a unique electronic structure that has motivated extensive research into their applications in optoelectronic and quantum sensing. However, computational methods have so far struggled to reliably provide insight into the photophysics of these molecules, largely due to the substantial static and dynamic correlation inherent in their electronic states. While accurate methods such as CASPT2 and MC-PDFT can rigorously treat this correlation, their high computational cost and reliance on a carefully chosen active space have severely limited their application to emissive diradicals. As a result, TD-DFT and its broken-symmetry variant remain the most popular choices for simulating the excited states of these molecules, owing largely to their relative simplicity and low computational cost. However, spin contamination is an unavoidable pitfall of these approaches, limiting the reliable characterisation spin states and electronic transitions. It remains to establish a method for calculating diradical electronic structure that can efficiently yield accurate and spin-pure results, while avoiding the complications of active space selection or fragment-based decomposition. The development of such a method is presented in this report, providing an efficient and accessible new tool for the interpretation of diradical absorption spectra. 12 3 Methodology 
+
+Addressing the need for an efficient computational method capable of producing spin-pure, qualitatively accurate excited states for diradical molecules, a novel theoretical approach is presented that combines a multi-reference configuration interaction approach with Pariser-Parr-Pople (PPP) theory. This method builds on the extended restricted open-shell PPP (ExROPPP) approach developed by Green and Hele in 2024 74 . While ExROPPP was designed for the calculation of excited states in monoradical molecules, this work applies a similar framework to the more complex case of diradical electronic structure, giving rise to a method hereafter referred to as Diradical-ExROPPP (D-ExROPPP). This section will present the theoretical results derived in this project to construct D-ExROPPP, alongside relevant details of its implementation into a custom Python program. 
+
+## 3.1 Diradical Molecular Orbitals 
+
+3.1.1 Open-Shell SCF Procedure 
+
+Restricted Hartree-Fock theory is inadequate for describing molecular orbitals in diradicals and similar open-shell systems, since it assumes that all occupied orbitals are doubly-occupied. Here, we introduce a self-consistent field (SCF) procedure for optimising the molecular orbitals (MOs) of diradicals, extending the presented by Longuet-Higgins and Pople 79 , and revisited more recently by Hele 80 , for the treatment of monoradical MOs. The optimal Hartree-Fock molecular orbitals are typically defined as those that minimise the energy of the ground state |Ψ0⟩, which for closed shell molecules is simply a single Slater determinant of doubly-occupied orbitals. Since diradicals lack a well-defined single reference ground state, we instead look for orbitals that minimise the energy of the open-shell singlet and triplet ground states, |1OS ⟩ and |3OS ⟩ (see Fig. 1). The derivation presented here follows the |1OS ⟩, however, the same arguments are applied to 
+
+|3OS ⟩ in section 1A of the appendix. The first step is to recognise that any infinitesimal variation in MOs is equivalent to mixing small-amounts of singly-excited states into the reference states 79 .
+
+|1OS ⟩ → | 1OS ⟩ + 𝜆 − |1ZW −⟩ + 𝜆 + |1ZW −⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0 |1CS 0 
+
+> 𝑖
+
+⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0′ |1CS 0′ 
+
+> 𝑖
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0𝑝 |1SV 𝑝  
+
+> 0
+
+⟩+
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0′ 𝑝 |1SV 𝑝  
+
+> 0′
+
+⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 |1𝑆 CV 𝑝 𝑖 ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 |1𝑇 CV 𝑝 𝑖 ⟩
+
+(4) where 𝑖 and 𝑝 are indices for doubly-occupied and virtual orbitals respectively, and 𝑘 is the number of doubly occupied (core) spatial orbitals. The kets shown in Eq. 4 ( |1CS 0 
+
+> 𝑖
+
+⟩ , |1SV 𝑗 
+
+> 0
+
+⟩ , etc.) are defined fully in the following section. For now it is 13 only important to recognise that they are spin-adapted electronic states in which a single electron has been excited from one of the doubly occupied MOs or SOMOs of the open-shell ground state |1OS ⟩. Note that mixing with triplet states does not need to be considered since Hamiltonian interactions between states of different multiplicity is always formally forbidden (i.e. ⟨1Ψ| ˆ𝐻 |3Ψ⟩ = 0). An infinitesimal change in energy caused by an infinitesimal variation in MOs is thus given by Eq. 5. 
+
+𝛿𝐸 =𝜆 − ⟨1OS | ˆ𝐻 |1ZW −⟩ + 𝜆 + ⟨1OS | ˆ𝐻 |1ZW +⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0 ⟨1OS | ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩+
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0′ ⟨1OS | ˆ𝐻 |1CS 0′ 
+
+> 𝑖
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0𝑝 ⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0′ 𝑝 ⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩+
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 ⟨1OS | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 ⟨1OS | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩
+
+(5) By the variational priniciple, the best possible MOs to describe the open-shell singlet state of a diradical molecule are those for which 𝛿𝐸 = 0, which in turn requires that all of the above brakets are equal to 0. Using Slater-Condon rules to evaluate the Hamiltonian interactions between the ground and excited states, we obtain the following expressions for satisfying this requirement: 
+
+⟨1OS | ˆ𝐻 |1ZW −⟩ = (00 ′|00 ) − ( 00 ′|0′0′) = 0 (6a) 
+
+⟨1OS | ˆ𝐻 |1ZW +⟩ = 2[𝐹 00 ′ + 12 (00 ′|00 ) + 12 (00 ′|0′0′)] = 0 (6b) 
+
+⟨1OS | ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩ = −𝐹 𝑖 0 − ( 𝑖 0|00 ) − ( 𝑖 0|0′0′) + 2(𝑖 0′|0′0) = 0 (6c) 
+
+⟨1OS | ˆ𝐻 |1CS 0′ 
+
+> 𝑖
+
+⟩ = 𝐹 𝑖 0′ + ( 𝑖 0′|00 ) + ( 𝑖 0′|0′0′) − 2(𝑖 0|00 ′) = 0 (6d) 
+
+⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ = 𝐹 0𝑝 + ( 0𝑝 |0′0′) + ( 00 ′|0′ 𝑝 ) = 0 (6e) 
+
+⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ = 𝐹 0′ 𝑝 + ( 0′ 𝑝 |00 ) + ( 0′0|0𝑝 ) = 0 (6f) 
+
+⟨1OS | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ = √2[𝐹 𝑖 𝑝 + ( 𝑖 𝑝 |00 ) − 12 (𝑖 0|0𝑝 ) + ( 𝑖 𝑝 |0′0′) − 12 (𝑖 0′|0′ 𝑝 )] = 0 (6g) 
+
+⟨1OS | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩ =
+
+√62 [( 𝑖 0′|0′ 𝑝 ) − ( 𝑖 0|0𝑝 )] = 0 (6h) where 𝐹 𝑖 𝑝 is the conventional Fock-operator ( 𝐹 𝑖 𝑝 = ℎ𝑖 𝑝 + Í𝑘 𝑙 =1 [2( 𝑝𝑞 |𝑙𝑙 ) − ( 𝑝𝑙 |𝑙𝑞 )] ), ℎ𝑖 𝑝 is the conventional one-electron integral ( ℎ𝑖 𝑝 = ⟨𝜓 𝑖 | ˆℎ(1) | 𝜓 𝑝 ⟩) and (𝑖 𝑗 |𝑘𝑙 ) is a two electron integral written in chemist’s notation, as shown in eq 7 81 .
+
+(𝑖 𝑗 |𝑘𝑙 ) =
+
+∫
+
+𝑑 r1
+
+∫
+
+𝑑 r2𝜓 ∗ 
+
+> 𝑖
+
+(r1)𝜓 𝑗 (r1) 1
+
+𝑟 12 
+
+𝜓 ∗ 
+
+> 𝑘
+
+(r2)𝜓 𝑙 (r2) (7) For Eq. 6g in particular, we notice that the Fock operator 𝐹 𝑖 𝑗 is accompanied by several extra two electron integrals prevent the requirement ⟨1Ψ0 | ˆ𝐻 |1𝑆 Ψ𝑝 𝑖 ⟩ = 0 from being satisfied. This braket represents 14 the interaction between the open-shell singlet state and singly-excited electronic states where an electron is promoted from a doubly-occupied MO ( 𝑖 ) to an empty orbital ( 𝑝 ). In almost all molecules, there are many more states of this kind than excited states that promote electrons to and from the SOMOs (0 , 0′) since typically there are many more doubly occupied and virtual orbitals than SOMOs. We are thus motivated to use the approximate diradical Fock-like operator ( 𝐹 d) shown in Eq 8. 
+
+𝐹 d 
+
+> 𝑎𝑏
+
+= 𝐹 𝑎𝑏 + ( 𝑖 𝑗 |00 ) − 12 (𝑎 0|0𝑏 ) + ( 𝑎𝑏 |0′0′) − 12 (𝑎 0′|0′𝑏 )] 
+
+= ℎ𝑎𝑏 +
+
+> 𝑘
+
+∑︁ 
+
+> 𝑙 =1
+
+[2(𝑎𝑏 |𝑙𝑙 ) − ( 𝑎𝑙 |𝑙𝑏 )] + 12 [2(𝑎𝑏 |00 ) − ( 𝑎 0|0𝑏 ) + 2(𝑎𝑏 |0′0′) − ( 𝑎 0′|0′𝑏 )] 
+
+(8) Substituting the expression in Eq. 8 back into equations 6a-h, we end up with equations 9a-h 
+
+(00 ′|00 ) − ( 00 ′|0′0′) = 0 (9a) 2𝐹 d00 ′ = 0 (9b) 
+
+𝐹 d 
+
+> 𝑖 0′
+
++ 12 (𝑖 0′|0′0′) − 32 (𝑖 0|00 ′) = 0 (9c) 
+
+𝐹 d 
+
+> 𝑖 0
+
++ 12 (𝑖 0|00 ) − 32 (𝑖 0′|0′0) = 0 (9d) 
+
+𝐹 d0′ 𝑝 − 12 (0′ 𝑝 |00 ) + 32 (0′0|0𝑝 ) = 0 (9e) 
+
+𝐹 d0𝑝 − 12 (0𝑝 |0′0′) + 32 (00 ′|0′ 𝑝 ) = 0 (9f) 
+
+√2𝐹 d 
+
+> 𝑖 𝑝
+
+= 0 (9g) 
+
+√62 [( 𝑖 0′|0′ 𝑝 ) − ( 𝑖 0|0𝑝 )] = 0 (9h) Now, the extra two electron terms have either disappeared from equations 9a-9h or are reduced in magnitude. We can now make a similar approximation to Longuet-Higgins and Pople in assuming that the two electron terms ( (𝑖 0|00 ), (𝑖 0′|0′0), ... ) that persist for brakets with excitations that involve the SOMOs will be small and so can be ignored 79 . This approximation is made to simplify eqs 9a-h such that 𝐹 d 
+
+> 𝑝𝑞
+
+= 0for all core, virtual and occupied molecular orbitals 𝑝 and 𝑞 . This result allows us to conveniently adopt the conventional approach of iteratively solving the Roothan equations FdC = SC 𝜖 to obtain molecular orbital coefficients 81 , now using the diradical Fock-operator instead of the closed-shell variant. In practice, this is most conveniently implemented by changing the standard expression for the density matrix 𝑃 to a ’diradical’ density matrix 𝑃 d shown in eq 10 (where 𝑘 is once again an index for all doubly-occupied MOs). Using the diradical density matrix with the standard Fock operator is shown in section I-A of the appendix to be equivalent to using the standard density matrix with the diradical Fock operator. 15 𝑃 𝜇𝜈 =
+
+> 𝑘
+
+∑︁ 
+
+> 1=1
+
+2𝐶 ∗
+
+> 𝜇𝑙
+
+𝐶 𝜈𝑙 
+
+→ 𝑃 d 
+
+> 𝜇𝜈
+
+=
+
+> 𝑘
+
+∑︁ 
+
+> 1=1
+
+(2𝐶 ∗
+
+> 𝜇𝑙
+
+𝐶 𝜈𝑙 ) + 𝐶 ∗
+
+> 𝜇 0
+
+𝐶 𝜈 0 + 𝐶 ∗ 
+
+> 𝜇 0′
+
+𝐶 𝜈 0′
+
+(10) 
+
+3.1.2 PPP Theory 
+
+Having introduced the diradical Fock operator, 𝐹 d, and density matrix, 𝑃 d, we now require a way to calculate the one- and two-electron integrals necessary for the SCF procedure. For this, we turn to the semi-empirical formalism developed by Pariser, Parr and Pople in 1953 to describe the electronic structure of 𝜋 -electrons in unsaturated hydrocarbons 70–72 . PPP theory has been proven to accurately reproduce the excited spectra of 𝜋 -conjugated closed-shell molecules 82,83 as well as more recently in open-shell molecules 9,74,76,77 . It’s main advantage is it’s minimal computational cost relative to ab-initio methods, which is largely the result of several approximations that we briefly describe below. The first approximation is use of linear combinations of atomic orbitals (LCAO) to represent molecular orbitals. As opposed to the standard Gaussian basis functions, MOs ( 𝜙 ) are expanded as a weighted sum of atom-centred basis functions, 
+
+𝜙 (r) =∑︁ 
+
+> 𝜇
+
+𝐶 𝜇𝑝 𝜒 𝜇 (r), (11) where 𝜒 𝜇 represents a 2 𝑝 𝑧 atomic orbital for an atom 𝜇 . This is typically a Carbon atom but can be any atom with one or two electrons in the 2 𝑝 𝑧 AOs that constitute the 𝜋 -bonding system (e.g. Nitrogen, Chlorine, etc.). In PPP theory only the 𝜋 -electron framework is treated explicitly, with the 𝜎 -bonded core absorbed into an effective potential. A closely related approximation is the neglect of differential overlap (NDO), where the overlap integral between any two atomic orbitals on different atoms is set to zero. This has two key implications, the first being that the overlap matrix S reduces to the identity matrix and so does not play a role in the SCF procedure, as it typically would when gaussian basis functions are used. Secondly, the four-index two-electron integrals that are routinely evaluated during the SCF procedure collapse to a single two-index quantity as shown in Eq. 12. 
+
+(𝜇𝜈 |𝜌𝜎 ) = 𝛿 𝜇𝜈 𝛿 𝜌𝜎 𝛾 𝜇𝜌 = 𝑈 
+
+(1 + 𝑟 𝜇𝜈  
+
+> 𝑟 0
+
+) (12) 
+
+𝛾 𝜇𝜌 is a function of the distance between two atoms, here defined with the Mataga-Nishimoto form 84 
+
+that is used in the D-ExROPPP implementation. U is a semi-empirical parameter that describes the Coulomb repulsion for a given atom. Using Eq. 12 yields a dramatic reduction in computational cost compared to evaluating two-electron integrals from first principles, and lowers the computational scaling from 𝑂 (𝑁 4)
+
+to 𝑂 (𝑁 2) where N is the number of basis functions 73 . The remaining one- and two-electron integrals are 16 similarly approximated by semi-empirical parameters. The diagonal core integrals ℎ𝜇𝜇 are replaced by valence state ionisation potentials ( 𝑊 𝜇 ) which approximate the energy of an electron in the field of its own core. The off-diagonal core integrals ℎ𝜇𝜈 are replaced with resonance integrals ( 𝛽 𝜇𝜈 ) that are only non-zero only between bonded atoms. The end result, when combined with the diradical density matrix derived previously, is the effective Fock-operator given in eq. 13 85 .
+
+𝐹 c 
+
+> 𝜇𝜇
+
+= 𝑊 𝜇 + 12 𝑃 𝜇𝜇 (𝜇𝜇 |𝜇𝜇 ) + ∑︁ 
+
+> 𝜌 ≠𝜇
+
+(𝑃 𝜌𝜌 − 𝑍 𝜌 )( 𝜇𝜇 |𝜌𝜌 ) (13a) 
+
+𝐹 c 
+
+> 𝜇𝜈
+
+= 𝛽 𝜇𝜈 − 12 𝑃 𝜇𝜈 (𝜇𝜇 |𝜈𝜈 ) (13b) As well as offering drastic improvements to computational speed, the fitting of parameters to empirical data allows them to typically capture some of the dynamical correlation between electrons in 𝜋 -conjugated systems, which is entirely missing from the ab-initio Hartree-Fock model. To enhance this capability, D-ExROPPP makes use of machine-learned parameters that were optimised by Shen et al. for the prediction of monoradical excited states 86 . While no diradicals were included in the training set for this study, a sizeable portion of the data originated from monoradicals based on TTM, PyBTM and similar molecules. Since many emissive diradicals are formed as dimers of TTM and PyBTM monoradicals, we expect these parameters to similarly capture their excited states 
+
+## 3.2 Spin-Pure Diradical Excited States 
+
+3.2.1 Constructing Configuration State Functions 
+
+While the two electron two-orbital model (TOTEM) provides a good description of the low-lying electronic states of diradical molecules, it is unable to capture the higher energy excitations that play a key role in their absorption and emission properties. To address this, we begin by extending the TOTEM model to include the highest occupied molecular orbital (HOMO) and the lowest unoccupied molecular orbital (LUMO), thus establishing a four-electron four-orbital model (FOFEM). Figure 4 shows the three general ways that a single electron can be excited from the low-lying Slater determinants of a diradical. The HOMO is more generally referred to as a core orbital, whereas the general name for the LUMO is a virtual orbital. Excitations described with the FOFEM are conveniently generalised to higher-energy excitations involving any core or virtual MO in the 𝜋 system of diradicals. In these cases, core orbitals are represented with indices 𝑖, 𝑗, 𝑘, 𝑙 and virtual orbitals are given indices 𝑝, 𝑞, 𝑟, 𝑠 .17 Figure 4: Examples of electronic configurations involved in describing diradical electronic structure within the FOFEM model. Indices with a ’ refer to virtual orbitals, while no prime suggests a core orbital (not including 0 and 0’). In the absence of well-defined, single-reference ground state, we arbitrarily label |Ψ0⟩
+
+to be the Slater determinant for the zwitterionic state with the HOMO and SOMO(0) doubly occupied. This choice is made to allow other Slater determinants to be more concisely represented with ket vectors that show which spin-orbitals are occupied. Since none of the excited Slater determinants are eigenstates of the ˆ𝑆 2 operator, spin-adapted linear combinations, known as configuration state functions (CSFs), must be formed to ensure spin-purity 87 . For core → SOMO (CS) and SOMO → LUMO (SV) excitations, the number of unpaired electrons in the system is conserved which makes it relatively straightforward to form CSFs. Similar to the |1OS ⟩ and |3OS ⟩
+
+states, taking symmetric and antisymmetric combinations excited Slater determinants with opposite spin orientations in the unpaired MOs yields spin-pure singlets and triplets respectively (Table 1). Constructing CSFs to describe core → virtual (CV) excitations becomes more complicated. Moving an electron from a doubly-occupied core MO increases the number of unpaired electrons in the system from two to four, thus increasing the number of ways that the two 𝛼 and two 𝛽 electrons can be distributed among the four singly-occupied orbitals. Furthermore, Maurice and Head-Gordon previously showed for monoradicals that CSFs for CV excitations can only be formed with the inclusion of specific doubly-excited configurations that simultaneously excite an electron from a core to a virtual orbital, while also flipping the spin of the singly occupied orbital 75 . These ’extended single’ excitations (Fig. 4) are the key insight from their 18 extended configuration interaction singles (XCIS) method, which was designed as a spin-pure formulation of standard CIS for monoradical molecules. Building from this, we are left us with a basis of six excited Slater determinants needed to describe the excitation of one electron from a core orbital to a virtual orbital. 
+
+Table 1: Singlet and triplet configuration state functions for excitations from an arbitrary core orbital, denoted by the index 𝑖 , to either of the SOMOs (0 or 0 ′), and from either of the SOMOs (0 or 0 ′) to an arbitrary virtual orbital, denoted by the index 𝑝 .Core → SOMO CSFs SOMO → Virtual CSFs 
+
+|3CS 0 
+
+> 𝑖
+
+⟩ = 1√2 (| Ψ0′ 
+
+> 𝑖
+
+⟩ − | Ψ ¯0′ 
+
+> ¯𝑖
+
+⟩) |3SV 𝑝  
+
+> 0
+
+⟩ = 1√2 (| Ψ𝑝 ¯0′ 
+
+> 0 ¯ 0
+
+⟩ − | Ψ ¯𝑝 0′ 
+
+> ¯0 0
+
+⟩) |1CS 0 
+
+> 𝑖
+
+⟩ = 1√2 (| Ψ0′ 
+
+> 𝑖
+
+⟩ + | Ψ ¯0′ 
+
+> ¯𝑖
+
+⟩) |1SV 𝑝  
+
+> 0
+
+⟩ = 1√2 (| Ψ𝑝 ¯0′ 
+
+> 0 ¯ 0
+
+⟩ + | Ψ ¯𝑝 0′ 
+
+> ¯0 0
+
+⟩) |3CS 0′ 
+
+> 𝑖
+
+⟩ = 1√2 (| Ψ0′ ¯0′  
+
+> 𝑖 ¯0
+
+⟩ − | Ψ ¯0′0′  
+
+> ¯𝑖 0
+
+⟩) |3SV 𝑝  
+
+> 0′
+
+⟩ = 1√2 (| Ψ𝑝  
+
+> 0
+
+⟩ − | Ψ ¯𝑝  
+
+> ¯0
+
+⟩) |1CS 0′ 
+
+> 𝑖
+
+⟩ = 1√2 (| Ψ0′ ¯0′  
+
+> 𝑖 ¯0
+
+⟩ + | Ψ ¯0′0′  
+
+> ¯𝑖 0
+
+⟩) |1SV 𝑝  
+
+> 0′
+
+⟩ = 1√2 (| Ψ𝑝  
+
+> 0
+
+⟩ + | Ψ ¯𝑝  
+
+> ¯0
+
+⟩) 
+
+To obtain CSFs, the matrix representation of the total-spin ( 𝑆 2) operator was calculated in the basis of these six determinants, where the 𝑆 2 operator is defined as ˆ 𝑆 2 |Φ⟩ = ( ˆ𝑆 − ˆ𝑆 + + ˆ𝑆 2 
+
+> 𝑧
+
++ ˆ𝑆 𝑧 ) | Φ⟩81 . ˆ𝑆 + and ˆ𝑆 −
+
+are the standard raising and lowering operators for spin, while ˆ 𝑆 𝑧 operator is simply the 𝑧 -component of the spin-angular momentum operator which is 0 for all determinants included. 
+
+ˆS2 =
+
+©«            
+
+> |Ψ¯1′¯0′
+> ¯1 ¯ 0⟩ | Ψ1′¯0′
+> 1 ¯ 0⟩ | Ψ¯0′1′
+> ¯1 0 ⟩ | Ψ0′¯1′
+> 1 ¯ 0⟩ | Ψ¯1′0′
+> ¯1 0 ⟩ | Ψ1′0′
+> 1 0 ⟩
+
+2 −1 1 1 −1 0
+
+−1 2 −1 −1 0 −11 −1 2 0 −1 11 −1 0 2 −1 1
+
+−1 0 −1 −1 2 −10 −1 1 1 −1 2
+
+ª®®®®®®®®®®®®®®®®®®®®¬
+
+(14) The eigenvectors and eigenvalues of the matrix shown in Eq 14 were calculated using a standard linear algebra package in Python. This produced two eigenvectors with an eigenvalue of 0, three with an eigenvalue of 2 and one with an eigenvalue of 6. Using the formula to determine the multiplicity of an electronic state ( ˆ 𝑆 2 |Φ⟩ = 𝑆 (𝑆 + 1) | Φ⟩) these CSFs can be recognised as two singlets ( 𝑆 = 0), three triplets ( 𝑆 = 1) and one quintet ( 𝑆 = 2). The CSFs obtained are given in table A1 in the appendix. Of these, only the quintet CSF is a non-degenerate eigenvector and thus uniquely defined. For the triplets and singlets, it follows from standard linear algebra that any linear combination of CSFs with the same multiplicity will also be a valid CSF of that multiplicity. Recognising this, we sought to further 19 differentiate the singlets and triplets based on their transition dipole moments with the low-lying singlet and triplet open-shell states. The transition dipole moment operator ( ˆ 𝜇 ) is a one-electron operator, meaning that analytical expressions for transition dipole moments can be computed relatively easily according to the Slater-Condon rules 81 . By taking linear combinations of the CSFs obtained from the ˆ𝑆 2 matrix, we are able to concentrate transition dipole moment intensity into only of the singlets and triplets (Table 2). These ’bright’ singlet and triplet states are denoted as 1S and 3T to highlight that they can be accessed by dipole-allowed electronic transitions from |1OS ⟩ and |3OS ⟩ respectively, wheras transitions to and from the ’dark’ 1T, 3S and 3X states are formally forbidden. On the whole, while this specific basis of core → virtual CSFs is not uniquely defined, it is expected to make interpretation of absorption and emission spectra more convenient. 
+
+Table 2: Core → virtual CSFs representing excitations from a generic core orbital ( 𝑖 ) to a generic virtual orbital ( 𝑝 ) alongside their transition dipole moments with the open-shell CSFs. Transitions between states of different multiplicity are always formally forbidden meaning TDMs between singlets and triplets are all 0. 
+
+Core → Virtual CSF Transition dipole moment 
+
+|5CV 𝑝 𝑖 ⟩ = 1√6 ( | Ψ𝑝 ¯0′  
+
+> 𝑖 ¯0
+
+⟩ − | Ψ ¯𝑝 ¯0′  
+
+> ¯𝑖 ¯0
+
+⟩ − | Ψ ¯0′ 𝑝   
+
+> ¯𝑖 0
+
+⟩+ | Ψ ¯𝑝 0′  
+
+> ¯𝑖 0
+
+⟩ − | Ψ𝑝 0′  
+
+> 𝑖 0
+
+⟩ − | Ψ0′ ¯𝑝 𝑖 ¯0 ⟩) ⟨3OS | 𝜇 |5CV 𝑝 𝑖 ⟩ = 0
+
+⟨1OS | 𝜇 |5CV 𝑝 𝑖 ⟩ = 0
+
+|3𝑇 CV 𝑝 𝑖 ⟩ = 12 (| Ψ ¯𝑝 ¯0′  
+
+> ¯𝑖 ¯0
+
+⟩ + | Ψ𝑝 ¯0′  
+
+> 𝑖 ¯0
+
+⟩ − | Ψ𝑝 0′  
+
+> 𝑖 0
+
+⟩ − | Ψ ¯𝑝 0′  
+
+> ¯𝑖 0
+
+⟩) ⟨3OS | 𝜇 |3𝑇 CV 𝑝 𝑖 ⟩ = √2𝜇 𝑖 𝑝 
+
+|3𝑆 CV 𝑝 𝑖 ⟩ = 12 (| Ψ ¯𝑝 ¯0′  
+
+> ¯𝑖 ¯0
+
+⟩ + | Ψ ¯𝑝 0′  
+
+> ¯𝑖 0
+
+⟩ − | Ψ𝑝 0′  
+
+> 𝑖 0
+
+⟩ − | Ψ𝑝 ¯0′  
+
+> 𝑖 ¯0
+
+⟩) ⟨3OS | 𝜇 |3𝑆 CV 𝑝 𝑖 ⟩ = 0
+
+|3𝑋 CV 𝑝 𝑖 ⟩ = 1√2 (| Ψ0′ ¯𝑝 𝑖 ¯0 ⟩ − | Ψ ¯0′ 𝑝   
+
+> ¯𝑖 0
+
+⟩) ⟨3OS | 𝜇 |3𝑋 CV 𝑝 𝑖 ⟩ = 0
+
+|1𝑆 CV 𝑝 𝑖 ⟩ = 12 (| Ψ ¯𝑝 ¯0′  
+
+> ¯𝑖 ¯0
+
+⟩ + | Ψ ¯𝑝 0′  
+
+> ¯𝑖 0
+
+⟩ + | Ψ𝑝 0′  
+
+> 𝑖 0
+
+⟩ + | Ψ𝑝 ¯0′  
+
+> 𝑖 ¯0
+
+⟩) ⟨1OS | 𝜇 |1𝑆 CV 𝑝 𝑖 ⟩ = √2𝜇 𝑖 𝑝 
+
+|1𝑇 CV 𝑝 𝑖 ⟩ = 12√3 (2 |Ψ ¯0′ 𝑝   
+
+> ¯𝑖 0
+
+⟩ + | Ψ𝑝 ¯0′  
+
+> 𝑖 ¯0
+
+⟩ − | Ψ ¯𝑝 ¯0′  
+
+> ¯𝑖 ¯0
+
+⟩+2 |Ψ0′ ¯𝑝 𝑖 ¯0 ⟩ + | Ψ ¯𝑝 0′  
+
+> ¯𝑖 0
+
+⟩ − | Ψ𝑝 0′  
+
+> 𝑖 0
+
+⟩) ⟨1OS | 𝜇 |1𝑇 CV 𝑝 𝑖 ⟩ = 0Combining the CV CSFs with those representing CS and SV excitations, we have a complete, spin-pure description of single excitations in diradical molecules. However, many emissive diradicals including many based on the TTM radical have a property known as alternacy symmetry, a consequence of which is that their core and virtual molecular orbitals come in paired sets with energies that are symmetrically distributed about the energy of the SOMOs ( 𝜖 SOMO − 𝜖 core = 𝜖 virt − 𝜖 SOMO )9,80,88 . In diradicals with this property, the energy gap between a core MO and its alternant virtual pair will be very similar or identical to twice the energy gap from that core MO to one of the SOMOs, or twice the energy gap from one of the SOMOs to that virtual MO. This implies that double excitations of this kind will have similar transition energies to those of 20 single core → virtual excitations. This motivates the inclusion of these specific double excitations into our existing basis of singly-excited CSFs (Fig. 5). 
+
+Figure 5: Examples of doubly-excited electronic configurations included in the description of diradical excited states. For these core to SOMO double (CSD) excitations and SOMO to virtual double (SVD) excitations, the formation of CSFs is mostly straightforward. As shown in figure 5, in the case that both electrons are excited either from the same core orbital or to the same virtual orbital, all MOs become doubly occupied meaning these configurations can be described straightforwardly with a single Slater determinant of singlet multiplicity. If CSD excitations are from two different MOs, however, we once again have one unpaired 
+
+𝛼 and 𝛽 electron across two MOs so need to form +/- singlet and triplet CSFs. The same applies to SVD excitations that excite electrons to different virtual orbitals. 
+
+Table 3: Slater determinants and CSFs describing the excitation of two electrons from core orbitals ( 𝑖, 𝑗 )
+
+→ SOMOs and from the SOMOs → virtual orbitals ( 𝑝, 𝑞 ). In the case that excitations are from/to the same core/virtual orbital, electrons in all occupied orbitals are paired meaning they are spin-pure singlets and don’t need to be spin-adapted. Double Core → SOMO CSFs Double SOMO → Virtual CSFs 
+
+|1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ = |Ψ0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ |1SV 𝑝 ¯𝑝   
+
+> 0′¯0′
+
+⟩ = |Ψ𝑝 ¯𝑝   
+
+> 0′¯0′
+
+⟩|3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ = 1√2 (| Ψ0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ − | Ψ ¯0′0′ 
+
+> ¯𝑖 𝑗
+
+⟩) |3SV 𝑝 ¯𝑞   
+
+> 0′¯0′
+
+⟩ = 1√2 (| Ψ𝑝 ¯𝑞   
+
+> 0′¯0′
+
+⟩ − | Ψ ¯𝑝 𝑞  
+
+> ¯0′0′
+
+⟩) |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ = 1√2 (| Ψ0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ + | Ψ ¯0′0′ 
+
+> ¯𝑖 𝑗
+
+⟩) |1SV 𝑝 ¯𝑞   
+
+> 0′¯0′
+
+⟩ = 1√2 (| Ψ𝑝 ¯𝑞   
+
+> 0′¯0′
+
+⟩ + | Ψ ¯𝑝 𝑞  
+
+> ¯0′0′
+
+⟩) 
+
+21 3.2.2 Configuration Interaction 
+
+Having established a spin-pure basis of configuration state functions to represent all single and low-energy double excitations in diradical molecules, configuration interaction is used to calculate excited states and their energies. We refer to this novel implementation as extended configuration interaction singles with selected doubles (XCIS-D). This approach goes beyond extended configuration interaction singles, with the inclusion of a subset of double excitations, but stops short of XCISD since certain double excitations such as double core → virtual excitations are excluded. The Hamiltonian matrix is constructed in the CSF basis using analytical expressions for matrix elements that were derived using a custom Python script to implement Slater-Condon rules. Diagonal elements ( 𝐻 𝑎𝑎 = ⟨Φ𝑎 | ˆ𝐻 |Φ𝑎 ⟩) are the approximate energies of each CSF and their expressions can be found in Table A2 of the Appendix. Off-diagonal elements ( 𝐻 𝑎𝑏 = ⟨Φ𝑎 | ˆ𝐻 |Φ𝑏 ⟩)are energetic couplings between CSFs, where large couplings cause CSFs to mix strongly into a stabilised lower-energy state and a destabilised higher-energy state 89 . Analytical expressions obtained for all couplings in the XCIS-D matrix are given in tables A3-A5. 
+
+Figure 6: A depiction of the structure of the XCIS-D matrix. Hamiltonian matrix elements between CSFs with different multiplicities are always 0, creating a distinct block-diagonal structure. The triplet block is highlighted, showing the diagonal matrix elements which represent the energies of each CSF as well as the off-diagonal couplings. 𝐹 d 
+
+> 𝑎,𝑏
+
+is the diradical Fock operator defined previously. Stars (*) indicate the presence of mixed two-electron terms e.g. (𝑖 𝑗 |𝑘𝑙 ) that are not shown for conciseness. Diagonalisation of the XCIS-D matrix yields the approximate energies of electronic states (eigenvalues) and their configuration coefficients that give the weightings of each CSF to the state (eigenvectors). Diago-nalising the full matrix is typically inefficient meaning lowest energy states are instead iteratively obtained using the Lanczos algorithm, implemented in the ARPACK library 90 . The use of CSFs rather than Slater determinants as the CI basis yields two significant benefits. Firstly, electronic states are guaranteed to be 22 spin-pure by construction 75,89 , and secondly, since matrix elements between CSFs of different multiplici-ties are zero, the XCIS-D matrix has a block-diagonal structure. This enables the use of a more efficient divide-and-conquer approach in which singlet, triplet, and quintet blocks are diagonalised independently. Although not yet implemented in D-ExROPPP, singlet, triplet, and quintet blocks can also be diagonalised in parallel, which could provide further speedups to calculations in the future. XCIS-D uses an efficient basis for configuration interaction compared to other CI and MCSCF methods that include higher-order excitations. For a 𝜋 system where the number of doubly occupied MOs is equal to the number of virtual MOs ( 𝑁 core = 𝑁 virt ), as is often the case when using an LCAO basis, the XCIS-D matrix contains (8 ∗ 𝑁 2core + 8 ∗ 𝑁 core + 4) CSFs, representing a 𝑂 (𝑁 2core ) scaling in big-O notation. This low polynomial scaling allows the inclusion of excitations across all 𝜋 MOs, removing the need to define an active space to make CI computationally tractable. Including all core → virtual double excitations in a full XCISD treatment would raise the scaling to 𝑂 (𝑁 4core ). By contrast, active-space methods like CASSCF and RASCI feature scale much less favourably, with the number of Slater determinants typically growing combinatorially with the size of the active space. This is the main reason that these methods can be prohibitively expensive for large molecules, even when the chosen active spaces only captures a small subspace of the 𝜋 system. 
+
+3.2.3 Simulating Spectra 
+
+In order to evaluate transition intensities between electronic states obtained from XCIS-D, the dipole moment operator ˆ𝜇 was calculated in the same basis of CSFs as ˆH. Similarly, a custom python script implementing Slater-Condon rules was used to obtain analytical expressions for each of these matrix elements, which can be found in tables A6 - A8 in the appendix. The point charge approximation is used to calculate the dipole moment between two orbitals 𝜇 𝑖 𝑗 with Eq. 15 where n is the number of atoms in the molecule and 𝐶 𝜈𝑖 is the coefficient for MO 𝑖 on atom 𝜈 .
+
+𝜇 𝑖 𝑗 =
+
+> 𝑛
+
+∑︁ 
+
+> 𝜈
+
+𝐶 𝜈𝑖 · r𝜈 · 𝐶 𝜈 𝑗 (15) Transition dipole interactions between CSFs are then contracted with the CI state coefficients to calculate transition dipole moments between the lowest energy singlet and triplet states ( 𝑆 0 and 𝑇 0) and excited electronic states. This is then used to calculate an oscillator strength for each transition ( |Φ⟩ ← | Ψ⟩), as shown in Eq. 16 where 𝜔 ΦΨ = 𝐸 Φ − 𝐸 Ψ is the transition energy in Hartrees. 
+
+𝑓 ΦΨ = 23𝜔 ΦΨ |𝜇 ΦΨ |2 (16) Finally, Lorentzian line broadening is applied to peaks in the simulated spectra using a full width half maximum (FWHM) value of 20 nm for a peak at 300 nm. 23 4 Results and Discussion 
+
+## 4.1 Small and Medium-Sized Diradicals 
+
+The D-ExROPPP method was first tested on a selection of small organic diradical molecules 12 . Results are compared with those obtained from multi-reference wavefunction-based methods and experimental data where possible. In each case, the open shell structure was estimated using unrestricted DFT geometry optimisation of the lowest energy triplet state. The methods used for comparison are the state-averaged complete active space self-consistent field (SA-CASSCF) method and generalised multiconfigurational quasi-degenerate perturbation theory (GMC-QDPT), with active spaces that include all 𝜋 -orbitals. Further details on the computational procedure are provided in the appendix. 
+
+Cyclobutadiene 
+
+Square cyclobutadiene (CBD) is perhaps the most structurally simple organic diradical, consisting of only four Carbon and four Hydrogen atoms. Despite this, the attempts of organic chemists to synthesise CBD have been unsuccessful for over a century, and the nature of its electronic structure was a subject of intense scrutiny for much of that time 91 . The ground state of square CBD was widely believed to be a triplet for many years until it was recognised by Borden in the late 1970s that accounting for correlation between electrons in the HOMO and the SOMO leads to the correct prediction of a singlet ground state instead 14,92 .
+
+Table 4: Summary of calculated energies and configurations for the first four electronic states of CBD obtained with various methods. Energies are given relative to that of their respective ground state energy and do not include zero-point energy corrections. The most important configuration(s) in each state with the highest weighting(s) (coefficient given in brackets) is(/are) given. 
+
+D-ExROPPP Energy D-ExROPPP Configurations CASSCF Energy CASSCF Configurations GMC-QDPT Energy GMC-QDPT Configurations 
+
+0
+
+|1OS ⟩ ( 0.97 ),
+
+|1𝑇 CV 1′ 
+
+> 1
+
+⟩ ( 0.23 ) 0
+
+|1OS ⟩ ( 0.97 ),
+
+|1𝑇 CV 1′ 
+
+> 1
+
+⟩ ( 0.24 ) 0
+
+|1ZW −⟩ ( 0.74 ),
+
+|1OS ⟩ (− 0.63 )
+
+0.335 
+
+|3OS ⟩ ( 0.97 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ ( 0.24 ) 0.172 
+
+|3OS ⟩ ( 0.98 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ ( 0.21 ) 0.121 
+
+|3OS ⟩ ( 0.97 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ ( 0.25 )
+
+1.938 
+
+|1ZW +⟩ ( 0.95 ),
+
+|1CS 0′ ¯0′ 
+
+> 1 ¯ 1
+
+⟩ (− 0.21 ) 2.024 
+
+|1ZW +⟩ ( 0.94 ),
+
+|1CS 0′ ¯0′ 
+
+> 1 ¯ 1
+
+⟩ (− 0.24 ) 1.310 
+
+|1ZW +⟩ ( 0.94 ),
+
+|1CS 0′ ¯0′ 
+
+> 1 ¯ 1
+
+⟩ (− 0.24 )
+
+2.770 |1ZW −⟩ ( 1.0) 2.95 |1ZW −⟩ ( 1.0) 1.766 
+
+|1OS ⟩ ( 0.76 ),
+
+|1ZW −⟩ ( 0.65 )
+
+Results in table 4 show that D-ExROPPP correctly predicts the open-shell singlet to be the ground 24 state, suggesting it is able to sufficiently describe the aformentioned correlation between electrons in the HOMO and SOMO. While CBD’s instability has prevented its electronic structure from being characterised experimentally, benchmark results have been calculated by Loos et al. at a CCSDTQ/aug-cc-pVTZ level of theory 93 . The CCSDTQ (coupled-cluster singles doubles triples quadruples) method is a highly expensive post-Hartree Fock method that, when used with the large aug-cc-pVTZ basis, is expected to yield highly accurate energy predictions. D-ExROPPP overestimates the energy of the higher energy |3OS ⟩ state relative to the to the CCSDTQ benchmark of 0.144eV 93 , wheras CASSCF and GMC-QDPT show relatively good agreement on this front. For the zwitterionic states, CASSCF and D-ExROPPP both appear to overestimate energies relative to the benchmark results of 1.500 eV and 1.849 eV for |1ZW +⟩ and |1ZW −⟩ respectively 93 .However, compared to CASSCF which does not treat dynamic correlation, results from D-ExROPPP are consistently closer to the benchmark energies. D-ExROPPP is able to predict the correct ordering of CBD’s low-lying electronic states and shows relatively good qualitative agreement with the high-level GMC-QDPT and CCSDTQ methods. 
+
+Trimethylenemethane 
+
+Trimethylenemethane (TMM) is another widely studied molecule that is often used a minimal example of a non-disjoint diradical (Fig. 7) 11,12,14 . The agreement between results obtained from D-ExROPPP and those from CASSCF and GMC-QDPT is slightly worse for TMM compared to CBD (Table 5), notice-able particularly in predictions of the singlet-triplet gap ( Δ𝐸 S-T ). This may be partially explained by the presence of core → virtual double excitations in CASSCF and GMC-QDPT results, which act to stabilise the |3OS ⟩ state slighltly relative to |1OS ⟩. However, D-ExROPPP results actually agree better with pho-toelectron spectroscopy measurements of the TMM − anion, which predict Δ𝐸 S-T = 0.699 ± 0.006 eV 94 .This experimental result has been further supported by high-level benchmark calculations, including with the highly-correlated equation-of-motion spin-flip coupled-cluster(2,3) (EOM-SF-CC(2,3)) method which predicts Δ𝐸 S-T = 0.697 eV 95 .
+
+Figure 7: 𝜋 molecular orbitals of the trimethylenemethane diradical. This diradical is classed as non-disjoint since both SOMOs have electron density on the bottom two Carbon atoms. 25 Table 5: Summary of calculated energies and configurations for the first five electronic states of TMM obtained with various methods. Energies are given relative to that of their respective ground state energy and do not include zero-point energy corrections. The most important configuration(s) with the highest weighting(s) (coefficient given in brackets) is shown, sometimes alongside lower-weighted configurations that stabilise them. The experimental prediction of the lowest energy singlet’s energy relative to |3OS ⟩ is 0.699 ± 0.006 eV 94 .
+
+D-ExROPPP Energy D-ExROPPP Configurations CASSCF Energy CASSCF Configurations GMC-QDPT Energy GMC-QDPT Configurations 
+
+0
+
+|3OS ⟩ ( 0.97 ),
+
+|3𝑋 CV 1′ 
+
+> 1
+
+⟩ (− 0.23 ) 0
+
+|3OS ⟩ ( 0.96 ),
+
+|3𝑋 CV 1′ 
+
+> 1
+
+⟩ (− 0.24 ) 0
+
+|3OS ⟩ ( 0.96 ),
+
+|3𝑋 CV 1′ 
+
+> 1
+
+⟩ (− 0.24 )
+
+0.893 |1OS ⟩ ( 0.84 ) 1.119 |1OS ⟩ ( 0.84 ) 1.145 |1OS ⟩ ( 0.9)
+
+0.893 |1ZW −⟩ ( 0.84 ) 1.119 |1ZW −⟩ ( 0.84 ) 1.145 |1ZW −⟩ ( 0.9)
+
+3.177 
+
+|1CS 0′ 
+
+> 1
+
+⟩ ( 0.57 ),
+
+|1SV 1′ 
+
+> 0
+
+⟩ ( 0.57 ) 4.447 
+
+|1CS 0′ 
+
+> 1
+
+⟩ ( 0.69 ),
+
+|1SV 1′ 
+
+> 0
+
+⟩ ( 0.56 ) 4.508 
+
+|1CS 0′ 
+
+> 1
+
+⟩ ( 0.77 ),
+
+|1SV 1′ 
+
+> 0
+
+⟩ ( 0.46 )
+
+3.736 |1ZW +⟩ ( 0.96 ) 5.866 |1ZW +⟩ ( 0.96 ) 3.621 |1ZW +⟩ ( 0.96 )
+
+While there are no experimental insights available into the energies of higher lying states, the D-ExROPPP and GMC-QDPT predictions of 3.736 eV and 3.621 eV respectively for the relative energy of the 
+
+|1ZW +⟩ state are in good agreement with the benchmark EOM-SF-CC(2,3) prediction of 3.551 eV 95 . On the other hand, the CASSCF energy of 5.866 eV for this state is severely overestimated relative to methods which account for dynamic correlation. While D-ExROPPP does obtain a good prediction of the |1ZW +⟩
+
+state energy, largely thanks to stabilisation from double excitations |1CS 0′ ¯0′ 
+
+> 1 ¯ 1
+
+⟩ and |1SV 1′ ¯1′ 
+
+> 0 ¯ 0
+
+⟩, the energetic ordering of states is slightly thrown off by the apparent underestimation of |1CS 0′ 
+
+> 1
+
+⟩ /| 1SV 1′ 
+
+> 0
+
+⟩ state energy. The fact that the weighting of |1CS 0′ 
+
+> 1
+
+⟩ state increases relative to |1SV 1′ 
+
+> 0
+
+⟩ for the MCSCF and MCPT methods might suggest that the self-consistent orbital optimisation is driving the energies of these states apart. 
+
+meta -Xylylene 
+
+The meta -xylylene (m-XYL) diradical, also known as meta -benzoquinodomethane (MBQDM), is a moderately-sized, stable diradical that has been widely studied 12,41,96,97 . It is frequently used as a model system for assessing the quality of electronic structure methods for diradicals since it’s electronic states are relatively well characterised by experiment 98–103 .26 Figure 8: Energy level diagram for electronic states of the m-XYL diradical calculated with various methods. Triplet states are shown in black, while singlets are in red. States of the same character are joined by dotted lines with their highest weighted configuration(s) given right. Energy levels for each method are given relative to the energy of the |3OS ⟩ calculated with that method. Data can be found in table A9 of the appendix. Fig. 8 shows excellent agreement between D-ExROPPP and GMC-QDPT for the energies for the low-lying excited states of m-XYL. Predictions of 0.485 eV and 0.502 eV made by D-ExROPPP and GMC-QDPT for the relative energy of the |1ZW −⟩ state (Table A9) are in good agreement with the experimental measurement of (0.416 ±0.009 ) eV obtained by Linenberger and colleagues with photoelectron spectroscopy 103 . Similarly for the |1OS ⟩ state, D-ExROPPP obtains a relative energy of 1.116 eV which is slightly lower than the GMC-QDPT prediction of 1.235 eV but closer to the experimental value of 
+
+≤ 0.932 eV 103 . For the |1ZW +⟩ state, D-ExROPPP prediction of 2.813 eV is approximately 0.45 eV higher than that obtained by GMC-QDPT. For the higher-lying states composed predominantly of core to SOMO and SOMO to virtual single excitations, experimental results are not readily available. However, we note that similar to TMM, estimates obtained by D-ExROPPP are on average 11.8 % lower than those obtained by GMC-QDPT for the first 3 states of this kind. Regarding CASSCF results, for all but the lowest energy singlet, energies are consistently shifted ≈ 1 eV higher than those obtained with D-ExROPPP and GMC-QDPT, suggesting once again that the lack of dynamic correlation is causing significant issues. 27 Figure 9: a) UV-vis absorption spectrum for the meta -Xylylene diradical simulated by D-ExROPPP. b) Experimentally measured UV-vis absorption spectrum for the meta -Xylylene diradical obtained by Sander et al. 99 . c) Comparison of main absorption peaks found in the experimental spectrum and the D-ExROPPP spectrum. The main configurations that contribute to the respective excited states are also given. d) Frontier 
+
+𝜋 orbitals for meta -Xylylene. The meta -xylylene diradical also acts as a useful test case for D-ExROPPP since it features several dipole-allowed electronic transitions that have been measured with UV-vis absorption spectroscopy 99,101 .Since m-XYL features a relatively large singlet-triplet energy gap ( Δ𝐸 S-T > 0.4 eV), we can be confident that the lowest energy singlet state is not significantly populated at room temperature and thus all observed transitions are between triplet states. Comparing the UV-vis spectrum produced by D-ExROPPP to the experimental spectrum measured by Sander et. al (Fig. 9), we find good qualitative agreement. All of the main features of the experimental spectrum are reproduced by D-ExROPPP, although transition energies are underestimated an average of 6.6 %. Furthermore, to the best of our knowledge, this is the first time that these electronic transitions have been assigned, highlighting the potential that D-ExROPPP holds as a tool for elucidating the photophysical properties of diradical molecules. 28 Influence of SOMO rotation 
+
+In pure diradicals such as CBD, TMM and MXYL, the SOMOs ( 𝜙 0, 𝜙 0′ ) obtained in an SCF procedure are eigenfunctions of the Fock-operator with exactly degenerate eigenvalues, meaning any unitary rotation within the degenerate SOMO subspace will yield a valid pair of SOMOs. In an exact treatment, configuration interaction results should be invariant with respect to rotations of this kind. However, Borden showed in 1996 that truncated CI methods can sometimes violate this invariance, yielding excited electronic states that differ slightly depending on the choice of SOMOs 62 .To assess the sensitivity of D-ExROPPP to SOMO rotation, we take orthogonal linear combinations of the SOMOs obtained from SCF (Fig. 10), and compare CI results obtained for the standard SOMOs versus the rotated ones. In general, D-ExROPPP excited state energies are found to be sensitive to the choice of SOMOs. This effect is observed for CBD and m-XYL (Tables A10 and A12), although notably not for the TMM diradical (Table A11). Inspecting this more closely, CSF energies are found to remain invariant to SOMO rotation while off-diagonal couplings between states in the XCIS-D matrix that are responsible for the observed sensitivity. This is illustrated most clearly in the excited states of CBD (Table A10). With localised SOMOs (MO diagrams shown in Fig. 2), a strong coupling is present between the |3OS ⟩ and 
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ states, which reduces to zero when configurations are formed from delocalised SOMOs (Fig. 2). Conversely, coupling between the |1ZW +⟩ and |1𝑇 CV 1′ 
+
+> 1
+
+⟩ states is present for delocalised but not localised SOMOs. In each case, off-diagonal couplings yield an energy stabilisation of ≈ 0.4 eV for the overall state compared to states with solely |3OS ⟩ or |1ZW +⟩ character. Comparison with benchmark CCSDTQ results 93 
+
+does not clearly favour either set of SOMOs, as the relative energy of the |3OS ⟩ state is better predicted with localised orbitals, wheras a more accurate |1ZW +⟩ energy is obtained with delocalised orbitals. 
+
+Figure 10: a) UV-vis absorption spectrum calculated for the meta-xylylene diradical using the rotated SOMOs shown in b) in the configuration interaction treatment. Peaks are labelled according to their main excitation character. b) also shows the linear transformation used to rotate SOMOs (where 𝜙 0 and 𝜙 0′ are the unrotated SOMOs shown in Figure 9). 29 meta -Xylylene shows largely the same behaviour as CBD, with couplings between CSFs in the CI matrix changing depending on the choice of SOMOs (Table A12). However, the effect on the excited states appears to be more dispersed for m-XYL, likely due to the higher number of excited configurations contributing to each state. Relative energies of all of the first five excited states are affected by SOMO rotation, with a mean absolute percentage change of 7.6% between results obtained with rotated and unrotated SOMOs. Notably, the sensitivity of D-ExROPPP results is higher when an XCIS basis is used instead of XCIS-D, with the mean absolute % change rising to 8.8%. Figure 12 shows the negative effect that SOMO rotation has on the predicted UV-vis absorption spectrum of m-XYL, where the unrotated spectrum is in better agreement with experimental measurements (Fig. 9) than that obtained with rotated SOMOs. This is most evident in the splitting of the main 250 nm peak into two peaks with slightly higher absorption energies. This appears to be primarily caused by changes in transition intensities rather than state energies. Dipole moments involving the SOMOs are highly sensitive to their orbital coefficients (eq 15), meaning the rotation of SOMOs can cause transitions that were previously dark ( 𝜇 𝑖 0 ≈ 0) to gain intensity ( |𝜇 𝑖 0 | > 0). This appears to be the case in Fig. 10, where the previously weak HOMO - 1 (2) → SOMO(0’) and SOMO(0’) → LUMO + 1 (2’) transitions gain intensity due to the polarisation of the rotated SOMO(0’). While the rotated absorption spectrum still shows decent qualitative agreement with the experimental spectrum, we recognise this lack of invariance to SOMO rotation as a limitation of D-ExROPPP that will be carefully considered moving forward. 
+
+Computational Efficiency 
+
+The speed of the excited state calculations using D-ExROPPP is compared with that of the post-Hartree Fock methods. D-ExROPPP calculations were run on a laptop using a single CPU core, meanwhile GMC-QDPT and CASSCF calculations were run on UCL’s Myriad HPC cluster with 8 CPU cores. Given this drastic difference in computational hardware, the single-core wall-clock time of the post-Hartree Fock methods is roughly estimated using eq. 17. The multi-core wall clock time and CPU utilisation % are both obtained from the GAMESS output and 𝑛 cores = 8 for all calculations. While parallelisation over multiple CPU cores will not truly yield a ×8 speed-up, this overestimation is expected to be more than offset by the significantly higher single-core performance and memory bandwith of the HPC cluster relative to the laptop hardware used. Single-core wall-clock time ≈ ( Multi-core wall-clock time ) × 𝑛 cores × CPU utilisation % 100 (17) 30 Table 6: Comparison of the wall-clock time taken by various computational methods in calculations on the small diradicals studied.  
+
+> ∗
+
+Mean wall clock time taken over 5 calculations.  
+
+> ∗∗
+
+Estimated single-core wall clock time calculated using eq. 17 .  
+
+> ∗∗∗
+
+Approximate increase in computational speed when running D-ExROPPP with an XCIS-D basis com-pared to GMC-QDPT. 
+
+Molecule Name 
+
+𝑡 D-ExROPPP ∗
+
+(XCIS) / s 
+
+𝑡 D-ExROPPP ∗
+
+(XCIS-D) / s 
+
+𝑡 CASSCF ∗∗ 
+
+/ s 
+
+𝑡 GMC-QDPT ∗∗ 
+
+/ s 
+
+Speed-up Factor ∗∗∗ 
+
+Cyclobutadiene 0.008 0.009 12.08 56.12 ≈ 6000 Trimethylenemethane 0.008 0.010 18.19 77.366 ≈ 7500 meta-Xylylene 0.051 0.101 780.21 20926.63 ≈ 200 , 000 While the comparisons are approximate, Table 6 highlights the efficiency of D-ExROPPP for calculat-ing diradical electronic structure compared to multireference approaches like CASSCF and GMC-QDPT. Perhaps most importantly, we find that, as expected, D-ExROPPP scales much more favourably with respect to the size of the molecule. MCSCF and MCPT methods typically scale steeply with the number of basis functions, which itself grows linearly with the number of atoms being simulated in a molecule increases. Despite m-XYL only containing twice as many atoms as CBD, CASSCF and GMC-QDPT calculations respectively take ≈65x and 370x longer. This unfavourable scaling becomes a severe problem for large emissive diradicals, which often exceed 100 atoms and thus require thousands of basis functions. In con-trast, the time taken for D-ExROPPP/XCIS-D calculations only increases ≈ ten-fold for m-XYL compared to CBD, largely owing to the low 𝑂 (𝑁 2occ ) scaling of the XCIS-D CSF basis and the use of atomic orbitals instead of basis functions. 
+
+## 4.2 Large emissive diradicals 
+
+Having verified the speed, accuracy and spin-purity of D-ExROPPP for the calculation of electronic states for small diradicals, we apply it the method to the more challenging task of predicting the excited states of large, emissive diradicals. A survey of the literature since 2019 identified 18 novel organic diradical molecules with publicly available UV-Vis absorption data and optimised molecular coordinates. Molecules including heteroatoms such as boron and fluorine were excluding due to the unavailability of their machine-learned PPP parameters 86 . While running D-ExROPPP on these 19 molecular geometries, 5 failed to achieve appropriate SCF convergence and had to be discarded. Results for the remaining 14 diradicals, are presented in this section are the subject of this section. Large emissive diradicals almost all feature a very small or sometimes negligible energy gap between the lowest energy singlet and triplet electronic states ( Δ𝐸 S-T ). Δ𝐸 S-T can be predicted experimentally by 31 performing electron paramagnetic resonance (EPR) (also referred to as electron spin resonance (ESR)) measurements at variable temperatures, and fitting the results to the Bleaney-Bowers equation 104 . The ground state multiplicity is found to be singlet for the majority of the TTM- and PyBTM-based diradicals studied, which indicates so-called ’anti-ferromagnetic coupling’ ( Δ𝐸 S-T < 0). As for cyclobutadiene, the presence of a singlet ground state goes against the typical TOTEM energy ordering (Fig. 1), thus suggesting that there is an appreciable degree of correlation between electrons in the core MOs and the SOMOs which needs to be accounted for to obtain a qualitatively correct prediction. 
+
+Table 7: Comparison of the predictions of Δ𝐸 S-T obtained by different methods for the 12 emissive diradicals that have had Δ𝐸 S-T predicted from VT-EPR. Spin-flip time-dependent density functional theory (SF-TD-DFT) is used with three popular exchange correlation functionals (in brackets). Full Δ𝐸 S-T data is given in Tables A13 and A14.  
+
+> ∗
+
+SF calculations severely overestimate Δ𝐸 S-T for PCz-(PyBTM’) 2 by over 3 eV. This is treated as an outlier and is not included in SF results. 
+
+Method Root Mean Squared Error (eV) Mean Signed Error (eV) Correct GS Mult. Prediction 
+
+D-ExROPPP 0.049 -0.034 9/9 SF-TD-DFT (B3LYP) ∗ 0.029 0.0070 8/9 SF-TD-DFT (CAM-B3LYP) ∗ 0.027 0.0097 8/9 SF-TD-DFT (PEB0) ∗ 0.029 0.0059 8/9 Ground state multiplicities and singlet triplet gaps ( Δ𝐸 S-T ) calculated by D-ExROPPP are presented alongside experimental results in Table A13 in the appendix. Of the 9 diradicals with well-characterised ground state multiplicities, D-ExROPPP correctly predicts the mulitplicity in every case. In the 8 molecules with singlet ground states, singly excited CSFs couple more strongly to |1ZW −⟩ than to |3OS ⟩ state, which drives the stabilisation of the singlet. While D-ExROPPP produces good qualitative agreement with experimental measurements of Δ𝐸 S-T , Table A13 and Fig. A1 in the appendix show that the quantitative accuracy of predictions is fairly limited. To benchmark D-ExROPPP against established methods for determining Δ𝐸 S-T , spin-flip time-dependent density functional theory (SF-TD-DFT) calculations were performed with three widely-used functionals (Table 7). SF-TD-DFT consistently predicts smaller |Δ𝐸 S-T |
+
+values than D-ExROPPP, which has a tendency to overestimate the stabilisation of the singlet state relative to the triplet. 32 Figure 11: Predicted versus experimental 𝜆 max abs for the 13 emissive diradicals studied. Right: D-ExROPPP; left: spin-flip time dependent density functional theory with the uB3LYP functional. Dot colour indicates the ⟨ ˆ𝑆 2⟩ value of the final state. The dotted line denotes perfect agreement with experiment. SF-TDDFT significantly overestimates 𝜆 max abs for the PCz-(PyBTM’) 2 diradical meaning this data point is treated as an outlier and is not shown. The advantages of D-ExROPPP over TD-DFT approaches become more apparent when consider-ing higher energy electronic states. Figure 11 compares results obtained from D-ExROPPP and SF-TDDFT/B3LYP for the energies of the highest wavelength UV-vis transitions ( 𝜆 max abs ) for each of the large emissive diradical molecules studied. D-ExROPPP achieves a root mean squared error (RMSE) of 0.323 eV with respect to experimental UV-vis data, wheras the RMSE of SF-TDDFT calculations is 0.558 eV. Even if the PCz-(PyBTM’) 2 outlier is removed, the improved RMSE of SF predictions (0.345 eV) is still higher than that of D-ExROPPP (0.297 eV). This is perhaps attributable in part to the spin-purity of D-ExROPPP’s excited states, where in contrast, most SF-TD-DFT states are heavily spin contaminated, with ⟨ ˆ𝑆 2⟩ ≈ 1indicating a mixing of singlet and triplet states. Beyond improving the accuracy of D-ExROPPP relative to SF-TD-DFT, the lack of spin contamination also allows the multiplicity of states involved in transitions to be more reliably characterised. This is particularly important for the 𝜆 max absorption peak, since it is typically relevant to many of the molecule’s optical properties. Finally, D-ExROPPP also outperforms SF-TD-DFT in terms of computational efficiency. Eq 17 is used again to estimate the single-core wall-clock time for SF-TD-DFT calculations, which were performed on 24 CPU cores of an HPC cluster. The CPU-utilisation of each calculation was not readily available and was estimated to be 75%, in line with the mean observed for GAMESS calculations. The resulting timings (Table A16) estimate that D-ExROPPP on average takes 86 × less time than SF-TD-DFT/B3LYP to calculate the first 30 excited electronic states of TTM- and PyBTM-based diradicals. As noted previously, the superior computing architecture of the HPC cluster relative to the laptop used for D-ExROPPP calculations makes this a relatively conservative estimate, with the true speedup likely exceeding 100 ×. The combination of 33 improved accuracy, spin-purity and computational efficiency make D-ExROPPP a practical and reliable tool for calculating and characterising the excited states of large emissive diradicals. Looking at UV-Vis spectra more widely, we recognise that the small Δ𝐸 S-T of the emissive diradicals studied means that in many cases states of both singlet and triplet multiplicity will be thermally populated at room temperature. To account for this behaviour, D-ExROPPP combines the absorption spectra predicted for each thermally accessible state into a single spectrum, where the intensities of singlet and triplet transitions are weighted according to their thermal population (Eq. 18). Since we find D-ExROPPP has a tendency to overestimate Δ𝐸 S-T , we use the values obtained from variable-temperature electron paramagnetic resonance measurements. 
+
+𝑤 singlet = exp (− Δ𝐸 S-T /𝑘 B𝑇 )
+
+3 + exp (− Δ𝐸 S-T /𝑘 B𝑇 ) , 𝑤 triplet = 33 + exp (− Δ𝐸 S-T /𝑘 B𝑇 ) , (18) 
+
+Figure 12: a) Visible/Near-IR absorption spectrum of the DTA diradical calculated by D-ExROPPP, where the weighted combination is performed according to Boltzmann weights shown in Eq. 18 with 𝑇 = 298 K. b) Comparison of experimental peak positions versus those calculated by D-ExROPPP. Typically many CSFs contribute to each of the excited states of large emissive diradicals, but the CSF with the highest weighting is also given. ∗Note |1ZW −⟩ not |1OS ⟩ is the lowest energy singlet state predicted for DTA. c) Variable-temperature Vis/Near-IR absorption spectrum of DTA experimentally measured by Dong et. al 37 .d) MO diagrams for the two singly occupied molecular orbitals of DTA calculated by D-ExROPPP. This approach successfully reproduces many of the absorption features observed in experimental UV-34 vis spectra across the 14 diradicals studied. For the DTA diradical (Fig. 12), all 5 peaks observed in the experimental spectrum are replicated by D-ExROPPP. Although some of peak energies and intensities are not exactly accurate in some cases, this offers an excellent demonstration of the method’s ability to offer insight into the multiplicities and configuration character of electronic transitions. Indeed the multiplicity assignments are largely supported by variable temperature absorption data, which shows a decrease in the intensities of singlet peaks as the temperature increases and drives up the relative population of the triplet ground state. ON the other hand, there is a slight increase in intensity for the shoulder peak near 460nm, suggesting it does indeed arise from an electronic transition between triplet states. Many of the peak’s in DTA’s absorption spectrum are found to be characteristic of TTM- and PyBTM- based diradicals. Figure 13 shows the predicted energies of the triplet shoulder peak often observed between 400 - 500 nm, and the higher energy peak between 360 - 400 nm, which is typically also the most intense peak in emissive diradicals. 
+
+Figure 13: Predicted (D-ExROPPP) versus experimental transition energies for high intensity peaks in the spectra of large emissive diradicals. Left: Medium intensity shoulder peaks found between 400 - 500 nm in experimental spectra. Right: High intensity peaks found between 360 - 400 nm in experimental spectra. The dotted line denotes perfect agreement with experiment. White dots do not mean that excited states are spin-contaminated, but instead signifies that the peak could not be definitively assigned as arising from singlet or triplet transitions but instead features contributions from states of both multiplicities. Once again, D-ExROPPP shows relatively good agreement with experimentally measured transition energies for the two higher-energy peaks that are typical in emissive organic diradicals. Energies are mostly overestimated, as was observed for 𝜆 max abs peaks, which corresponds to an underestimation of wavelengths. This is unsurprising since configuration interaction singles (CIS) and extended configuration interaction singles (XCIS) are known to typically overestimate excited state energies due to a lack of an insufficient description of electron correlation 75 . Combining results for the lower-energy maximum absorption peak, the root mean squared error of all the peaks predictions is 0.301 eV, which falls short of quantitative agreement 35 but is expected to be sufficient for the reliable qualitative assignment of most absorption features. 
+
+# 5 Conclusion 
+
+In conclusion, this report presents the methodology and initial results for D-ExROPPP, a novel semi-empirical method designed for the calculation of spin-pure ground and excited electronic states of organic diradical molecules. An approximate SCF procedure is used for obtaining open-shell molecular orbitals of any diradical molecule, which is combined with Pariser-Parr-Pople theory to ensure computational efficiency and low-scaling with respect to molecule size. A spin-pure basis of configuration state functions is constructed to describe single excitations within the 𝜋 system of a diradical molecule, with selected doubles incorporated to increase the accuracy of excited state energies while maintaining favourable computational scaling. Hamiltonian interactions between these CSFs are calculated and implemented into a block-diagonal configuration interaction matrix, which is efficiently solved to yield spin-pure excited states and their energies. The accuracy, efficiency and spin purity of D-ExROPPP were then assessed with calculations on a variety of small and large organic diradical molecules. For the small molecules studied, D-ExROPPP achieves qualitative and in many cases quantitative agreement with the highly-correlated GMC-QDPT method, while offering much improved scaling with respect to system size. For the higher-lying states of 
+
+meta-xylylene, D-ExROPPP faithfully replicates the experimental UV-vis absorption spectrum measured by Sander et al. 99 , with energies deviating only by an average of 6.6%. We then similarly apply the D-ExROPPP method to study the electronic structure of 14 large emissive diradicals drawn from the recent literature. Ground state multiplicities are accurately predicted in every case, although singlet-triplet energy gaps are systematically overestimated. D-ExROPPP is however, found to reliably reproduce the majority of absorption peaks found in experimental UV-vis spectra, with an RMSE of 0.301 eV across a range of peaks with transition energies between 1.5 and 3.5 eV. We find evidence that D-ExROPPP can predict transition energies in these large diradical molecules with a higher accuracy and lower computational cost than SF-TDDFT, while also offering spin purity. Future work will aim to more rigourously compare the accuracy and efficiency of D-ExROPPP relative to existing methods for computing diradical electronic states. This work establishes D-ExROPPP as a promising tool for calculating the electronic structure of organic diradicals, and in particular for interpreting their highly complex UV-vis absorption spectra. We anticipate that the method will prove especially valuable for high-throughput screening or data driven approaches to molecular design, where its low computational cost and minimal user-input would be particularly ad-vantageous. However, there remains plenty of scope for improving the method, particularly in regards to the sensitivity of excited state energies to the choice of SOMOs. Additional double excitations could be incorporated into the XCIS-D basis without increasing scaling beyond 𝑂 (𝑁 2occ ), while modifications to the 36 SCF procedure, such as the use of natural orbitals or self-consistent MO optimisation, could yield a more physically motivated orbital basis 105 . Together, these developements would further strengthen D-ExROPPP as a reliable and accessible tool for the study of organic diradical molecules. 37 6 Acknowledgements and Declaration of Contributions 
+
+Declaration of Contributions 
+
+The Python code for the original EXROPPP program, which provided a useful basis from which the D-ExROPPP code was heavily adapted, was written by Dr. James Green and Kevin Ma. Dr. Prashant Kumar prepared input files and ran TD-DFT calculations on ORCA for large emissive diradicals. D-ExROPPP results for the cyclobutadiene molecule were checked by Dr. Hugh Burton using the QUANTEL package, allowing small bugs in the implementation to be identified and fixed. Finally, Dr. Hele and Dr. Burton provided both helped significantly with conceptualising the project and developing ideas for the methodology. 
+
+Acknowledgements 
+
+I would like to first and foremost thank my primary supervisor Dr. Hele and secondary supervisor Dr. Burton for their useful guidance, inspiration and support throughout the duration of the project. In addition, I thank all the members of the Hele group for creating a welcoming and stimulating academic environment. In particular, I thank Dr. Prashant Kumar, Dr. James Green and Jingkun Shen for their help in navigating unfamiliar computational methods and software. Finally I thank my friends and family for their encouragement and support throughout the project and throughout the full duration of my undergraduate studies. 
+
+# 7 Use of Generative AI Declaration 
+
+Generative AI was used in the following capacity in this project: 
+
+• Anthropic’s Claude Sonnet 4.5 ( URL: www.Claude.ai ) was used on several occasions to check for bugs in code files that were otherwise written without any AI assistance. Additionally this model was used at times to assist in the creation and formatting of overleaf tables and figures designed for the project report, where data was then entered individually. On a limited number of occasions, the model was used to provide suggestions for the best way to phrase sentences in drafts of the project report, although no text was copied directly. 
+
+• Google Scholar labs ( URL: www.scholar.google.com/scholar labs ) was used to support literature review by helping to find relevant academic papers relevant in the field. 38 References 
+
+> 1
+
+J. Thiele and H. Balhorn, “Ueber einen chino¨ ıden kohlenwasserstoff”, Berichte der deutschen chemischen Gesellschaft 37 , 1463–1470 (1904). 
+
+> 2
+
+Y. Hattori, E. Michail, A. Schmiedel, M. Moos, M. Holzapfel, I. Krummenacher, H. Braunschweig, U. M¨ uller, J. Pflaum, and C. Lambert, “Luminescent mono-, di-, and triradicals: bridging polychlorinated triarylmethyl radicals by triarylamines and triarylboranes”, Chemistry – A European Journal 25 , 15463– 15471 (2019). 
+
+> 3
+
+Z. Feng, Y. Chong, S. Tang, Y. Fang, Y. Zhao, J. Jiang, and X. Wang, “A stable triplet diradical emitter”, Chemical Science 12 , 15151–15156 (2021). 
+
+> 4
+
+A. Mizuno, R. Matsuoka, S. Kimura, K. Ochiai, and T. Kusamoto, “Spin-correlated luminescence of a carbazole-containing diradical emitter: single-molecule magnetoluminescence and thermally activated emission”, Journal of the American Chemical Society 146 , 18470–18483 (2024). 
+
+> 5
+
+R. Chowdhury, P. Murto, N. A. Panjwani, Y. Sun, P. Ghosh, Y. Boeije, C. D. Cordeiro, V. Derkach, S.-J. Woo, O. Millington, D. G. Congrave, Y. Fu, T. B. E. Mustafa, M. Monteverde, J. Cerd´ a, G. Londi, J. Behrends, A. Rao, D. Beljonne, A. Chepelianskii, H. Bronstein, and R. H. Friend, “Bright triplet and bright charge-separated singlet excitons in organic diradicals enable optical read-out and writing of spin states”, Nature Chemistry 17 , 1410–1417 (2025). 
+
+> 6
+
+Y. Zhu, Z. Zhu, S. Wang, Q. Peng, and A. Abdurahman, “Stable luminescent diradicals: the emergence and potential applications”, Angewandte Chemie International Edition 64 , e202423470 (2025). 
+
+> 7
+
+P. Murto and H. Bronstein, “Electro-optical 𝜋 -radicals: design advances, applications and future perspec-tives”, Journal of Materials Chemistry C 10 , 7368–7403 (2022). 
+
+> 8
+
+S. M. Kopp, S. Nakamura, B. T. Phelan, Y. R. Poh, S. B. Tyndall, P. J. Brown, Y. Huang, J. Yuen-Zhou, M. D. Krzyaniak, and M. R. Wasielewski, “Luminescent organic triplet diradicals as optically addressable molecular qubits”, Journal of the American Chemical Society 146 , 27935–27945 (2024). 
+
+> 9
+
+Y. R. Poh, D. Morozov, N. P. Kazmierczak, R. G. Hadt, G. Groenhof, and J. Yuen-Zhou, “Alternant hydrocarbon diradicals as optically addressable molecular qubits”, Journal of the American Chemical Society 146 , 15549–15561 (2024). 
+
+> 10
+
+L. Salem and C. Rowland, “The electronic properties of diradicals”, Angewandte Chemie International Edition in English 11 , 92–111 (1972). 
+
+> 11
+
+T. Stuyver, B. Chen, T. Zeng, P. Geerlings, F. De Proft, and R. Hoffmann, “Do diradicals behave like radicals?”, Chemical Reviews 119 , 11291–11351 (2019). 39 12 W. Carl Lineberger and W. Thatcher Borden, “The synergy between qualitative theory, quantitative calculations, and direct experiments in understanding, calculating, and measuring the energy differences between the lowest singlet and triplet states of organic diradicals”, Physical Chemistry Chemical Physics 
+
+13 , 11792 (2011). 
+
+> 13
+
+W. T. Borden, “Diradicals – a fifty year fascination”, in The foundations of physical organic chemistry: fifty years of the james flack norris award (American Chemical Society, 2015), pp. 251–303. 
+
+> 14
+
+W. T. Borden and E. R. Davidson, “Effects of electron repulsion in conjugated hydrocarbon diradicals”, Journal of the American Chemical Society 99 , 4587–4594 (1977). 
+
+> 15
+
+E. F. Hayes and A. K. Q. Siu, “Electronic structure of the open forms of three-membered rings”, Journal of the American Chemical Society 93 , 2090–2091 (1971). 
+
+> 16
+
+K. Takatsuka, T. Fueno, and K. Yamaguchi, “Distribution of odd electrons in ground-state molecules”, Theoretica Chimica Acta 48 , 175–183 (1978). 
+
+> 17
+
+M. Nakano, “Open-shell-character-based molecular design principles: applications to nonlinear optics and singlet fission”, The Chemical Record 17 , 27–62 (2016). 
+
+> 18
+
+M. Nakano, K. Fukuda, S. Ito, H. Matsui, T. Nagami, S. Takamuku, Y. Kitagawa, and B. Champagne, “Di-radical and ionic characters of open-shell singlet molecular systems”, The Journal of Physical Chemistry A 121 , 861–873 (2017). 
+
+> 19
+
+V. Bachler, G. Olbrich, F. Neese, and K. Wieghardt, “Theoretical evidence for the singlet diradical character of square planar nickel complexes containing two o-semiquinonato type ligands”, Inorganic Chemistry 41 , 4179–4193 (2002). 
+
+> 20
+
+M. Head-Gordon, “Characterizing unpaired electrons from the one-particle density matrix”, Chemical Physics Letters 372 , 508–511 (2003). 
+
+> 21
+
+K. Yamaguchi, “The electronic structures of biradicals in the unrestricted hartree-fock approximation”, Chemical Physics Letters 33 , 330–335 (1975). 
+
+> 22
+
+A. Abdurahman, J. Wang, Y. Zhao, P. Li, L. Shen, and Q. Peng, “A highly stable organic luminescent diradical”, Angewandte Chemie International Edition 62 , e202300772 (2023). 
+
+> 23
+
+A. Abdurahman, L. Shen, J. Wang, M. Niu, P. Li, Q. Peng, J. Wang, and G. Lu, “A highly efficient open-shell singlet luminescent diradical with strong magnetoluminescence properties”, Light Sci. Appl. 
+
+12 , 272 (2023). 
+
+> 24
+
+S. Gorgon, K. Lv, J. Gr¨ une, B. H. Drummond, W. K. Myers, G. Londi, G. Ricci, D. Valverde, C. Tonnel´ e, P. Murto, A. S. Romanov, D. Casanova, V. Dyakonov, A. Sperlich, D. Beljonne, Y. Olivier, F. Li, R. H. Friend, and E. W. Evans, “Reversible spin-optical interface in luminescent organic radicals”, Nature 620 ,538–544 (2023). 40 25 X. Chang, M. E. Arnold, R. Blinder, J. Zolg, J. Wischnat, J. van Slageren, F. Jelezko, A. J. C. Kuehne, and M. von Delius, “A stable chichibabin diradicaloid with near-infrared emission”, Angewandte Chemie International Edition 63 , e202404853 (2024). 
+
+> 26
+
+D. Mesto, M. Orza, B. Bardi, A. Punzi, I. Ratera, J. Veciana, G. Farinola, A. Painelli, F. Terenziani, D. Blasi, and F. Negri, “Luminescent trityl-based diradicaloids: a theoretical and experimental assessment of charge-resonance in low-lying excited states”, Chemistry – A European Journal 31 , e202500749 (2025). 
+
+> 27
+
+M. E. Arnold, A. Lebzelter, P. Thielert, R. Blinder, J. Schmid, J. Zolg, E. Spatola, F. Jelezko, M. von Delius, S. Richert, and A. J. C. Kuehne, “Photostable triphenylmethyl-based diradicals with a degenerate singlet-triplet ground state and strong photoluminescence”, Chemical Science 16 , 14616–14624 (2025). 
+
+> 28
+
+Z. Feng, J. Zhou, X. He, B. Wang, G. Xie, X. Qiao, L. Liu, Z. Xie, and Y. Ma, “Extremely stable perylene bisimide-bridged regioisomeric diradicals and their redox properties”, Chemistry – A European Journal 
+
+30 , e202302943 (2023). 
+
+> 29
+
+Y. Hattori and G. Rapenne, “Facile preparation methods for triarylmethyl-type stable luminescent dirad-icals and higher multiradicals”, European Journal of Organic Chemistry 29 , e70329 (2026). 
+
+> 30
+
+L. Sch¨ oneburg, M. E. Arnold, M. R. Rapp, R. Blinder, M. Gross, J. Zolg, F. Jelezko, H. F. Bettinger, and A. J. C. Kuehne, “A novel [2.2]paracyclophane bridged tris(2, 4, 6-trichlorophenyl)methyl-diradical and its interaction with circularly polarized light”, Journal of Materials Chemistry C 14 , 1666–1674 (2026). 
+
+> 31
+
+R. Chowdhury, A. Inglis, L. E. Walker, P. Murto, C. Delpiano-Cordeiro, C. Morrison, N. A. Panjwani, Y. Fu, Y. Sun, W. Zhou, P. J. Skabara, A. Rao, A. Chepelianskii, H. Bronstein, S. L. Bayliss, and R. H. Friend, Room temperature optical control of spin states in organic diradicals , 2025. 
+
+> 32
+
+C. P. Yu, R. Chowdhury, Y. Fu, P. Ghosh, W. Zeng, T. B. E. Mustafa, J. Gr¨ une, L. E. Walker, D. G. Congrave, X. W. Chua, P. Murto, A. Rao, H. Sirringhaus, F. Plasser, C. P. Grey, R. H. Friend, and H. Bronstein, “Near-infrared luminescent open-shell 𝜋 -conjugated systems with a bright lowest-energy zwitterionic singlet excited state”, Science Advances 10 , eado3476 (2024). 
+
+> 33
+
+R. Matsuoka, S. Kimura, T. Miura, T. Ikoma, and T. Kusamoto, “Single-molecule magnetoluminescence from a spatially confined persistent diradical emitter”, en, J. Am. Chem. Soc. 145 , 13615–13622 (2023). 
+
+> 34
+
+Y. Hattori, K. Yamamoto, R. Kitajima, and K. Uchida, “Bright fluorescent p-phenylene-bridged triaryl-methyl highly stable diradical”, Chemistry – A European Journal 30 (2024). 
+
+> 35
+
+A. Abdurahman, T. J. H. Hele, Q. Gu, J. Zhang, Q. Peng, M. Zhang, R. H. Friend, F. Li, and E. W. Evans, “Understanding the luminescent nature of organic radicals for efficient doublet emitters and pure-red light-emitting diodes”, Nature Materials 19 , 1224–1229 (2020). 41 36 S. Arikawa, A. Shimizu, D. Shiomi, K. Sato, T. Takui, H. Sotome, H. Miyasaka, M. Murai, S. Yamaguchi, and R. Shintani, “A kinetically stabilized nitrogen-doped triangulene cation: stable and nir fluorescent diradical cation with triplet ground state”, Angewandte Chemie International Edition 62 , e202302714 (2023). 
+
+> 37
+
+Z. Tong, S. Zhang, W. Niu, T. Yu, X. Zhang, P. Yao, J. Wang, Y. Han, G. Li, and S. Dong, “Deci-phering spin-governed dual emissions in ttm diradicaloids: unraveling the interplay of singlet and triplet fluorescence pathways”, Journal of the American Chemical Society 147 , 39232–39246 (2025). 
+
+> 38
+
+X. Wang, Z. Zhu, Q. Peng, and A. Abdurahman, “Magnetoluminescence in organic radical emitters”, Fundamental Research (2026). 
+
+> 39
+
+J. A. Pople, P. M. W. Gill, and N. C. Handy, “Spin-unrestricted character of kohn-sham orbitals for open-shell systems”, International Journal of Quantum Chemistry 56 , 303–305 (1995). 
+
+> 40
+
+Q. Sun, J.-L. Br´ edas, and H. Li, “Reliable diradical characterization via precise singlet–triplet gap calculations: application to thiele, chichibabin, and m¨ uller analogous diradicals”, Journal of Chemical Theory and Computation 21 , 1194–1202 (2025). 
+
+> 41
+
+D. Reta Ma˜ neru, A. K. Pal, I. d. P. R. Moreira, S. N. Datta, and F. Illas, “The triplet–singlet gap in the m-xylylene radical: a not so simple one”, Journal of Chemical Theory and Computation 10 , 335–345 (2013). 
+
+> 42
+
+L. Noodleman, “Valence bond description of antiferromagnetic coupling in transition metal dimers”, The Journal of Chemical Physics 74 , 5737–5743 (1981). 
+
+> 43
+
+F. Neese, “Definition of corresponding orbitals and the diradical character in broken symmetry dft calculations on spin coupled systems”, Journal of Physics and Chemistry of Solids 65 , 781–785 (2004). 
+
+> 44
+
+N. Ferr´ e, N. Guih´ ery, and J.-P. Malrieu, “Spin decontamination of broken-symmetry density functional theory calculations: deeper insight and new formulations”, Physical Chemistry Chemical Physics 17 ,14375–14382 (2015). 
+
+> 45
+
+K. Yamaguchi, F. Jensen, A. Dorigo, and K. Houk, “A spin correction procedure for unrestricted hartree-fock and møller-plesset wavefunctions for singlet diradicals and polyradicals”, Chemical Physics Letters 
+
+149 , 537–542 (1988). 
+
+> 46
+
+J. M. Wittbrodt and H. B. Schlegel, “Some reasons not to use spin projected density functional theory”, The Journal of Chemical Physics 105 , 6574–6577 (1996). 
+
+> 47
+
+R. Costa, R. Valero, D. R. Ma˜ neru, I. d. P. R. Moreira, and F. Illas, “Spin adapted versus broken symmetry approaches in the description of magnetic coupling in heterodinuclear complexes”, Journal of Chemical Theory and Computation 11 , 1006–1019 (2015). 42 48 P. Rivero, I. d. P. R. Moreira, F. Illas, and G. E. Scuseria, “Reliability of range-separated hybrid functionals for describing magnetic coupling in molecular systems”, The Journal of Chemical Physics 129 (2008). 
+
+> 49
+
+G. Trinquier and J.-P. Malrieu, “Kekul´ e versus lewis: when aromaticity prevents electron pairing and imposes polyradical character”, Chemistry – A European Journal 21 , 814–828 (2014). 
+
+> 50
+
+Y. Shao, M. Head-Gordon, and A. I. Krylov, “The spin–flip approach within time-dependent density functional theory: theory and applications to diradicals”, The Journal of Chemical Physics 118 , 4807– 4818 (2003). 
+
+> 51
+
+L. V. Slipchenko and A. I. Krylov, “Singlet-triplet gaps in diradicals by the spin-flip approach: a benchmark study”, The Journal of Chemical Physics 117 , 4694–4708 (2002). 
+
+> 52
+
+R. Valero, F. Illas, and D. G. Truhlar, “Magnetic coupling in transition-metal binuclear complexes by spin-flip time-dependent density functional theory”, Journal of Chemical Theory and Computation 7,3523–3531 (2011). 
+
+> 53
+
+S. Lee, M. Filatov, S. Lee, and C. H. Choi, “Eliminating spin-contamination of spin-flip time dependent density functional theory within linear response formalism by the use of zeroth-order mixed-reference (mr) reduced density matrix”, The Journal of Chemical Physics 149 , 104101 (2018). 
+
+> 54
+
+K. Komarov, M. Oh, H. Nakata, S. Lee, and C. H. Choi, “Umrsf-tddft: unrestricted mixed-reference spin-flip-tddft”, The Journal of Physical Chemistry A 128 , 9526–9537 (2024). 
+
+> 55
+
+Y. Horbatenko, S. Sadiq, S. Lee, M. Filatov, and C. H. Choi, “Mixed-reference spin-flip time-dependent density functional theory (mrsf-tddft) as a simple yet accurate method for diradicals and diradicaloids”, Journal of Chemical Theory and Computation 17 , 848–859 (2021). 
+
+> 56
+
+A. C. Wahl and G. Das, “The multiconfiguration self-consistent field method”, in Methods of electronic structure theory , Vol. 3, edited by H. F. Schaefer III, Modern Theoretical Chemistry (Plenum Press, New York, 1977), pp. 51–78. 
+
+> 57
+
+B. O. Roos, P. R. Taylor, and P. E. Sigbahn, “A complete active space scf method (casscf) using a density matrix formulated super-ci approach”, Chemical Physics 48 , 157–173 (1980). 
+
+> 58
+
+J. Olsen, B. O. Roos, P. Jo/rgensen, and H. J. A. Jensen, “Determinant based configuration interaction algorithms for complete and restricted configuration interaction spaces”, The Journal of Chemical Physics 
+
+89 , 2185–2192 (1988). 
+
+> 59
+
+L. Matasovi´ c, H. Bronstein, R. H. Friend, and F. Plasser, “Classification and quantitative characterisation of the excited states of 𝜋 -conjugated diradicals”, Faraday Discussions 254 , 107–129 (2024). 
+
+> 60
+
+A. G. Starikov, M. G. Chegerev, A. A. Starikova, and V. I. Minkin, “Magnetic properties of diradical dihydropyrene derivatives: a computational modeling”, Russian Chemical Bulletin 74 , 2702–2712 (2025). 43 61 N. W. Moriarty, R. Lindh, and G. Karlstr¨ om, “Tetramethylene: a caspt2 study”, Chemical Physics Letters 
+
+289 , 442–450 (1998). 
+
+> 62
+
+W. T. Borden and E. R. Davidson, “The importance of including dynamic electron correlation in ab initio calculations”, Accounts of Chemical Research 29 , 67–75 (1996). 
+
+> 63
+
+W. T. Borden, E. R. Davidson, and D. Feller, “Rhf and two-configuration scf calculations are inappropriate for conjugated diradicals”, Tetrahedron 38 , 737–739 (1982). 
+
+> 64
+
+K. Andersson, P.-˚ A. Malmqvist, and B. O. Roos, “Second-order perturbation theory with a complete active space self-consistent field reference function”, The Journal of Chemical Physics 96 , 1218–1226 (1992). 
+
+> 65
+
+C. Angeli, R. Cimiraglia, and J.-P. Malrieu, “N-electron valence state perturbation theory: a spinless formulation and an efficient implementation of the strongly contracted and of the partially contracted variants”, The Journal of Chemical Physics 117 , 9138–9153 (2002). 
+
+> 66
+
+H. Nakano, R. Uchiyama, and K. Hirao, “Quasi-degenerate perturbation theory with general multicon-figuration self-consistent field reference functions”, Journal of Computational Chemistry 23 , 1166–1175 (2002). 
+
+> 67
+
+B. O. Roos and K. Andersson, “Multiconfigurational perturbation theory with level shift — the cr2 potential revisited”, Chemical Physics Letters 245 , 215–223 (1995). 
+
+> 68
+
+G. Li Manni, R. K. Carlson, S. Luo, D. Ma, J. Olsen, D. G. Truhlar, and L. Gagliardi, “Multiconfiguration pair-density functional theory”, Journal of Chemical Theory and Computation 10 , 3669–3680 (2014). 
+
+> 69
+
+S. J. Stoneburner, D. G. Truhlar, and L. Gagliardi, “Mc-pdft can calculate singlet–triplet splittings of organic diradicals”, The Journal of Chemical Physics 148 , 064108 (2018). 
+
+> 70
+
+R. Pariser and R. G. Parr, “A semi-empirical theory of the electronic spectra and electronic structure of complex unsaturated molecules. i.”, The Journal of Chemical Physics 21 , 466–471 (1953). 
+
+> 71
+
+R. Pariser and R. G. Parr, “A semi-empirical theory of the electronic spectra and electronic structure of complex unsaturated molecules. ii”, The Journal of Chemical Physics 21 , 767–776 (1953). 
+
+> 72
+
+J. A. Pople, “Electron interaction in unsaturated hydrocarbons”, Transactions of the Faraday Society 49 ,1375 (1953). 
+
+> 73
+
+J. A. Pople and D. L. Beveridge, Approximate molecular orbital theory (McGraw-Hill, New York, 1970). 
+
+> 74
+
+J. D. Green and T. J. H. Hele, “Exroppp: fast, accurate, and spin-pure calculation of the electronically excited states of organic hydrocarbon radicals”, The Journal of Chemical Physics 160 , 164110 (2024). 
+
+> 75
+
+D. Maurice and M. Head-Gordon, “On the nature of electronic transitions in radicals: an extended single excitation configuration interaction method”, The Journal of Physical Chemistry 100 , 6131–6137 (1996). 44 76 M. Dubbini, F. Bonvini, L. Savi, and F. Di Maiolo, “Turning on organic radical emitters”, The Journal of Physical Chemistry C 128 , 18158–18169 (2024). 
+
+> 77
+
+L. Savi, M. T. Barreca, M. Bedogni, and F. Di Maiolo, “Organic diradicals bridged by inverted sin-glet–triplet units for optical–spin interfaces”, Journal of Chemical Theory and Computation, 1465–1475 (2025). 
+
+> 78
+
+M. T. Barreca and F. Di Maiolo, “Spin coupling in symmetric and asymmetric allyl and phenalenyl diradicals bridged by an inverted singlet–triplet system”, The Journal of Physical Chemistry A 130 ,2399–2410 (2026). 
+
+> 79
+
+H. C. Longuet-Higgins and J. A. Pople, “The electronic spectra of aromatic molecules iv: excited states of odd alternant hydrocarbon radicals and ions”, Proceedings of the Physical Society. Section A 68 ,591–600 (1955). 
+
+> 80
+
+T. Hele, “On the electronic structure of alternant conjugated organic radicals for light-emitting diode applications”, in Physical chemistry of semiconductor materials and interfaces xx (2021), p. 35. 
+
+> 81
+
+A. Szabo and N. S. Ostlund, Modern quantum chemistry : introduction to advanced electronic structure theory (Dover Publications, Mineola, N.Y, 1989). 
+
+> 82
+
+T. J. H. Hele, E. G. Fuemmeler, S. N. Sanders, E. Kumarasamy, M. Y. Sfeir, L. M. Campos, and N. Ananth, “Anticipating acene-based chromophore spectra with molecular orbital arguments”, The Journal of Physical Chemistry A 123 , 2527–2536 (2019). 
+
+> 83
+
+A. M. Alvertis, S. Lukman, T. J. H. Hele, E. G. Fuemmeler, J. Feng, J. Wu, N. C. Greenham, A. W. Chin, and A. J. Musser, “Switching between coherent and incoherent singlet fission via solvent-induced symmetry breaking”, Journal of the American Chemical Society 141 , 17558–17570 (2019). 
+
+> 84
+
+N. Mataga and K. Nishimoto, “Electronic structure and spectra of nitrogen heterocycles”, Zeitschrift f¨ ur Physikalische Chemie 13 , 140–157 (1957). 
+
+> 85
+
+K. Jug, “Theoretical basis and design of the ppp model hamiltonian”, International Journal of Quantum Chemistry 37 , 403–414 (1990). 
+
+> 86
+
+J. Shen, L. E. Walker, K. Ma, J. D. Green, H. Bronstein, K. T. Butler, and T. J. H. Hele, “Learning radical excited states from sparse data”, Chemical Science 16 , 17356–17368 (2025). 
+
+> 87
+
+T. Helgaker, P. Jorgensen, and J. Olsen, Molecular electronic-structure theory (John Wiley & Sons, Ltd, Chichester, UK, 2000). 
+
+> 88
+
+E. Cho, Q. Sun, E. P. McBride, J.-L. Br´ edas, and V. Coropceanu, “Luminescent radicals based on the tris(trichlorophenyl)methyl acceptor: how to choose the donor component”, ACS Materials Letters 7,1620–1625 (2025). 45 89 I. Shavitt, “The method of configuration interaction”, in Methods of electronic structure theory (Plenum Press, New York, 1977), pp. 189–275. 
+
+> 90
+
+R. B. Lehoucq, D. C. Sorensen, and C. Yang, ARPACK users’ guide: solution of large-scale eigenvalue problems with implicitly restarted Arnoldi methods , Software, Environments, and Tools (Society for Industrial and Applied Mathematics, Philadelphia, PA, 1998). 
+
+> 91
+
+G. Maier, “The cyclobutadiene problem”, Angewandte Chemie International Edition in English 13 , 425– 438 (1974). 
+
+> 92
+
+W. T. Borden, “Can a square or effectively square singlet be the ground state of cyclobutadiene”, Journal of the American Chemical Society 97 , 5968–5970 (1975). 
+
+> 93
+
+E. Monino, M. Boggio-Pasqua, A. Scemama, D. Jacquemin, and P.-F. Loos, “Reference energies for cyclobutadiene: automerization and excited states”, The Journal of Physical Chemistry A 126 , 4664– 4679 (2022). 
+
+> 94
+
+P. G. Wenthold, J. Hu, R. R. Squires, and W. C. Lineberger, “Photoelectron spectroscopy of the trimethylene- methane negative ion. the singlet-triplet splitting of trimethylenemethane”, Journal of the American Chemical Society 118 , 475–476 (1996). 
+
+> 95
+
+L. V. Slipchenko and A. I. Krylov, “Spin-conserving and spin-flipping equation-of-motion coupled-cluster method with triple excitations”, The Journal of Chemical Physics 123 , 084107 (2005). 
+
+> 96
+
+D. A. Hrovat, M. A. Murcko, P. M. Lahti, and W. Thatcher Borden, “The effects of heteroatom sub-stitution on the singlet–triplet energy differences in diradicals—ab initio calculations of ΔEST in meta-benzoquinomethane and in 1, 3-naphthoquinomethane”, Journal of the Chemical Society, Perkin Trans-actions 2, 1037–1044 (1998). 
+
+> 97
+
+T. Wang and A. I. Krylov, “The effect of substituents on electronic states’ ordering in meta-xylylene diradicals: qualitative insights from quantitative studies”, The Journal of Chemical Physics 123 , 104304 (2005). 
+
+> 98
+
+V. LeJeune, A. Despres, and E. Migirdicyan, “Site selection spectroscopy of the non-kekule m-xylylene biradical and its methylated derivatives in shpolskii matrixes”, The Journal of Physical Chemistry 88 ,2719–2722 (1984). 
+
+> 99
+
+P. Neuhaus, D. Grote, and W. Sander, “Matrix isolation, spectroscopic characterization, and photoiso-merization of m-xylylene”, Journal of the American Chemical Society 130 , 2993–3000 (2008). 
+
+> 100
+
+K. W. Haider, E. Migirdicyan, M. S. Platz, N. Soundararajan, and A. Despres, “Recent studies of meta-xylylene and a diaza derivative”, Molecular Crystals and Liquid Crystals Incorporating Nonlinear Optics 
+
+176 , 85–98 (1989). 46 101 E. Migirdicyan and J. Baudet, “Electron spectra of o- and m-xylylenes and their methylated derivatives. experimental and theoretical study”, Journal of the American Chemical Society 97 , 7400–7404 (1975). 
+
+> 102
+
+B. B. Wright and M. S. Platz, “Electron spin resonance spectroscopy of the triplet state of m-xylylene”, Journal of the American Chemical Society 105 , 628–630 (1983). 
+
+> 103
+
+P. G. Wenthold, J. B. Kim, and W. C. Lineberger, “Photoelectron spectroscopy of m-xylylene anion”, Journal of the American Chemical Society 119 , 1354–1359 (1997). 
+
+> 104
+
+B. Bleaney and K. D. Bowers, “Anomalous paramagnetism of copper acetate”, Proceedings of the Royal Society of London. Series A. Mathematical and Physical Sciences 214 , 451–465 (1952). 
+
+> 105
+
+N. Suaud, R. Ruamps, N. Guih´ ery, and J.-P. Malrieu, “A strategy to determine appropriate active or-bitals and accurate magnetic couplings in organic magnetic systems”, Journal of Chemical Theory and Computation 8, 4127–4137 (2012). 
+
+> 106
+
+M. W. Schmidt, K. K. Baldridge, J. A. Boatz, S. T. Elbert, M. S. Gordon, J. H. Jensen, S. Koseki, N. Matsunaga, K. A. Nguyen, S. Su, T. L. Windus, M. Dupuis, and J. A. Montgomery, “General atomic and molecular electronic structure system”, Journal of Computational Chemistry 14 , 1347–1363 (1993). 
+
+> 107
+
+G. M. J. Barca et al., “Recent developments in the general atomic and molecular electronic structure system”, The Journal of Chemical Physics 152 , 154102 (2020). 
+
+> 108
+
+P. C. Reeves, J. Henery, and R. Pettit, “Further experiments pertaining to the ground state of cyclobuta-diene”, Journal of the American Chemical Society 91 , 5888–5890 (1969). 
+
+> 109
+
+F. Neese, “Software update: the ORCA program system—Version 5.0”, WIREs Computational Molecular Science 12 , e1606 (2022). 47 Appendix 
+
+## I - Further Methodological Details 
+
+A - Further derivation of Diradical-Fock Operator 
+
+Here we present the derivation for the diradical Fock-operator but showing that it applies similarly to the description of triplet open-shell states. Once again, the first step is to recognise that any infinitesimal variation in MOs is equivalent to mixing small-amounts of singly-excited states into the reference states. This time, singly excited states have triplet multiplicity and we have an additional core → virtual CSF to be concerned with. 
+
+|3OS ⟩ → | 3OS ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0 |3CS 0 
+
+> 𝑖
+
+⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0′ |3CS 0′ 
+
+> 𝑖
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0𝑝 |3SV 𝑝  
+
+> 0
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0′ 𝑝 |3SV 𝑝  
+
+> 0′
+
+⟩+
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 |3𝑇 CV 𝑝 𝑖 ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 |3𝑆 CV 𝑝 𝑖 ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 |3𝑋 CV 𝑝 𝑖 ⟩
+
+(19) where once again 𝑖 and 𝑝 are indices for doubly-occupied and virtual orbitals respectively, and 𝑘 is the number of doubly occupied (core) spatial orbitals. An infinitesimal change in energy caused by an infinitesimal variation in MOs is thus given by 
+
+𝛿𝐸 =
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0 ⟨3OS | ˆ𝐻 |3CS 0 
+
+> 𝑖
+
+⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+
+𝜆 𝑖 0′ ⟨3OS | ˆ𝐻 |3CS 0′ 
+
+> 𝑖
+
+⟩ + 
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0𝑝 ⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0
+
+⟩+
+
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 0′ 𝑝 ⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0′
+
+⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 ⟨3OS | ˆ𝐻 |3𝑇 CV 𝑝 𝑖 ⟩ + 
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 ⟨3OS | ˆ𝐻 |3𝑆 CV 𝑝 𝑖 ⟩+
+
+> 𝑘
+
+∑︁ 
+
+> 𝑖
+> ∞
+
+∑︁ 
+
+> 𝑝
+
+𝜆 𝑖 𝑝 ⟨3OS | ˆ𝐻 |3𝑋 Ψ𝑝 𝑖 ⟩
+
+(20) By the variational priniciple, the best possible MOs to describe the open-shell triplet state of a diradical molecule are those for which 𝛿𝐸 = 0, which in turn requires that all of the above brakets are equal to 0. Using Slater-Condon rules to evaluate the Hamiltonian interactions between the ground and excited states, we obtain the following expressions for satisfying this requirement: 48 ⟨3OS | ˆ𝐻 |3CS 0 
+
+> 𝑖
+
+⟩ = 𝐹 𝑖 0 + ( 𝑖 0|00 ) + ( 𝑖 0|0′0′) = 0 (21a) 
+
+⟨3OS | ˆ𝐻 |3CS 0′ 
+
+> 𝑖
+
+⟩ = 𝐹 𝑖 0′ + ( 𝑖 0′|0′0′) + ( 𝑖 0′|00 ) = 0 (21b) 
+
+⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0
+
+⟩ = 𝐹 0𝑝 + ( 0𝑝 |00 ) + ( 00 ′|0′ 𝑝 ) = 0 (21c) 
+
+⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0′
+
+⟩ = 𝐹 0′ 𝑝 + ( 0′ 𝑝 |0′0′) + ( 0′0|0𝑝 ) = 0 (21d) 
+
+⟨3OS | ˆ𝐻 |3𝑇 CV 𝑝 𝑖 ⟩ = √2[𝐹 𝑖 𝑝 + ( 𝑖 𝑝 |00 ) − 12 (𝑖 0|0𝑝 ) + ( 𝑖 𝑝 |0′0′) − 12 (𝑖 0′|0′ 𝑝 )] = 0 (21e) 
+
+⟨3OS | ˆ𝐻 |3𝑆 CV 𝑝 𝑖 ⟩ =
+
+√22 [( 𝑖 0|0𝑝 ) − ( 𝑖 0′|0′ 𝑝 )] = 0 (21f) 
+
+⟨3OS | ˆ𝐻 |3𝑋 CV 𝑝 𝑖 ⟩ = (𝑖 0|0𝑝 ) + ( 𝑖 0′|0′ 𝑝 ) = 0 (21g) 
+
+𝐹 𝑖 𝑗 is the conventional Fock-operator as previously. We notice that the expression in Eq. 21e is identical to that of eq 6g - i.e. the coupling between the open-shell triplet and the bright core → virtual triplet CSF is the same as the coupling between the open-shell singlet and the bright core → virtual singlet CSF. As such, in the same way we replace 𝐹 with the diradical Fock-operator 𝐹 d defined in Eq. 8. Once again substituting this same 𝐹 d into equations 21a - 21g yields 
+
+𝐹 d 
+
+> 𝑖 0
+
++ 12 (𝑖 0|00 ) + 12 (𝑖 0′|0′0) = 0 (22a) 
+
+𝐹 d 
+
+> 𝑖 0′
+
++ 12 (𝑖 0′|0′0′) + 12 (𝑖 0|00 ′) = 0 (22b) 
+
+𝐹 d0′ 𝑝 − 12 (0′ 𝑝 |00 ) − 12 (0′0|0𝑝 ) = 0 (22c) 
+
+𝐹 d0𝑝 − 12 (0𝑝 |0′0′) − 12 (00 ′|0′ 𝑝 ) = 0 (22d) 
+
+√2𝐹 d 
+
+> 𝑖 𝑝
+
+= 0 (22e) 
+
+√22 [( 𝑖 0|0𝑝 ) − ( 𝑖 0′|0′ 𝑝 )] = 0 (22f) 
+
+(𝑖 0|0𝑝 ) + ( 𝑖 0′|0′ 𝑝 ) = 0 (22g) We now have a similar scenario where the bright core → virtual transition has a coupling with the open shell ground state given by √2𝐹 d 
+
+> 𝑖 𝑝
+
+= 0. Once again choosing to ignore mixed two electron terms, we find that couplings between the open shell triplet state and all singly excited CSFs can be approximated as 𝐹 d
+
+> 𝑎𝑏
+
+for some MOs a and b. Thus the same SCF procedure of iteratively solving the Roothaan equations with the diradidcal Fock operator yields is found to yield appropriate MOs for representing the open shell triplet state |3OS ⟩
+
+We can now show the equivalence between the use of the diradical Fock operator 𝐹 d with the standard 49 density matrix 𝑃 , and the use of the standard Fock operator 𝐹 with the diradical density matrix 𝑃 d
+
+Where 𝐶 𝜇𝑙 is the coefficient of a doubly-occupied molecular orbital 𝑙 on atom 𝜇 . Orbital 0 refers to the singly occupied molecular orbital. 
+
+𝑃 d is defined as follows: 
+
+𝑃 d 
+
+> 𝜇𝜈
+
+=
+
+> 𝑘
+
+∑︁ 
+
+> 1=1
+
+(2𝐶 ∗
+
+> 𝜇𝑙
+
+𝐶 𝜈𝑙 ) + 𝐶 ∗
+
+> 𝜇 0
+
+𝐶 𝜈 0 + 𝐶 ∗ 
+
+> 𝜇 0′
+
+𝐶 𝜈 0′
+
+Where 𝐶 𝜇𝑙 is the coefficient of a doubly-occupied molecular orbital 𝑙 on atom 𝜇 . Orbitals 0 and 0’ are the two SOMOs as usual. This definition is also equivalent to 
+
+𝑃 d = 𝐶 Λ𝐶 𝑇 
+
+where 𝑃 d and 𝐶 are the diradical density matrix and matrix of MO coefficients respectively, and 
+
+Λ = 
+
+
+
+2 0 0 . . . 0 0 0 0 2 0 . . . 0 0 0 
+
+... ... ... . . . ... ... ...
+
+0 0 0 . . . 2 0 0 0 0 0 . . . 0 1 0 0 0 0 . . . 0 0 1 
+
+
+
+The above definition for the diradical density matrix ( 𝑃 d
+
+> 𝜇𝜈
+
+) can then be substituted into the standard closed-shell form of the Fock operator in the AO basis. As shown below, this yields the same expression as the earlier defined diradical Fock operator ( 𝐹 d
+
+> 𝑝𝑞
+
+). 50 𝐹 d 
+
+> 𝜇𝜈
+
+= ℎ𝜇𝜈 +∑︁ 
+
+> 𝜆𝜎
+
+𝑃 d 
+
+> 𝜆𝜎
+
+[( 𝜇𝜈 |𝜆𝜎 ) − 12 (𝜇𝜎 |𝜆𝜈 )] 
+
+= ℎ𝜇𝜈 +
+
+> 𝑘
+
+∑︁ 
+
+> 1=1
+
+∑︁ 𝜆𝜎 
+
+(2𝐶 ∗
+
+> 𝜆𝑙
+
+𝐶 𝜎𝑙 ) [( 𝜇𝜈 |𝜆𝜎 ) − 12 (𝜇𝜎 |𝜆𝜈 )] + ∑︁ 
+
+> 𝜆𝜎
+
+𝐶 ∗
+
+> 𝜆 0
+
+𝐶 𝜎 0 [( 𝜇𝜈 |𝜆𝜎 ) − 12 (𝜇𝜎 |𝜆𝜈 )] + ∑︁ 
+
+> 𝜆𝜎
+
+𝐶 ∗ 
+
+> 𝜆 0′
+
+𝐶 𝜎 0′ [( 𝜇 
+
+( Simplifying with ∑︁ 
+
+> 𝜆𝜎
+
+𝐶 ∗
+
+> 𝜆𝑖
+
+𝐶 𝜎𝑖 𝜙 ∗ 
+
+> 𝜆
+
+𝜙 𝜎 = 𝜓 ∗ 
+
+> 𝑖
+
+𝜓 𝑖 )
+
+= ℎ𝜇𝜈 +
+
+> 𝑘
+
+∑︁ 
+
+> 𝑙 =1
+
+[2(𝜇𝜈 |𝑙𝑙 ) − ( 𝜇𝑙 |𝑙𝜈 )]] + ( 𝜇𝜈 |00 ) − 12 (𝜇 0|0𝜈 ) + ( 𝜇𝜈 |0′0′) − 12 (𝜇 0′|0′𝜈 )
+
+=⇒ 𝐹 𝜇𝜈 = ℎ𝜇𝜈 +
+
+> 𝑘
+
+∑︁ 
+
+> 𝑙 =1
+
+[2(𝜇𝜈 |𝑙𝑙 ) − ( 𝜇𝑙 |𝑙𝜈 )]] + 12 [2(𝜇𝜈 |00 ) − ( 𝜇 0|0𝜈 )] + 12 [2(𝜇𝜈 |0′0′) − ( 𝜇 0′|0′𝜈 )] 
+
+51 B - Matrix Elements for ˆ𝐻 and ˆ𝜇 
+
+Table A1: FOFEM CSFs obtained from the ˆ 𝑆 2 matrix and their transition dipole moments with the open-shell singlet and triplet CSFs. 
+
+CSF Transition dipole moment 
+
+|5Ψ1′ 
+
+> 1
+
+⟩ = 1√6 (| Ψ ¯1′ ¯0′ 
+
+> ¯1 ¯ 0
+
+⟩ − | Ψ1′ ¯0′ 
+
+> 1 ¯ 0
+
+⟩ + | Ψ ¯0′1′ 
+
+> ¯1 0
+
+⟩ + |Ψ1′0′ 
+
+> 1 0
+
+⟩ + | Ψ0′ ¯1′ 
+
+> 1 ¯ 0
+
+⟩ − | Ψ ¯1′0′ 
+
+> ¯1 0
+
+⟩) ⟨3OS | 𝜇 |5Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+⟨1OS | 𝜇 |5Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+|3Ψ1′ 
+
+> 1
+
+⟩ = 1√2 (| Ψ ¯1′ ¯0′ 
+
+> ¯1 ¯ 0
+
+⟩ − | Ψ1′0′ 
+
+> 1 0
+
+⟩) ⟨3OS | 𝜇 |3Ψ1′ 
+
+> 1
+
+⟩ = 𝜇 1,1′
+
+⟨1OS | 𝜇 |3Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+|3′
+
+Ψ1′ 
+
+> 1
+
+⟩ = 1√2 (| Ψ1′ ¯0′ 
+
+> 1 ¯ 0
+
+⟩ − | Ψ ¯1′0′ 
+
+> ¯1 0
+
+⟩) ⟨3OS | 𝜇 |3′
+
+Ψ1′ 
+
+> 1
+
+⟩ = 𝜇 1,1′
+
+⟨1OS | 𝜇 |3′
+
+Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+|3′′ 
+
+Ψ1′ 
+
+> 1
+
+⟩ = 1√2 (| Ψ ¯0′1′ 
+
+> ¯1 0
+
+⟩ − | Ψ0′ ¯1′ 
+
+> 1 ¯ 0
+
+⟩) ⟨3OS | 𝜇 |3′′ 
+
+Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+⟨1OS | 𝜇 |3′′ 
+
+Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+|1Ψ1′ 
+
+> 1
+
+⟩ = 12 (| Ψ1′ ¯0′ 
+
+> 1 ¯ 0
+
+⟩ + | Ψ ¯0′1′ 
+
+> ¯1 0
+
+⟩ + | Ψ0′ ¯1′ 
+
+> 1 ¯ 0
+
+⟩ + | Ψ ¯1′0′ 
+
+> ¯1 0
+
+⟩) ⟨3OS | 𝜇 |1Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+⟨1OS | 𝜇 |1Ψ1′ 
+
+> 1
+
+⟩ = 1√2 𝜇 1,1′
+
+|1′
+
+Ψ1′ 
+
+> 1
+
+⟩ = 12 (| Ψ ¯1′ ¯0′ 
+
+> ¯1 ¯ 0
+
+⟩ − | Ψ ¯0′1′ 
+
+> ¯1 0
+
+⟩ − | Ψ0′ ¯1′ 
+
+> 1 ¯ 0
+
+⟩ + | Ψ1′0′ 
+
+> 1 0
+
+⟩) ⟨3OS | 𝜇 |1Ψ1′ 
+
+> 1
+
+⟩ = 0
+
+⟨1OS | 𝜇 |1Ψ1′ 
+
+> 1
+
+⟩ = 1√2 𝜇 1,1′
+
+Table A2: Diagonal elements of the XCIS-D matrix, which represent the energies of each CSF. Indices 
+
+𝑖, 𝑗, 𝑘, 𝑙 represent core MOs, while indices 𝑝, 𝑞, 𝑟, 𝑠 represent virtual MOs. Energies are written relative to 
+
+𝐸 0 = Í𝑖 (ℎ𝑖𝑖 + 𝐹 d 
+
+> 𝑖𝑖
+
+) + 12 (ℎ00 + ℎ0′0′ + 𝐹 d00 + 𝐹 d0′0′ ) to allow more convenient comparison. 
+
+Diagonal Matrix Element Expression in terms of 𝐸 0
+
+⟨1OS | ˆ𝐻 |1OS ⟩ 𝐸 0 − 14 (𝐽 00 + 𝐽 0′0′ ) + 32 𝐾 00 ′
+
+⟨1ZW − | ˆ𝐻 |1ZW −⟩ 𝐸 0 + 14 (𝐽 00 + 𝐽 0′0′ ) − 𝐽 00 ′ − 12 𝐾 00 ′
+
+⟨1ZW + | ˆ𝐻 |1ZW +⟩ 𝐸 0 + 14 (𝐽 00 + 𝐽 0′0′ ) − 𝐽 00 ′ + 32 𝐾 00 ′
+
+⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩ 𝐸 0 + 𝐹 d00 − 𝐹 d 
+
+> 𝑖𝑖
+
+− 𝐽 𝑖 0 + 14 (𝐽 00 − 𝐽 0′0′ ) + 32 𝐾 𝑖 0′ + 12 𝐾 𝑖 0
+
+Continued on next page... 
+
+52 Diagonal Matrix Element Expression in terms of 𝐸 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝐻 |1CS 0′
+
+𝑖 ⟩ 𝐸 0 + 𝐹 d0′0′ − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 0′ + 14 (𝐽 0′0′ − 𝐽 00 ) + 32 𝐾 𝑖 0 + 12 𝐾 𝑖 0′
+
+⟨1SV 𝑝 
+
+0 | ˆ𝐻 |1SV 𝑝 
+
+0 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d00 − 𝐽 0𝑝 + 14 (𝐽 00 − 𝐽 0′0′ ) + 12 𝐾 0𝑝 + 32 𝐾 0′ 𝑝 
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝐻 |1SV 𝑝 
+
+0′ ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d0′0′ − 𝐽 0′ 𝑝 + 14 (𝐽 0′0′ − 𝐽 00 ) + 12 𝐾 0′ 𝑝 + 32 𝐾 0𝑝 
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 + 2𝐾 𝑖 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) + 32 𝐾 00 ′
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 + 𝐾 𝑖 0 + 𝐾 𝑖 0′ + 𝐾 0𝑝 + 𝐾 0′ 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) − 12 𝐾 00 ′
+
+⟨1CS 0′ ¯0′
+
+𝑖 ¯𝑖 | ˆ𝐻 |1CS 0′ ¯0′
+
+𝑖 ¯𝑖 ⟩ 𝐸 0 −2𝐹 d
+
+𝑖𝑖 +𝐹 d00 +𝐹 d0′0′ +𝐽 𝑖𝑖 −2𝐽 𝑖 0 +𝐾 𝑖 0 −2𝐽 𝑖 0′ +𝐾 𝑖 0′ +𝐽 00 ′ − 12 𝐾 00 ′ + 14 (𝐽 00 +𝐽 0′0′ )⟨1𝑆 CS 0′ ¯0′
+
+𝑖 ¯𝑘 | ˆ𝐻 |1𝑆 CS 0′ ¯0′
+
+𝑖 ¯𝑘 ⟩ 𝐸 0 − 𝐹 d
+
+𝑖𝑖 − 𝐹 d
+
+𝑘 𝑘 + 𝐹 d00 + 𝐹 d0′0′ + 𝐽 𝑖𝑘 + 𝐾 𝑖𝑘 − 𝐽 𝑖 0 − 𝐽 𝑖 0′ − 𝐽 𝑘 0 − 𝐽 𝑘 0′ + 12 (𝐾 𝑖 0 +
+
+𝐾 𝑖 0′ + 𝐾 𝑘 0 + 𝐾 𝑘 0′ ) + 14 (𝐽 00 + 𝐽 0′0′ ) + 𝐽 00 ′ − 12 𝐾 00 ′
+
+⟨1SV 𝑝 ¯𝑝 
+
+0¯ 0 | ˆ𝐻 |1SV 𝑝 ¯𝑝 
+
+0¯ 0 ⟩ 𝐸 0 + 2𝐹 d
+
+𝑝 𝑝 − 𝐹 d00 − 𝐹 d0′0′ + 𝐽 𝑝 𝑝 − 2𝐽 0𝑝 + 𝐾 0𝑝 − 2𝐽 0′ 𝑝 + 𝐾 0′ 𝑝 + 14 (𝐽 00 + 𝐽 0′0′ ) + 
+
+𝐽 00 ′ − 12 𝐾 00 ′
+
+⟨1SV 𝑝 ¯𝑞 
+
+0¯ 0 | ˆ𝐻 |1SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 + 𝐹 d
+
+𝑞𝑞 − 𝐹 d00 − 𝐹 d0′0′ + 𝐽 𝑝𝑞 + 𝐾 𝑝𝑞 − 𝐽 0𝑝 − 𝐽 0′ 𝑝 − 𝐽 0𝑞 − 𝐽 0′𝑞 + 12 (𝐾 0𝑝 +
+
+𝐾 0′ 𝑝 + 𝐾 0𝑞 + 𝐾 0′𝑞 ) + 14 (𝐽 00 + 𝐽 0′0′ ) + 𝐽 00 ′ − 12 𝐾 00 ′
+
+⟨3CS 0′
+
+𝑖 | ˆ𝐻 |3CS 0′
+
+𝑖 ⟩ 𝐸 0 + 𝐹 d0′0′ − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 0′ + 14 (𝐽 0′0′ − 𝐽 00 ) − 12 𝐾 𝑖 0 + 12 𝐾 𝑖 0′
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝐻 |3SV 𝑝 
+
+0′ ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d0′0′ − 𝐽 0′ 𝑝 + 14 (𝐽 0′0′ − 𝐽 00 ) + 12 𝐾 0′ 𝑝 − 12 𝐾 0𝑝 
+
+⟨3SV 𝑝 
+
+0 | ˆ𝐻 |3SV 𝑝 
+
+0 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d00 − 𝐽 0𝑝 + 14 (𝐽 00 − 𝐽 0′0′ ) + 12 𝐾 0𝑝 − 12 𝐾 0′ 𝑝 
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3𝑇 CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 + 2𝐾 𝑖 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) − 12 𝐾 00 ′
+
+⟨3𝑆 CV 𝑝 𝑖 | ˆ𝐻 |3𝑆 CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) + 32 𝐾 00 ′
+
+⟨3𝑋 CV 𝑝 𝑖 | ˆ𝐻 |3𝑋 CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) + 12 (𝐾 𝑖 0 + 𝐾 𝑖 0′ + 𝐾 0𝑝 + 𝐾 0′ 𝑝 ) − 12 𝐾 00 ′
+
+⟨3CS 0′ ¯0′
+
+𝑖 ¯𝑗 | ˆ𝐻 |3CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 𝐸 0 − 𝐹 d
+
+𝑖𝑖 − 𝐹 d
+
+𝑗 𝑗 + 𝐹 d00 + 𝐹 d0′0′ + 𝐽 𝑖 𝑗 − 𝐽 𝑖 0 − 𝐽 𝑖 0′ − 𝐽 𝑗 0 − 𝐽 𝑗 0′ + 12 (𝐾 𝑖 0 + 𝐾 𝑖 0′ +
+
+𝐾 𝑗 0 + 𝐾 𝑗 0′ ) + 14 (𝐽 00 + 𝐽 0′0′ ) + 𝐽 00 ′ − 12 𝐾 00 ′ − 𝐾 𝑖 𝑗 
+
+⟨3SV 𝑝 ¯𝑞 
+
+0¯ 0 | ˆ𝐻 |3SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 + 𝐹 d
+
+𝑞𝑞 − 𝐹 d00 − 𝐹 d0′0′ + 𝐽 𝑝𝑞 − 𝐾 𝑝𝑞 − 𝐽 𝑝 0 − 𝐽 𝑝 0′ − 𝐽 𝑞 0 − 𝐽 𝑞 0′ + 12 (𝐾 𝑝 0 +
+
+𝐾 𝑝 0′ + 𝐾 𝑞 0 + 𝐾 𝑞 0′ ) + 14 (𝐽 00 + 𝐽 0′0′ ) + 𝐽 00 ′ − 12 𝐾 00 ′
+
+⟨5CV 𝑝 𝑖 | ˆ𝐻 |5CV 𝑝 𝑖 ⟩ 𝐸 0 + 𝐹 d
+
+𝑝 𝑝 − 𝐹 d
+
+𝑖𝑖 − 𝐽 𝑖 𝑝 − 14 (𝐽 00 + 𝐽 0′0′ ) − 12 (𝐾 𝑖 0 + 𝐾 𝑖 0′ + 𝐾 0𝑝 + 𝐾 0′ 𝑝 ) − 12 𝐾 00 ′
+
+53 Table A3: Off-diagonal elements of the singlet block of the XCIS-D matrix, which represent the energetic coupling between each CSF. Indices 𝑖, 𝑗, 𝑘, 𝑙 represent core MOs, while indices 𝑝, 𝑞, 𝑟, 𝑠 represent virtual MOs. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. Note that the XCIS-D matrix is symmetric meaning only the upper diagonal elements are shown. 
+
+Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d and two electron integrals 
+
+⟨1OS | ˆ𝐻 |1ZW −⟩ (00 ′|00 ) − ( 00 ′|0′0′)⟨1OS | ˆ𝐻 |1ZW +⟩ 2𝐹 d00 ′
+
+⟨1OS | ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩ −𝐹 d 
+
+> 𝑖 0
+
++ 32 (𝑖 0′|0′0) − 12 (𝑖 0|00 )⟨1OS | ˆ𝐻 |1CS 0′ 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0′
+
++ 12 (𝑖 0′|0′0′) − 32 (𝑖 0|00 ′)⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ 𝐹 d0𝑝 + 32 ( 𝑝 0′|0′0) − 12 ( 𝑝 0|00 )] ⟨1OS | ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ −𝐹 d0′ 𝑝 + 12 ( 𝑝 0′|0′0′) − 32 ( 𝑝 0|00 ′)⟨1OS | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ √2𝐹 d
+
+> 𝑖 𝑝
+
+⟨1OS | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩ 
+
+> √3√2
+
+[( 𝑖 0′|0′ 𝑝 ) − ( 𝑖 0|0𝑝 )] ⟨1OS | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ −√2(𝑖 0|0′𝑖 )⟨1OS | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ −( 𝑖 0|0′ 𝑗 ) − ( 𝑖 0′|0 𝑗 )⟨1OS | ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ √2( 𝑝 0|0′ 𝑝 )⟨1OS | ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ ( 𝑝 0|0′𝑞 ) + ( 𝑝 0′|0𝑞 )⟨1ZW − | ˆ𝐻 |1ZW +⟩ 𝐹 d00 − 𝐹 d0′0′
+
+⟨1ZW − | ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′|00 ) + 12 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′)⟨1ZW − | ˆ𝐻 |1CS 0′ 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0
+
++ ( 𝑖 0|0′0′) + 12 (𝑖 0′|0′0) − 12 (𝑖 0|00 )⟨1ZW − | ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ −𝐹 d0′ 𝑝 + ( 0′ 𝑝 |00 ) + 12 (0′0|0𝑝 ) − 12 (0′ 𝑝 |0′0′)⟨1ZW − | ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ −𝐹 d0𝑝 + ( 0𝑝 |0′0′) + 12 (00 ′|0′ 𝑝 ) − 12 (0𝑝 |00 )⟨1ZW − | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ 1√2 [( 𝑖 0|0′ 𝑝 ) − ( 𝑖 0′|0𝑝 )] ⟨1ZW − | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩ 
+
+> √3√2
+
+[( 𝑖 0|0′ 𝑝 ) + ( 𝑖 0′|0𝑝 )] ⟨1ZW − | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 1√2 [( 𝑖 0′|0′𝑖 ) − ( 𝑖 0|0𝑖 )] ⟨1ZW − | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ (𝑖 0′|0′ 𝑗 ) − ( 𝑖 0|0 𝑗 )⟨1ZW − | ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 1√2 [( 𝑝 0|0𝑝 ) − ( 𝑝 0′|0′ 𝑝 )] ⟨1ZW − | ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ ( 𝑝 0|0𝑞 ) − ( 𝑝 0′|0′𝑞 )
+
+Continued on next page... 
+
+54 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d and/or two electron integrals 
+
+⟨1ZW + | ˆ𝐻 |1CS 0 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′|00 ) − 32 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′)⟨1ZW + | ˆ𝐻 |1CS 0′ 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0
+
++ 32 (𝑖 0′|0′0) + 12 (𝑖 0|00 ) − ( 𝑖 0|0′0′)⟨1ZW + | ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ 𝐹 d0′ 𝑝 + 12 (0′ 𝑝 |0′0′) + 32 (0′0|0𝑝 ) − ( 0′ 𝑝 |00 )⟨1ZW + | ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ −𝐹 d0𝑝 + ( 0𝑝 |0′0′) − 12 (0𝑝 |00 ) − 32 (00 ′|0′ 𝑝 )⟨1ZW + | ˆ𝐻 |1𝑆 CV 𝑝 𝑖 ⟩ 1√2 [4(𝑖 𝑗 |00 ′) − ( 𝑖 0|0′ 𝑗 ) − ( 𝑖 0′|0 𝑗 )] ⟨1ZW + | ˆ𝐻 |1𝑇 CV 𝑝 𝑖 ⟩ 
+
+> √3√2
+
+[( 𝑖 0′|0𝑖 ) − ( 𝑖 0|0′ 𝑗 )] ⟨1ZW + | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 1√2 [( 𝑖 0′|0′𝑖 ) + ( 𝑖 0|0𝑖 )] ⟨1ZW + | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ (𝑖 0′|0′ 𝑗 ) + ( 𝑖 0|0 𝑗 )⟨1ZW + | ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 1√2 [( 𝑝 0|0𝑝 ) + ( 𝑝 0′|0′ 𝑝 )] ⟨1ZW + | ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ ( 𝑝 0|0𝑞 ) + ( 𝑝 0′|0′𝑞 )⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝐸 1CS-0 − ( 1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 |00 ) − 12 (𝑖 0|0 𝑗 ) − 32 (𝑖 0′|0′ 𝑗 )] ⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 [𝐹 d00 ′ − ( 00 ′|𝑖𝑖 ) − ( 0𝑖 |𝑖 0′) + 12 (00 ′|00 ) + 12 (00 ′|0′0′)] − ( 1 − 𝛿 𝑖 𝑗 ) [( 𝑖 𝑗 |00 ′) + (𝑖 0|0′ 𝑗 )] ⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ −( 𝑖 0|0𝑝 )⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ (𝑖 0|0′ 𝑝 ) − 2(𝑖 0′|0𝑝 )⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1𝑆 CV 𝑝 𝑗 ⟩ − 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0𝑝 − ( 0𝑝 |𝑖𝑖 ) − 32 (00 ′|0′ 𝑝 ) + 12 (00 |0𝑝 ) + 2(0𝑖 |𝑖 𝑝 )] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑖 𝑗 ) [( 0𝑝 |𝑖 𝑗 ) − 2(0 𝑗 |𝑖 𝑝 )] ⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1𝑇 CV 𝑝 𝑗 ⟩ 
+
+> √3√2
+
+𝛿 𝑖 𝑗 [𝐹 d0𝑝 − ( 0𝑝 |𝑖𝑖 ) + 12 (0𝑝 |00 ) + 12 (00 ′|0′ 𝑝 )] −  
+
+> √3√2
+
+(1 − 𝛿 𝑖 𝑗 )( 0𝑝 |𝑖 𝑗 )⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑗
+
+⟩ √2𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑖 0′
+
+− ( 𝑖 0′|𝑖𝑖 ) + ( 𝑖 0′|00 ) − 12 (𝑖 0|00 ′) + 12 (𝑖 0′|0′0′)] − ( 1 − 𝛿 𝑖 𝑗 ) [( 𝑗 0′|𝑖 𝑗 )] ⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩
+
+𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑘 0′
+
+− ( 𝑘 0′|𝑖𝑖 ) − ( 𝑘𝑖 |𝑖 0′) + ( 𝑘 0′|00 ) − 12 (𝑘 0|00 ′) + 12 (𝑘 0′|0′0′)] + 𝛿 𝑖𝑘 [𝐹 d 
+
+> 𝑗 0′
+
+−( 𝑗 0′|𝑖𝑖 ) − ( 𝑗𝑖 |𝑖 0′) + ( 𝑗 0′|00 ) − 12 ( 𝑗 0|00 ′) + 12 ( 𝑗 0′|0′0′)] − ( 1 − 𝛿 𝑖 𝑗 )( 1 −
+
+𝛿 𝑖𝑘 ) [( 𝑗 0′|𝑖𝑘 ) + ( 𝑘 0′|𝑖 𝑗 )] ⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝐸 1CS-0’ − ( 1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 |0′0′) − 12 (𝑖 0′|0′ 𝑗 ) − 32 (𝑖 0|0 𝑗 )] ⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝  
+
+> 0
+
+⟩ (𝑖 0′|0𝑝 ) − 2(𝑖 0|0′ 𝑝 )⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝  
+
+> 0′
+
+⟩ −( 𝑖 0′|0′ 𝑝 )
+
+Continued on next page... 
+
+55 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d and/or two electron integrals 
+
+⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1𝑆 CV 𝑝 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0′ 𝑝 − ( 0′ 𝑝 |𝑖𝑖 ) − 32 (0′0|0𝑝 ) + 12 (0′0′|0′ 𝑝 ) + 2(0′𝑖 |𝑖 𝑝 )] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑖 𝑗 ) [ 2(0′ 𝑗 |𝑖 𝑝 ) − ( 0′ 𝑝 |𝑖 𝑗 )] ⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1𝑇 CV 𝑝 𝑗 ⟩ 
+
+> √3√2
+
+𝛿 𝑖 𝑗 [𝐹 d0′ 𝑝 − ( 0′ 𝑝 |𝑖𝑖 ) + 12 (0′0′|0′ 𝑝 ) + 12 (0′0|0𝑝 )] −  
+
+> √3√2
+
+(1 − 𝛿 𝑖 𝑗 )( 0′ 𝑝 |𝑖 𝑗 )⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑗
+
+⟩ −√2𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑖 0
+
+− ( 𝑖 0|𝑖𝑖 ) + ( 𝑖 0|0′0′) − 12 (𝑖 0′|0′0) + 12 (𝑖 0|00 )] + ( 1 − 𝛿 𝑖𝑘 ) [( 𝑗 0|𝑖 𝑗 )] ⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩−𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑘 0
+
+− ( 𝑘 0|𝑖𝑖 ) − ( 𝑘𝑖 |𝑖 0) + ( 𝑘 0|0′0′) − 12 (𝑘 0′|0′0) + 12 (𝑘 0|00 )] − 𝛿 𝑖𝑘 [𝐹 d 
+
+> 𝑗 0
+
+−( 𝑗 0|𝑖𝑖 ) − ( 𝑗𝑖 |𝑖 0) + ( 𝑗 0|0′0′) − 12 ( 𝑗 0′|0′0) + 12 ( 𝑗 0|00 )] + ( 1 − 𝛿 𝑖 𝑗 )( 1 −
+
+𝛿 𝑖𝑘 ) [( 𝑗 0|𝑖𝑘 ) + ( 𝑘 0|𝑖 𝑗 )] ⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1SV 𝑞  
+
+> 0
+
+⟩ 𝛿 𝑝𝑞 𝐸 1SV-0 + ( 1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |00 ) + 12 ( 𝑝 0|0𝑞 ) + 32 ( 𝑝 0′|0′𝑞 )] ⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1SV 𝑞  
+
+> 0′
+
+⟩ −𝛿 𝑝𝑞 [𝐹 d00 ′ + ( 00 ′| 𝑝 𝑝 ) + ( 0𝑝 | 𝑝 0′) − 12 (00 ′|00 ) − 12 (00 ′|0′0′)] − ( 1 −
+
+𝛿 𝑝𝑞 ) [( 𝑝𝑞 |00 ′) + ( 𝑝 0′|0𝑞 )] ⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1𝑆 CV 𝑞 𝑖 ⟩ − 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0
+
++ ( 𝑖 0| 𝑝 𝑝 ) + 32 (𝑖 0′|0′0) − 12 (𝑖 0|00 ) − 2(𝑖 𝑝 | 𝑝 0)] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑝𝑞 ) [ 2(𝑖 𝑝 |𝑞 0) − ( 𝑖 0| 𝑝𝑞 )] ⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1𝑇 CV 𝑞 𝑖 ⟩ − 
+
+> √3√2
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0
+
+− 12 (𝑖 0′|0′0) − 12 (𝑖 0|00 ) + ( 𝑖 0| 𝑝 𝑝 )] −  
+
+> √3√2
+
+(1 − 𝛿 𝑝𝑞 )( 𝑖 0| 𝑝𝑞 )⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 0
+
+⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩√2𝛿 𝑝𝑞 [𝐹 d0′ 𝑝 + ( 0′ 𝑝 | 𝑝 𝑝 ) − ( 0′ 𝑝 |00 ) + 12 (0′0|0𝑝 ) − 12 (0′ 𝑝 |0′0′)] + √2(1 −
+
+𝛿 𝑝𝑞 )( 0′ 𝑝 | 𝑝𝑞 )⟨1SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |1SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩
+
+𝛿 𝑝𝑞 [𝐹 d0′𝑟 + ( 0′𝑟 |𝑞𝑞 ) + ( 0′𝑞 |𝑞𝑟 ) − 12 (0′𝑟 |0′0′) − ( 0′𝑟 |00 ) + 12 (0′0|0𝑟 )] + 
+
+𝛿 𝑝𝑟 [𝐹 0′𝑞 + ( 0′𝑞 |𝑟𝑟 ) + ( 0′𝑟 |𝑟𝑞 ) − 12 (0′𝑞 |0′0′) − ( 0′𝑞 |00 ) + 12 (0′0|0𝑞 )] + ( 1 −
+
+𝛿 𝑝𝑞 )( 1 − 𝛿 𝑝𝑟 ) [( 0′𝑞 |𝑟 𝑝 ) + ( 0′𝑟 |𝑞 𝑝 )] ⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1SV 𝑞  
+
+> 0′
+
+⟩ 𝛿 𝑝𝑞 𝐸 1SV-0’ + ( 1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |0′0′) + 32 ( 𝑝 0|0𝑞 ) + 12 ( 𝑝 0′|0′𝑞 )] ⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1𝑆 CV 𝑞 𝑖 ⟩ 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′| 𝑝 𝑝 ) − 2(𝑖 𝑝 | 𝑝 0′) + 32 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′)] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑝𝑞 ) [( 𝑖 0′| 𝑝𝑞 ) − 2(𝑖 𝑝 |𝑞 0′)] ⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1𝑇 CV 𝑞 𝑖 ⟩ − 
+
+> √3√2
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0′
+
+− 12 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′) + ( 𝑖 0′| 𝑝 𝑝 )] −  
+
+> √3√2
+
+(1 − 𝛿 𝑝𝑞 )( 𝑖 0′| 𝑝𝑞 )⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 0
+
+⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+Continued on next page... 
+
+56 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d and/or two electron integrals 
+
+⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩ −√2𝛿 𝑝𝑞 [𝐹 d0𝑝 + ( 0𝑝 | 𝑝 𝑝 ) − ( 0𝑝 |0′0′) + 12 (00 ′|0′ 𝑝 ) − 12 (0𝑝 |00 )] − √2(1 −
+
+𝛿 𝑝𝑞 )( 0𝑝 | 𝑝𝑞 )⟨1SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩−𝛿 𝑝𝑞 [𝐹 d0𝑟 +( 0𝑟 |𝑞𝑞 )+( 0𝑞 |𝑞𝑟 )− 12 (0𝑟 |00 )−( 0𝑟 |0′0′)+ 12 (00 ′|0′𝑟 )]− 𝛿 𝑝𝑟 [𝐹 d0𝑞 +(0𝑞 |𝑟𝑟 ) + ( 0𝑟 |𝑟𝑞 ) − 12 (0𝑞 |00 ) − ( 0𝑞 |0′0′) + 12 (00 ′|0′𝑞 )] − ( 1 − 𝛿 𝑝𝑞 )( 1 −
+
+𝛿 𝑝𝑟 ) [( 0𝑞 |𝑟 𝑝 ) + ( 0𝑟 |𝑞 𝑝 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1𝑆 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 CV-1S − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 | 𝑝 𝑝 ) − 2(𝑖 𝑝 | 𝑝 𝑗 )] + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑗𝑙
+
+−( 𝑝𝑞 |𝑖𝑖 ) + ( 𝑝𝑖 |𝑖𝑞 )] + ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 ) [ 2(𝑖 𝑝 |𝑞 𝑗 ) − ( 𝑖 𝑗 | 𝑝𝑞 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1𝑇 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞  
+
+> √32
+
+[( 𝑖 0|0𝑖 )−( 𝑖 0′|0′𝑖 )+( 𝑝 0′|0′ 𝑝 )−( 𝑝 0|0𝑝 )]+ 𝛿 𝑝𝑞 (1−𝛿 𝑖 𝑗 ) 
+
+> √32
+
+[( 𝑖 0|0 𝑗 )− (𝑖 0′|0′ 𝑗 )] + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) 
+
+> √32
+
+[( 𝑝 0′|0′𝑞 ) − ( 𝑝 0|0𝑞 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑗
+
+⟩ −𝛿 𝑖 𝑗 [( 𝑖 0′|0𝑝 ) + ( 𝑖 0|0′ 𝑝 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ − 
+
+> √22
+
+𝛿 𝑖 𝑗 [( 𝑘 0|0′ 𝑝 ) + ( 𝑘 0′|0𝑝 )] −  
+
+> √22
+
+𝛿 𝑖𝑘 [( 𝑗 0|0′ 𝑝 ) + ( 𝑗 0′|0𝑝 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩ −𝛿 𝑝𝑞 [( 𝑖 0′|0𝑝 ) + ( 𝑖 0|0′ 𝑝 )] ⟨1𝑆 CV 𝑝 𝑖 | ˆ𝐻 |1SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ − 1√2 𝛿 𝑝𝑞 [( 𝑖 0|0′𝑟 ) + ( 𝑖 0′|0𝑟 )] − 1√2 𝛿 𝑝𝑟 [( 𝑖 0|0′𝑞 ) + ( 𝑖 0′|0𝑞 )] ⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1𝑇 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 CV-1T − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
+− ( 𝑖 0|0 𝑗 ) − ( 𝑖 0′|0′ 𝑗 ) + ( 𝑖 𝑗 | 𝑝 𝑝 )] + 𝛿 𝑖 𝑗 (1 −
+
+𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |𝑖𝑖 ) + ( 𝑝 0|0𝑞 ) + ( 𝑝 0′|0′𝑞 )] − ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 )( 𝑖 𝑗 | 𝑝𝑞 )⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑗
+
+⟩ √3𝛿 𝑖 𝑗 [( 𝑖 0′|0𝑝 ) − ( 𝑖 0|0′ 𝑝 )] ⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 
+
+> √3√2
+
+𝛿 𝑖 𝑗 [( 𝑘 0′|0𝑝 ) − ( 𝑘 0|0′ 𝑝 )] +  
+
+> √3√2
+
+𝛿 𝑖𝑘 [( 𝑗 0′|0𝑝 ) − ( 𝑗 0|0′ 𝑝 )] ⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩ √3𝛿 𝑝𝑞 [( 𝑖 0′|0𝑝 ) − ( 𝑖 0|0′ 𝑝 )] ⟨1𝑇 CV 𝑝 𝑖 | ˆ𝐻 |1SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 
+
+> √3√2
+
+𝛿 𝑝𝑞 [( 𝑖 0′|0𝑟 ) − ( 𝑖 0′|0𝑟 )] +  
+
+> √3√2
+
+𝛿 𝑝𝑟 [( 𝑖 0′|0𝑞 ) − ( 𝑖 0|0′𝑞 )] ⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝐸 1CSD + ( 1 − 𝛿 𝑖 𝑗 )𝐾 𝑖 𝑗 
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩−√2𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑖𝑘
+
+− ( 𝑖𝑘 |𝑖𝑖 ) + ( 𝑖𝑘 |00 ) − 12 (𝑖 0|0𝑘 ) + ( 𝑖𝑘 |0′0′) − 12 (𝑖 0′|0′𝑘 )] − √2𝛿 𝑖𝑘 [𝐹 d 
+
+> 𝑗 𝑘
+
+− ( 𝑗 𝑘 | 𝑗 𝑗 ) + ( 𝑗 𝑘 |00 ) − 12 ( 𝑗 0|0𝑘 ) + ( 𝑗 𝑘 |0′0′) − 12 ( 𝑗 0′|0′𝑘 )] + √2(1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑖𝑘 ) [( 𝑖 𝑗 |𝑘𝑖 )] ⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝐻 |1CS 0′ ¯0′  
+
+> 𝑘 ¯𝑙
+
+⟩
+
+𝛿 𝑖𝑘 𝛿 𝑗𝑙 [𝐸 1DCS ] − 𝛿 𝑖𝑘 (1 − 𝛿 𝑗𝑙 ) [ 𝐹 d 
+
+> 𝑗𝑛
+
+− ( 𝑗𝑙 |𝑖𝑖 ) − ( 𝑗𝑖 |𝑖𝑙 ) + ( 𝑗𝑙 |00 ) − 12 ( 𝑗 0|0𝑙 ) + ( 𝑗𝑙 |0′0′) − 12 ( 𝑗 0′|0′𝑙 )] − 𝛿 𝑗𝑙 (1 − 𝛿 𝑖𝑘 ) [ 𝐹 d 
+
+> 𝑖𝑘
+
+− ( 𝑖𝑘 | 𝑗 𝑗 ) − ( 𝑖 𝑗 | 𝑗 𝑘 ) + ( 𝑖𝑘 |00 ) −  
+
+> 12
+
+(𝑖 0|0𝑘 ) + ( 𝑖𝑘 |0′0′) − 12 (𝑖 0′|0′𝑘 ) + ( 1 − 𝛿 𝑖𝑘 )( 1 − 𝛿 𝑗𝑙 ) [( 𝑖𝑘 | 𝑗𝑙 ) + ( 𝑖𝑙 | 𝑗 𝑘 )] 
+
+Continued on next page... 
+
+57 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d and/or two electron integrals 
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝐻 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+| ˆ𝐻 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 𝛿 𝑝𝑞 𝐸 1SVD + ( 1 − 𝛿 𝑝𝑞 )𝐾 𝑝𝑞 
+
+⟨1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+| ˆ𝐻 |1SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩√2𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑝𝑟
+
++ ( 𝑝𝑟 | 𝑝 𝑝 ) − ( 𝑝𝑟 |00 ) + 12 ( 𝑝 0|0𝑟 ) − ( 𝑝𝑟 |0′0′) + 12 ( 𝑝 0′|0′𝑟 )] + √2𝛿 𝑝𝑟 [𝐹 d 
+
+> 𝑝𝑞
+
++ ( 𝑝𝑞 | 𝑝 𝑝 ) − ( 𝑝𝑞 |00 ) + 12 ( 𝑝 0|0𝑞 ) − ( 𝑝𝑞 |0′0′) + 12 ( 𝑝 0′|0′𝑞 )] + √2(1 − 𝛿 𝑝𝑞 )( 1 − 𝛿 𝑙 𝑝 ) [( 𝑝𝑞 |𝑟 𝑝 )] ⟨1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+| ˆ𝐻 |1SV 𝑟 ¯𝑠 
+
+> 0¯ 0
+
+⟩
+
+𝛿 𝑟 𝑝 𝛿 𝑠𝑞 𝐸 1DSV + 𝛿 𝑟 𝑝 (1 − 𝛿 𝑠𝑞 ) [ 𝐹 d 
+
+> 𝑠𝑞
+
++ ( 𝑠𝑞 |𝑟𝑟 ) + ( 𝑠𝑟 |𝑟𝑞 ) − ( 𝑠𝑞 |00 ) + 12 (𝑠 0|0𝑞 ) − (𝑠𝑞 |0′0′) + 12 (𝑠 0′|0′𝑞 )] + 𝛿 𝑠𝑞 (1 − 𝛿 𝑟 𝑝 ) [ 𝐹 d 
+
+> 𝑟 𝑝
+
++ ( 𝑟 𝑝 |𝑠𝑠 ) + ( 𝑟𝑠 |𝑠𝑝 ) − ( 𝑟 𝑝 |00 ) +  
+
+> 12
+
+(𝑟 0|0𝑝 ) − ( 𝑟 𝑝 |0′0′) + 12 (𝑟 0′|0′ 𝑝 )] + ( 1 − 𝛿 𝑟 𝑝 )( 1 − 𝛿 𝑠𝑞 ) [( 𝑟 𝑝 |𝑠𝑞 ) + ( 𝑟𝑞 |𝑠𝑝 )] 
+
+Table A4: Off-diagonal elements of the triplet block of the XCIS-D matrix, which represent the energetic coupling between each CSF. Indices 𝑖, 𝑗, 𝑘, 𝑙 represent core MOs, while indices 𝑝, 𝑞, 𝑟, 𝑠 represent virtual MOs. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. Note that the XCIS-D matrix is symmetric meaning only the upper diagonal elements are shown. 
+
+Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3OS | ˆ𝐻 |3CS 0 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0
+
++ 12 (𝑖 0|00 ) + 12 (𝑖 0′|0′0)⟨3OS | ˆ𝐻 |3CS 0′ 
+
+> 𝑖
+
+⟩ 𝐹 d 
+
+> 𝑖 0′
+
++ 12 (𝑖 0′|0′0′) + 12 (𝑖 0|00 ′)⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0
+
+⟩ 𝐹 d0𝑝 − 12 (0𝑝 |00 ) − 12 (00 ′|0′ 𝑝 )⟨3OS | ˆ𝐻 |3SV 𝑝  
+
+> 0′
+
+⟩ −𝐹 d0′ 𝑝 + 12 (0′ 𝑝 |0′0′) + 12 (0′0|0𝑝 )⟨3OS | ˆ𝐻 |3𝑇 CV 𝑝 𝑖 ⟩ √2𝐹 d
+
+> 𝑖 𝑝
+
+⟨3OS | ˆ𝐻 |3𝑆 CV 𝑝 𝑖 ⟩ 
+
+> √22
+
+[( 𝑖 0|0𝑝 ) − ( 𝑖 0′|0′ 𝑝 )] ⟨3OS | ˆ𝐻 |3𝑋 CV 𝑝 𝑖 ⟩ (𝑖 0|0𝑝 ) + ( 𝑖 0′|0′ 𝑝 )⟨3OS | ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ (𝑖 0|0′ 𝑗 ) − ( 𝑖 0′|0 𝑗 )⟨3OS | ˆ𝐻 |3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ ( 𝑝 0|0′𝑞 ) − ( 𝑝 0′|0𝑞 )⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3CS 0 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝐸 3CS-0 − ( 1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 |00 ) − 12 (𝑖 0|0 𝑗 ) + 12 (𝑖 0′|0′ 𝑗 )] ⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3CS 0′ 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 [𝐹 d00 ′ − ( 00 ′|𝑖𝑖 ) + ( 0𝑖 |𝑖 0′) + 12 (00 ′|00 ) + 12 (00 ′|0′0′)] + ( 1 − 𝛿 𝑖 𝑗 ) [( 𝑖 0|0′ 𝑗 ) − (𝑖 𝑗 |00 ′)] 
+
+Continued on next page... 
+
+58 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝  
+
+> 0
+
+⟩ (𝑖 0|0𝑝 )⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝  
+
+> 0′
+
+⟩ −( 𝑖 0|0′ 𝑝 )⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑇 CV 𝑝 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0𝑝 − ( 0𝑝 |𝑖𝑖 ) + 12 (0𝑝 |00 ) + 12 (00 ′|0′ 𝑝 ) + 2(0𝑖 |𝑖 𝑝 )] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑖 𝑗 ) [ 2(0 𝑗 |𝑖 𝑝 ) − ( 0𝑝 |𝑖 𝑗 )] ⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑆 CV 𝑝 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0𝑝 − ( 0𝑝 |𝑖𝑖 ) + 12 (0𝑝 |00 ) − 32 (00 ′|0′ 𝑝 )] −  
+
+> √22
+
+(1 − 𝛿 𝑖 𝑗 ) [( 0𝑝 |𝑖 𝑗 )] ⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑋 CV 𝑝 𝑗 ⟩ 𝛿 𝑖 𝑗 [𝐹 d0𝑝 − ( 0𝑝 |𝑖𝑖 ) + 12 (0𝑝 |00 ) + 12 (00 ′|0′ 𝑝 )] − ( 1 − 𝛿 𝑖 𝑗 ) [( 0𝑝 |𝑖 𝑗 )] ⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩
+
+𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑘 0′
+
+− ( 𝑘 0′|𝑖𝑖 ) + ( 𝑘𝑖 |𝑖 0′) + ( 𝑘 0′|00 ) − 12 (𝑘 0|00 ′) + 12 (𝑘 0′|0′0′)] − 𝛿 𝑖𝑘 [𝐹 d 
+
+> 𝑗 0′
+
+−( 𝑗 0′|𝑖𝑖 ) + ( 𝑗𝑖 |𝑖 0′) + ( 𝑗 0′|00 ) − 12 ( 𝑗 0|00 ′) + 12 ( 𝑗 0′|0′0′)] + ( 1 − 𝛿 𝑖 𝑗 )( 1 −
+
+𝛿 𝑖𝑘 ) [( 𝑗 0′|𝑘𝑖 ) − ( 𝑘 0′| 𝑗𝑖 )] ⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3CS 0′ 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝐸 3CS-0’ − ( 1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 |0′0′) + 12 (𝑖 0|0 𝑗 ) − 12 (𝑖 0′|0′ 𝑗 )] ⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝  
+
+> 0
+
+⟩ (𝑖 0′|0𝑝 )⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝  
+
+> 0′
+
+⟩ −( 𝑖 0′|0′ 𝑝 )⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑇 CV 𝑝 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0′ 𝑝 − ( 0′ 𝑝 |𝑖𝑖 ) + 12 (0′ 𝑝 |0′0′) + 12 (0′0|0𝑝 ) + 2(0′𝑖 |𝑖 𝑝 )] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑖 𝑗 ) [ 2(0′ 𝑗 |𝑖 𝑝 ) − ( 0′ 𝑝 |𝑖 𝑗 )] ⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑆 CV 𝑝 𝑗 ⟩ − 
+
+> √22
+
+𝛿 𝑖 𝑗 [𝐹 d0′ 𝑝 − ( 0′ 𝑝 |𝑖𝑖 ) + 12 (0′ 𝑝 |0′0′) − 32 (0′0|0𝑝 )] +  
+
+> √22
+
+(1 − 𝛿 𝑖 𝑗 ) [( 0′ 𝑝 |𝑖 𝑗 )] ⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3𝑋 CV 𝑝 𝑗 ⟩ 𝛿 𝑖 𝑗 [𝐹 d0′ 𝑝 − ( 0′ 𝑝 |𝑖𝑖 ) + 12 (0′ 𝑝 |0′0′) + 12 (0′0|0𝑝 )] − ( 1 − 𝛿 𝑖 𝑗 ) [( 0′ 𝑝 |𝑖 𝑗 )] ⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩−𝛿 𝑖 𝑗 [𝐹 d 
+
+> 𝑘 0
+
+− ( 𝑘 0|𝑖𝑖 ) + ( 𝑘𝑖 |𝑖 0) + ( 𝑘 0|0′0′) − 12 (𝑘 0′|0′0) + 12 (𝑘 0|00 )] + 𝛿 𝑖𝑘 [𝐹 d 
+
+> 𝑗 0
+
+−( 𝑗 0|𝑖𝑖 ) + ( 𝑗𝑖 |𝑖 0) + ( 𝑗 0|0′0′) − 12 ( 𝑗 0′|0′0) + 12 ( 𝑗 0|00 )] − ( 1 − 𝛿 𝑖 𝑗 )( 1 −
+
+𝛿 𝑖𝑘 ) [( 𝑗 0|𝑘𝑖 ) − ( 𝑘 0| 𝑗𝑖 )] ⟨3CS 0′ 
+
+> 𝑖
+
+| ˆ𝐻 |3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3SV 𝑞  
+
+> 0
+
+⟩ 𝛿 𝑝𝑞 [𝐸 3SV-0 ] + ( 1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |00 ) + 12 ( 𝑝 0|0𝑞 ) − 12 ( 𝑝 0′|0′𝑞 )] ⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3SV 𝑞  
+
+> 0′
+
+⟩ 𝛿 𝑝𝑞 [𝐹 d00 ′ + ( 00 ′| 𝑝 𝑝 ) − ( 0𝑝 | 𝑝 0′) − 12 (00 ′|00 ) − 12 (00 ′|0′0′)] + ( 1 −
+
+𝛿 𝑝𝑞 ) [( 𝑝𝑞 |00 ′) − ( 𝑝 0|0′𝑞 )] ⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3𝑇 CV 𝑞 𝑖 ⟩ − 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0
+
++ ( 𝑖 0| 𝑝 𝑝 ) − 2(𝑖 𝑝 | 𝑝 0) − 12 (𝑖 0′|0′0) − 12 (𝑖 0|00 )] +  
+
+> √22
+
+(1 −
+
+𝛿 𝑝𝑞 ) [ 2(𝑖 𝑝 |𝑞 0) − ( 𝑖 0| 𝑝𝑞 )] ⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3𝑆 CV 𝑞 𝑖 ⟩ 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0
+
++ ( 𝑖 0| 𝑝 𝑝 ) + 32 (𝑖 0′|0′0) − 12 (𝑖 0|00 )] +  
+
+> √22
+
+(1 − 𝛿 𝑝𝑞 ) [( 𝑖 0| 𝑝𝑞 )] ⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3𝑋 CV 𝑞 𝑖 ⟩ 𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0
+
++ ( 𝑖 0| 𝑝 𝑝 ) − 12 (𝑖 0|00 ) − 12 (𝑖 0′|0′0)] + ( 1 − 𝛿 𝑝𝑞 ) [( 𝑖 0| 𝑝𝑞 )] 
+
+Continued on next page... 
+
+59 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨3SV 𝑝  
+
+> 0
+
+| ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩
+
+𝛿 𝑝𝑞 [𝐹 d0′𝑟 + ( 0′𝑟 | 𝑝 𝑝 ) − ( 0′ 𝑝 | 𝑝𝑟 ) − 12 (0′𝑟 |0′0′) − ( 0′𝑟 |00 ) + 12 (0′0|0𝑟 )] − 
+
+𝛿 𝑝𝑟 [𝐹 d0′𝑞 + ( 0′𝑞 | 𝑝 𝑝 ) − ( 0′ 𝑝 | 𝑝𝑞 ) − 12 (0′𝑞 |0′0′) − ( 0′𝑞 |00 ) + 12 (0′0|0𝑞 )] + (1 − 𝛿 𝑝𝑞 )( 1 − 𝛿 𝑝𝑟 ) [( 0′𝑞 |𝑟 𝑝 ) − ( 0′𝑟 |𝑞 𝑝 )] ⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3SV 𝑞  
+
+> 0′
+
+⟩ 𝛿 𝑝𝑞 [𝐸 3SV-0’ ] + ( 1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |0′0′) − 12 ( 𝑝 0|0𝑞 ) + 12 ( 𝑝 0′|0′𝑞 )] ⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3𝑇 CV 𝑞 𝑖 ⟩ 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′| 𝑝 𝑝 ) − 2(𝑖 𝑝 | 𝑝 0′) − 12 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′)] −  
+
+> √22
+
+(1 −
+
+𝛿 𝑝𝑞 ) [ 2(𝑖 𝑝 |𝑞 0′) − ( 𝑖 0′| 𝑝𝑞 )] ⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3𝑆 CV 𝑞 𝑖 ⟩ 
+
+> √22
+
+𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′| 𝑝 𝑝 ) + 32 (𝑖 0|00 ′) − 12 (𝑖 0′|0′0′)] +  
+
+> √22
+
+(1 − 𝛿 𝑝𝑞 ) [( 𝑖 0′| 𝑝𝑞 )] ⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3𝑋 CV 𝑞 𝑖 ⟩ −𝛿 𝑝𝑞 [𝐹 d 
+
+> 𝑖 0′
+
++ ( 𝑖 0′| 𝑝 𝑝 ) − 12 (𝑖 0′|0′0′) − 12 (𝑖 0|00 ′)] − ( 1 − 𝛿 𝑝𝑞 ) [( 𝑖 0′| 𝑝𝑞 )] ⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨3SV 𝑝  
+
+> 0′
+
+| ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩−𝛿 𝑝𝑞 [𝐹 d0𝑟 +( 0𝑟 | 𝑝 𝑝 )−( 0𝑝 | 𝑝𝑟 )− 12 (0𝑟 |00 )−( 0𝑟 |0′0′)+ 12 (00 ′|0′𝑟 )]− 𝛿 𝑝𝑟 [𝐹 d0𝑞 +(0𝑞 | 𝑝 𝑝 ) − ( 0𝑝 | 𝑝𝑞 ) − 12 (0𝑞 |00 ) − ( 0𝑞 |0′0′) + 12 (00 ′|0′𝑞 )] + ( 1 − 𝛿 𝑝𝑞 )( 1 −
+
+𝛿 𝑝𝑟 ) [( 0𝑞 |𝑟 𝑝 ) − ( 0𝑟 |𝑞 𝑝 )] ⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3𝑇 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 𝐵𝑇 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 | 𝑝 𝑝 ) − 2(𝑖 𝑝 | 𝑝 𝑗 )] + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+−( 𝑝𝑞 |𝑖𝑖 ) + ( 𝑝𝑖 |𝑖𝑞 )] + ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 ) [ 2(𝑖 𝑝 | 𝑗 𝑞 ) − ( 𝑖 𝑗 | 𝑝𝑞 )] ⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3𝑆 CV 𝑞 𝑗 ⟩ 
+
+> 12
+
+𝛿 𝑖 𝑗 𝛿 𝑝𝑞 [( 𝑖 0′|0′𝑖 ) − ( 𝑖 0|0𝑖 ) + ( 𝑝 0|0𝑝 ) − ( 𝑝 0′|0′ 𝑝 )] + 12 𝛿 𝑝𝑞 (1−𝛿 𝑖 𝑗 ) [( 𝑖 0′|0′ 𝑗 ) − (𝑖 0|0 𝑗 )] + 12 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [( 𝑝 0|0𝑞 ) − ( 𝑝 0′|0′𝑞 )] ⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3𝑋 CV 𝑞 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 𝛿 𝑝𝑞 [( 𝑝 0|0𝑞 )+( 𝑝 0′|0′𝑞 )−( 𝑖 0|0𝑖 )−( 𝑖 0′|0′𝑖 )]−  
+
+> √22
+
+𝛿 𝑝𝑞 (1−𝛿 𝑖 𝑗 ) [( 𝑖 0′|0′ 𝑗 )+ (𝑖 0|0 𝑗 )] +  
+
+> √22
+
+𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [( 𝑝 0|0𝑞 ) + ( 𝑝 0′|0′𝑞 )] ⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [( 𝑘 0′|0𝑝 ) − ( 𝑘 0|0′ 𝑝 )] +  
+
+> √22
+
+𝛿 𝑖𝑘 [( 𝑗 0|0′ 𝑝 ) − ( 𝑗 0′|0𝑝 )] ⟨3𝑇 CV 𝑝 𝑖 | ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 1√2 𝛿 𝑝𝑞 [( 𝑖 0′|0𝑟 ) − ( 𝑖 0|0′𝑟 )] + 1√2 𝛿 𝑝𝑟 [( 𝑖 0|0′𝑞 ) − ( 𝑖 0′|0𝑞 )] ⟨3𝑆 CV 𝑝 𝑖 | ˆ𝐻 |3𝑆 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 3CV-S + 𝛿 𝑝𝑞 (𝛿 𝑖 𝑗 − 1) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 | 𝑝 𝑝 )] + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |𝑖𝑖 ) − ( 𝑝𝑖 |𝑖𝑞 )] − ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 )( 𝑖 𝑗 | 𝑝𝑞 )⟨3𝑆 CV 𝑝 𝑖 | ˆ𝐻 |3𝑋 CV 𝑞 𝑗 ⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 𝛿 𝑝𝑞 [( 𝑝 0|0𝑝 )−( 𝑝 0′|0′ 𝑝 )+( 𝑖 0|0𝑖 )−( 𝑖 0′|0′𝑖 )]+  
+
+> √22
+
+𝛿 𝑝𝑞 (1−𝛿 𝑖 𝑗 ) [( 𝑖 0|0 𝑗 )− (𝑖 0′|0′ 𝑗 )] +  
+
+> √22
+
+𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 ) [( 𝑝 0|0𝑞 ) − ( 𝑝 0′|0′𝑞 )] ⟨3𝑆 CV 𝑝 𝑖 | ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ − 
+
+> √22
+
+𝛿 𝑖 𝑗 [( 𝑘 0′|0𝑝 ) + ( 𝑘 0|0′ 𝑝 )] +  
+
+> √22
+
+𝛿 𝑖𝑘 [( 𝑗 0|0′ 𝑝 ) + ( 𝑗 0′|0𝑝 )] ⟨3𝑆 CV 𝑝 𝑖 | ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 1√2 𝛿 𝑝𝑞 [( 𝑖 0′|0𝑟 ) + ( 𝑖 0|0′𝑟 )] − 1√2 𝛿 𝑝𝑟 [( 𝑖 0|0′𝑞 ) + ( 𝑖 0′|0𝑞 )] 
+
+Continued on next page... 
+
+60 Off-Diagonal 
+
+ˆ𝐻 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3𝑋 CV 𝑝 𝑖 | ˆ𝐻 |3𝑋 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 𝐷𝑇 2 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ ( 𝑖 𝑗 | 𝑝 𝑝 ) − 12 (𝑖 0|0 𝑗 ) − 12 (𝑖 0′|0′ 𝑗 )] + 𝛿 𝑖 𝑗 (1 −
+
+𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |𝑖𝑖 ) + 12 ( 𝑝 0|0𝑞 ) + 12 ( 𝑝 0′|0′𝑞 )] + ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 )( 𝑖 𝑗 | 𝑝𝑞 )⟨3𝑋 CV 𝑝 𝑖 | ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 
+
+> √22
+
+𝛿 𝑖 𝑗 [( 𝑘 0′|0𝑝 ) − ( 𝑘 0|0′ 𝑝 )] +  
+
+> √22
+
+𝛿 𝑖𝑘 [( 𝑗 0|0′ 𝑝 ) − ( 𝑗 0′|0𝑝 )] ⟨3𝑋 CV 𝑝 𝑖 | ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 𝛿 𝑝𝑞 [( 𝑖 0|0′𝑟 ) − ( 𝑖 0′|0𝑟 )] + 𝛿 𝑝𝑟 [( 𝑖 0′|0𝑞 ) − ( 𝑖 0|0′𝑞 )] ⟨3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝐻 |3CS 0′ ¯0′  
+
+> 𝑘 ¯𝑙
+
+⟩
+
+𝛿 𝑖𝑘 𝛿 𝑗𝑙 [𝐸 3CSD ] − 𝛿 𝑗𝑙 (1 − 𝛿 𝑖𝑘 ) [ 𝐹 d 
+
+> 𝑖𝑘
+
+− ( 𝑖𝑘 | 𝑗 𝑗 ) + ( 𝑖 𝑗 | 𝑗 𝑘 ) + ( 𝑖𝑘 |00 ) − 12 (𝑖 0|0𝑘 ) + (𝑖𝑘 |0′0′) − 12 (𝑖 0′|0′𝑘 )] + 𝛿 𝑖𝑘 (1 − 𝛿 𝑗𝑙 ) [ 𝐹 d 
+
+> 𝑗𝑙
+
+− ( 𝑗𝑙 |𝑖𝑖 ) + ( 𝑗𝑖 |𝑖𝑙 ) + ( 𝑗𝑙 |00 ) −  
+
+> 12
+
+( 𝑗 0|0𝑙 ) + ( 𝑗𝑙 |0′0′) − 12 ( 𝑗 0′|0′𝑙 )] + ( 1 − 𝛿 𝑖𝑘 )( 1 − 𝛿 𝑗𝑙 ) [( 𝑖𝑘 | 𝑗𝑙 ) − ( 𝑖𝑙 | 𝑗 𝑘 )] ⟨3CS 0′ ¯0′  
+
+> 𝑖 𝑗
+
+| ˆ𝐻 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+| ˆ𝐻 |3SV 𝑟 ¯𝑠 
+
+> 0¯ 0
+
+⟩
+
+𝛿 𝑝𝑟 𝛿 𝑞𝑠 [𝐸 3SVD ]+ 𝛿 𝑝𝑟 (1−𝛿 𝑞𝑠 ) [ 𝐹 d 
+
+> 𝑞𝑠
+
++( 𝑞𝑠 | 𝑝 𝑝 )−( 𝑞 𝑝 | 𝑝𝑠 )−( 𝑞𝑠 |00 )+ 12 (𝑞 0|0𝑠 )− (𝑞𝑠 |0′0′) + 12 (𝑞 0′|0′𝑠 )] + 𝛿 𝑞𝑠 (1 − 𝛿 𝑝𝑟 ) [ 𝐹 d 
+
+> 𝑝𝑟
+
++ ( 𝑝𝑟 |𝑞𝑞 ) − ( 𝑝𝑞 |𝑞𝑟 ) − ( 𝑝𝑟 |00 ) +  
+
+> 12
+
+( 𝑝 0|0𝑟 ) − ( 𝑝𝑟 |0′0′) + 12 ( 𝑝 0′|0′𝑟 )] + ( 1 − 𝛿 𝑝𝑟 )( 1 − 𝛿 𝑞𝑠 ) [( 𝑝𝑟 |𝑞𝑠 ) − ( 𝑞𝑟 |𝑠𝑝 )] 
+
+Table A5: Hamiltonian Interactions for the Quintet core ( 𝑖, 𝑗 ) → virtual ( 𝑝, 𝑞 ) CSF. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. ˆ𝐻 Matrix element =
+
+⟨5CV 𝑝 𝑖 | ˆ𝐻 |5CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 𝐸 𝑄 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 ) [ 𝐹 d 
+
+> 𝑖 𝑗
+
++ 12 (𝑖 0|0 𝑗 ) + 12 (𝑖 0′|0′ 𝑗 ) + ( 𝑖 𝑗 | 𝑝 𝑝 )] + 𝛿 𝑖 𝑗 (1 −
+
+𝛿 𝑝𝑞 ) [ 𝐹 d 
+
+> 𝑝𝑞
+
+− ( 𝑝𝑞 |𝑖𝑖 ) − 12 ( 𝑝 0|0𝑞 ) − 12 ( 𝑝 0′|0′𝑞 )] − ( 1 − 𝛿 𝑖 𝑗 )( 1 − 𝛿 𝑝𝑞 )( 𝑖 𝑗 | 𝑝𝑞 )] 
+
+Table A6: Analytical expressions for the singlet block of the transition dipole matrix in the XCIS-D basis. Indices 𝑖, 𝑗, 𝑘, 𝑙 represent core MOs, while indices 𝑝, 𝑞, 𝑟, 𝑠 represent virtual MOs. Í𝑜 represents a sum over all occupied orbitals. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. Note that the matrix is symmetric meaning only the upper diagonal elements are shown. 
+
+Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨1OS | ˆ𝜇 |1ZW −⟩ 0
+
+⟨1OS | ˆ𝜇 |1ZW +⟩ 2𝜇 00 ′
+
+⟨1OS | ˆ𝜇 |1CS 0 
+
+> 𝑖
+
+⟩ −𝜇 𝑖 0
+
+⟨1OS | ˆ𝜇 |1CS 0′ 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0′
+
+Continued on next page... 
+
+61 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨1OS | ˆ𝜇 |1SV 𝑝  
+
+> 0
+
+⟩ 𝜇 0 𝑗 
+
+⟨1OS | ˆ𝜇 |1SV 𝑝  
+
+> 0′
+
+⟩ −𝜇 0′ 𝑗 
+
+⟨1OS | ˆ𝜇 |1𝑆 CV 𝑝 𝑖 ⟩ √2𝜇 𝑖 𝑝 
+
+⟨1OS | ˆ𝜇 |1𝑇 CV 𝑝 𝑖 ⟩ 0
+
+⟨1OS | ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 0
+
+⟨1OS | ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨1OS | ˆ𝜇 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1OS | ˆ𝜇 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1ZW +⟩ 𝜇 00 − 𝜇 0′0′
+
+⟨1ZW − | ˆ𝜇 |1CS 0 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0′
+
+⟨1ZW − | ˆ𝜇 |1CS 0′ 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0
+
+⟨1ZW − | ˆ𝜇 |1SV 𝑝  
+
+> 0
+
+⟩ −𝜇 0𝑝 
+
+⟨1ZW − | ˆ𝜇 |1SV 𝑝  
+
+> 0′
+
+⟩ −𝜇 0′ 𝑝 
+
+⟨1ZW − | ˆ𝜇 |1𝑆 CV 𝑝 𝑖 ⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1𝑇 CV 𝑝 𝑖 ⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1ZW − | ˆ𝜇 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1ZW + | ˆ𝜇 |1CS 0 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0′
+
+⟨1ZW + | ˆ𝜇 |1CS 0′ 
+
+> 𝑖
+
+⟩ −𝜇 𝑖 0
+
+⟨1ZW + | ˆ𝜇 |1SV 𝑝  
+
+> 0
+
+⟩ −𝜇 0𝑝 
+
+⟨1ZW + | ˆ𝜇 |1SV 𝑝  
+
+> 0′
+
+⟩ 𝜇 0′ 𝑝 
+
+⟨1ZW + | ˆ𝜇 |1𝑆 CV 𝑝 𝑖 ⟩ 0
+
+⟨1ZW + | ˆ𝜇 |1𝑇 CV 𝑝 𝑖 ⟩ 0
+
+⟨1ZW + | ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑖
+
+⟩ 0
+
+Continued on next page... 
+
+62 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨1ZW + | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 0
+
+⟨1ZW + | ˆ𝜇 |1SV 𝑝 ¯𝑝 
+
+0¯ 0 ⟩ 0
+
+⟨1ZW + | ˆ𝜇 |1SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1CS 0
+
+𝑗 ⟩ 𝛿 𝑖 𝑗 
+
+Í𝑟 𝜇 𝑟𝑟 − ( 1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1CS 0′
+
+𝑗 ⟩ 𝛿 𝑖 𝑗 𝜇 00 ′
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1SV 𝑝 
+
+0 ⟩ 0
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1SV 𝑝 
+
+0′ ⟩ 0
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1𝑆 CV 𝑝 𝑗 ⟩ − 1√2 𝛿 𝑖 𝑗 𝜇 0𝑝 
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1𝑇 CV 𝑝 𝑗 ⟩
+
+√3√2 𝛿 𝑖 𝑗 𝜇 0𝑝 
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑗 ⟩ √2𝛿 𝑖 𝑗 𝜇 𝑖 0′
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ 𝛿 𝑖 𝑗 𝜇 𝑘 0′ + 𝛿 𝑖𝑘 𝜇 𝑗 0′
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑝 
+
+0¯ 0 ⟩ 0
+
+⟨1CS 0
+
+𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1CS 0′
+
+𝑗 ⟩ 𝛿 𝑖 𝑗 
+
+Í𝑟 𝜇 𝑟𝑟 − ( 1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1SV 𝑝 
+
+0 ⟩ 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1SV 𝑝 
+
+0′ ⟩ 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1𝑆 CV 𝑝 𝑗 ⟩ 1√2 𝛿 𝑖 𝑗 𝜇 0′ 𝑝 
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1𝑇 CV 𝑝 𝑗 ⟩
+
+√3√2 𝛿 𝑖 𝑗 𝜇 0′ 𝑝 
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑗 ⟩ −√2𝛿 𝑖 𝑗 𝜇 𝑖 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ −𝛿 𝑖 𝑗 𝜇 𝑘 0 − 𝛿 𝑖𝑘 𝜇 𝑗 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑝 
+
+0¯ 0 ⟩ 0
+
+⟨1CS 0′
+
+𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1SV 𝑞 
+
+0 ⟩ 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 + ( 1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1SV 𝑞 
+
+0′ ⟩ −𝛿 𝑝𝑞 𝜇 00 ′
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1𝑆 CV 𝑞 𝑖 ⟩ − 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1𝑇 CV 𝑞 𝑖 ⟩ −
+
+√3√2 𝛿 𝑝𝑞 𝜇 𝑖 0
+
+Continued on next page... 
+
+63 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑖 ¯𝑖 ⟩ 0
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 0
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1SV 𝑞 ¯𝑞 
+
+0¯ 0 ⟩ √2𝛿 𝑝𝑞 𝜇 0′ 𝑝 
+
+⟨1SV 𝑝 
+
+0 | ˆ𝜇 |1SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ 𝛿 𝑝𝑞 𝜇 0′𝑟 + 𝛿 𝑝𝑟 𝜇 0′𝑞 
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1SV 𝑞 
+
+0′ ⟩ 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 + ( 1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1𝑆 CV 𝑞 𝑖 ⟩ 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0′
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1𝑇 CV 𝑞 𝑖 ⟩ −
+
+√3√2 𝛿 𝑝𝑞 𝜇 𝑖 0′
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑖 ¯𝑖 ⟩ 0
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 0
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1SV 𝑞 ¯𝑞 
+
+0¯ 0 ⟩ −√2𝛿 𝑝𝑞 𝜇 0𝑝 
+
+⟨1SV 𝑝 
+
+0′ | ˆ𝜇 |1SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ −𝛿 𝑝𝑞 𝜇 0𝑟 − 𝛿 𝑝𝑟 𝜇 0𝑞 
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1𝑆 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1𝑇 CV 𝑞 𝑗 ⟩ 0
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑗 ⟩ 0
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ 0
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1SV 𝑞 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨1𝑆 CV 𝑝 𝑖 | ˆ𝜇 |1SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ 0
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝜇 |1𝑇 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖𝑘 + 𝛿 𝑖𝑘 (1 − 𝛿 𝑗𝑙 )𝜇 𝑗𝑙 
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑗 ⟩ 0
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ 0
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝜇 |1SV 𝑞 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨1𝑇 CV 𝑝 𝑖 | ˆ𝜇 |1SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ 0
+
+⟨1CS 0′ ¯0′
+
+𝑖 ¯𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑗 ⟩ 𝛿 𝑖 𝑗 
+
+Í𝑜 𝜇 𝑜𝑜 
+
+⟨1CS 0′ ¯0′
+
+𝑖 ¯𝑖 | ˆ𝜇 |1CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ −√2𝛿 𝑖 𝑗 𝜇 𝑖 𝑗 − √2𝛿 𝑖𝑘 𝜇 𝑖𝑘 
+
+⟨1CS 0′ ¯0′
+
+𝑖 ¯𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑝 
+
+0¯ 0 ⟩ 0
+
+⟨1CS 0′ ¯0′
+
+𝑖 ¯𝑖 | ˆ𝜇 |1SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+Continued on next page... 
+
+64 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝜇 |1CS 0′ ¯0′  
+
+> 𝑘 ¯𝑙
+
+⟩ 𝛿 𝑖𝑘 𝛿 𝑗𝑙 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑖𝑘 (1 − 𝛿 𝑗𝑙 )𝜇 𝑗𝑙 − 𝛿 𝑗𝑙 (1 − 𝛿 𝑖𝑘 )𝜇 𝑖𝑘 
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝜇 |1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝜇 |1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+| ˆ𝜇 |1SV 𝑞 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 
+
+⟨1SV 𝑝 ¯𝑝  
+
+> 0¯ 0
+
+| ˆ𝜇 |1SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ √2𝛿 𝑝𝑞 𝜇 𝑝𝑟 + √2𝛿 𝑝𝑟 𝜇 𝑝𝑟 
+
+⟨1SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+| ˆ𝜇 |1SV 𝑟 ¯𝑠 
+
+> 0¯ 0
+
+⟩ 𝛿 𝑝𝑟 𝛿 𝑞𝑠 
+
+Í𝑜 𝜇 𝑜𝑜 + 𝛿 𝑝𝑟 (1 − 𝛿 𝑞𝑠 )𝜇 𝑞𝑠 + 𝛿 𝑞𝑠 (1 − 𝛿 𝑝𝑟 )𝜇 𝑝𝑟 
+
+Table A7: Analytical expressions for the triplet block of the transition dipole matrix in the XCIS-D basis. Indices 𝑖, 𝑗, 𝑘, 𝑙 represent core MOs, while indices 𝑝, 𝑞, 𝑟, 𝑠 represent virtual MOs. Í𝑜 represents a sum over all occupied orbitals. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. Note that the matrix is symmetric meaning only the upper diagonal elements are shown. 
+
+Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3OS | ˆ𝜇 |3CS 0 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0
+
+⟨3OS | ˆ𝜇 |3CS 0′ 
+
+> 𝑖
+
+⟩ 𝜇 𝑖 0′
+
+⟨3OS | ˆ𝜇 |3SV 𝑝  
+
+> 0
+
+⟩ 𝜇 0𝑝 
+
+⟨3OS | ˆ𝜇 |3SV 𝑝  
+
+> 0′
+
+⟩ −𝜇 0′ 𝑝 
+
+⟨3OS | ˆ𝜇 |3𝑇 CV 𝑝 𝑖 ⟩ √2𝜇 𝑖 𝑝 
+
+⟨3OS | ˆ𝜇 |3𝑆 CV 𝑝 𝑖 ⟩ 0
+
+⟨3OS | ˆ𝜇 |3𝑋 CV 𝑝 𝑖 ⟩ 0
+
+⟨3OS | ˆ𝜇 |3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+⟩ 0
+
+⟨3OS | ˆ𝜇 |3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝜇 |3CS 0 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 
+
+Í𝑜 𝜇 𝑜𝑜 − ( 1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝜇 |3CS 0′ 
+
+> 𝑗
+
+⟩ 𝛿 𝑖 𝑗 𝜇 00 ′
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝜇 |3SV 𝑝  
+
+> 0
+
+⟩ 0
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝜇 |3SV 𝑝  
+
+> 0′
+
+⟩ 0
+
+⟨3CS 0 
+
+> 𝑖
+
+| ˆ𝜇 |3𝑇 CV 𝑝 𝑗 ⟩ 1√2 𝛿 𝑖 𝑗 𝜇 0𝑝 
+
+Continued on next page... 
+
+65 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3CS 0
+
+𝑖 | ˆ𝜇 |3𝑆 CV 𝑝 𝑗 ⟩ 1√2 𝛿 𝑖 𝑗 𝜇 0𝑝 
+
+⟨3CS 0
+
+𝑖 | ˆ𝜇 |3𝑋 CV 𝑝 𝑗 ⟩ 𝛿 𝑖 𝑗 𝜇 0𝑝 
+
+⟨3CS 0
+
+𝑖 | ˆ𝜇 |3CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ 𝛿 𝑖 𝑗 𝜇 𝑘 0′ − 𝛿 𝑖𝑘 𝜇 𝑗 0′
+
+⟨3CS 0
+
+𝑖 | ˆ𝜇 |3SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3CS 0′
+
+𝑗 ⟩ 𝛿 𝑖 𝑗 
+
+Í𝑜 𝜇 𝑜𝑜 − ( 1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3SV 𝑝 
+
+0 ⟩ 0
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3SV 𝑝 
+
+0′ ⟩ 0
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3𝑇 CV 𝑝 𝑗 ⟩ 1√2 𝛿 𝑖 𝑗 𝜇 0′ 𝑝 
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3𝑆 CV 𝑝 𝑗 ⟩ − 1√2 𝛿 𝑖 𝑗 𝜇 0′ 𝑝 
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3𝑋 CV 𝑝 𝑗 ⟩ 𝛿 𝑖 𝑗 𝜇 0′ 𝑝 
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3CS 0′ ¯0′
+
+𝑗 ¯𝑘 ⟩ −𝛿 𝑖 𝑗 𝜇 𝑘 0 + 𝛿 𝑖𝑘 𝜇 𝑗 0
+
+⟨3CS 0′
+
+𝑖 | ˆ𝜇 |3SV 𝑝 ¯𝑞 
+
+0¯ 0 ⟩ 0
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3SV 𝑞 
+
+0 ⟩ 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 + ( 1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3SV 𝑞 
+
+0′ ⟩ 𝛿 𝑝𝑞 𝜇 00 ′
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3𝑇 CV 𝑞 𝑖 ⟩ − 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3𝑆 CV 𝑞 𝑖 ⟩ 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3𝑋 CV 𝑞 𝑖 ⟩ 𝛿 𝑝𝑞 𝜇 𝑖 0
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 0
+
+⟨3SV 𝑝 
+
+0 | ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ 𝛿 𝑝𝑞 𝜇 0′𝑟 − 𝛿 𝑝𝑟 𝜇 0′𝑞 
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3SV 𝑞 
+
+0′ ⟩ 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 + ( 1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3𝑇 CV 𝑞 𝑖 ⟩ 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0′
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3𝑆 CV 𝑞 𝑖 ⟩ 1√2 𝛿 𝑝𝑞 𝜇 𝑖 0′
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3𝑋 CV 𝑞 𝑖 ⟩ −𝛿 𝑝𝑞 𝜇 𝑖 0′
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3CS 0′ ¯0′
+
+𝑖 ¯𝑗 ⟩ 0
+
+⟨3SV 𝑝 
+
+0′ | ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+0¯ 0⟩ 𝛿 𝑝𝑞 𝜇 0𝑟 − 𝛿 𝑝𝑟 𝜇 0𝑞 
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝜇 |3𝑇 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+Continued on next page... 
+
+66 Off-Diagonal 
+
+ˆ𝜇 Matrix Element Expression in terms of 𝐹 d or two electron integrals 
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝜇 |3𝑆 CV 𝑞 𝑗 ⟩ 0
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝜇 |3𝑋 CV 𝑞 𝑗 ⟩ 0
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝜇 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 0
+
+⟨3𝑇 CV 𝑝 𝑖 | ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3𝑆 CV 𝑝 𝑖 | ˆ𝜇 |3𝑆 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨3𝑆 CV 𝑝 𝑖 | ˆ𝜇 |3𝑋 CV 𝑞 𝑗 ⟩ 0
+
+⟨3𝑆 CV 𝑝 𝑖 | ˆ𝜇 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 0
+
+⟨3𝑆 CV 𝑝 𝑖 | ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3𝑋 CV 𝑝 𝑖 | ˆ𝜇 |3𝑋 CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+⟨3𝑋 CV 𝑝 𝑖 | ˆ𝜇 |3CS 0′ ¯0′  
+
+> 𝑗 ¯𝑘
+
+⟩ 0
+
+⟨3𝑋 CV 𝑝 𝑖 | ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3CS 0′ ¯0′  
+
+> 𝑖 ¯𝑗
+
+| ˆ𝜇 |3CS 0′ ¯0′  
+
+> 𝑘 ¯𝑙
+
+⟩ 𝛿 𝑖𝑘 𝛿 𝑗𝑙 
+
+Í𝑜 𝜇 𝑜𝑜 + 𝛿 𝑖𝑘 (1 − 𝛿 𝑗𝑙 )𝜇 𝑗𝑙 − 𝛿 𝑗𝑙 (1 − 𝛿 𝑖𝑘 )𝜇 𝑖𝑘 
+
+⟨3CS 0′ ¯0′  
+
+> 𝑖 𝑗
+
+| ˆ𝜇 |3SV 𝑞 ¯𝑟 
+
+> 0¯ 0
+
+⟩ 0
+
+⟨3SV 𝑝 ¯𝑞  
+
+> 0¯ 0
+
+| ˆ𝜇 |3SV 𝑟 ¯𝑠 
+
+> 0¯ 0
+
+⟩ 𝛿 𝑝𝑟 𝛿 𝑞𝑠 
+
+Í𝑜 𝜇 𝑜𝑜 + 𝛿 𝑝𝑟 (1 − 𝛿 𝑞𝑠 )𝜇 𝑞𝑠 − 𝛿 𝑞𝑠 (1 − 𝛿 𝑝𝑟 )𝜇 𝑝𝑟 
+
+⟨5CV 𝑝 𝑖 | ˆ𝜇 |5CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+Table A8: Transition Dipole Moments for the Quintet core ( 𝑖, 𝑗 ) → virtual ( 𝑝, 𝑞 ) CSF. Í𝑜 represents a sum over all occupied orbitals. The 𝛿 symbols used is the Kronecker delta, used to show when CSFs how couplings change when CSFs have common core or virtual orbitals. ˆ𝐻 Matrix element =
+
+⟨5CV 𝑝 𝑖 | ˆ𝜇 |5CV 𝑞 𝑗 ⟩ 𝛿 𝑖 𝑗 𝛿 𝑝𝑞 
+
+Í𝑜 𝜇 𝑜𝑜 − 𝛿 𝑝𝑞 (1 − 𝛿 𝑖 𝑗 )𝜇 𝑖 𝑗 + 𝛿 𝑖 𝑗 (1 − 𝛿 𝑝𝑞 )𝜇 𝑝𝑞 
+
+67 III - Test calculations on small/medium diradicals 
+
+A - Computational Details 
+
+For each of the molecules studied, geometries were first optimised with the GAMESS quantum chemistry package 106,107 , using unrestricted density functional theory with the PBE functional. The 6-31+G ∗∗ basis set was used for all ab-initio calculations described. The multiplicity was set to 3 to ensure that the calculations converged towards the open-shell triplet geometry, and the optimisations were constrained to preserve the respective point-group symmetry of each molecule. For cyclobutadiene, D 4h symmetry was enforced during DFT optimisation to prevent a Jahn-Teller distortion to a closed-shell geometry 62,93,108 . For trimethylenemethane and meta-xylylene, point group symmetries of D 3h and C 2v respectively were enforce. Optimised geometries were then passed into the D-ExROPPP program, which calculates molecular orbitals and then excited states. A convergence tolerance of 2 .5 × 10 −15 was used to check whether the density matrix was appropriately converged. For the multi-reference methods, this process had to be done in two stages, with molecular orbitals first obtained with single-point energy calculations at the restricted open-shell Hartree-Fock (ROHF) level of theory. These MOs were then used to run state-averaged complete active space self-consistent field (SA-CASSCF) calculations with a ( 𝑛 ,𝑛 ) active space, where n is the number of 𝜋 -orbitals in each molecule. For cyclobutadiene and trimethylenemethane, a (4,4) active space was used while for meta-xylylene a (8,8) active space was used. The state averaging procedure means that the molecular orbitals and CI coefficients are self-consistently optimised with respect to the average energy of a given set of electronic states, rather than solely the ground state. For Cyclobutadiene, this was selected to be the 5 lowest energy singlet states, for trimethylenemethane the energy was averaged over the 5 lowest energy triplet states and for 
+
+meta-xylylene the 8 lowest energy triplets were selected. Alongside SA-CASSCF, results were also obtained using the generalised multiconfigurational quasi-degenerate perturbation theory method (GMC-QDPT). For GMC-QDPT calculations, a level shift of 0.02 hartrees was used to prevent intruder states. 68 B - Results for Ground and Excited States Table A9: Summary of the 7 lowest energy electronic states of the mXYL radical obtained using various methods. Energies are given relative to that of their respective ground state. Configurations shown are those with the highest weighting in the overall excited state, as shown by the coefficients in brackets. All results are fully spin pure, meaning ⟨ ˆ𝑆 2⟩ = 0 for singlet states and ⟨ ˆ𝑆 2⟩ = 2 for triplets. 
+
+D-ExROPPP Energy D-ExROPPP Configurations CASSCF Energy CASSCF Configurations GMC-QDPT Energy GMC-QDPT Configurations 
+
+0 |3OS ⟩ ( 0.95 ) 0 |3OS ⟩ ( 0.97 ) 0 |3OS ⟩ ( 0.90 )
+
+0.485 |1ZW −⟩ ( 0.89 ) 0.338 |1ZW −⟩ ( 0.98 ) 0.502 |1ZW −⟩ ( 0.81 )
+
+1.116 |1OS ⟩ ( 0.86 ),
+
+|1CS 0′ 
+
+> 2
+
+⟩ (− 0.28 )
+
+2.437 |1OS ⟩ ( 0.62 ),
+
+|1CS 0′ 
+
+> 1
+
+⟩ (− 0.39 )
+
+1.235 |1OS ⟩ ( 0.79 ),
+
+|1CS 0′ 
+
+> 1
+
+⟩ (− 0.30 )
+
+2.750 |1SV 2′ 
+
+> 0′
+
+⟩ ( 0.53 ),
+
+|1CS 02⟩ ( 0.52 )
+
+3.830 |1SV 2′ 
+
+> 0′
+
+⟩ ( 0.56 ),
+
+|1CS 02⟩ (− 0.41 )
+
+3.047 |1CS 02⟩ ( 0.60 ),
+
+|1SV 2′ 
+
+> 0′
+
+⟩ ( 0.54 )
+
+2.813 |1ZW +⟩ ( 0.93 ) 3.754 |1ZW +⟩ ( 0.61 ) 2.352 |1ZW +⟩ ( 0.89 )
+
+2.857 |3SV 1′ 
+
+> 0
+
+⟩ ( 0.65 ),
+
+|3CS 01⟩ (− 0.63 )
+
+4.008 |3CS 0′ 
+
+> 1
+
+⟩ ( 0.45 ),
+
+|3CS 02⟩ (− 0.39 )
+
+3.279 |3CS 02⟩ ( 0.49 ),
+
+|3SV 1′ 
+
+> 0
+
+⟩ ( 0.41 )
+
+2.986 |1CS 0′ 
+
+> 1
+
+⟩ ( 0.54 ),
+
+|1CS 02⟩ (− 0.44 )
+
+4.129 |1SV 2′ 
+
+> 0
+
+⟩ ( 0.44 ),
+
+|1CS 02⟩ (− 0.43 )
+
+3.286 |1CS 02⟩ ( 0.49 ),
+
+|1SV 3′ 
+
+> 0
+
+⟩ (− 0.42 )
+
+69 Table A10: Summary of the electronic states of the CBD radical obtained using the D-ExROPPP method but with different SOMOs and configuration spaces. The localised and delocalised SOMOs used are shown in Fig. 2. As described in the methodology section, XCIS results are obtained from a configuration interaction treatment that only includes CSFs describing single excitations, wheras XCIS-D means that specific double excitations are also included. The configuration coefficients shown in brackets are those of the XCIS-D excited states, although the XCIS coefficients almost within ± 0.02 of these values. 
+
+’Localised’ ’Localised’ Energy (eV) ’Delocalised’ ’Delocalised’ Energy (eV) Configurations XCIS XCIS-D Configurations XCIS XCIS-D 
+
+|1OS ⟩ ( 0.97 ) 0 0 |1ZW − ⟩ ( 0.97 ) 0 0
+
+|3OS ⟩ ( 0.97 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ ( 0.24 )
+
+0.355 0.355 |3OS ⟩ ( 1.00 ) 0.811 0.811 
+
+|1ZW +⟩ ( 0.95 ) 2.770 1.938 |1ZW +⟩ ( 0.91 ),
+
+|1𝑇 CV 1′ 
+
+> 1
+
+⟩ ( 0.21 )
+
+2.682 1.510 
+
+|1ZW − ⟩ ( 1.00 ) 2.770 2.770 |1OS ⟩ ( 1.00 ) 2.770 2.770 
+
+|3CS 01⟩ ( 0.71 ),
+
+|3SV 10⟩ ( 0.71 )
+
+3.462 3.462 
+
+|3CS 01⟩ ( 0.53 ),
+
+|3SV 10⟩ ( 0.47 ),
+
+|3CS 0′ 
+
+> 1
+
+⟩ ( 0.47 ),
+
+|3SV 10′ ⟩ (− 0.53 )
+
+3.462 3.462 
+
+70 Table A11: Summary of the electronic states of the TMM radical obtained using the D-ExROPPP method but with different SOMOs and configuration spaces. As described in the methodology section XCIS results are obtained from a configuration interaction treatment that only includes CSFs describing single excitations, wheras XCIS-D means that specific double excitations are also included. The configuration coefficients shown in brackets are those of the XCIS-D excited states, although the XCIS coefficients almost within ±
+
+0.02 of these values. 
+
+’Standard’ ’Standard’ Energy (eV) ’Rotated’ ’Rotated’ Energy (eV) Configurations XCIS XCIS-D Configurations XCIS XCIS-D 
+
+|3OS ⟩ ( 0.97 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ (− 0.23 )
+
+0 0 |3OS ⟩ ( 0.97 ),
+
+|3𝑆 CV 1′ 
+
+> 1
+
+⟩ (− 0.23 )
+
+0 0
+
+|1OS ⟩ ( 0.88 ) 0.893 0.893 |1ZW −⟩ ( 0.88 ) 0.893 0.893 
+
+|1ZW −⟩ ( 0.88 ) 0.893 0.893 |1OS ⟩ ( 0.88 ) 0.893 0.893 
+
+|3CS 0′ 
+
+> 1
+
+⟩ ( 0.66 ),
+
+|3SV 10′ ⟩ ( 0.66 )
+
+3.177 3.177 
+
+|3CS 01⟩ ( 0.46 ),
+
+|3SV 10⟩ (− 0.46 ),
+
+|3CS 0′ 
+
+> 1
+
+⟩ ( 0.46 ),
+
+|3SV 10′ ⟩ ( 0.46 )
+
+3.462 3.462 
+
+|1ZW +⟩ ( 0.96 ) 4.257 3.736 |1ZW +⟩ ( 0.96 ) 4.257 3.736 71 Table A12: Summary of the electronic states of the mXYL radical obtained using the D-ExROPPP method but with different SOMOs and configuration spaces. The spatial distributions of standard and rotated orbitals are shown in figures 11 and 12. XCIS means that only CSFs describing single excitations are included in the CI matrix, wheras XCIS-D means that specific double excitations are also included as described in the methodology section. The coefficients for the two sets of configurations are taken from the XCIS-D excited states, although the XCIS coefficients are all within 0.01 of these values. Standard Standard Energy (eV) Rotated Rotated Energy (eV) Configurations XCIS XCIS-D Configurations XCIS XCIS-D 
+
+|3OS ⟩ ( 0.95 ) 0 0 |3OS ⟩ ( 0.95 ) 0 0
+
+|1ZW −⟩ ( 0.89 ) 0.498 0.485 |1OS ⟩ ( 0.91 ) 0.562 0.534 
+
+|1OS ⟩ ( 0.86 ) 1.187 1.116 |1ZW −⟩ ( 0.84 ) 1.039 1.018 
+
+|3SV 1′ 
+
+> 0′
+
+⟩ ( 0.68 ),
+
+|3CS 0′ 
+
+> 1
+
+⟩ (− 0.59 )
+
+2.723 2.726 |3SV 1′ 
+
+> 0′
+
+⟩ ( 0.58 ),
+
+|3SV 2′ 
+
+> 0′
+
+⟩ (− 0.50 )
+
+2.449 2.423 
+
+|3SV 2′ 
+
+> 0
+
+⟩ ( 0.55 ),
+
+|3CS 0′ 
+
+> 2
+
+⟩ ( 0.54 )
+
+2.854 2.782 |3SV 1′ 
+
+> 0
+
+⟩ ( 0.52 ),
+
+|3CS 01⟩ (− 0.49 )
+
+2.684 2.639 
+
+|1ZW +⟩ ( 0.92 ) 3.311 2.812 |1ZW +⟩ ( 0.93 ) 3.218 2.731 72 IV - Calculations on Emissive Diradicals 
+
+A - Computational Details 
+
+Optimised geometry files for each of the large emissive diradicals studied were obtained from the supporting information sections of the papers referenced in Table A13. For D-ExROPPP calculations, a convergence tolerance of 2 .5 × 10 −15 was used to check whether the density matrix was appropriately converged by the SCF procedure. Spin-flip time-dependent density functional theory calculations were run using the Orca quantum chemistry package 109 . A 6-31G ∗∗ basis set was used for all TD-DFT calculations and 30 electronic states were obtained in each case. 73 C - Results for Ground and Excited States Table A13: Singlet triplet gaps ( Δ𝐸 S-T = 𝐸 T − 𝐸 S) predicted by D-ExROPPP alongside those predicted from variable-temperature electron paramagnetic resonance (VT-EPR) measurements.  
+
+> ∗
+
+VT-EPR measurements were taken but data suggested that Δ𝐸 S-T ≈ 0.  
+
+> ∗∗
+
+No VT-EPR data is available. 
+
+Molecule Name D-ExROPPP GS Multiplicity D-ExROPPP 
+
+Δ𝐸 S-T (eV) 
+
+Experimental GS Multiplicity Experimental 
+
+Δ𝐸 S-T (eV) Ref. 
+
+TTM-TTM Singlet -0.692 Singlet -0.135 ± 0.002 25 
+
+para-TTM-Ph-TTM Singlet -0.083 Singlet -0.065 22 
+
+meta-TTM-Ph-TTM Singlet -0.091 N/A ∗∗ N/A ∗∗ 8
+
+DTA Singlet -0.087 Singlet -0.014 37 
+
+5-7-ICz-TTM 2 Singlet -0.028 Singlet -0.0005 27 
+
+5-8-ICz-TTM 2 Singlet -0.073 Degenerate ∗ ≈ 0∗ 27 
+
+5-11-ICz-TTM 2 Singlet -0.085 Degenerate ∗ ≈ 0∗ 27 
+
+pseudo-o-PCP-TTM 2 Triplet 0.011 ≈ Degenerate ∗ ≈ 0∗ 30 
+
+pseudo-p-PCP-TTM 2 Triplet 0.015 Degenerate ∗ ≈ 0∗ 30 
+
+PyBTM-Ph-PyBTM Singlet -0.087 Singlet -0.044 34 
+
+PyBTM-Hex 2-PyBTM Singlet -0.087 Singlet -0.031 34 
+
+PCz-(PyBTM’) 2 Singlet -0.039 Singlet -0.002 4
+
+THDBA-(PyBTM’) 2 Triplet 0.024 Triplet 0.0007 ± 0.0005 33 
+
+TPA(Me)-(PyBTM”) 2 Singlet -0.050 Singlet -0.0015 2
+
+74 Table A14: SF-TD-DFT ground state multiplicities and singlet-triplet energy gaps ( Δ𝐸 S-T ) for all diradical molecules computed with B3LYP, CAM-B3LYP, and PBE0 functionals. ⟨𝑆 2⟩ is the expectation value of the total spin operator, where ⟨𝑆 2⟩ < 1 indicates a ground state of mostly singlet character and ⟨𝑆 2⟩ > 1indicates a ground state of mostly triplet character. 
+
+Molecule Name B3LYP GS ⟨ ˆ𝑆 2⟩
+
+B3LYP 
+
+Δ𝐸 S-T (eV) 
+
+CAM-B3LYP GS ⟨ ˆ𝑆 2⟩
+
+CAM-B3LYP 
+
+Δ𝐸 S-T (eV) 
+
+PBE0 GS ⟨ ˆ𝑆 2⟩
+
+PBE0 
+
+Δ𝐸 S-T (eV) 
+
+TTM-TTM 0.08 -0.135 0.21 -0.309 0.11 -0.155 
+
+para -TTM-Ph-TTM 0.08 -0.0068 0.10 -0.0028 0.10 -0.0058 
+
+meta -TTM-Ph-TTM 2.06 0.00099 2.18 0.00090 2.10 0.0012 DTA 0.11 -0.070 0.13 -0.028 0.13 -0.060 5-7-ICz-TTM 2 1.02 -0.025 1.15 -0.020 1.07 -0.027 5-8-ICz-TTM 2 0.54 -0.0046 1.00 0.0027 0.72 -0.0044 5-11-ICz-TTM 2 0.13 -0.0048 0.60 -0.0014 0.20 -0.0035 
+
+pseudo -o-PCP-TTM 2 1.29 0.00065 1.65 0.00012 1.35 0.00059 
+
+pseudo -p-PCP-TTM 2 0.19 -0.00098 0.51 -0.035 0.30 -0.033 PyBTM-Ph-PyBTM 0.08 -0.013 0.12 -0.0052 0.11 -0.011 PyBTM-Hex 2-PyBTM 0.08 -0.0016 0.12 -0.0006 0.10 -0.0013 PCz-(PyBTM ′)2 0.03 -3.34 0.08 -3.68 0.04 -3.42 THDBA-(PyBTM ′)2 1.05 0.0063 1.18 0.0033 1.10 0.0070 TPA(Me)-(PyBTM ′′ )2 0.12 -0.0090 0.17 -0.0017 0.15 -0.0070 75 Figure A1: Comparison of Δ𝐸 S-T predictions obtained by different computational methods for the 13 diradicals studied with VT-EPR data available. Data points are found in tables A13 and A14. 76 Table A15: Experimental and calculated first peak transition energies for the diradical molecule set. D-ExROPPP and TD-DFT (with B3LYP functional) values are obtained by inspected the oscillator strengths ( 𝑓 ) of the first 29 excited states and selecting the first state in the Visible/Near-IR range with a non-negligible value of 𝑓 . Experimental energies are obtained by predicting the positions of the lowest energy Visible/Near-IR in absorption spectra and converting to eV. 
+
+Molecule Name Exp. Energy (eV) 
+
+D-ExROPPP Energy (eV) 
+
+D-ExROPPP 
+
+⟨ ˆ𝑆 2⟩
+
+SF-TD-DFT Energy (eV) 
+
+SF-TD-DFT 
+
+⟨ ˆ𝑆 2⟩
+
+TTM-TTM 2.049 1.904 0.00 1.443 1.15 
+
+para -TTM-Ph-TTM 2.214 2.638 0.00 2.292 1.11 
+
+meta -TTM-Ph-TTM 2.167 2.485 0.00 1.694 1.09 DTA 1.471 1.585 2.00 1.589 0.65 5-7-ICz-TTM 2 1.934 2.250 2.00 1.805 1.07 5-8-ICz-TTM 2 1.876 2.326 2.00 1.831 1.07 5-11-ICz-TTM 2 1.839 2.353 2.00 1.842 1.00 
+
+pseudo -o-PCP-TTM 2 1.853 1.907 2.00 1.968 1.30 
+
+pseudo -p-PCP-TTM 2 1.848 1.919 2.00 1.996 1.24 PyBTM-Ph-PyBTM 2.183 2.500 0.00 1.655 1.02 PyBTM-Hex-PyBTM 2.283 2.627 0.00 1.640 1.03 PCz-(PyBTM) 2 1.899 2.465 2.00 3.73 1.88 THDBA-(PyBTM) 2 1.968 1.959 2.00 1.631 1.09 TPA(Me)-(PyBTM ′′ )2 1.579 1.388 2.00 1.296 0.42 77 Table A16: Comparison of the wall-clock time taken by various computational methods to calculate the first 30 electronic states of large emissive diradicals.  
+
+> ∗
+
+Estimated single-core wall clock time calculated using eq. 17 with CPU-Utilisation estimated at 75%.  
+
+> ∗∗
+
+Approximate increase in computational speed when running D-ExROPPP with an XCIS-D basis compared to SF-TD-DFT/B3LYP. Speed-up Factor = 𝑡 SF-TD-DFT 
+
+> 𝑡 D-ExROPPP
+
+Molecule Name 
+
+𝑡 D-ExROPPP ∗
+
+/ s 
+
+𝑡 SF-TD-DFT ∗∗ 
+
+/ s 
+
+Speed-up Factor ∗∗∗ 
+
+TTM-TTM 17 16434 966 
+
+para-TTM-Ph-TTM 22 3438 156 
+
+meta-TTM-Ph-TTM 23 3132 137 DTA 34 3600 106 5-7-ICz-TTM 2 86 5202 60 5-8-ICz-TTM 2 85 4824 57 5-11-ICz-TTM 2 88 5112 58 pseudo-o-PCP-TTM 2 86 5166 60 pseudo-p-PCP-TTM 2 81 5202 62 PyBTM-Ph-PyBTM 20 2898 145 PyBTM-Hex 2-PyBTM 55 4950 90 PCz-(PyBTM’) 2 61 4896 82 THDBA-(PyBTM’) 2 89 5184 58 TPA(Me)-(PyBTM”) 2 106 4932 47 78
