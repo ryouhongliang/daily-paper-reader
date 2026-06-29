@@ -1,0 +1,24 @@
+{
+  "label": "2026-06-29",
+  "date": "2026-06-29",
+  "generated_at": "2026-06-29T23:28:49",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202606/29/2606.26760v1-an-iterative-dual-channel-neural-quantum-state-algorithm-for-selected-configuration-interaction",
+      "section": "deep",
+      "title_en": "An Iterative Dual-Channel Neural Quantum State Algorithm for Selected Configuration Interaction",
+      "authors": "Jen-Yu Chang, Yi-Chun Chang, Yu-Jui Lin, Ming-Chun Yang, Hsiu-Chi Tsai, Tai-Yue Li, Nan Yow Chen, Tsung-Wei Huang, En-Jui Kuo",
+      "date": "2026-06-25",
+      "pdf": "https://arxiv.org/pdf/2606.26760v1",
+      "score": "8.0",
+      "evidence": "神经量子态算法用于精确电子结构计算以支持机理研究",
+      "tldr": "强关联电子体系求解中配置空间指数增长限制精确方法。HI-NQS算法将双通道Transformer神经量子态嵌入迭代采样-对角化-更新框架，利用自旋交叉注意力编码费米子结构。在小分子和氮活性空间测试中达到化学精度，行列式计数扩展性优于传统CIPSI-based SCI。该纯经典GPU方法高效可扩展，为选定组态相互作用问题提供新方案。",
+      "tags": "query:caos-poly",
+      "abstract_en": "Accurately solving the electronic Schrödinger equation for strongly correlated systems remains a central challenge in quantum chemistry, where the exponential growth of configuration space limits the applicability of exact methods. Selected Configuration Interaction (SCI) algorithms address this challenge by adaptively constructing compact determinantal expansions, yet their efficiency depends critically on the quality of the sampling strategy used to identify chemically important configurations. Here we introduce the Handover Iterative Neural Quantum State (HI-NQS) algorithm, which embeds a classically trained autoregressive Transformer neural quantum state within the iterative sample--diagonalize--update framework of Sample-Based Quantum Diagonalization. A dual-channel Transformer architecture with explicit spin-up/spin-down cross-attention encodes fermionic spin structure as an architectural inductive bias, enabling expressive and physically informed wavefunction representations. After each subspace diagonalization, the resulting eigenvector is distilled back into the network through a factorized spin-marginal teacher signal, establishing a closed feedback loop between generative sampling and exact diagonalization. Benchmarks across a range of small molecules and a systematic nitrogen active-space series demonstrate that HI-NQS achieves chemical accuracy on all systems tested, with determinant-count scaling substantially more favorable than conventional CIPSI-based SCI for all but the smallest active spaces. All calculations are performed on GPU hardware without quantum computing resources, establishing HI-NQS as an efficient and scalable purely classical approach to the selected configuration interaction problem.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

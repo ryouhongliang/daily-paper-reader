@@ -1,0 +1,60 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-29T23:27:18.487007+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2606.26760v1",
+      "source": "arxiv",
+      "title": "An Iterative Dual-Channel Neural Quantum State Algorithm for Selected Configuration Interaction",
+      "abstract": "Accurately solving the electronic Schrödinger equation for strongly correlated systems remains a central challenge in quantum chemistry, where the exponential growth of configuration space limits the applicability of exact methods. Selected Configuration Interaction (SCI) algorithms address this challenge by adaptively constructing compact determinantal expansions, yet their efficiency depends critically on the quality of the sampling strategy used to identify chemically important configurations. Here we introduce the Handover Iterative Neural Quantum State (HI-NQS) algorithm, which embeds a classically trained autoregressive Transformer neural quantum state within the iterative sample--diagonalize--update framework of Sample-Based Quantum Diagonalization. A dual-channel Transformer architecture with explicit spin-up/spin-down cross-attention encodes fermionic spin structure as an architectural inductive bias, enabling expressive and physically informed wavefunction representations. After each subspace diagonalization, the resulting eigenvector is distilled back into the network through a factorized spin-marginal teacher signal, establishing a closed feedback loop between generative sampling and exact diagonalization. Benchmarks across a range of small molecules and a systematic nitrogen active-space series demonstrate that HI-NQS achieves chemical accuracy on all systems tested, with determinant-count scaling substantially more favorable than conventional CIPSI-based SCI for all but the smallest active spaces. All calculations are performed on GPU hardware without quantum computing resources, establishing HI-NQS as an efficient and scalable purely classical approach to the selected configuration interaction problem.",
+      "authors": [
+        "Jen-Yu Chang",
+        "Yi-Chun Chang",
+        "Yu-Jui Lin",
+        "Ming-Chun Yang",
+        "Hsiu-Chi Tsai",
+        "Tai-Yue Li",
+        "Nan Yow Chen",
+        "Tsung-Wei Huang",
+        "En-Jui Kuo"
+      ],
+      "primary_category": "physics.chem-ph",
+      "categories": [
+        "physics.chem-ph",
+        "quant-ph"
+      ],
+      "published": "2026-06-25T08:47:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.26760v1",
+      "tags": [
+        "keyword:CAOS-Poly",
+        "query:CAOS-Poly"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Neural quantum state algorithm for accurate electronic structure enabling mechanistic studies",
+      "llm_evidence_cn": "神经量子态算法用于精确电子结构计算以支持机理研究",
+      "llm_evidence": "神经量子态算法用于精确电子结构计算以支持机理研究",
+      "canonical_evidence": "神经量子态算法用于精确电子结构计算以支持机理研究",
+      "llm_tldr_en": "HI-NQS combines an autoregressive Transformer neural quantum state with selected CI to efficiently sample important configurations, achieving high accuracy for strongly correlated systems and providing a powerful tool for mechanistic quantum chemistry.",
+      "llm_tldr_cn": "该论文针对强关联体系中电子薛定谔方程求解的挑战，提出HI-NQS算法，将自回归Transformer神经网络与选定组态相互作用框架相结合，通过高效采样重要组态来构造紧凑展开，在保持高精度的同时显著降低了计算量，为复杂化学体系的机理研究提供了强大的量子化学工具。",
+      "llm_tldr": "该论文针对强关联体系中电子薛定谔方程求解的挑战，提出HI-NQS算法，将自回归Transformer神经网络与选定组态相互作用框架相结合，通过高效采样重要组态来构造紧凑展开，在保持高精度的同时显著降低了计算量，为复杂化学体系的机理研究提供了强大的量子化学工具。",
+      "llm_tags": [
+        "query:caos-poly"
+      ],
+      "matched_query_tag": "query:caos-poly",
+      "matched_query_text": "density functional theory mechanistic study providing causal explanation for experimental observations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}

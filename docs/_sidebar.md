@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-06-29 <!--dpr-date:20260629-->
+    * 精读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/29/2606.26760v1-an-iterative-dual-channel-neural-quantum-state-algorithm-for-selected-configuration-interaction" data-sidebar-item="{&quot;title&quot;: &quot;An Iterative Dual-Channel Neural Quantum State Algorithm for Selected Configuration Interaction&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.26760v1-an-iterative-dual-channel-neural-quantum-state-algorithm-for-selected-configuration-interaction&quot;, &quot;score&quot;: &quot;8.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;caos-poly&quot;}], &quot;evidence&quot;: &quot;神经量子态算法用于精确电子结构计算以支持机理研究&quot;}">An Iterative Dual-Channel Neural Quantum State Algorithm for Selected Configuration Interaction</a>
   * 2026-06-27 <!--dpr-date:20260627-->
     * 精读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202606/27/2606.22448v1-kinetics-of-template-directed-multistate-copolymerization" data-sidebar-item="{&quot;title&quot;: &quot;Kinetics of template-directed multistate copolymerization&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2606.22448v1-kinetics-of-template-directed-multistate-copolymerization&quot;, &quot;score&quot;: &quot;9.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;caos-poly&quot;}], &quot;evidence&quot;: &quot;模板引导共聚合的精确动力学解为序列定义聚合物的计算辅助合成提供支持&quot;}">Kinetics of template-directed multistate copolymerization</a>
