@@ -1,0 +1,1087 @@
+Title: Conformation-Dependent Donor Selectivity in the Xanthan Gum Glycosyltransferase GumK Revealed by AI-Based Docking
+
+URL Source: https://www.biorxiv.org/content/10.64898/2026.04.10.717502v2.full.pdf
+
+Number of Pages: 15
+
+Markdown Content:
+# Conformation-Dependent Donor Selectivity in the Xanthan Gum 1
+
+# Glycosyltransferase GumK Revealed by AI-Based Docking 2
+
+Davide Luciano 1, Tova Alenfalk 1, and Gaston Courtade 1
+
+> 3
+> 1
+
+Department of Biotechnology and Food Science, NTNU Norwegian University of Science 4
+
+and Technology, Trondheim, Norway 5
+
+Abstract 6
+
+The interdomain flexibility of GT-B fold glycosyltransferases regulates substrate binding 7
+
+and catalysis, yet the role of local structural variations in donor substrate specificity remains 8
+
+unclear. GumK, a GT70 enzyme from Xanthomonas campestris , exhibits local plasticity 9
+
+within its donor-binding pocket. We classify this plasticity into two conformational states, 10 
+
+defined by the presence (closed state) or absence (open state) of a conserved hydrophobic 11 
+
+interaction stabilizing the pocket. Using the AI-enhanced docking approach GNINA, we 12 
+
+investigated the relationship between these states and substrate specificity by comparing 13 
+
+UDP-glucuronate with five acidic and neutral ligand analogs. While docking scores showed 14 
+
+limited discrimination among ligands, distance-based analysis between the sugar C6 atom 15 
+
+and Lys307 revealed conformation-dependent trends. In the open state, negatively charged 16 
+
+sugars preferentially interact with Lys307 via their carboxylate groups. Conversely, the closed 17 
+
+state favors interactions with the pyrophosphate moiety. To provide orthogonal validation, 18 
+
+we generated ensembles of GumK–substrate complexes using AI-based cofolding methods 19 
+
+(AlphaFold3 and Boltz). While Boltz-2 affinities correctly ranked substrate specificity, only 20 
+
+the GNINA-generated ensembles were consistent with physics-based simulations in capturing 21 
+
+the conformational basis of selectivity. These results suggest that donor specificity arises 22 
+
+from the interplay between ligand chemistry and binding-site plasticity rather than from a 23 
+
+single rigid binding mode, and highlight complementary strengths of docking and cofolding 24 
+
+approaches for studying flexible CAZymes. 25 
+
+Keywords: GNINA, AI, glycosyltransferase, Xanthan gum, GumK, docking, cofolding models 26 
+
+# Introduction 27 
+
+Glycosyltransferases (GTs) catalyze the formation of glycosidic bonds and are essential for 28 
+
+the biosynthesis of a wide range of glycoconjugates and polysaccharides. By transferring a 29 
+
+monosaccharide unit from an activated donor, typically a nucleotide sugar, to a specific acceptor, 30 
+
+these enzymes regulate the assembly of complex carbohydrate structures and their derivatives [1]. 31 
+
+Due to their catalytic versatility, GTs are increasingly used as biocatalysts to produce glycans 32 
+
+and functional biomaterials, and are also attractive targets for therapeutic intervention [2–4]. 33 
+
+Despite their broad relevance, the molecular principles governing donor recognition and catalytic 34 
+
+selectivity remain only partially understood. 35 
+
+GTs display a high degree of structural diversity and are classified into 139 families in the 36 
+
+CAZy database based on sequence similarity [5]. These families adopt different structural folds, 37 
+
+including GT-A, GT-B, GT-C, and other less common architectures [6], which reflect the wide 38 
+
+range of catalytic strategies and substrate specificities within the superfamily. 39 
+
+Among the different architectures, the GT-B fold is one of the most abundant and conserved. 40 
+
+GT-B enzymes are composed of two Rossmann-like domains connected by a flexible linker, with 41 
+
+1
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+the catalytic site located at the interface between the two domains [7]. The N-terminal domain 42 
+
+is typically involved in acceptor binding, whereas the C-terminal domain accommodates the 43 
+
+donor substrate. In contrast to enzymes with a rigid and preorganized active site, GT-B proteins 44 
+
+often rely on interdomain motions to regulate substrate binding and catalysis [8]. Despite the 45 
+
+prevalence of GT-B enzymes, their conformational landscape and its role in determining substrate 46 
+
+selectivity, particularly toward the donor substrate, remain incompletely understood. 47 
+
+The limited structural and mechanistic characterization of many GT-B enzymes poses a 48 
+
+challenge for understanding their function and for exploiting them in biotechnological applications. 49 
+
+In this context, the development of efficient strategies to rapidly screen donor–enzyme interactions 50 
+
+would be highly valuable [9]. Computational approaches offer a promising starting point, providing 51 
+
+atomistic insight into substrate recognition and enabling the exploration of multiple candidate 52 
+
+substrates in a relatively high-throughput manner. 53 
+
+Among the less explored GT-B families, GT70 includes only one characterized member, 54 
+
+GumK, a GT from Xanthomonas campestris involved in the biosynthesis of xanthan gum, a highly 55 
+
+versatile microbial polysaccharide widely used in the food and materials industries [10, 11]. GumK 56 
+
+catalyzes the transfer of glucuronic acid from UDP-glucuronate to a lipid-linked oligosaccharide 57 
+
+intermediate, thus incorporating an acidic sugar moiety that contributes to the physicochemical 58 
+
+properties of the final polymer [12]. The crystal structure of GumK (PDB ID: 2HY7)[13] revealed 59 
+
+Asp157 as the catalytic base, consistent with an inverting reaction mechanism [14]. It has 60 
+
+been experimentally shown that GumK binds UDP-glucuronate, but neither UDP-glucose nor 61 
+
+UDP-galacturonic acid [15]. 62 
+
+Understanding donor selectivity is of particular interest for both mechanistic and biotech-63 
+
+nological reasons. While UDP-glucuronate is the native substrate, incorporating alternative 64 
+
+UDP-sugars could enable the biosynthesis of modified xanthan derivatives with altered charge 65 
+
+distribution and mechanical properties. The discrimination between acidic and neutral sugar 66 
+
+moieties is expected to arise from specific electrostatic interactions within the donor-binding 67 
+
+pocket, yet the residues responsible for this selectivity have not been conclusively identified [13, 68 
+
+15]. 69 
+
+In a previous computational study [16], we investigated the conformational landscape of 70 
+
+GumK and the conformational space of the monosaccharidic part of the donor substrate when 71 
+
+the nucleotidic moiety is in the bound state at the isolated C-domain. We compared the ring 72 
+
+orientation of UDP-glucuronate (the natural substrate) with that of the non-substrate UDP-73 
+
+glucose. We observed that the polarity of the C-domain’s binding site, together with its flexibility, 74 
+
+may influence donor selectivity by favoring interaction between the carboxyl group of glucuronate 75 
+
+and the key residue Lys307. This interaction may be important for both the catalytic mechanism 76 
+
+and the substrate-binding pathway, providing an additional enthalpic contribution that is absent 77 
+
+in UDP-glucose. 78 
+
+However, the computational strategy used to sample sugar conformations was not high-79 
+
+throughput, thereby limiting the utility of the approach for studying multiple donor substrate 80 
+
+candidates or for screening mutants with potentially altered activity. To address this sampling 81 
+
+limitation, we herein explore the use of docking as a complementary approach to investigate 82 
+
+the interactions of various ligands with both full-length GumK and its isolated C-domain. We 83 
+
+performed systematic docking calculations using GNINA [17], an AI-based scoring algorithm that 84 
+
+has demonstrated improved performance over the standard AutoDock Vina scoring scheme. Our 85 
+
+results show that the docking algorithm recovers pose populations similar to those generated by 86 
+
+molecular dynamics (MD) simulations [16], enabling discrimination of substrates based on geo-87 
+
+metric descriptors. However, we found the outcome is highly sensitive to the conformation of the 88 
+
+donor-binding site within the C-domain of GumK. Thanks to recent developments in AI-based co-89 
+
+folding methods that enable the prediction of protein–ligand complexes, we additionally employed 90 
+
+AlphaFold3 and two versions of Boltz to generate multiple structural samples for each UDP-sugar 91 
+
+ligand in complex with GumK. This comparison allows us to assess whether independent cofolding 92 
+
+2
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+ensembles recover the same conformational states and substrate-dependent trends identified by 93 
+
+GNINA, and to evaluate the utility of cofolding methods for saccharide–enzyme docking in the 94 
+
+context of flexible CAZymes.Altogether, this study provides mechanistic insight into the dynamic 95 
+
+determinants of donor recognition in a GT-B enzyme and offers a structural basis for the rational 96 
+
+engineering of GumK toward alternative UDP-sugar substrates. Additionally, it provides insights 97 
+
+into the strengths and limitations of cofolding methods and AI-based docking compared with 98 
+
+physics-based molecular simulations for studying highly flexible carbohydrate–protein systems. 99 
+
+# Results and Discussion 100 
+
+Conformational states of the donor-binding site 101 
+
+We focused our study on the donor-binding domain (C-domain) of GumK to isolate its binding 102 
+
+properties from interactions with the acceptor domain. This choice also simplifies the highly 103 
+
+dynamic two-domain enzyme into a relatively static one, thereby avoiding the need to sample 104 
+
+multiple states with varying degrees of opening when studying the donor substrate’s conformation 105 
+
+in the binding site [16]. 106 
+
+The donor-binding domain of GumK shows a peculiar characteristic that is absent in the 107 
+
+other xanthan gum GT-Bs, namely a flexible loop between residues 293–300, which shows high 108 
+
+variability in terms of amino acid composition within the CAZy family of GumK (GT70) [5, 16]. 109 
+
+This loop is not directly in contact with the donor substrate, as a hydrophobic interaction between 110 
+
+Met231 and Leu301 positions it away from the donor-binding site. The crystal structures of 111 
+
+GumK in the apo form (PDB: 2HY7) (Fig. 1A) and in complex with UDP (PDB: 2Q6V) (Fig. 1B) 112 
+
+reveal that these hydrophobic residues adopt different conformational states. One conformation 113 
+
+shows the side chain of Met231 interacting with that of Leu301 in the apo structure, whereas this 114 
+
+interaction is absent in the UDP-bound complex. These residues are conserved within the GT70 115 
+
+family, and their conformational plasticity is partially attributable to the aforementioned flexible 116 
+
+loop. 117 
+
+Patrick and colleagues used NMR spectroscopy to show that binding of the donor substrate 118 
+
+is initially guided by the nucleobase, i.e., UDP, in a glycosyltransferase from E. coli (WaaG) 119 
+
+that binds UDP-glucose [18]. Once this part is bound, the unconstrained sugar moiety retains 120 
+
+conformational freedom, which is lost as the substrate approaches the catalytic pocket and finally 121 
+
+binds. 122 
+
+Considering the conformational flexibility of both the binding site and the donor substrate, we 123 
+
+evaluated the performance of GNINA in docking the native substrate and a series of UDP-sugars 124 
+
+that are present in the metabolism of Xanthomonas as building blocks for several glycosylation 125 
+
+reactions: UDP-glucose, UDP-galactose, UDP-galacturonate, UDP-N -acetylglucosamine, and 126 
+
+UDP-N -acetylgalactosamine. Each ligand was docked onto two different states of the donor 127 
+
+domain: one conformation obtained from the prediction of the C-domain in complex with full-128 
+
+length UDP-glucuronate using Boltz-2 (named conf0 in this work)[19] (Fig. 1C), and a second 129 
+
+conformation extracted from a previously published [16] unbiased MD simulation of the isolated 130 
+
+donor domain (named conf1 in this work) (Fig. 1D). 131 
+
+The conf1 corresponds to an open state of the hydrophobic interaction, confirming that this 132 
+
+is a natural behavior of the donor-binding site and does not depend on the presence of the 133 
+
+acceptor-binding domain, as suggested by the crystal structure [13]. In contrast, the Boltz2 134 
+
+cofolded complex, conf0, displays a closed state of the hydrophobic interaction. In this model, 135 
+
+the sugar moiety does not directly interact with the binding domain, and binding is primarily 136 
+
+mediated by the pyrophosphate group. 137 
+
+3
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+Figure 1: A) Conformation of the donor-binding domain taken from the apo crystal structure (PDB: 2HY7), with the key amino acids analyzed in this work labeled in bold. B) Conformation of the same domain in the crystal structure of GumK in complex with UDP (yellow) (PDB: 2Q6V). C) Boltz-2 prediction of the donor binding domain in complex with the donor substrate (UDP-GlcA in yellow). This conformation corresponds to conf0 in the main text. D) Donor-binding domain conformation sampled from a preparative simulation of the donor substrate in solution. This conformation corresponds to conf1 in the main text. 
+
+GNINA docking recapitulates MD-derived pose populations 138 
+
+For each ligand, a GNINA docking approach was employed to obtain a statistically meaningful 139 
+
+representation of the accessible binding poses. We ran 31 replicas per ligand, with each replica 140 
+
+generating 20 poses, yielding a total of 31 ×20 docked poses per ligand. We plotted the distributions 141 
+
+of the median GNINA CNN score (convolutional neural network score) computed for each replica, 142 
+
+i.e., over 20 poses (Fig. 2A and B). We filtered out poses in which the nucleobase was not in the 143 
+
+crystallographic binding mode, based on RMSD relative to the crystal structure (PDB 2Q6V). 144 
+
+For the remaining poses, we computed a bootstrapped distribution of the distance between the 145 
+
+C6 atom of the ligand and the N η atom of the key residue Lys307 ( dK ) (Fig. 2C and D). 146 
+
+Inspection of the distributions of median CNN scores across ligands reveals no apparent 147 
+
+difference. The only distribution that deviates from the native substrate (UDP-GlcA) is UDP-148 
+
+GlcNAc in the conf0 state of the binding site. Assuming that the donor domain specifically binds 149 
+
+UDP-GlcA, then the score alone cannot be used to discriminate between substrates, as it fails to 150 
+
+distinguish between a good binder and a non-binder. 151 
+
+4
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+However, when analyzing the distribution of the reference distance ( dK ), clear differences 152 
+
+emerge. In the closed state of the binding site (conf0; Fig. 2C), two peaks at approximately 153 
+
+4 Å are observed for the acidic ligands UDP-GlcA and UDP-GalA, corresponding to a direct 154 
+
+interaction between the carboxyl group and Lys307. In this C-domain conformation, the neutral 155 
+
+substrates display a lower population in this region, while their main peak is centered above 156 
+
+8 Å. At these distances, Lys307 interacts primarily with one or both phosphate groups of the 157 
+
+pyrophosphate moiety. 158 
+
+Figure 2: A) Distribution of the median GNINA CNN score across docking replicas using two different conformations of the donor binding site. conf0 has a short distance between Met231 and Leu301, as shown by the structure in panel A. conf1 has a longer distance between the two residues, as shown by the dashed line in the structure in panel B. In the left column, results using conf0 as the receptor; in the right column, results using conf1 as the receptor. Each replica generates 20 poses, and the median score is calculated over these poses using conf0 as the receptor. The resulting values are compared across ligands, with UDP-GlcA used as a reference. B) Like A, but using conf1 as the receptor in the docking calculations. C) Bootstrapped distribution (4,000 resampling cycles) of the distance between the C6 atom of the tested ligands and the ζ-nitrogen of Lys307 ( dK in Å), calculated over all conformations in which the uridine moiety is correctly docked based on the RMSD respect to the crystallographic mode. The shaded region represents the standard deviation obtained from the bootstrap procedure. D) Like C, but using conf1 as the receptor. The dotted and dashed curves correspond to the weighted distributions of the same variable ( dK ) sampled during Hamiltonian replica exchange simulations of UDP-GlcA and UDP-Glc with the uridine moiety constrained, as reported in our previous work [16]. 
+
+In the open conformation (conf1), the distributions of the two acidic ligands change substan-159 
+
+tially, and their dominant peaks become associated with direct interactions between the carboxyl 160 
+
+group and Lys307 (Fig. 2D). In contrast, the neutral substrates exhibit broader distributions 161 
+
+spanning a wider range of distances dK . This behavior likely reflects the increased conformational 162 
+
+space available for reorienting the sugar moiety in conf1 relative to conf0. 163 
+
+Filtering the conformations based on the docked orientation of the nucleobase in the crystal 164 
+
+5
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+structure has a similar effect to constraining the nucleobase’s RMSD to the reference conformation, 165 
+
+a strategy previously used to study the interaction using MD simulations [16]. The conformations 166 
+
+generated with GNINA are in agreement with the states sampled in MD simulations (Fig. 2C and 167 
+
+D). The region between 8 and 10 Å represents interactions with the phosphate groups, whereas 168 
+
+in the region between 2 and 4 Å the C6 atom of the monosaccharide is located close to Lys307. 169 
+
+The GNINA-generated distributions do not completely overlap with those generated by MD 170 
+
+because, in the latter, the flexible side chain of Lys307 can rearrange to interact optimally with 171 
+
+the carboxyl group of UDP-GlcA, maintaining conformation, whereas in the former, the side 172 
+
+chains are rigid. Despite this difference, the bimodal nature of the distributions is recapitulated. 173 
+
+In MD simulations, the sampled function corresponds to a biased potential energy surface 174 
+
+(using Hamiltonian Replica Exchange [16]) defined by a force field that models the physical 175 
+
+interactions of the system. In contrast, GNINA employs a CNN-based scoring function in which 176 
+
+atomic positions within the docking box are associated with the likelihood of observing that 177 
+
+distribution in experimental crystal structures. Specifically, the CNN predicts both a pose score 178 
+
+(a confidence score between 0 and 1 that a pose has a low RMSD relative to the experimental 179 
+
+structure) and binding affinity in pK units [20]. The scoring function, therefore, contains no 180 
+
+explicit physical energy terms. 181 
+
+Although the CNN score could not discriminate among substrates, it provided useful insights 182 
+
+into binding-site selectivity. As the protein transitions from the open (conf1) to closed (conf0) 183 
+
+conformation, the median CNN score distributions become less overlapping (Fig. 2A–B). However, 184 
+
+due to system flexibility and multiple local minima, poses with an improperly bound nucleobase 185 
+
+can still achieve high CNN scores and vice versa, since the nucleobase’s binding contribution can 186 
+
+be partially compensated by the sugar–pyrophosphate moiety. By introducing an RMSD filter and 187 
+
+a suitable binding-mode descriptor, GNINA nonetheless recovered a conformation distribution 188 
+
+resembling that of a physical potential energy surface. This likely reflects the CNN’s complex 189 
+
+representation of the chemical environment, though extracting interpretable information for a 190 
+
+specific docked system remains challenging [21]. 191 
+
+Carbohydrates are cyclic molecules whose ring structures impose important conformational 192 
+
+constraints. A potential limitation of scoring functions that are not explicitly physics-based 193 
+
+is that they may generate highly distorted ligand conformations or fail to preserve the correct 194 
+
+stereochemistry. Consequently, structural filtering is often required to identify and remove 195 
+
+physically unrealistic poses [22]. However, for GNINA, we did not observe significant distortions, 196 
+
+suggesting that the model is reasonably well-suited to these types of molecules. The limited 197 
+
+quantitative discrimination observed for the CNN score may be related to the nature of the 198 
+
+training dataset. Structural information for GT-B glycosyltransferases remains relatively scarce, 199 
+
+and GumK is currently the only member of the CAZy GT70 family for which an experimental 200 
+
+structure is available. As a result, binding modes and structural features specific to this enzyme 201 
+
+family are likely underrepresented in the data used to train the scoring model, potentially affecting 202 
+
+its performance on these systems [23]. 203 
+
+Despite these limitations, we demonstrated that prior knowledge from more computationally 204 
+
+demanding physics-based simulations, combined with a discriminating variable to characterize 205 
+
+the generated conformations, yielded an AI-based docking approach that provides meaningful 206 
+
+insights into the behavior of these systems while retaining the advantages of high-throughput 207 
+
+screening. 208 
+
+Cofolding predicts substrate affinity but not conformational specificity 209 
+
+To provide orthogonal validation of the docking-based analysis, we generated ensembles of 210 
+
+GumK–substrate complexes using AlphaFold3 [24] and Boltz-2 [19] by producing 200 diffusion 211 
+
+samples per UDP-sugar substrate. This approach was motivated by the hypothesis that a 212 
+
+sufficiently large number of samples could capture alternative interdomain conformations, yielding 213 
+
+a receptor ensemble implicitly coupled to each substrate. 214 
+
+6
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+Inspection of the predicted interdomain geometries (Fig. 3) revealed that cofolding samples 215 
+
+predominantly converge on narrow distance distributions between the C6 atom of the monosac-216 
+
+charides and Lys307, consistent with non-binding conformations. This behavior likely reflects 217 
+
+the tendency of diffusion-based structure prediction models to reproduce conformations seen 218 
+
+in the experimental structures [25]. As a consequence, the substrate-dependent conformational 219 
+
+trends identified by GNINA (Fig. 2) were not recovered from the cofolding ensembles. These 220 
+
+methods are also prone to well-documented stereochemical errors [25, 26], which we also observed 221 
+
+in our predicted ensembles of AlphaFold3 and Boltz-2. However, as we did not observe chirality 222 
+
+violations in Boltz-1, we also included ensembles of 100 diffusion samples generated by this 223 
+
+method. Yet, its dK distributions remained nearly identical across all six UDP-sugars (Fig. 3), 224 
+
+confirming that stereochemical fidelity alone cannot recover substrate-dependent conformational 225 
+
+discrimination. 226 
+
+Nevertheless, Boltz-2 affinity scores (Table 1) correctly ranked the substrates, assigning the 227 
+
+highest predicted affinity to the native substrate UDP-GlcA, closely followed by UDP-GalA, 228 
+
+and lower affinities to the neutral analogs. This result is consistent with the hypothesis that 229 
+
+negatively charged ligands are preferentially recognized by GumK and aligns with the enthalpic 230 
+
+contribution attributed to the Lys307–carboxylate interaction identified in the docking and MD 231 
+
+analyses. However, the mechanistic basis for this ranking cannot be directly extracted from the 232 
+
+cofolding output, as the score is not decomposable into conformation-dependent contributions, in 233 
+
+contrast to the geometric descriptor dK .234 
+
+Figure 3: Bootstrapped distribution (4,000 resampling cycles) of the distance between the C6 atom of the tested ligands and the ζ-nitrogen of Lys307 ( dK in Å), calculated over all conformations in the ensembles generated by Boltz-1 (N=100), Boltz-2 (N=200), and AlphaFold3 (N=200). The shaded region represents the standard deviation obtained from the bootstrap procedure. The dotted and dashed curves correspond to the weighted distributions of the same variable ( dK ) sampled during Hamiltonian replica exchange simulations of UDP-GlcA and UDP-Glc with the uridine moiety constrained, as reported in our previous work [16]. 
+
+Taken together, these results suggest that GNINA docking and AI-based cofolding provide 235 
+
+complementary rather than equivalent information. Boltz-2 offers a rapid route to affinity ranking, 236 
+
+but cofolding methods cannot capture the conformational plasticity of flexible binding sites, 237 
+
+a critical feature for predicting donor specificity in GT-B glycosyltransferases. Additionally, 238 
+
+carbohydrates are a challenging class of molecules for AI-based models due to their high degree of 239 
+
+chirality, which may not always be accurately captured by deep learning approaches. Nevertheless, 240 
+
+7
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+Table 1: Affinity scores calculated by Boltz-2 for each of the ligands. Scores can be approximately interpreted as a log 10 (IC 50 ), derived from an IC 50 measured in μM [19] 
+
+Ligand Boltz-2 Affinity 
+
+GlcA −0.6550 
+
+GalA −0.5980 
+
+Glc −0.2537 
+
+Gal −0.2512 
+
+GalNAc −0.1721 
+
+GlcNAc −0.1349 
+
+cofolding models can be highly valuable for generating initial protein–ligand conformations that 241 
+
+can subsequently be refined and analyzed using docking calculations or molecular simulations. 242 
+
+GNINA docking on full-length GumK shows the effect of the N-domain 243 
+
+The docking experiments on the isolated C-domain enabled us to isolate the effect of the binding-244 
+
+site conformation on donor-substrate binding and potential substrate selectivity. However, the 245 
+
+binding site of the isolated C-domain is largely solvent-exposed, allowing a greater conformational 246 
+
+freedom for the sugar moiety. In contrast, the presence of the N-domain in the closed conformation 247 
+
+may contribute to substrate selectivity by further constraining the orientation of the ligand. To 248 
+
+test this hypothesis, we generated full-length GumK–ligand complexes by cofolding UDP-GlcA 249 
+
+and UDP-GalA with Boltz-1 and subsequently performed docking calculations to evaluate how 250 
+
+the N-domain affects the GNINA-generated distributions (Fig. 4). 251 
+
+The cofolded structures adopt a closed-state conformation, in which the pyrophosphate region 252 
+
+of the ligand interacts with Lys307. Based on the Met231–Leu301 distance, the resulting structures 253 
+
+correspond to the conf0 state of the C-domain. 254 
+
+Redocking with GNINA, using the same protocol as for the isolated C-domain, revealed subtle 255 
+
+but noticeable differences in the distance distributions. In particular, the interaction between 256 
+
+the carboxyl group and Lys307 is less populated in the case of UDP-GlcA (Fig. 4A), and both 257 
+
+ligands display a dominant peak around 8 Å, consistent with interactions between Lys307 and 258 
+
+the pyrophosphate moiety. This shift in the distribution may be explained by the additional 259 
+
+contacts provided by the N-domain, which, as expected, further restricts the orientation of the 260 
+
+ligand within the binding site. 261 
+
+Ensemble docking considerations 262 
+
+Although the lack of receptor flexibility represents an intrinsic limitation of the docking approach, 263 
+
+it may also provide a conceptual advantage. By constraining the protein conformation, docking 264 
+
+enables a more controlled comparison of how predefined binding-site states influence the spatial 265 
+
+distribution of the docked ligands, thereby facilitating the dissection of conformation-dependent 266 
+
+specificity. 267 
+
+The docking study suggests that acidic ligands contribute an additional enthalpic component 268 
+
+to binding through interactions between the carboxylate and Lys307. This interaction may 269 
+
+influence the binding pathway by properly orienting the substrate for catalysis. The flexibility 270 
+
+of the donor-binding site may guide this interaction through two steps: in a more open state, 271 
+
+the sugar moiety can interact with Lys307 via its carboxyl group, as there is sufficient space to 272 
+
+accommodate the sugar ring in the proper orientation. When the Met-Leu loop adopts a closed 273 
+
+conformation, the interaction with the carboxyl group is reduced, whereas interactions with the 274 
+
+pyrophosphate group become more favored, allowing the sugar ring to approach the catalytic 275 
+
+residue in the acceptor-binding domain (Fig. 5). 276 
+
+8
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+Figure 4: A) Boltz-1 cofolded complex of UDP-GlcA bound to full-length GumK. The distance between Met298 and Leu301 is highlighted with a dashed line, indicating that the C-domain adopts a closed conformation, similar to that observed in conf0. B) Boltz-1 cofolded complex of UDP-GalA bound to full-length GumK. The same distance between the key hydrophobic residues is highlighted to assess the conformational state of the C-domain. In this case the ring of the sugar moiety was predicted in a distorted chain representation. C) Comparison of the bootstrapped dk distributions obtained from the docked conformations of UDP-GlcA with full-length GumK and conf0 for the isolated C-domain (Fig. 2C). D) Comparison of the bootstrapped dk distributions obtained from the docked conformations of UDP-GalA with full-length GumK and conf0 (Fig. 2C). The shaded region represents the standard deviation obtained from the bootstrap procedure. 
+
+This two-state behavior can be formalized within an ensemble-docking framework in which 277 
+
+each GNINA-derived distribution represents the residual conformational freedom of the substrate 278 
+
+conditioned on a specific protein conformation. The equilibrium substrate distribution can then 279 
+
+be reconstructed as a weighted average of these conditional distributions, with weights given by 280 
+
+the Boltzmann populations of the corresponding protein states, which can be estimated from 281 
+
+molecular dynamics simulations. For example, conformations such as conf0 and conf1, as well as 282 
+
+other conformational states of the full-length protein, would contribute proportionally to their 283 
+
+equilibrium populations. 284 
+
+In practice, however, such an ensemble-docking strategy is non-trivial. The positioning of the 285 
+
+uridine moiety within its binding pocket is not independent of the geometry of the surrounding 286 
+
+donor-binding site, implying a structural coupling between local and global conformational 287 
+
+9
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+features. Consequently, sampling only selected regions of the binding site without accounting for 288 
+
+their collective organization is inherently challenging. 289 
+
+# Conclusion 290 
+
+In this study, we explored the potential of GNINA to investigate donor recognition in a system 291 
+
+characterized by substantial conformational flexibility at both the binding site and the substrate 292 
+
+level. GumK presents a challenging case for rigid docking approaches, as the donor-binding 293 
+
+domain can adopt multiple conformations, and the UDP-sugar retains residual flexibility even 294 
+
+after nucleobase anchoring. 295 
+
+To account for this structural variability, we represented the conformational heterogeneity of 296 
+
+the donor-binding site through two structurally defined states. These were operationally defined 297 
+
+based on the presence or absence of a conserved hydrophobic interaction that stabilizes the pocket: 298 
+
+an open state, in which this interaction is disrupted, and a closed state, in which it is maintained. 299 
+
+By docking multiple UDP-sugars to these two predefined conformations, we aimed to assess 300 
+
+whether GNINA could capture substrate-dependent trends across distinct structural contexts. 301 
+
+While the median CNN score does not clearly discriminate between substrates, analysis 302 
+
+of geometric descriptors suggests that substrate behavior depends on the binding pocket’s 303 
+
+conformational state. In the closed state (conf0; Fig. 5A), the contacts between pyrophosphate 304 
+
+and Lys307 represent the main population. In contrast, in the open state (conf1; Fig. 5B), acidic 305 
+
+sugars more frequently adopt conformations compatible with an interaction between the carboxyl 306 
+
+group and Lys307. 307 
+
+A similar picture emerges for the full-length protein, where the constraints on the conforma-308 
+
+tional freedom of the sugar ligand arise not only from the architecture of the binding site within a 309 
+
+single domain, but also from the presence of the second domain. This effect can be qualitatively 310 
+
+appreciated from the changes observed in the distributions of the geometric descriptor used to 311 
+
+characterize the sampled binding modes. 312 
+
+Figure 5: A) Representative docked conformation of UDP-glucuronate interacting with conf0 through the pyrophosphate groups. The dashed red line shows the reference distance, dk, used to describe the binding modes. The black dashed line highlights the degree of opening of the binding site. B) Representative docked conformation of UDP-glucuronate interacting with conf1 through the carboxyl group. 
+
+These observations are consistent with a model in which donor recognition may arise from 313 
+
+the interplay between substrate chemistry and the binding site’s conformation, rather than from 314 
+
+a single static binding mode. Although GNINA does not explicitly sample backbone motions, 315 
+
+10 
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+the two-conformation strategy and the full-length protein experiment adopted here suggest 316 
+
+that docking can still capture meaningful trends when different structural states are explicitly 317 
+
+considered. 318 
+
+Furthermore, we compared the AI-based docking approach with the cofolding methods 319 
+
+implemented in AlphaFold3 and Boltz. In contrast to docking algorithms, where AI is primarily 320 
+
+used to score conformations generated by a sampling procedure, cofolding methods rely on the 321 
+
+AI model itself to directly sample the conformational space of the protein–ligand complex. In our 322 
+
+case, these models appear to be biased toward a very narrow binding mode, likely reflecting the 323 
+
+limited amount of experimental structural information available for such systems. In addition, 324 
+
+they occasionally fail to preserve the correct stereochemistry of the ligands. 325 
+
+Despite not being explicitly physics-based, GNINA is surprisingly capable of generating an 326 
+
+ensemble of binding modes that resembles those sampled during molecular dynamics simulations. 327 
+
+This highlights the value of combining AI models with knowledge obtained from more computa-328 
+
+tionally demanding methods and suggests that there is still considerable room for improvement 329 
+
+in current cofolding approaches. Importantly, our results show that simple affinity scores alone 330 
+
+are insufficient to discriminate between favorable and unfavorable ligands. Instead, meaningful 331 
+
+interpretation requires analysis of the generated conformations using appropriate geometric 332 
+
+descriptors. Importantly, due to its computational efficiency, the GNINA-based approach used 333 
+
+in this work could, in principle, be extended to rapid screening of mutants, provided that the 334 
+
+conformational ensemble of the donor-binding site is adequately represented. In this context, 335 
+
+docking would not replace detailed molecular simulations, but could serve as an initial filter 336 
+
+to identify variants whose binding-site conformations preserve or alter key substrate-dependent 337 
+
+interactions. 338 
+
+Overall, this work suggests that AI-based docking, combined with an explicit representation 339 
+
+of the binding site’s open and closed states, may provide a practical, exploratory framework for 340 
+
+generating testable hypotheses about donor selectivity in flexible GT-B enzymes. 341 
+
+# Methods 342 
+
+GNINA 343 
+
+The first conformation of the C-domain (conf0) was predicted using Boltz-2 [19], which takes 344 
+
+as input only the sequence of the isolated domain and the CCD definition of UDP-GlcA (see 345 
+
+below). The top-ranked model was selected and used as a receptor for docking. conf1 was instead 346 
+
+extracted from a preparative MD simulation of the C-domain in solution. 347 
+
+Each ligand was docked using GNINA (version 1.3) [17]. The docking search space was 348 
+
+defined by an autobox centered on residues surrounding the donor-binding site (228–231, 253– 349 
+
+254, 271–275, 278, 292, 301, 304–308, and 310), with automatic box extension enabled. The 350 
+
+exhaustiveness parameter was set to 16, and the minimum RMSD between poses during the 351 
+
+Monte Carlo sampling was set to 1 Å to filter redundant conformations. For each ligand, 31 352 
+
+independent docking runs were performed, each initialized with a different random seed and 353 
+
+generating 20 poses per replica. 354 
+
+Since both receptor conformations (conf0 and conf1) were structurally aligned to the C-domain 355 
+
+domain of the crystal structure (PDB ID: 2Q6V), the RMSD of the uridine moiety with respect 356 
+
+to the crystallographic reference was used as a geometric filter. Among the poses generated for 357 
+
+each replica, only those with a CNN score above the median and with the uridine moiety correctly 358 
+
+positioned within the binding site were retained for further analysis. 359 
+
+Cofolding methods 360 
+
+AlphaFold3 (v3.0.1) [24], Boltz-1 (v1.0.0) [27], and Boltz-2 (v2.2.1) [19] were used to predict 361 
+
+cofolded structures of conf0 (see above) with each of the six UDP-sugar ligands, identified by 362 
+
+11 
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+their CCD codes (UGA: UDP-GlcA, UGB: UDP-GalA, UD1: UDP-GlcNAc, UD2: UDP-GalNAc, 363 
+
+UPG: UDP-Glc, GDU: UDP-Gal). To generate conformational ensembles, the number of diffusion 364 
+
+samples was set to 200 for AlphaFold3 and Boltz-2, and to 100 for Boltz-1 due to memory 365 
+
+limitations. The resulting samples were aligned using PyMOL [28]. 366 
+
+Full-legth Gumk docking 367 
+
+The full-length GumK complexes with UDP-GlcA and UDP-GalA were predicted using Boltz-1 368 
+
+(v1.0.0), employing the CCD codes UGA and UGB for the respective ligands. Three diffusion 369 
+
+samples were generated for each complex, although only the top-ranked model was selected for 370 
+
+the docking analysis. After removing the cofolded ligand, GNINA docking calculations were 371 
+
+performed using the same protocol adopted for the isolated C-domain. The resulting poses were 372 
+
+filtered based on the uridine binding mode by calculating the RMSD of the uridine moiety relative 373 
+
+to the crystallographic reference structure (PDB ID: 2Q6V). Only poses reproducing the reference 374 
+
+uridine conformation were retained for subsequent analysis. 375 
+
+Distance distribution analysis 376 
+
+For the filtered poses generated by the GNINA workflow and the conformational ensembles 377 
+
+produced by the cofolding methods, the distance between the C6 atom of the ligand and the 378 
+
+ζ-nitrogen of Lys307 was measured. Kernel density estimation (KDE) was then computed to 379 
+
+characterize the distribution of this distance. To assess variability in the sampled conformations, 380 
+
+a bootstrapped KDE was computed using 4000 resampling cycles, and the standard deviation 381 
+
+was estimated from the resulting distribution. 382 
+
+# Data Availability Statement 383 
+
+Data and scripts used for running and analyzing simulations, and for generating the figures, are 384 
+
+available from https://github.com/gcourtade/papers/tree/master/2026/GumK_GNINA 385 
+
+# Acknowledgements 386 
+
+G.C. gratefully acknowledges funding by the Novo Nordisk Foundation (grant number 387 
+
+NNF22OC0073963). 388 
+
+# Funding Declaration 389 
+
+Novo Nordisk Foundation (grant number NNF22OC0073963; to G.C.). 390 
+
+# Conflict of Interest 391 
+
+The authors declare that they have no conflicts of interest. 392 
+
+# References 393 
+
+[1] G. K. Wagner and T. Pesnot. “Glycosyltransferases and their assays”. In: ChemBioChem 394 
+
+11.14 (2010), pp. 1939–1949. doi : 10.1002/cbic.201000201 .395 
+
+[2] M. Y. Ali, F. Liaqat, M. I. Khazi, S. Sethupathy, and D. Zhu. “Utilization of glycosyltrans-396 
+
+ferases as a seamless tool for synthesis and modification of the oligosaccharides-A review”. 397 
+
+In: International Journal of Biological Macromolecules 249 (Sept. 2023), p. 125916. doi :398 
+
+10.1016/j.ijbiomac.2023.125916 .399 
+
+12 
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+[3] A. Shtaiwi, S. U. Khan, M. Khedraoui, M. Alaraj, A. Samadi, and S. Chtita. “A compre-400 
+
+hensive computational study to explore promising natural bioactive compounds targeting 401 
+
+glycosyltransferase MurG in Escherichia coli for potential drug development”. In: Scientific 402 
+
+Reports 14.1 (Mar. 26, 2024), p. 7098. doi : 10.1038/s41598-024-57702-x .403 
+
+[4] B. He, X. Bai, Y. Tan, W. Xie, Y. Feng, and G. -Y. Yang. “Glycosyltransferases: Mining, 404 
+
+engineering and applications in biosynthesis of glycosylated plant natural products”. In: 405 
+
+Synthetic and Systems Biotechnology 7.1 (Mar. 2022), pp. 602–620. doi : 10.1016/j.synbio. 406 
+
+2022.01.001 .407 
+
+[5] P. M. Coutinho, E. Deleury, G. J. Davies, and B. Henrissat. “An evolving hierarchical 408 
+
+family classification for glycosyltransferases”. In: Journal of Molecular Biology 328.2 (2003), 409 
+
+pp. 307–317. doi : 10.1016/S0022-2836(03)00307-3 .410 
+
+[6] L. Mestrom, M. Przypis, D. Kowalczykiewicz, A. Pollender, A. Kumpf, S. R. Marsden, 411 
+
+I. Bento, A. B. Jarzębski, K. Szymańska, A. Chruściel, D. Tischler, R. Schoevaart, U. 412 
+
+Hanefeld, and P. -L. Hagedoorn. “Leloir glycosyltransferases in applied biocatalysis: A 413 
+
+multidisciplinary approach”. In: International Journal of Molecular Sciences 20.21 (2019), 414 
+
+p. 5263. doi : 10.3390/ijms20215263 .415 
+
+[7] A. Chang, S. Singh, G. N. Phillips, and J. S. Thorson. “Glycosyltransferase structural 416 
+
+biology and its role in the design of catalysts for glycosylation”. In: Current Opinion in 417 
+
+Biotechnology 22.6 (Dec. 2011), pp. 800–808. doi : 10.1016/j.copbio.2011.04.013 .418 
+
+[8] B. A. Hassan, J. Milicaj, C. A. Ramirez-Mondragon, Y. Y. Sham, and E. A. Taylor. 419 
+
+“Ligand-Induced Conformational and Dynamical Changes in a GT-B Glycosyltransferase: 420 
+
+Molecular Dynamics Simulations of Heptosyltransferase I Complexes”. In: Journal of 421 
+
+Chemical Information and Modeling 62.2 (Jan. 2022), pp. 324–339. doi : 10.1021/acs.jcim. 422 
+
+1c00868 .423 
+
+[9] S. G. Hennen, Y. J. Bomble, B. R. Urbanowicz, and V. S. Bharadwaj. “Decoding substrate 424 
+
+specificity determining factors in glycosyltransferase-B enzymes – insights from machine 425 
+
+learning models”. en. In: Digital Discovery 4.8 (Aug. 2025), pp. 2214–2228. doi : 10.1039/ 426 
+
+D4DD00338A .427 
+
+[10] A. Kumar, K. M. Rao, and S. S. Han. “Application of xanthan gum as polysaccharide in 428 
+
+tissue engineering: A review”. In: Carbohydrate Polymers 180 (Jan. 15, 2018), pp. 128–144. 429 
+
+doi : 10.1016/j.carbpol.2017.10.009 .430 
+
+[11] D. F. S. Petri. “Xanthan gum: A versatile biopolymer for biomedical and technological 431 
+
+applications”. In: Journal of Applied Polymer Science 132.23 (2015). doi : 10.1002/app. 432 
+
+42035 .433 
+
+[12] M. Barreras, P. L. Abdian, and L. Ielpi. “Functional characterization of GumK, a membrane-434 
+
+associated β-glucuronosyltransferase from Xanthomonas campestris required for xanthan 435 
+
+polysaccharide synthesis”. In: Glycobiology 14.3 (Mar. 2004), pp. 233–241. doi : 10.1093/ 436 
+
+glycob/cwh056 . eprint: https://academic.oup.com/glycob/article-pdf/14/3/233/ 437 
+
+1802497/cwh056.pdf .438 
+
+[13] M. Barreras, S. R. Salinas, P. L. Abdian, M. A. Kampel, and L. Ielpi. “Structure and 439 
+
+Mechanism of GumK, a Membrane-Associated Glucuronosyltransferase”. In: Journal of 440 
+
+Biological Chemistry 283.36 (2008), pp. 25027–25035. doi : 10.1074/jbc.M801227200 .441 
+
+[14] A. Ardèvol and C. Rovira. “Reaction Mechanisms in Carbohydrate-Active Enzymes: Gly-442 
+
+coside Hydrolases and Glycosyltransferases. Insights from ab Initio Quantum Mechan-443 
+
+ics/Molecular Mechanics Dynamic Simulations”. In: Journal of the American Chemical 444 
+
+Society 137.24 (June 2015), pp. 7528–7547. doi : 10.1021/jacs.5b01156 .445 
+
+13 
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+[15] S. R. Salinas, A. A. Petruk, N. G. Brukman, M. I. Bianco, M. Jacobs, M. A. Marti, and L. 446 
+
+Ielpi. “Binding of the substrate UDP-glucuronic acid induces conformational changes in the 447 
+
+xanthan gum glucuronosyltransferase”. en. In: Protein Engineering, Design and Selection 448 
+
+29.6 (June 2016), pp. 197–207. doi : 10.1093/protein/gzw007 .449 
+
+[16] D. Luciano, F. E. Thomasen, K. Lindorff-Larsen, and G. Courtade. “Computational Char-450 
+
+acterization of the Xanthan Gum Glycosyltransferase GumK”. In: PLOS Computational 451 
+
+Biology 21.12 (2025), e1013803. doi : 10.1371/journal.pcbi.1013803 .452 
+
+[17] A. T. McNutt, P. Francoeur, R. Aggarwal, T. Masuda, R. Meli, M. Ragoza, J. Sunseri, 453 
+
+and D. R. Koes. “GNINA 1.0: Molecular docking with deep learning”. In: Journal of 454 
+
+Cheminformatics 13.1 (2021), p. 43. doi : 10.1186/s13321-021-00522-2 .455 
+
+[18] J. Patrick, P. Pettersson, and L. Mäler. “Lipid- and substrate-induced conformational and 456 
+
+dynamic changes in a glycosyltransferase involved in E. coli LPS synthesis revealed by 19F 457 
+
+and 31P NMR”. In: Biochimica et Biophysica Acta (BBA) - Biomembranes 1865.8 (2023), 458 
+
+p. 184209. doi : 10.1016/j.bbamem.2023.184209 .459 
+
+[19] S. Passaro, G. Corso, J. Wohlwend, M. Reveiz, S. Thaler, V. R. Somnath, N. Getz, T. 460 
+
+Portnoi, J. Roy, H. Stark, D. Kwabi-Addo, D. Beaini, T. Jaakkola, and R. Barzilay. “Boltz-461 
+
+2: Towards Accurate and Efficient Binding Affinity Prediction”. In: bioRxiv (2025). doi :462 
+
+10.1101/2025.06.14.659707 . eprint: https://www.biorxiv.org/content/early/2025/ 463 
+
+06/18/2025.06.14.659707.full.pdf .464 
+
+[20] M. Ragoza, J. Hochuli, E. Idrobo, J. Sunseri, and D. R. Koes. “Protein–Ligand Scoring with 465 
+
+Convolutional Neural Networks”. en. In: Journal of Chemical Information and Modeling 466 
+
+57.4 (Apr. 2017), pp. 942–957. doi : 10.1021/acs.jcim.6b00740 .467 
+
+[21] J. Hochuli, A. Helbling, T. Skaist, M. Ragoza, and D. R. Koes. “Visualizing convolutional 468 
+
+neural network protein-ligand scoring”. en. In: Journal of Molecular Graphics and Modelling 469 
+
+84 (Sept. 2018), pp. 96–108. doi : 10.1016/j.jmgm.2018.06.005 .470 
+
+[22] M. Buttenschoen, G. M. Morris, and C. M. Deane. “PoseBusters: AI-based docking methods 471 
+
+fail to generate physically valid poses or generalise to novel sequences”. en. In: Chemical 472 
+
+Science 15.9 (2024), pp. 3130–3139. doi : 10.1039/D3SC04185A .473 
+
+[23] J. Sunseri, J. E. King, P. G. Francoeur, and D. R. Koes. “Convolutional neural network 474 
+
+scoring and minimization in the D3R 2017 community challenge”. en. In: Journal of 475 
+
+Computer-Aided Molecular Design 33.1 (Jan. 2019), pp. 19–34. doi : 10.1007/s10822-018-476 
+
+0133-y .477 
+
+[24] J. Abramson, J. Adler, J. Dunger, R. Evans, T. Green, A. Pritzel, O. Ronneberger, L. 478 
+
+Willmore, A. J. Ballard, J. Bambrick, S. W. Bodenstein, D. A. Evans, C. -C. Hung, M. 479 
+
+O’Neill, D. Reiman, K. Tunyasuvunakool, Z. Wu, A. Žemgulyt˙ e, E. Arvaniti, C. Beattie, 480 
+
+O. Bertolli, A. Bridgland, A. Cherepanov, M. Congreve, A. I. Cowen-Rivers, A. Cowie, 481 
+
+M. Figurnov, F. B. Fuchs, H. Gladman, R. Jain, Y. A. Khan, C. M. R. Low, K. Perlin, 482 
+
+A. Potapenko, P. Savy, S. Singh, A. Stecula, A. Thillaisundaram, C. Tong, S. Yakneen, 483 
+
+E. D. Zhong, M. Zielinski, A. Žídek, V. Bapst, P. Kohli, M. Jaderberg, D. Hassabis, and 484 
+
+J. M. Jumper. “Accurate structure prediction of biomolecular interactions with AlphaFold 485 
+
+3”. In: Nature 630.8016 (May 2024), pp. 493–500. doi : 10.1038/s41586-024-07487-w .486 
+
+[25] P. Škrinjar, J. Eberhardt, G. Studer, G. Tauriello, T. Schwede, and J. Durairaj. “Evaluating 487 
+
+generalization in protein–ligand cofolding methods”. In: Nature Structural & Molecular 488 
+
+Biology 33.5 (May 2026), pp. 782–794. doi : 10.1038/s41594-026-01797-5 .489 
+
+[26] C. Huang, N. Kannan, and K. W. Moremen. “Modeling glycans with AlphaFold 3: capabili-490 
+
+ties, caveats, and limitations”. In: Glycobiology 35.10 (Aug. 2025). doi : 10.1093/glycob/ 491 
+
+cwaf048 .492 
+
+14 
+
+> .CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint
+
+[27] J. Wohlwend, G. Corso, S. Passaro, N. Getz, M. Reveiz, K. Leidal, W. Swiderski, L. Atkinson, 493 
+
+T. Portnoi, I. Chinn, J. Silterra, T. Jaakkola, and R. Barzilay. “Boltz-1: Democratizing 494 
+
+Biomolecular Interaction Modeling”. In: bioRxiv (2024). doi : 10.1101/2024.11.19.624167 .495 
+
+[28] “The PyMOL Molecular Graphics System, Version 3.1.5.1”. June 2025. 496 
+
+15 
+
+.CC-BY 4.0 International license made available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is The copyright holder for this preprint this version posted June 22, 2026. ;https://doi.org/10.64898/2026.04.10.717502 doi: bioRxiv preprint

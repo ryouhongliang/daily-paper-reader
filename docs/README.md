@@ -6,26 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-29
-- 运行时间：2026-06-29 23:28:40 UTC
+- 最新运行日期：2026-06-30
+- 运行时间：2026-06-30 23:48:05 UTC
 - 运行状态：成功
 - 本次总论文数：1
-- 精读区：1
-- 速读区：0
+- 精读区：0
+- 速读区：1
 
 ### 今日简报（AI）
-今日精读聚焦于一种用迭代双通道神经量子态提升选组态相互作用计算的新算法。  
-最值得关注的是其将双通道网络与迭代策略融合，有望在保持精度的同时大幅压缩计算复杂度。  
-建议关注该算法在强关联分子体系或激发态计算中的后续基准测试结果，这可能是通往实用量子化学加速的关键一步。
-- 详情：[/202606/29/README](/202606/29/README)
+今日速读一篇AI辅助对接揭示黄原胶糖基转移酶GumK供体选择性的机制研究。  
+最值得关注：AI对接显示黄原胶合成酶GumK的供体选择性取决于酶构象变化，为理解多糖组装逻辑提供新视角。  
+对合成生物学感兴趣可读原文，看AI如何加速糖基转移酶底物设计。
+- 详情：[/202606/30/README](/202606/30/README)
 
 ### 精读区论文标签
-1. [An Iterative Dual-Channel Neural Quantum State Algorithm for Selected Configuration Interaction](/202606/29/2606.26760v1-an-iterative-dual-channel-neural-quantum-state-algorithm-for-selected-configuration-interaction)  
-   标签：评分：8.0/10、query:caos-poly
-   evidence：神经量子态算法用于精确电子结构计算以支持机理研究
+- 本次无精读推荐。
 
 ### 速读区论文标签
-- 本次无速读推荐。
+1. [Conformation-Dependent Donor Selectivity in the Xanthan Gum Glycosyltransferase GumK Revealed by AI-Based Docking](/202606/30/biorxiv-10-64898-2026-04-10-717502-v2-conformation-dependent-donor-selectivity-in-the-xanthan-gum-glycosyltransferase-gumk-revealed-by-ai-based-docking)  
+   标签：评分：7.0/10、query:caos-poly
+   evidence：基于AI的虚拟筛选用于多糖合成酶的供体底物
 
 
 <div class="dpr-home-promo-card">
