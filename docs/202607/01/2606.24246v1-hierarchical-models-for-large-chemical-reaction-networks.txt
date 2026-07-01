@@ -1,0 +1,3695 @@
+Title: Hierarchical models for large chemical reaction networks
+
+URL Source: https://arxiv.org/pdf/2606.24246v1
+
+Published Time: Wed, 24 Jun 2026 00:38:16 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+Hierarchical models for large chemical reaction networks 
+
+# Hierarchical models for large chemical reaction networks 
+
+Jérémie Unterberger, 1, a) Ulysse Herbach, 2 and Roxane Cellier 2
+
+> 1) Université de Lorraine, CNRS, IECL, F-54000 Nancy, France
+> 2) Université de Lorraine, CNRS, Inria, IECL, F-54000 Nancy, France
+> (Dated: June 24, 2026)
+
+The quest for the origin of life, especially in the metabolism-first scenario brought forth by the celebrated Miller–Urey experiment, has triggered a research program dedicated to studying the emergence of complex dynamical behaviors in large chemical mixtures. Though autocatalysis, understood as the capacity of a system driven by chemical reactions to grow exponentially, has been recognized as a potential key factor driving instability or multistability, no quantitative theory has yet emerged, partly due to the lack of available kinetic data. We introduce a computational tool for large chemical reaction networks, based on a scale-splitting algorithm inspired by Wilson’s renormalization group. We focus here on dilute regimes, i.e., the special case when species of interest have low concentration, so that non-unimolecular reactions may be neglected, and the time evolution is close to linear. The main feature of such networks is their ability to exhibit autocatalytic dynamics, depending on parameter thresholds. Our algorithm takes as input a network structure, and outputs (1) a simplified effective graph representation of the network containing exactly the main reaction path-ways; the effective graph is hierarchical, meaning that its vertices are obtained by recursively coarse-graining particular subgraphs; (2) a finite number of analytical formulas in terms of kinetic rates for the dynamics of the system, called hierarchical formulas, which are approximate but easily interpretable, accurate when scale separation is effective, the coarse-graining offering a reliable picture of the dynamical behavior at different time-scales. The domain of validity of each formula can be interpreted as a kinetic phase of the network: each phase typically produces a different dy-namical pattern of chemical composition. We show on a simple example that this approach allows fast and reliable statistical inference of kinetic rates from a time-series of concentration measurements. Hierarchical formulas have been implemented as a Python package, and are discussed on a simplified model of the formose reaction.  
+
+> I. INTRODUCTION
+
+Synthesis chemistry is traditionally concerned with finding a synthesis path with best possible yield for a given com-pound. This point of view is however challenged in problems relating to complex metabolism, since the high diversity of molecules and potential pathways suggests instead a detailed chemical analysis of the composition of samples produced in a one-pot experiment, possibly in a high-throughput framework, with a view to studying the dependence on chemical condi-tions (pH, fluxes, catalysts...), see e.g., 1–3. In presence of a large number of unknown reaction intermediates, mass spec-trometers do not allow to disambiguate isomers, suggesting the use of techniques based on similarity indices and chemical expertise. These difficulties are compounded in experiments pertaining to the origin of life, since there is no preferred syn-thesis goal, and time becomes an essential variable on the way to open-ended evolution. In our view, what is lacking here is a systematic compu-tational method to derive the composition of a large-diversity sample that would capture reliably the structure of the reaction network as a whole instead of trying to infer individual inter-mediates. This question can be taken both ways. Imagining one had a ‘good’ knowledge of the stoichiometry and kinetics of the reaction network, one would like to get a description of the main reaction pathways and time-dependent composi-tion. Conversely, given the partial information on composi-tion given by mass spectroscopy data, one would like to infer 
+
+> a) Electronic mail: jeremie.unterberger@univ-lorraine.fr
+
+the network (i.e., the main pathways) and kinetic rates. Im-plementing blindly the inference task using numerical ODE solvers would require to scan a large part of the rate space, which is impracticable for large networks. Also, in presence of rates spanning several orders of magnitude, as is typically the case in chemistry, ODE solvers face a well-known stiff-ness problem, and uncertainty on the rates can be amplified through the equation flow, yielding unreliable predictions 4.We fill in this gap here using an algorithm inherited from renormalization theory, which is universally valid assuming a loose scale separation hypothesis , stating that kinetic rates span many scales instead of forming large clusters. The gen-eral philosophy is that the ‘bare’ (ab initio) network should be replaced by scale-dependent, effective networks describ-ing more aptly and concisely the observed behavior at each time scale; the way these effective, coarse-grained networks are constructed is through a particular inductive multi-scale analysis algorithm. The results presented here, however, are limited to dilute regimes (see below), therefore they mainly describe the growth phase of autocatalytic networks. This is meant however to be the easier part of a program based on the same mathematical ideas, which lifts this restriction. Various graph techniques going in the direction of a re-duction of dimensionality are in use in the literature. Let us cite: (i) formal work on singular ε-perturbation tech-niques based on the classification of either concentrations or reactions into fast/slow types, see 5,6 , expanding the classi-cal quasi-steady-state approximation; (ii) stochastic path inte-gral techniques 7,8 giving accelerated stochastic simulation for stiff chemical kinetic systems; (iii) structural reduction based on topology alone 9,10 ; (iv) data-driven model reduction tech-niques based on information theory 11 ; (v) and network renor-malization techniques 12 , based either on Kadanoff’s block-
+
+> arXiv:2606.24246v1 [q-bio.MN] 23 Jun 2026
+
+Hierarchical models for large chemical reaction networks 2spin approach, where nodes are recursively replaced by node blocks, or on Laplacian renormalization 13,14 , used either as a tool to describe the organization of the graph, in particular for community detection, or to model complex bio-molecular systems 15 . Our work is ultimately based on perturbation the-ory, therefore closest to (i), but allows a whole spectrum of time-scales, leading to a recursive elimination of time-scales, from the fastest one to the slowest one. This is permitted in (ii), which is based on a much more complicated formal-ism than our paper (saddle-point equations of a cumulant-generating function), and requires Monte-Carlo sampling, and the previous knowledge of typical species concentrations and the associated time scales. Actually, one of the main strong points of our approach is that it automatically derives the ef-fective time scales of the system, which, as turns out, are not directly accessible from the bare graph. Leaving out (iii) which does not take kinetics into account, and is mostly concerned with the identification of stationary states, (iv)-(v) are ultimately based on information theory, variational mini-mization, or on approximate diagonalization of the generator (Laplacian); they depend on numerical techniques and require an exact knowledge of the kinetic rates. Furthermore, the re-duced model representation in terms of extended quasi-modes or reconstruction in terms of fitting parameters make them not suitable for a direct identification of reaction pathways or dy-namics in compositional space. Summarizing: our approach is unique in that it gives a ro-bust , quantitative picture of the organization of kinetic chemi-cal networks, which is directly interpretable by the chemist in terms of induction time scales, growth patterns, pathways and more generally, compositional dynamics. It is based on a fully general algorithm that is implemented at a very low computa-tional cost . ‘Robust’ means here that only the stoichiometry and the scales (orders of magnitude) of rates are needed in in-put. Also, outputs are all expressed as functions of the scale parameters ; formulas hold on scale domains defined by sets of linear inequalities; scale domains, called chemical phases ,are in finite number, and may be explored systematically by the algorithm. Thus even the rate scales are not systemati-cally needed in input; actually, one of the main interests of hierarchical formulas is that they may be used to infer kinetic rates , starting from some very rough (mainly stoichiometric) information and a time-series of concentration measurements obtained in a dilute regime through available analytical chem-istry techniques.  
+
+> II. THEORETICAL FRAMEWORK AND MAIN EXAMPLES
+
+This section is a cursory introduction to the concepts and techniques of the paper. It is illustrated by Examples 1 and 2 whose analysis is pursued throughout the paper.  
+
+> A. A brief outline
+
+We discuss in this article only dilute systems . The frame-work is that of a solution containing initially a finite number of abundant species, called external species, plus a small (ide-ally, infinitesimal) quantity of internal species Sσ indexed by a set Σ. The concentration of this ‘seed’ 16 may amplify ex-ponentially in an initial time regime, a distinctive signature of autocatalytic behavior. As long as it remains small enough, the concentration of abundant species may be considered as fixed, and the seed dynamics is well described in the kinetic limit by coupled linear equations for the chemical composi-tion X = ( Xσ )σ ∈Σ, defined as the vector of concentrations, 
+
+dX σ
+
+dt = ∑ 
+
+> σ′∈Σ
+
+Aσ ,σ ′ Xσ ′ , Xσ = [ Sσ ] (1) Assuming mass-action rates (or Michaelis–Menten rates, which have order one kinetics in this limit), off-diagonal co-efficients Aσ ,σ ′ are the sums of kinetic rates of all 1 − 1or one-to-many reactions Sσ ′ → Sσ + · · · , hence positive. Such matrices, of the Perron-Frobenius form, have a gener-ally unique ’top’ eigenvalue/eigenvector satisfying the equa-tion Av ∗ = λ ∗v∗, with v∗ > 0 (all components positive) and 
+
+λ ∗ = λ ∗(A) real maximizing {ℜλ | λ eigenvalue of A}. Let-ting v†,∗ with ⟨v,∗†, v∗⟩ = 1 satisfy the left eigenvalue equation 
+
+A†v†,∗ = λ ∗v†,∗, the large-time behavior of (1) is given by 
+
+X(t) ∼ ⟨ v†,∗, X(0)⟩ eλ ∗t v∗ (2) Thus λ ∗ is the Lyapunov (instability) exponent of the lin-earized dynamical system, or (in biological terms) its growth rate , while the Lyapunov eigenvector v ∗ reflects its long-term 
+
+asymptotic composition . When the only reactions of the net-work are detail balanced 1-1 reactions 
+
+Sσ  
+
+> kσ→σ′
+
+⇄ 
+
+> kσ′→σ
+
+Sσ ′ ,
+
+the matrix A† is the generator of a Markov chain 17 , λ ∗ = 0, the vector v∗ is proportional to its equilibrium measure, and 
+
+v†,∗ = 1, so that ⟨v†,∗, X(0)⟩ is the total initial concentra-tion Xtot (0) = ∑σ ∈Σ Xσ (0). One is interested in determin-ing Lyapunov data (λ ∗, v∗, v†,∗) as a function of various pa-rameters (pH, temperature, metallic catalyst concentration...) when λ ∗ > 0. The network is then called autocatalytic ; tight connection to the stoichiometric definition of autocatalysis (whereby it is meant that some combination of the reactions has a strictly positive balance for all internal species) is shown in 18 .We shall focus here on two illustrative examples. The first one is an autocatalytic version of the Michaelis–Menten model of enzymatic catalysis with species S1 (substrate), S0
+
+(enzyme/substrate complex), S2 (product). The second one is obtained by coupling through rates k± two autocatalytic cy-cles S1 → S2 → 2S2 → 2S1 and S¯1 → S¯2 → 2S¯2 → 2S¯1.Hierarchical models for large chemical reaction networks 3
+
+Example 1 (One autocatalytic cycle) .
+
+S1
+
+> kon
+
+⇄
+
+> koff
+
+S0, S0
+
+> k2
+
+⇄
+
+> ¯k2
+
+S2, S1
+
+> ν+
+
+→ S0 + S0
+
+Example 2 (Two coupled autocatalytic cycles) .
+
+S1
+
+> kmax
+
+⇄
+
+> kmin
+
+S2, S¯1¯kmax 
+
+⇄
+
+> ¯kmin
+
+S¯2, S1
+
+> k+
+
+⇄
+
+> k−
+
+S¯1
+
+S2
+
+> k+
+
+→ S2 + S2, S¯2
+
+> k−
+
+→ S¯2 + S¯2
+
+Plotting measured log-concentrations of an autocatalytic network as a function of time, one should observe paral-lel, upward tilted lines with slope λ ∗ and relative offsets log (v∗ 
+
+> σ
+
+/v∗  
+
+> σ′
+
+). However, this asymptotic regime is not nec-essarily accessible experimentally, since (depending on ini-tial concentrations) the system may undergo a cross-over to a nonlinear regime before, typically a stationary state or cycle. Instead, regularly repeated measurements will typically (see Fig. 1a) present themselves (for small enough X(0), and af-ter an initial transient regime) roughly in the form of broken lines, with slopes sharply increasing at well-defined transition times t(1) ≪ t(2) ≪ · · · . As time goes by, more and more lines become parallel, following a merging pattern that will be ex-plained below. Fig. 1 shows a schematized example for the two coupled autocatalytic cycles (1 ⇄ 2) ⇄ (¯1 ⇄ ¯2) of Ex-ample 2, in which the initial composition is some arbitrary mixture of species 1,2. Solving numerically the model (see again Fig. 1a) shows that the broken lines actually interpene-trate instead of following each other, and that the real solution interpolates smoothly between the broken lines at species-dependent induction times (see below (36)). A log-log plot makes it easier to span several time scales simultaneously, but is ill-suited for direct interpretation. Here is, in words, what is shown in Fig. 1b. Species 1 (in black) is not apparent before time t(1), because the dominant flux is from S1 to S2; similarly, species S¯1, S¯2 (in red/purple) before t(2) because dominant fluxes are directed from S¯1, S¯2
+
+and not to S¯1, S¯2 . Between time t(1) and t(2), the slope 
+
+λ (1) materializes an autocatalytic cycle coupling 1 , 2, and 
+
+v(1) = v(1)
+
+> 1
+
+v(1)
+
+> 2
+
+!
+
+gives the relative concentrations. The off-set log (X1/X2) ≃ log (v(1) 
+
+> 1
+
+/v(1) 
+
+> 2
+
+) = log (v(2) 
+
+> 1
+
+/v(2) 
+
+> 2
+
+) remains con-stant for all t > t(1), therefore (S1, S2) may be considered a quasi-species 19 . After time t(2), the slope λ (2) > λ (1) mate-rializes an autocatalytic cycle coupling ¯ 1, ¯2. Simultaneously, fluxes from the quasi-species (¯1, ¯2) to (1, 2) produce a quasi-species (1, 2, ¯1, ¯2), i.e. concentration ratios of all species are fixed, and equal to that of v(2); the ‘fitter’ (i.e. with larger growth rate) second autocatalytic cycle (¯1, ¯2) has ‘absorbed’ the first one. The system does not evolve at later times, so that 
+
+(λ (∞), v(∞)) = ( λ (2), v(2)) ∼ (λ ∗, v∗) are the Lyapunov data of the network, whereas (λ (1), v(1)) are ‘space-time localized’ Lyapunov data , supported on the subspace {1, 2}.Note that a simple strategy consisting in simply ‘cutting-off’ slow reactions may fail to identify the second autocat-alytic cycle because the cycle-closing edge ¯ 2 → ¯1 is slower than the other cycle edges; or, it may disregard the even slower fluxes from (¯1, ¯2) to (1, 2), which enhance the growth rate of 
+
+(1, 2). Disentangling these kinetic effects is even more diffi-cult when cycles are intertwined, or when several cycles are competing. Our algorithm, however, does the job in a system-atic way. The methods presented below make it possible to derive (1) the ordered sequence of merging patterns; (2) hierar-chical formulas , which are approximate formulas, in the form of simple ratios of kinetic rates, for the Lyapunov data 
+
+(λ (i), v(i), v†,(i)). Induction times, and transient effects, char-acterizing the time behavior between induction times, may also be precisely described with the same methods, but are only discussed on an example in the present work. They provide a chemically interpretable, mathematically simple though faithful, representation of the dynamics in terms of formulas, which allows for a very robust inference of kinetic parameters. The extended dynamical algorithm will be pre-sented in a future work.  
+
+> B. Hierarchical graphs and multi-scale decompositions
+
+Only kinetics can tell whether the sequence of events en-visioned on Fig. 1 is correct; shuffling kinetic rates can also produce a wholly different sequence, e.g. (1, 2) ab-sorbing (¯1, ¯2) instead of the contrary, or different pairings of species into cycles. Stoichiometry alone, or even ther-modynamics, is not predictive; in fact, dynamical composi-tional stability of high-energy intermediates, apparently con-tradicting the laws of thermodynamics, but protected by ki-netic barriers, has been suggested to allow the emergence of autonomous systems by an evolutionary process through en-tropy dissipation 20 . On the other hand, knowing the kinetic scales , i.e. the integer scales nσ →σ ′ := ⌊log (Aσ ′,σ )⌋ (⌊·⌋ = in-teger part) makes it possible to predict with some degree of approximation the sequence of events, the scales of the char-acteristic elements , ⌊log (t(i))⌋, ⌊log (λ (i))⌋, relative offsets 
+
+⌊log (v(i) 
+
+> σ
+
+/v(i)  
+
+> σ′
+
+)⌋, ⌊log (v†,(i) 
+
+> σ
+
+/v†,(i)  
+
+> σ′
+
+)⌋, and finally, a time evolu-tion for composition scales ⌊log (Xσ (t)) ⌋, defining a dynami-cal distribution in log-scale. The appropriate description is through hierarchical struc-tures . Merging patterns are part of them. A general pattern is a finite sequence of the form Σ ≡ Σ(0) → Σ(1) · · · → Σ( jmax ),where elements of Σ( j) are either elements of Σ( j−1) or sub-sets of Σ( j−1); e.g. Σ = {1, 2, ¯1, ¯2}, Σ(1) = {{ 1, 2}, ¯1, ¯2},
+
+Σ(2) = {{ 1, 2}, {¯1, ¯2}} , Σ(3) = {{{ 1, 2}, {¯1, ¯2}}} . The recur-sive nesting, matryoshka-like, structure, may be drawn as a coalescence tree, see Fig. 2, with compound vertices given new names, G1 = {1, 2}, G2 = {¯1, ¯2}, G3 = {G1, G2}.We now let elements of Σ( j), j = 0, . . . , jmax be vertices of a graph G( j) = ( Σ( j), E(G( j))) , which is constructed from 
+
+G(0) ≡ G and Σ by successive rewiring steps as follows: if 
+
+σ → σ ′ is an edge of G( j) (σ , σ ′ ∈ Σ( j)), then G( j+1)(σ ) →
+
+G( j+1)(σ ′) is an edge of G( j+1), where G( j+1)(σ ) is the ver-Hierarchical models for large chemical reaction networks 4Hierarchical models for large chemical reaction networks 4
+
+t(1) t(2)
+
+¯1¯221      
+
+> (l(1),v(1),v†,(1))
+> (l(2),v(2),v†,(2))
+> log  X(t)
+
+(a) (b) 
+
+Figure 1: Time evolution for two coupled autocatalytic cycles, with Lyapunov data (l (i) , v(i) , v†,(i) ). Left: numerical solution of dynamical equations (1) in Example 1. Right: schematized version based on hierarchical formulas. 
+
+Figure 2: Example of coalescence tree tex of G ( j+1) equal to or containing s . Self-edges s ! s
+
+are removed. If e.g. E(G (0) ) = {1   2, ¯1   ¯2, 1   ¯2},then E(G (1) ) = {¯1   ¯2, G 1   ¯2}, E(G (2) ) = {G 1   G 2 },
+
+E(G (3) ) = /0. The compound vertex s = {s1 , . . . , sn } 2 S ( j) ,
+
+n   2 is formed only if s1 , . . . , sn 2 S ( j 1) form a strongly connected component (SCC) structure, i.e., there exists a path connecting any pair (si , s i0 ). However, only SCCs of a spe-cial type ( maximal dominant SCCs , see below) are actually formed. Paths connecting the vertices inside s are the domi-nant (i.e. main) pathways of the network; therefore, they are the most relevant information for reactivity. Including them yields a hierarchical graph structure . However, only merg-ing patterns, not individual dominant pathways, are useful in constructing the approximate dynamics. 
+
+Input and output. Transition state theory suggests the Ansatz k r ⇠ A e DG ‡  
+
+> r/RT
+
+(A = Arrhenius constant, DG ‡ =activation energy) for the kinetic rate of reaction r. Since log 10 (e DG ‡ /RT ) '   DG ‡ /1.36 at room temperature if DG ‡is measured in kcal/mol, chemical precision (±1 kcal.mol) allows a determination of the kinetic scales log 10 (k) up to one unit, so that integer data n(kr ) = blog 10 (kr )c character-ize the input. Then the output, namely, space-time localized Lyapunov data and time evolution of concentrations, as de-duced from the scales of characteristic elements, would have the same order of precision. In practice, errors may accumu-late for large networks when scale separation is very weak or the size of dominant SCCs is unbounded, see below (8) and discussion in Sec. V. Our simulations (see Sec. IV and Suppl. Mat.) show that the approximation scheme is good when properly used.  
+
+> C. Renormalization
+
+Hierarchical models are produced by a recursive algo-rithm which is directly inspired by Wilson’s renormalization group 21–23 in quantum field theory, and its applications to sta-tistical physics; see also 8 for the use of related techniques in stochastic networks. Namely, one starts from the highest ki-netic scale n1 = max (ns !s 0 ), and then progressively incor-porates lower scales one by one, merges maximal dominant SCCs , rewires edges following the above construction, and redefines the kinetic scales of the new effective graphs . The outcome is known as first-order Michaelis–Menten dynamics for enzymatic catalysis 
+
+E + S k+1
+
+ 
+
+> k 1
+
+ES kcat 
+
+! P
+
+(synthesis of product P from S with intermediate bound state 
+
+ES involving enzyme E). Namely, if k+1 [E], k 1   k cat are fast, and [S] is small enough (which defines the di-lute regime), then the reaction velocity d[P]/dt ' v max [S]0 
+
+> KM
+
+'
+
+Figure 1: Time evolution for two coupled autocatalytic cycles, with Lyapunov data (λ (i), v(i), v†,(i)). Left: numerical solution of dynamical equations (1) in Example 1. Right: schematized version based on hierarchical formulas. 1
+
+> 2
+> 1
+> 2
+> G1
+> G2
+> G3
+
+Figure 2: Example of coalescence tree tex of G( j+1) equal to or containing σ . Self-edges σ → σ
+
+are removed. If e.g. E(G(0)) = {1 ⇄ 2, ¯1 ⇄ ¯2, 1 ⇄ ¯2},then E(G(1)) = {¯1 ⇄ ¯2, G1 ⇄ ¯2}, E(G(2)) = {G1 ⇄ G2},
+
+E(G(3)) = /0. The compound vertex σ = {σ1, . . . , σn} ∈ Σ( j),
+
+n ≥ 2 is formed only if σ1, . . . , σn ∈ Σ( j−1) form a strongly connected component (SCC) structure, i.e., there exists a path connecting any pair (σi, σi′ ). However, only SCCs of a spe-cial type ( maximal dominant SCCs , see below) are actually formed. Paths connecting the vertices inside σ are the domi-nant (i.e. main) pathways of the network; therefore, they are the most relevant information for reactivity. Including them yields a hierarchical graph structure . However, only merg-ing patterns, not individual dominant pathways, are useful in constructing the approximate dynamics. 
+
+Input and output. Transition state theory suggests the Ansatz kρ ∼ A e−∆G‡  
+
+> ρ/RT
+
+(A = Arrhenius constant, ∆G‡ =activation energy) for the kinetic rate of reaction ρ. Since log 10 (e−∆G‡/RT ) ≃ − ∆G‡/1.36 at room temperature if ∆G‡
+
+is measured in kcal/mol, chemical precision (±1 kcal.mol) allows a determination of the kinetic scales log 10 (k) up to one unit, so that integer data n(kρ ) = ⌊log 10 (kρ )⌋ character-ize the input. Then the output, namely, space-time localized Lyapunov data and time evolution of concentrations, as de-duced from the scales of characteristic elements, would have the same order of precision. In practice, errors may accumu-late for large networks when scale separation is very weak or the size of dominant SCCs is unbounded, see below (8) and discussion in Sec. V. Our simulations (see Sec. IV and Suppl. Mat.) show that the approximation scheme is good when properly used.  
+
+> C. Renormalization
+
+Hierarchical models are produced by a recursive algo-rithm which is directly inspired by Wilson’s renormalization group 21–23 in quantum field theory, and its applications to sta-tistical physics; see also 8 for the use of related techniques in stochastic networks. Namely, one starts from the highest ki-netic scale n1 = max (nσ →σ ′ ), and then progressively incor-porates lower scales one by one, merges maximal dominant SCCs , rewires edges following the above construction, and redefines the kinetic scales of the new effective graphs . The outcome is known as first-order Michaelis–Menten dynamics for enzymatic catalysis 
+
+E + S k+1
+
+⇄
+
+> k−1
+
+ES kcat 
+
+→ P
+
+(synthesis of product P from S with intermediate bound state 
+
+ES involving enzyme E). Namely, if k+1[E], k−1 ≫ kcat 
+
+are fast, and [S] is small enough (which defines the di-lute regime), then the reaction velocity d[P]/dt ≃ vmax [S]0 
+
+> KM
+
+≃Hierarchical models for large chemical reaction networks 5  
+
+> kcat [E]tot [S]
+> k−1/k+1
+
+is linear in [S]. In our description, E is an abun-dant external species, Σ(0) = {S, ES , P}, Σ(1) = {{ S, ES }, P}.We may assume [E] = 1 (which amounts to a mere redef-inition of k+,1). Simple computations (or our algorithm) show that the cycle S k+1
+
+⇄
+
+> k−1
+
+ES may be merged at times t >
+
+t(1) := 1/ max (k+1, k−1), after which one obtains an effective graph {S, ES } k(1)
+
+> cat
+
+→ P, with k(1) 
+
+> cat
+
+∼
+
+(kcat , k+1 ≫ k−1 
+
+> k+1
+> k−1
+
+kcat , k+1 ≪ k−1
+
+.(The expression of k(1) 
+
+> cat
+
+is usually obtained through the quasi-steady-state approximation 24 , i.e., by assuming that the con-centration of the complex ES does not change on the time scale over which the product formation is measured). The Lyapunov exponent of the cycle is 0 (catalysis is not au-tocatalysis), so that the associated eigenvector agrees with equilibrium, [ES ][S] ∼ k+1 
+
+> k−1
+
+. The effective equation dP /dt ∼
+
+k(1) 
+
+> cat
+
+([ S] + [ ES ]) ∼
+
+(
+
+k(1) 
+
+> cat
+
+[ES ], k+1 ≫ k−1
+
+k(1) 
+
+> cat
+
+[S], k+1 ≪ k−1
+
+is consistent with the Michaelis–Menten equation. The model equation parallel to the enzymatic catalysis, but involving instead an autocatalytic cycle, is Example 1, 
+
+S0
+
+> kon
+
+⇄
+
+> koff
+
+S1, E + S1
+
+> ν+
+
+→ S0 + S0, S0
+
+> k2
+
+→ S2,
+
+where E is an external species ensuring atom number con-servation, and (to be specific) k2, ν+ ≪ kon , koff . We neglect here the reverse reaction S2¯k2
+
+→ S0 for simplicity. The cor-respondence (E, ES , S, P) → (E, S0, S1, S2), (k+1, k−1, kcat ) →
+
+(koff , kon , k2) is misleading because of the extra doubling reaction S1 → S0 + S0. Indeed, as in the catalytic case, the cycle S0, S1 may be merged at times t > t(1), after which the effective graph is {S0, S1} k(1)
+
+> 2
+
+→ S2, with k(1) 
+
+> 2
+
+∼(
+
+k2, koff ≫ kon  
+
+> koff
+> kon
+
+k2, koff ≪ kon 
+
+, but the rest of the story is differ-ent. For definiteness, we choose koff ≫ kon . Multiplying the stoichiometry matrix S =
+
+ −1 +1 +2 −11 −1 −1 00 0 0 1
+
+ by the flux vector j =
+
+
+
+kon X0
+
+koff X1
+
+ν+X1
+
+k2X0
+
+, one gets dX /dt = AX , with A =
+
+ −kon − k2 koff + 2ν+ 0
+
+kon −koff − ν+ 0
+
+k2 0 0
+
+. Define deficiency weights as 
+
+εσ = ∑σ ′ Aσ ′,σ    
+
+> ∑σ′̸ =σAσ′,σ
+
+; they vanish when A† is a Markov chain gen-erator, in particular in the enzymatic catalysis case ( ν+ = 0). Here only ε1 = ν+ 
+
+> koff +2ν+
+
+∼ ν+ 
+
+> koff
+
+is ̸ = 0. Note the contrary effects of the doubling reaction and the end reaction S0 → S2: at a purely stoichiometric level, summing S0 → S1, S1 → S0 + S0
+
+increases X0, while the end reaction decreases X0. If the effect of the end reaction dominates, then the autocatalytic cycle is not viable, and the final composition is just pure 2-state, i.e. 
+
+X0(t), X1(t) → 0; in the contrary case, one expects all com-ponents to increase exponentially with the same rate. The algorithm (or elementary computations) proves that the au-tocatalytic threshold lies at k2 ∼ ε1kon ∼ kon  
+
+> koff
+
+ν+. For larger 
+
+k2, the growth rate is 0, the effect of the doubling reaction is negligible, and Michaelis–Menten equation is correct. How-ever, for smaller k2, the Lyapunov data are λ ∗ ∼ kon  
+
+> koff
+
+ν+ and 
+
+v∗ ∼
+
+
+
+1
+
+> kon
+> koff
+> k2koff
+> kon ν+
+
+. The ratio v∗
+
+> 0
+
+/v∗ 
+
+> 1
+
+agrees with equilibrium, but not the ratios v∗ 
+
+> i
+
+/v∗
+
+> 2
+
+, i = 0, 1 which depend on the rate of the totally irreversible doubling reaction. 
+
+III. METHODS 
+
+We discuss here the full hierarchical algorithm (Sec. III A, Sec. III B), and the hierarchical model-based approach to sta-tistical inference (Sec. III C). 
+
+A. General framework 
+
+We use here the formalism of open chemical reaction net-works in the kinetic limit (see e.g. 25, and Sec. A for more de-tails). We assume reaction rates to follow mass-action. Here we have • a set of species {Sσ }, with σ varying in an index set Σext 
+
+(indexing external species) or in Σ (indexing internal species, called species for short); • a stoichiometry matrix with columns representing the stoichiometry of reactions; • for each reaction ρ, a kinetic rate, kρ .Species concentrations [Sσ ] are denoted Xσ . External species 
+
+σ are assumed to be chemostated, that is, for each σ ∈ Σext , a term is added to the r.-h.s. of the dynamical equations so that 
+
+dX σ /dt = 0. This is difficult to realize experimentally, but provided Xσ ext ≫ Xσ for all σ ∈ Σext , σ ∈ Σ throughout the observation time window, Xσ ext can be considered as constant. Then, we define a reaction ρ to be uni-molecular if it has only one internal reactant .
+
+Dilute regime. We consider the case when internal species have low concentration; then reactions of kinetic order ≥
+
+2, can be dismissed, since the associated fluxes are negli-gible. Equivalently, one may linearize the system around 0, which makes sense even for more general rates, such as Michaelis–Menten rates. The outcome is a linear system 
+
+dX /dt = AX . Since we assumed mass-action rates, this is equivalent to keeping only columns ρ associated to unimolec-ular reactions. Degradation reactions are also included in the form σ βσ
+
+→ /0, where / 0 ∈ Σ is seen as a reservoir of unspecified, non-reacting species; mind the specific notation for the rates. Hierarchical models for large chemical reaction networks 6
+
+Graph of split reactions. The starting point is the graph of split reactions G = ( Σ, E) (later on denoted: G(0), and called: bare graph, see below). For simplicity, we consider only reac-tions with up to two products (which is chemically realistic); extension to reactions with ≥ 3 products would be straightfor-ward. By construction, σ → σ ′ (σ̸ = σ ′) is an edge in E if either there exists a 1 → 1 reaction σ → σ ′, or (ii) σ → σ ′ is a split reaction coming from a 1 → 2 reaction σ → σ ′ + σ ′′ .The rate kσ →σ ′ is obtained by summing the kinetic rates of all reactions (i), (ii) and equals the off-diagonal entry Aσ ′,σ .Each reaction (i), (ii) also contributes −kρ to Aσ ,σ , therefore diagonal coefficients of A are < 0. 
+
+Autocatalysis. We say that G is autocatalytic if λ ∗ 
+
+> G
+
+:=
+
+λ ∗(A) > 0. This dynamical definition has been shown in 18 
+
+to be equivalent to the usual stoichiometric one 26 for a sub-class of graphs including strongly connected graphs with zero (or near-zero) degradation rates. Lyapunov eigenvectors are zero eigenvectors of 
+
+A(α) := A − αId (3) with α = λ ∗(A).
+
+Associated Markov chain. We let ˜ A = ( ˜Aσ ′,σ )σ ′,σ ∈Σ be the matrix with off-diagonal coefficients ˜ Aσ ′,σ = Aσ ′,σ (σ̸ = σ ′),and modified diagonal coefficients with absolute value 
+
+− ˜Aσ ,σ = ∑  
+
+> σ′̸=σ
+
+Aσ ′,σ = ∑  
+
+> σ′̸=σ
+
+kσ →σ ′ (4) (called: total outgoing rate from σ ), also denoted kσ . By construction 17 , ˜ A is an adjoint Markov generator, so that its Lyapunov exponent (i.e. eigenvalue with largest real part) is 0. The two matrices, A and ˜ A, differ by the deficiency rates 
+
+κσ = Aσ ,σ − ˜Aσ ,σ , which are also equal to the sum of kinetic rates of all 1 → 2 reactions with reactant σ , and are therefore 
+
+≥ 0. Next, we discuss our methodological contribution.   
+
+> B. Hierarchical formulas
+> 1. Lyapunov weights
+
+Though time is continuous, the resolvent formula (see: Suppl. Mat.) makes it possible to express all relevant quanti-ties in terms of paths describing transitions between species, whose statistics are similar to those used in the Gillespie al-gorithm. Computations below hold for the corrected matrix 
+
+A(α), with α ≥ 0. 
+
+Transition weights. Let, for α ≥ 0, 
+
+w(α)σ →σ ′ = kσ →σ ′
+
+|Aσ ,σ | + α (σ̸ = σ ′) (5) In particular, wσ →σ ′ := w(0)σ →σ ′ . Similarly, we let ˜ wσ →σ ′ :=
+
+kσ →σ ′ / | ˜Aσ ,σ | = kσ →σ ′ 
+
+> kσ
+
+, with kσ as in (4). The latter ratio is equal to the jump probability σ → σ ′ of Gillespie’s simulation algorithm for the associated Markov chain. Then, the weight w(α)γ of a path γ : σ0 → · · · → σℓ of length ℓ ≥ 0 is the product of the transition weights w along its edges, 
+
+w(α)γ =
+
+> ℓ
+
+# ∏
+
+> i=1
+
+w(α)σi−1→σi . (6) 
+
+Stationary measure, stationary weights. Let 1 be the constant vector with components 1σ = 1. The zero-diagonal matrix ˜W = ( ˜wσ →σ ′ )σ ,σ ′ is a Markov transition matrix since ˜W 1 = 1 by construction. A stationary measure of the discrete-time Markov chain with transition weights ˜ w is a positive dis-tribution ˜ π such that ˜ π ˜W = ˜π. Let ˜ μσ := k−1 
+
+> σ
+
+˜πσ ; plugging the definition of ˜ wσ →σ ′ into the above eigenvector identity yields 
+
+∑σ̸ =σ ′ ˜μσ kσ →σ ′ = | ˜Aσ ′,σ ′ | ˜μσ ′ , from which ˜ A ˜μ = 0. Thus ˜ π
+
+is a stationary measure of the discrete-time Markov chain if and only if ˜ μ is a stationary composition for ˜ A. We work most of the time with discrete-time transition weights, and our re-sults will provide estimates for the associated discrete-time weights, called Lyapunov weights ,
+
+π∗ 
+
+> σ
+
+:= ( |Aσ ,σ | + λ ∗)v∗ 
+
+> σ
+
+. (7) Then Av ∗ = λ ∗v∗ if and only if ∑σ̸ =σ ′ π∗ 
+
+> σ
+
+w∗   
+
+> σ→σ′
+
+= π∗  
+
+> σ′
+
+, where 
+
+w∗   
+
+> σ→σ′
+
+≡ w(λ ∗)σ →σ ′ . 
+
+> 2. Multi-scale analysis, dominant SCCs
+
+Kinetic scales. Fix a scale parameter b > 1 once and for all. If (σ , σ ′) ∈ E, we let (with ⌊ · ⌋ denoting either the integer part, or rounding to the closest integer) 
+
+nσ →σ ′ := ⌊log b(kσ →σ ′ )⌋ ∈ Z (8) and split kinetic rates according to their scale. Due to the associated truncation errors (see Sec. V), all our results are valid up to one or a few scale units. We write k ≺ k′, resp. 
+
+⪯ k′ when ⌊log b(k/k′)⌋ ≤ − 1 (resp. ≤ 0), and use similarly curved symbols ≻, ⪰; symmetrizing, k, k′ have same order if 
+
+(k ∼ k′) ⇔ (k ⪯ k′ ⪯ k) (9) In particular, we often use the ‘sum-max’ substitution rule for positive quantities (kinetic rates or kinetic rate ratios) 
+
+(k1 ⪰ k2 ⪰ · · · ⪰ km) ⇒ (k1 + · · · + km ∼ k1) (10) Thus, k ≺ 1 means in principle: k small. The log-scale param-eter, defined e.g. as ln (b), gives the minimum scale separation between two rates belonging to different scales. 
+
+Dominant edges. An edge σ → σ ′ is dominant if 
+
+nσ →σ ′ = max   
+
+> σ′′ ∈Σ
+
+nσ →σ ′′ (11) Hierarchical models for large chemical reaction networks 7Generalizing, if α > 0, nα = ⌊log b α⌋, then σ → σ ′ is α-dominant if nσ →σ ′ ⪰ nα and σ → σ ′ is dominant (letting α →
+
+0, the two notions coincide). As a general rule, α-dominant edges appear as bold lines on all our graphs. An important particular case is when σ is autocatalytic , i.e. κσ ≻ kσ , for then nσ →σ is dominant and the equivalent doubling reaction 
+
+σ κσ
+
+→ σ + σ ensures that Xσ (t) increases at least as fast as ∼
+
+eκσ t (possibly faster if there exists a path from σ ′ to σ , with 
+
+κσ ′ ≻ κσ ). 
+
+Vertex scales. A vertex σ is an element of Σ. The scale of 
+
+σ is 
+
+nσ := max   
+
+> σ′∈Σ
+
+nσ →σ ′ (12) i.e. the maximum scale of all edges σ → σ ′ of G outgoing from σ .Note that an edge σ → σ ′ is dominant if and only if 
+
+nσ →σ ′ = nσ . By construction, log b(kσ ) = log b(| ˜Aσ ,σ |) ∼
+
+log b(|Aσ ,σ |) ∼ nσ if σ is not autocatalytic. 
+
+Cut-off graphs. Split Σ into a disjoint union Σ = Σint ⊎ Σext 
+
+(internal species, versus external species). The cut-off graph 
+
+Gint = ( Σint , Eint ) has internal edge set Eint := {(σ , σ ′) ∈
+
+E | σ , σ ′ ∈ Σint } ⊂ E, and degradation rates β int  
+
+> σ
+
+:= βσ +
+
+∑σ ′∈Σext kσ →σ ′ . Roughly speaking, external species have been ’frozen’: influxes have been discarded, and outfluxes from Σint 
+
+to Σext have been added to degradation rates. For the multi-scale analysis, we shall need in particular 
+
+infra-red cut-off graphs. Fix a scale n (called: infra-red cut-off scale , or simply, cut-off scale), let 
+
+Σint ≡ Σ≥n := {σ ∈ Σ | nσ ≥ n},
+
+Σext ≡ Σ<n := {σ ∈ Σ | nσ < n} (13) and denote G↘n the cut-off graph. Even though the bare graph 
+
+G is connected, infra-red cut-off graphs Gint are often discon-nected. 
+
+The cut-off graphs produced by our algorithm have by con-struction the following essential properties: (i) every pair 
+
+σ , σ ′ of vertices in Σint is connected by a path of domi-nant edges of G int ; (ii) no outgoing edge is dominant, which means that every outgoing edge (σ , σ ′ 
+
+> ext
+
+), σ ∈ Σint , σ ′ 
+
+> ext
+
+∈ Σext ,is dominated by some internal edge (σ , σ ′), σ , σ ′ ∈ Σint , i.e. 
+
+kσ →σ ′ 
+
+> ext
+
+≺ kσ →σ ′ . Such structures will be uncovered induc-tively by lowering a cut-off scale. 
+
+Deficiency weight. Let α ≥ 0 be an overall degradation rate. The α-deficiency weight is the ratio 
+
+εσ := κσ
+
+|A(α)σ ,σ | = κσ
+
+|Aσ ,σ | + α . (14) For example, a couple consisting of a 1 → 1 reaction σ koff 
+
+→ σ ′
+
+and a 1 → 2 reaction σ ν+
+
+→ σ ′ + σ ′ implies a deficiency rate, resp. weight 
+
+κσ = ν+, resp . εσ = ν+
+
+koff + ν+ + α (15) If α ≻ koff , ν+, then εσ ∼ ν+ 
+
+> α
+
+≺ 1; this regime is called degra-dated . In the contrary case, εσ ∼ min ( ν+ 
+
+> koff
+
+, 1).
+
+Scale ordering. We let (ni)i=1,2,..., nmax be the set of edge and vertex scales, and order them by decreasing order, n1 >
+
+n2 > · · · . Representing them from top to bottom yields a 
+
+multi-scale graph (see Sec. IV for examples). By construc-tion, there is a reaction σ → · · · of scale nσ above any reaction with reactant σ . In particular, there is at least one vertex of scale n1.
+
+Dominant paths. From (11), (12), the edge σ → σ ′ is dom-inant if nσ →σ ′ = nσ . If σ̸ = σ ′, the condition is equivalent to 
+
+wσ →σ ′ ∼ 1. Iterating, we say that σ is connected to σ ′ by a dominant path if there exists a path γ : σ = σ1 → · · · → σℓ = σ ′
+
+whose edges σi → σi+1, i = 1, . . . , ℓ −1 are all dominant. This defines a notion of dominant path (weak or strong) connectiv-ity .
+
+Dominant graph. A dominant graph is a graph connected by dominant paths, i.e. a graph G = ( V (G), E(G)) such that all oriented pairs of vertices (σ , σ ′) are connected by domi-nant paths. The dominant subgraph of a graph G is obtained by selecting only dominant edges of G; even if G is connected, it may be disconnected. 
+
+Dominant SCCs. If σ , σ ′ ∈ V (G), we let σ ∼ σ ′ (including the case σ = σ ′) if there exists a path σ = σ1 → · · · → σℓ = σ ′
+
+of dominant edges of G connecting σ to σ ′, and similarly, a path of dominant edges of G connecting σ ′ to σ . The relation 
+
+∼ is an equivalence relation on vertices of G. We call dom-inant SCCs (dominant strongly connected components) its equivalence classes. Maximal dominant SCCs of G are dom-inant SCCs which are ’downstream’, i.e. which are not the source of any dominant edge (in the terminology of Markov chains 27 , they are maximal classes of the dominant subgraph of G). Non-trivial dominant SCCs are dominant SCCs con-taining at least two vertices; equivalently, containing a domi-nant cycle. The main objects of consideration for renormalization are 
+
+non-trivial maximal dominant SCCs , that is, maximal dom-inant SCCs which are non-trivial. Note that the presence of a dominant cycle implies the existence of a non-trivial domi-nant SCC, but not necessarily maximal. These structures will be uncovered inductively by lowering a cut-off scale, as we shall presently see.  
+
+> 3. Renormalization algorithm
+
+We refer to the Supplementary Materials both for heuris-tics and for a presentation of the interface. The mathematical proof will be presented elsewhere 28 . We content ourselves here with presenting the results. The starting point is the split graph G(0) with reaction rates 
+
+k(0)   
+
+> σ→σ′
+
+= kσ →σ ′ , β (0) 
+
+> σ
+
+= βσ = kσ → /0 obtained after lineariz-ing at 0. Call n(0) 
+
+> 1
+
+> n(0) 
+
+> 2
+
+> · · · the reaction scales of G(0).We start from the cut-off scale n(0) 
+
+> 1
+
+, i.e. eliminate reactions Hierarchical models for large chemical reaction networks 8with scale < n(0) 
+
+> 1
+
+, so that all reactions in the infra-red cut-off graph G := G(0)
+
+> ↘n(0)
+> 1
+
+(see Sec. III B 2) have same scale n(0) 
+
+> 1
+
+; in particular, they are all dominant. If G contains no non-trivial maximal dominant SCC, then we replace the cut-off scale by 
+
+n(0) 
+
+> 2
+
+. The cut-off graph G = G(0)
+
+> ↘n(0)
+> 2
+
+now contains reactions of both scales n(0) 
+
+> 1
+
+, n(0) 
+
+> 2
+
+. We consider only those reactions which are dominant, yielding a dominant subgraph, still denoted G.If G contains no non-trivial maximal dominant SCC, then we replace the cut-off scale by n(0) 
+
+> 3
+
+, and so forth. 
+
+One renormalization step (i = 1). The process usually stops at some scale n = n(i) (here i = 1), called step i cut-off scale , at which a non-trivial maximal dominant SCC appears. By con-struction, n(i) ≡ n(i−1) 
+
+> ji
+
+is one of the scales of the previous step graph. We first let G(i−1) 
+
+> cut
+
+:= G(i−1)
+
+> ↘n(i−1)
+> ji−1
+
+be the graph cut off at the scale just above n; this cut-off graph has no maximal dom-inant SCC. Then (adding scale n) we let (Gp)p=1,2,... be the non-trivial maximal dominant SCCs of G↘n. By construction, they involve only dominant edges, and their minimal scale is 
+
+n; also, none of the vertices of Gp is autocatalytic, because there is no dominant edge σ → σ ′, σ ′̸ = σ when σ is autocat-alytic. Fix p. Adding to the internal edges in Gp the set E out p
+
+of outgoing edges kσ →σ ′ , σ ∈ Gp, σ̸ ∈ Gp yields a new graph, 
+
+Gp, which is the same as the cut-off graph Gint , except for the fact that the target of outgoing edges is specified. By con-struction, none of the outgoing edges is dominant . We shall now collapse Gp, p = 1, 2, . . . inside G (0). Graphically, one (1) merges all vertices σ in Gp into a compound vertex de-noted Gi=1,p, so that G(i)(σ ) = Gi,p (see discussion of merg-ing patterns in Sec. II B); for all other vertices σ (including those in non-maximal dominant SCCs), the map G(i)(σ ) = σ
+
+is trivial; (2) redirects every outgoing edge σ → σ ′ in E out p
+
+(σ ∈ V (Gp), σ ′̸ ∈ V (Gp)) into an edge Gi,p → G(i)(σ ′) from 
+
+Gi,p; (3) and further, redirects every ingoing edge σ ′ → σ
+
+(σ ∈ V (Gp), σ ′ ’trivial’, i.e. G(i)(σ ′) = σ ′) into an edge 
+
+σ ′ → Gi,p. We need now specify the kinetic rates of the new coarse-grained graph G(i), called step i effective graph . De-fine first 
+
+(characteristic rate ) 1/τGp = kp,min (16) where kp,min is any internal rate with scale n(i), equal to the lowest scale of all internal edges in Gp;
+
+(bare deficiency weight ) ¯εGp ∼ max {εσ , σ ∈ V (Gp)};(17) 
+
+(renormalization factor ) Z(0)Gp ∼ max    
+
+> (σ,σ′)∈Eout p
+
+kσ →σ ′
+
+kσ
+
+(18) which is ≺ 1 since outgoing edges are non-dominant; 
+
+(external rate ) kext  
+
+> Gp
+
+∼ 1
+
+τGp
+
+× Z(0)Gp (19) The resonance regime is defined by Z(0)Gp ∼ ¯εGp ; in that regime, we cannot decide whether Gp is autocatalytic or not. Banning this regime, the Lyapunov exponent of Gp is defined as 
+
+λGp ∼
+
+(
+
+0, Z(0)Gp ≻ ¯εGp
+
+¯εGp /τGp , Z(0)Gp ≺ ¯εGp
+
+(20) When Z(0)Gp ≻ ¯εGp (non-autocatalytic case) , the Lyapunov exponent of Gint p is actually ≺ 0, but this may change when ingoing edges are taken into account at step (i + 1). However, when Z(0)Gp ≺ ¯εGp (autocatalytic case) , the exponent is ≻ 0, and adding ingoing edges can only increase it. The renormalized rates of the compound vertex Gi,p are now 
+
+(outgoing rates ) kGi,p→σ ′ ∼ 1
+
+τGp
+
+× max   
+
+> σ∈V(Gp)
+
+kσ →σ ′
+
+kσ
+
+(21) 
+
+(deficiency rate ) κGi,p ∼ ¯εGp /τGp (22) giving rise to a self-edge Gi,p → Gi,p, interpreted as a doubling reaction Gi,p
+
+> κGi,p
+
+→ Gi,p + Gi,p; note that, in the autocatalytic case, λGp ∼ κGi,p ≻ kGi,p is dominant; 
+
+(ingoing rates ) kσ ′→Gi,p ∼ max    
+
+> σ∈V(Gp)
+
+kσ ′→σ . (23) Finally, we call weight of G i,p the factor 
+
+(weight ) Z−1 
+
+> Gp
+
+∼
+
+
+
+max (Z(0)Gi,p , ¯εGp )
+
+−1
+
+(24) and let 
+
+Z(ε, α)Gp := Z(0)Gp − ¯εGp + ατ Gp , ε, α ≥ 0 (25) Note that Z(ε, 0)Gp ∼ Z(0)Gp in the free regime. When α ≻
+
+ZGp /τGp , Z(¯εGp , α)Gp ∼ Z(0, α)Gp ∼ ατ Gp simply. Looking at the new graph, we see that, by construction, 
+
+kGi,p = ∑  
+
+> σ′̸=Gi,p
+
+kGi,p→σ ′ ∼ kext  
+
+> Gp
+
+, (26) from which we get the renormalized deficiency weight, 
+
+εGi,p ∼ κGi,p /kGi,p ∼ ¯εGp
+
+Z(0)Gp
+
+, (27) and the new transition weights, 
+
+w(α)Gi,p→σ ′ ∼ kGi,p→σ ′
+
+kGi,p + α (28) Hierarchical models for large chemical reaction networks 9In the non-autocatalytic case, 
+
+w(α)Gi,p→σ ′ ∼
+
+
+
+w(0)Gi,p→σ ′ ∼ Z(0)−1 
+
+> Gp
+
+× max σ ∈V (Gp)   
+
+> kσ→σ′
+> kσ
+
+,
+
+α ⪯ kGi,p  
+
+> kGi,p→σ′
+> α
+
+∼ (ατ Gp )−1 × max σ ∈V (Gp)   
+
+> kσ→σ′
+> kσ
+
+,
+
+α ⪰ kGi,p
+
+(29) In the autocatalytic case, on the other hand, we only consider 
+
+α ⪰ λGp ≻ kGi,p ; then 
+
+w(α)Gi,p→σ ′ ∼ kGi,p→σ ′
+
+α , α ⪰ λGp . (30) The free regime is obtained in the non-autocatalytic case for 
+
+α ≺ kGi,p . The autocatalytic regime is obtained in the autocat-alytic case for α ∼ λGp . In both cases, 
+
+w(α)Gi,p→σ ′ ∼ w(λGp )Gi,p→σ ′ ∼ Z−1 
+
+> Gp
+
+× max   
+
+> σ∈V(Gp)
+
+kσ →σ ′
+
+kσ
+
+(free and autocatalytic regimes ) (31) This defines a threshold value, αthr ∼ kGi,p (non-autocatalytic case), αthr ∼ λGp (autocatalytic case); when α ≻ αthr , defining the degraded regime , the denominator in the expression (28) behaves like α. Note also that, in all three regimes, the pref-actor in w (α)Gi,p→σ ′ is Z (0, α)−1 
+
+> Gp
+
+. This is to be remembered when considering (33), (34) below. Since kGi,p ≺ kp,min , the next-step cut-off scale will be 
+
+< n(i), allowing downward induction on n. Note also that, when Gi,p is autocatalytic, κGi,p ≻ kGi,p is the highest reaction scale with reactant Gi,p, see below (11); therefore, if α ⪰ κGi,p ,
+
+w(α)Gi,p→σ ′ ∼ kGi,p→σ ′ 
+
+> α
+
+≺ 1. Thus we have this essential fact: 
+
+edges outgoing from an autocatalytic vertex are small .
+
+Final step. The next renormalization steps (i = 2, 3, . . . ) are exactly similar. Renormalization stops when there are no more non-trivial maximal dominant SCCs. Each step involves a non-trivial nesting step Σ(i) → Σ(i+1), hence the total num-ber of steps, imax is less than the number of species. The step i
+
+effective graph G(i) = ( V (G(i)), E(G(i)) ) is obtained from the bare graph G(0) by successive merging/rewiring steps. 
+
+Step i Lyapunov data. In order to follow the evolution of the system as slower and slower transitions are incorporated, we consider the sequence of cut-off graphs Gcut (i), i = 0, . . . , imax ,and compute their Lyapunov data (for i < imax , these may be understood as “transient” Lyapunov data, though we do not discuss dynamics here). By definition, E(Gcut (i)) is the set of bare edges (edges of G(0) with their rates) involved in the formation of the effective graph G(i) 
+
+> cut
+
+cut-off just before scale 
+
+n(i + 1), and V (Gcut (i)) ⊂ Σ the subset of sources and targets of edges in E(Gcut (i)) . By construction, Gcut (imax ) = G(0),and λ ∗(Gcut (i)) ≤ λ ∗(Gcut (i + 1)) , since cutting edges re-duces the growth rate. We wish to approximate the Lyapunov weights of Gcut (i);when the latter is not strongly connected, the Lyapunov vec-tor is not uniquely determined, which leads us to the fol-lowing “initial condition dependent” construction. Fix σ0 ∈
+
+V (Gcut (i)) ; we let (Gcut (i)) σ0 ⊂ Gcut (i) be the subgraph with vertex subset V (( Gcut (i)) σ0 ) = {σ ∈ V (Gcut (i)) | σ accessi-ble from σ0}, where “ σ accessible from σ0” means: σ is connected to σ0 by some path; if we assume that the ini-tial condition is Xσ (0) = δσ ,σ0 , only this subgraph can be reached. The σ0-SCCs of Gcut (i) are the maximal dominant SCCs Gq, q = 1, 2, . . . of Gcut (i) included in (Gcut (i)) σ0 .
+
+Lyapunov exponent of (Gcut (i)) σ0 . Each Gq has a thresh-old rate αq, which is (by definition) 0 if Gq is not autocat-alytic, otherwise gives the order of magnitude of the Lya-punov exponent λ ∗(Gq), with logarithm equal to the defi-ciency scale of Gq. The Gq are connected between themselves in various ways, but a non-autocatalytic Gq has no outgoing edge in (Gcut (i)) σ0 (otherwise Gq would not be maximal). The threshold scale ⌊log b α⌋ of (Gcut (i)) σ0 (logarithm of the 
+
+threshold rate ) is the maximal deficiency scale (if any), −∞
+
+else ( α = 0). If α > 0, 
+
+λ ∗(( Gcut (i)) σ0 ) ∼ α (32) The growth rate of the graph Gcut (i)) started from σ0 will be 
+
+∼ α. Otherwise (banning resonance cases), (Gcut (i)) σ0 is not autocatalytic. 
+
+Cores. Cores are maximal dominant σ0-SCCs maximiz-ing the set {αq, q = 1, 2, . . . }. If α = 0, all Gq, q = 1, 2, . . . 
+
+are cores, and (Gcut (i)) σ0 is not autocatalytic. In the contrary case ( (Gcut (i)) σ0 autocatalytic), we ban the resonance regime 
+
+defined by the case when there exist αq, αq′ with q̸ = q′ such that αq ∼ αq′ ∼ α are both maximal. Thus (by reindexing), we may assume that α ∼ α1 ≻ αq, q̸ = 1, and G1 is the only core. In the non-autocatalytic case, α1 = · · · = αq = α = 0, so that all Gq are cores. 
+
+Hierarchical formulas for Lyapunov vector/weights of 
+
+(Gcut (i)) σ0 . We approximate the Lyapunov eigenvector of 
+
+(Gcut (i)) σ0 by vσ ∼ (kσ + ασ0 )−1πσ , where 
+
+πσ ∼ ∏ 
+
+> σ′⊋σ
+
+Z−1  
+
+> σ′
+
+, σ ⊂ Gq core (33) 
+
+πσ ∼
+
+
+
+max  
+
+> γ:G1→G(i)(σ)
+
+w(α1)γ
+
+
+
+×× ∏   
+
+> σ⊊σ′⊂¯σ
+
+(Z(0, α1)σ ′ )−1 else (34) if σ ∈ V (( Gcut (i)) σ0 ), where: • in (33), “ σ ⊂ Gq core” means: ∃q, σ ∈ V (Gq). Then the product ∏σ ′⊋σ (· · · ) is over the chain of merged ver-tices containing σ (if any); • in (34), it is assumed that σ is not in a core, but there exists a core Gq and a path γ : Gq → G(i)(σ ) (other-wise πσ = 0); by construction, Gq is autocatalytic, so that q = 1. Then ¯ σ is the maximum compound vertex Hierarchical models for large chemical reaction networks 10 containing σ , and ∏σ ⊊σ ′⊂ ¯σ (· · · ) is the product over the chain of merged vertices σ ′ contained in ¯ σ .
+
+Remark. When σ is not nested in a core, see (34), paths γ can-not, by construction, form an α-dominant cycle. Though there is no upper bound over the length of paths γ, which may be ar-bitrarily large if there are cycles, the maximum order of mag-nitude is attained over the finite subset of simple excursions (paths with no self-intersection). Moreover, one can write a generalization of Dijkstra’s algorithm for finding the shortest paths between nodes in a weighted graph, which returns the set of maximal weight γ’s in the form of a directed acyclic graph (DAG) rooted in G1.
+
+Hierarchical formula for adjoint Lyapunov eigenvector. The estimate for v† is simpler. Reversing edges, let ¯ Σσ0 ⊂ Σ be the subset of bare vertices from which a σ0-core is accessible. Then 
+
+v† 
+
+> σ
+
+∼ max    
+
+> Gqcore ,γ†:G(i)(σ)→Gq
+
+w(α1)γ† (35) In (35), it is assumed that there exists a core Gq and a reverse path γ† : G(i)(σ ) → Gq (otherwise v† 
+
+> σ
+
+= 0). In particular, v† 
+
+> σ
+
+∼
+
+1 if σ is a core. The maximum order of magnitude, as in the case of the hierarchical formula for π, is attained over the finite subset of simple excursions, and may be made explicit in terms of a reverse DAG with edges oriented towards the root G1 (instead of away from G1). The key formulas (33)–(35) constitute what we call the hier-archical formulas . The dominant SCCs, DAG and reverse DAG constitute the hierarchical graph . An example is pro-duced in Result section (Sec. IV C), with edges of the DAG, resp. reverse DAG, drawn in red, resp. blue. The analogy is with blood circulation (arteries/veins), with edges from, resp. to, the cores, drawn red, resp. blue.  
+
+> 4. Phases and thresholds
+
+Phases. The multi-scale analysis requires previous knowl-edge of the scale ordering of the edges (including self-edges), but not of the scales themselves. Renormalized rates as de-fined in (21) rewire the network and shuffle the scales in a way that is difficult to anticipate. The different possible re-orderings define as many chemical phases ; a phase φ is de-fined by a system of explicit inequalities in the space of log (k)
+
+parameters, with geometric image D(φ ); see Sec. V. Iterating renormalization steps possibly produces a very large number of phases. We write k ∼ φ if k satisfies the inequalities defin-ing φ . If φ1, φ2 are two neighboring phases, i.e. if their ge-ometric images D(φ1), D(φ2) have a common boundary, we write similarly φ1 ∼ φ2. Connecting neighboring phases by an edge yields an adjacency graph. The hierarchical algo-rithm allows a fast local exploration of this graph, but getting a global picture for large networks may be very time-consuming in general. 
+
+Viability thresholds. Networks with positive degradation rates 
+
+βσ > 0 may be analyzed exactly as ordinary networks with a special species denoted / 0 and reaction rates σ βσ
+
+→ /0. They modify the network only if they become dominant at some step; see analysis of Toy Formose IIb. Assume that σ belongs to a step i non-trivial maximal dominant SCC, then a domi-nant step i edge σ β (i)
+
+> σ
+
+→ /0 makes it non maximal, in particular the vertices in the SCC are not merged any more, and do not de-fine an autocatalytic component. Conversely, an autocatalytic SCC whose support does not contain σ remains autocatalytic whatever the value of βσ . 
+
+> 5. Simplified time evolution
+
+We again assume that the initial condition is Xσ (0) = δσ ,σ0
+
+(only σ0 is present in the mixture). At step i (kinetic scale 
+
+n(i)), the asymptotic formula (2) suggests the following ap-proximation if σ0 ∈ V (Gcut (i)) ,
+
+X(i)(t) ∼ ⟨ v†,(i), X(0)⟩eλ (i)t v(i) (36) with λ (i) ∼ ασ0 , see (33, 34, 35). A proper normalization is ensured by choosing max σ (v†,(i) 
+
+> σ
+
+) = 1 and fixing v(i) so that 
+
+⟨v†,(i), v(i)⟩ ∼ 1. Mind that Lyapunov data (λ (i), v(i), v†,(i)) are actually dependent on σ0 in general (though Σσ0 = ¯Σσ0 = Σ
+
+in most of our examples, because G(i) is strongly connected). If σ0̸ ∈ V (Gcut (i)) , we simply let X(i) 
+
+> σ
+
+(t) ∼ δσ ,σ0 (trivial time evolution). The match condition 
+
+X(i−1) 
+
+> σ
+
+(t) ∼ X(i) 
+
+> σ
+
+(t) (37) defines a species-dependent transition time t(i) 
+
+> σ0→σ
+
+between step (i − 1) and step i. By construction, t(i) 
+
+> σ0→σ
+
+is upper-bounded by induction times t(i) ∼ b−n(i), but very often (see discussion in Sec. III A, and Examples below), it is much smaller. After the final step, v(i) ≡ v(∞), v†,(i) ≡ v†,(∞) become constant, and provide t → ∞ asymptotics; λ (∞) is an approxi-mation for the growth rate λ ∗ of the bare network. In the par-ticular case when G has no degradation rates, no irreversible 1 → 2 reactions and is detail balanced, it is easy to see that v(∞)
+
+approximates the equilibrium measure, and v†,(∞) ∼ 1, where 
+
+1σ = 1, σ ∈ Σ.We thus get simplified dynamics XH (t|k, φ ) for k within the geometric domain of a given phase φ . Transient dynamics between transition times are not adequately covered in gen-eral by this rapid discussion, and requires a more sophisti-cated study which is left for future work. However, match conditions turn out to be sufficient to get the dynamics of the examples treated below.  
+
+> C. Kinetic inference based on hierarchical models
+
+We recast here our hierarchical formulas in a new light. Namely, instead of considering the output XH (t|k, φ ) of the hierarchical algorithm as an approximation of the true con-Hierarchical models for large chemical reaction networks 11 centration vector X(t), we use it as the main building block of a family of models indexed by k for the time-dependent con-centrations. Then, given the analytical formulas, we consider statistical inference of chemical network as a model. As a proof of concept, we consider in this article a simple MCMC approach to optimize the set of chemical rates k based on time series of chemical concentration measurements. For each species σ , we consider a time series of measure-ments xσ (t) obtained from a simple log-normal model with variance ε2 centered on X(t), log xσ (t) ∼ N (log Xσ (t), ε2),with density 
+
+p(x|k, φ ) = ∏
+
+> t∈T
+
+# ∏ 
+
+> σ∈Σ
+
+e− log 2(xσ (t)/XH (t|k,φ )) 
+
+xσ (t)√2πε 2 (38) where T is a finite set of measurement times. As a general principle, different phases have a qualitatively different dynamical behavior, which allows one to recover the phase from a time series of observed concentrations. In a Bayesian approach, starting from a law on (k, φ ) (prior based on chemical expertise), observations should then yield a law p(k, φ |x) ≡ p(k, φ |(x(t)) t∈T ) (posterior) which puts a negligible marginal weight p(φ |x) on all phases except one, 
+
+(φ̸ = φ ∗) ⇒ (p(φ |x)/p(φ ∗|x) ≪ 1). Furthermore, p(k, φ ∗|x)
+
+should concentrate in a small volume around some optimal 
+
+k = k∗ ∼ φ ∗ in the log (k) variables. Since XH (·; k∗, φ ∗)̸ =
+
+X(·; k∗, φ ∗), the inferred values (k∗, φ ∗) should not be inter-preted as the best estimates for the kinetic rates given the ob-servations, rather, as the parameters of the family of hierar-chical models reproducing most accurately the observations. However, because the hierarchical approximation is generally good, k∗ should be a good proxy for the actual kinetic rates. Since these are unknown in practice, the distinction is not very relevant. Given that an a priori exploration of all phases is im-practical for large networks, a simple and natural strat-egy to get (k∗, φ ∗) is the following. (1) Start from some not implausible k = k0. Apply the hierarchical algorithm to get φ0 = φ (k0) and XH (t|k, φ0), k ∼ φ0. Then compute 
+
+k∗(φ0) :=argmax k∼φ0 log p(x|k, φ0) by a gradient descent algo-rithm, to obtain the maximum log-likelihood log MLE (φ0) = 
+
+log p(x|k, φ0) in the phase φ0. (2) In the next step, we ex-plore the neighboring phases φ ∼ φ0 by the hierarchical al-gorithm, and compute similarly k∗(φ ) and MLE (φ0) for all of them. Then we move randomly from φ0 to a neighboring phases by a Metropolis algorithm based on probability ratios 
+
+(MLE (φ )/MLE (φ0)) . Steps (1) and (2) are repeated in paral-lel on N trajectories. The phase random walk stops when the empirical distribution has reached equilibrium.  
+
+> IV. RESULTS
+
+We illustrate the algorithm described in Sec. III with three examples. More material (in particular, a comparison to sim-ulations) can be found in Supplementary Materials. Reactions are listed from first to last according to scale ordering. Lya-punov data are systematically derived; transition times, which follow immediately, are discussed only in a few cases, for a pure initial state Xσ (0) = δσ ,σ0 . In general, dominant edges are boldface, and so is a vertex σ at scale nσ . Asymptotic Lya-punov data (as in Sec. III A) are denoted (λ (∞) 
+
+> φ
+
+, v(∞) 
+
+> φ
+
+, v†,(∞) 
+
+> φ
+
+),where φ is a phase index. Lyapunov eigenvectors v are nor-malized as explained below (36). Dynamical plots combine numerical solution (full lines) with our hierarchical formulas (dashed lines).   
+
+> A. Example 1: one cycle
+> 1. Hierarchical formulas
+
+We consider here the model of Example 1, and choose the multi-scale ordering koff ≫ kon ≫ k2 ≫ ¯k2. The associated multi-scale graph is 
+
+G1
+
+S0
+
+koff S1 n(0)
+
+> 1
+
+kon 
+
+n(0)
+
+> 2
+
+k2
+
+¯k2
+
+S2
+
+n(0)
+
+> 3
+
+n(0)
+
+> 4
+
+plus the doubling reaction, S1
+
+> ν+
+
+→ S0 + S0. Bare scales are 
+
+n(0) 
+
+> 1
+
+= ⌊log (koff )⌋, n(0) 
+
+> 2
+
+= ⌊log (kon )⌋, n(0) 
+
+> 3
+
+= ⌊log (k2)⌋, n(0) 
+
+> 4
+
+=
+
+⌊log (¯k2)⌋; the scale ⌊log (ν+)⌋ is as yet unspecified but chosen 
+
+< n(0) 
+
+> 1
+
+. Dominant edges are 0 kon 
+
+⇄
+
+> koff
+
+1 and 2 → 0. At step (0), only the n1-scale reaction 1 → 0 is available. Then n(1) = n(0)
+
+> 2
+
+(i.e. above the dashed line separating (koff ) from (kon )), the unique non-trivial maximal dominant SCC is G1 = ( 0 ⇄ 1),
+
+G1 is G1 with the unique outgoing edge 0 k2
+
+→ 2. Collapsing G1
+
+yields a new set of vertices Σ1 = {{ 0, 1}, 2} ≡ { G1, 2} and the following scale-ordered reactions, 
+
+(k2) G1 → 2
+
+........................... 
+
+(¯k2) 2 → G1
+
+and an equivalent doubling reaction, G1
+
+> κG1
+
+→ G1 + G1, which may be above k2 (then G1 is autocatalytic) or not. The new edge scales of n(1) 
+
+> 1
+
+= n(0) 
+
+> 3
+
+and n(1) 
+
+> 2
+
+= n(0) 
+
+> 4
+
+.We now discuss eqs. (16–27). First, 1 /τG1 = kon , ¯ εG1 =
+
+ε1 ∼ ν+ 
+
+> koff
+
+, Z(0)G1 ∼ k2 
+
+> kon
+
+, kext  
+
+> G1
+
+∼ k2. Rates of G1 are kG1 ∼Hierarchical models for large chemical reaction networks 12 
+
+kG1→2 ∼ k2, κG1 ∼ kon  
+
+> koff
+
+ν+, k2→G1 ∼ ¯k2, and εG1,1 ∼ ν+/koff  
+
+> k2/kon
+
+.The graph G1 is autocatalytic if k2 
+
+> kon
+
+≺ ν+ 
+
+> koff
+
+, i.e. k2 ≺ ν+ 
+
+> koff
+
+kon .In this regime (phase a) – where the dotted line is irrelevant –, we get λG1 ∼ κG1 , the effective step 1 graph G(1) : G1
+
+> k2
+
+⇄
+
+> ¯k2
+
+2has a single dominant non-trivial edge 2 → G1 (because the self-edge G1
+
+> κG1
+
+→ G1 is dominant), so the algorithm stops. As-sume instead k2 ≻ ν+ 
+
+> koff
+
+kon (phase b) . Then the two edges of 
+
+G(1) form at scale n(2) = n(0) 
+
+> 4
+
+(i.e. below the dotted line) the maximal dominant SCC G2 = ( G1 ⇄ 2), which is auto-catalytic (there are no outgoing edges), with exponent λG2 ∼
+
+εG1,1 /τG2,1 ∼ ν+ kon  
+
+> koff
+> ¯k2
+> k2
+
+.Let us now discuss v∗, v†,∗, DAGs, and dynamics from (34), (35), using the match conditions (36, 37). (0) At step 0, G cut (1) = {1 → 0}, V (Gcut (0)) = {0, 1}.Choosing σ0 = 1 so that Gσ0 (0) = {1 → 0}, the root is the only core, 0, the reverse DAG is 1 → 0, and v(0) 
+
+> i
+
+= δi,0
+
+(i = 0, 1), v†,(0) = 1. To leading order in the initial regime, 
+
+X(0) 
+
+> i
+
+(t) ∼ Xtot (0)δi,0, where Xtot (0) = ∑i=0,1 Xi(0) is the total initial concentration. On the other hand, choosing σ0 = 2̸ ∈
+
+V (Gcut (0)) , X(0) 
+
+> 2
+
+(t) ∼ 1. (1) (step 1) In phase a, the unique core G1 has weight 
+
+Z−1 
+
+> G1
+
+∼ (¯εG1 )−1, threshold rate αG1 ∼ κG1 ∼ λG1 , and 
+
+w(λG1 )G1→2 ∼ kG1→2
+
+> λG1
+
+∼ k2
+
+> λG1
+
+, w(λG1 )2→G1,1 ∼ ¯k2
+
+> λG1
+
+. We get: 
+
+π0, π1 ∼ Z−1 
+
+> G1
+
+, and π2 ∼ w(λG1 )G1→2, whence (dividing by kσ + λG1 ∼ max (kσ , λG1 ), and multiplying by λG1 in the end to ensure proper normalization) v(∞) 
+
+> a
+
+≡ v(1) 
+
+> a
+
+∼
+
+λG1
+
+ kon 
+
+koff 
+
+λG1
+
+
+
+> −1
+
+×
+
+
+
+Z−1
+
+> G1,1
+
+Z−1
+
+> G1,1
+
+w(λG1 )G1,1→2
+
+ ∼
+
+
+
+1
+
+> kon
+> koff
+> k2koff
+> kon ν+
+
+, whereas 
+
+v†,(1) 
+
+> a
+
+∼
+
+ 11
+
+w(λG1 )2→G1,1
+
+ ∼
+
+
+
+11
+
+> ¯k2koff
+> ν+kon
+
+ . Thus 
+
+X(1)(t) ∼ v†,(1) 
+
+> a,σ0
+
+eλG1 t v(1) 
+
+> a
+
+. (39) 
+
+In phase b, (1) Gcut (1) = {1 → 0, 0 → 1, 0 → 2},
+
+V (Gcut (1)) = {0, 1, 2}; we now have Z−1 
+
+> G1
+
+∼ Z(0)−1 
+
+> G1
+
+. The unique core is now 2, so that v(1) 
+
+> b
+
+∼
+
+ 001
+
+, v†,(1) 
+
+> b
+
+∼ 1, and 
+
+X(1)(t) ∼
+
+ 001
+
+, compare with (39). (2) Next, Gcut (2) = 
+
+G(0), Z−1 
+
+> G2
+
+∼ ¯ε−1 
+
+> G2
+
+∼ ε−1 
+
+> G1
+
+. Then v(∞) 
+
+> b
+
+≡ v(2) 
+
+> b
+
+∼ λG2
+
+ kon 
+
+koff 
+
+¯k2
+
+
+
+> −1
+
+×
+
+
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+Z−1
+
+> G2
+
+ ∼
+
+ 
+
+> ¯k2
+> k2
+> kon ¯k2
+> koff k2
+
+1
+
+ and v†,(2) 
+
+> b
+
+∼ 1. Thus X(2)(t) ∼
+
+eλG2 t v(2) 
+
+> b
+
+, compare with (39). 
+
+2. Inference 
+
+We choose here k = kref inside phase a, and show the result of the inference algorithm sketched above. Numerical param-eter values are b = 4 and 
+
+kref off = b−0.5, kref on = b−3.5, kref 2 = b−6.5, kref 2 = b−8.5, νref  
+
+> +
+
+= b−2.5
+
+(40) We write XH (t; k, φ , i), φ = a, b, i = 0, 1, 2 for the dynami-cally extended hierarchical formulas for the phase φ dynamics started from the seed x j(t = 0) = δi, j (only species i is present initially). Then (see Suppl. Math. §II B. for a derivation of the formulas): 
+
+XH (t | k, a, 0) ∼ eλG1 t
+
+
+
+1 
+
+> kon
+> koff
+
+tanh (koff t) 
+
+> k2koff
+> ν+kon
+
+tanh ( ν+kon  
+
+> koff
+
+t)
+
+ , (41) 
+
+XH (t | k, b, 0) ∼ eλG2 t
+
+
+
+e−k2t + ¯k2 
+
+> k2
+> kon
+> koff
+
+tanh (koff t) × (e−k2t + ¯k2 
+
+> k2
+
+)
+
+tanh (k2t)
+
+
+
+(42) when the seed is species 0, and 
+
+XH (t | k, a, 2) ∼
+
+ 
+
+> ¯k2koff
+> kon ν+
+
+tanh ( ν+kon  
+
+> koff
+
+t) eλG1 t 
+
+> ¯k2
+> ν+
+
+tanh ( ν+kon  
+
+> koff
+
+t) eλG1 t
+
+1 + k2 ¯k2( koff  
+
+> kon ν+
+
+)2 eλG1 t
+
+ , (43) 
+
+XH (t | k, b, 2) ∼ eλG2 t
+
+ 
+
+> ¯k2
+> k2
+
+tanh (k2t) 
+
+> kon
+> koff
+> ¯k2
+> k2
+
+tanh (k2t)
+
+1
+
+ (44) when the seed is species 2. Any adequate time-window should include the transition time τ = b5.5 ≃ 2 × 10 3 defined by 
+
+λG1 τ ≡ 1, around which we start seeing the asymptotic slope of log-concentrations curves (formulas XH (t|k, φ , i) are actu-ally phase-independent to lowest order when t ≪ τ). On the other hand, the equilibration time between species 0 and 1 is 
+
+∼ 1, which is much smaller. We assume that we do not have such short-time concentration measurements, and decide in-stead that T is made up of regularly spaced values ranging in 
+
+(b4.5, b6.6) ≃ (5 × 10 3, 9 × 10 4). A number of time measure-ments comparable to the number of reactions is enough for the inference; we chose for the simulation dim (T ) = 12. 
+
+Exact inference. We first maximize p(xSEED |k, φ = a) with Hierarchical models for large chemical reaction networks 13 
+
+xSEED = XH (·| kref , a, SEED ), SEED = 0, 1, 2, starting from some arbitrary initial rates kinit ≡ kinit [a], kinit o f f = b−0.5, kinit on =
+
+b−2.5, kinit  
+
+> 2
+
+= b−4.5, ¯kinit  
+
+> 2
+
+= b−5.5, νinit  
+
+> +
+
+= b−1.5 located inside the geometric domain of phase a. Since x is the time-trajectory of a hierarchical model, it is in theory possible to get an exact inference, with k(n) (n-th iteration of the solve) converging to 
+
+kref , and x(n)(·) = XH (·| k(n), a, i) converging to xi.The results are shown in Fig. 3 when i = 0 (top), 2 (bot-tom). We use the L-BFGS-B method with gtol = 10 −1 stop-ping condition ( L∞ norm on the gradient of the objection func-tion). The algorithm terminates after < 20 iterations and is very quick (a few seconds). The first plots give log 10 (MSE i),where MSE i is the mean square error on trajectories and may be used as objective function in place of the log-likelihood since the two differ only by a trivial affine transformation, 
+
+MSE i = 1dim (T ) ∑
+
+> t∈T
+
+# ∑ 
+
+> σ∈Σ
+
+log 2(xσ (t)/XH (t|k, a, i)) (45) The values of the last iterations are very negative, suggest-ing that the model reproduces quite closely the time trajecto-ries, which is confirmed by the second log-plots, with log b(x)
+
+on the y-axis (lines for x = xref , bullets for the result of the inference, with k = k∗ equal to the values of the rates at the last iteration). Then the third plots show the log-rates as a function of the iteration number (stars), and the reference values (dotted lines). A few things seem to go wrong – but this is only due to the lack of identifiability of the model. There are actually two problems: 1. Because of the lack of short-time measurements, substi-tutions (koff , kon ) → (Ck off ,Ck on ) with C constant do not change the model. There is nothing we can do against it if short-time measurements are not possible, but note that such partial rate rescalings can be predicted be-forehand , and do not harm the quality of the inference. For the same reason, we did not provide dynamically extended hierarchical formulas for XH (t|k, φ , 1) started from SEED = 1, since they are in practice indistinguish-able from those for XH (t|k, φ , 0).2. The value of ¯ k2 is accurately inferred when the seed is 2, but totally wrong when the seed is 0. This, again, can be predicted from the hierarchical formulas themselves: 
+
+XH (·| k, a, 0) is independent of ¯ k2, XH (·| k, a, 2) is not. The fourth plots, which represent the MSE on the log-rates, 15 ∑i log 2(k∗ 
+
+> i
+
+/kref  
+
+> i
+
+), confirm this analysis. The third column gives the result of the inference when 
+
+x = xnum is the true value of the concentrations obtained by numerically solving the dynamics. We chose SEED = 2 since the inference is better starting from that initial condition in the given time-regime. Curves are unsurprisingly very simi-lar. We kept the dotted lines on the log-rate plot, but rates are now ‘effective’ rates and should not converge exactly to kref 
+
+any more; this is particularly noticeable for k2 (in green). The fourth column gives the variant when x = xnoise is log-normal, centered upon xnum , log xnoise (t) ∼ N (xnum (t), ε2) with stan-dard deviation ε = 0.1. The fluctuations are clearly visible on the log b x curves shown on the second plot, but have little effect on the inferred rate coefficients. This idea that ‘effective’ rates are not equal to the original rates is very general, and justifies in particular the multiplica-tive ‘corrections’ of order 1 applied to Lyapunov exponents 
+
+λG in §II B., C. of Suppl. Mat. to improve the fit with numer-ical trajectories, since they may be generated from the hierar-chical formulas by simply redefining rates. We computed the probability ratios MLE (φ =
+
+b)/MLE (φ = a) by starting instead from kinit ≡ kinit [b]
+
+in the geometric domain of phase b, kinit o f f =
+
+b−0.5, kinit on = b−2.5, kinit  
+
+> 2
+
+= b−3.5, ¯k2 = b−5.5, νinit  
+
+> +
+
+= b−2.5
+
+by using the results of the two alternative maximiza-tions. The one started from kinit [b] finds optimal log-rates log b k∗
+
+> off
+
+[b] = 0.0, log b k∗
+
+> on
+
+[b] = −3.0, log b k∗
+
+> 2
+
+[b] =
+
+−3.3, log b ¯k∗
+
+> 2
+
+[b] = −5.7, log b ν∗
+
+> +
+
+[b] = −0.8 located inside phase b, with ln (MLE (φ = b)/MLE (φ = a)) ≃ − 1.5 × 10 3.The odds are so overwhelming that the optimal solution found in phase b may be dismissed as irrelevant.  
+
+> B. Example 2: two coupled cycles
+
+We consider here Example 2. 
+
+G1
+
+G2
+
+1
+
+kmax 
+
+2 ¯1¯kmax 
+
+¯2
+
+n(0)
+
+> 1
+
+n(0)
+
+> 3
+
+n(0)
+
+> 4
+
+kmin 
+
+¯kmin 
+
+n(0)
+
+> 2
+
+k+ n(0)
+
+> 5
+
+k− n(0)
+
+> 6
+
+with kmax = b0, ¯kmax = b−2, ¯ν+,1 = b−3, kmin = b−5, ¯ kmin =
+
+b−6, ν+,1 = b−7, k+ = b−12 and k− = b−16 . We chose b = 3, and obtain the plot on Fig. 1 (right) for the log-distribution log b X(t) starting from Xi(0) = δi,2, i = 1, 2, ¯1, ¯2. The plot be-comes very caricatural if b is large, say b = 10, the first slope 
+
+λ1 being hard to discern. Following our analysis, we have ε1 ∼ ν+,1 
+
+> kmax
+
+= b−7, ε2 ∼ 
+
+> k+
+> kmin
+
+= b−7, ε¯1 ∼ ¯ν+,1 
+
+> ¯kmax
+
+= b−1, ε¯2 ∼ k− 
+
+> ¯kmin
+
+= b−10 . The original scales (from top to bottom) are n(0)  
+
+> 1,··· ,8
+
+=
+
+nmax , ¯nmax , ¯n+,1, nmin , ¯nmin , n+,1, n+, n−.(0) At cut-off scale n(0) = ¯n+,1, edges 1 → 2, ¯1 → ¯2 define a two-component reverse DAG with components rooted at 2 , ¯2. Hierarchical models for large chemical reaction networks 14 0 5 10 15 20 
+
+iter. number 
+
+4
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+> stored_mean_logk_error
+
+Long time mean error on log(k) for ntimes = 12 
+
+0 5 10 15 20 
+
+iter. number 
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+> stored_mean_logk_error
+
+Long time mean error on log(k) for ntimes = 12 
+
+0 5 10 15 20 
+
+iter. number 
+
+0
+
+1
+
+2
+
+3
+
+> log10(stored_mean_logtraj_error)
+
+Mean error on trajectories for ntimes = 12 
+
+0 5 10 15 20 
+
+iter. number 
+
+0.0 
+
+0.5 
+
+1.0 
+
+1.5 
+
+2.0 
+
+2.5 
+
+3.0 
+
+3.5 
+
+> log10(stored_mean_logtraj_error)
+
+Mean error on trajectories for ntimes = 12 
+
+0 5 10 15 20 
+
+iter. number 
+
+8
+
+6
+
+4
+
+2
+
+0
+
+> logk
+
+Log-rates 
+
+koff 
+
+kon 
+
+k2
+
+k2
+
+> +
+
+0 5 10 15 20 
+
+iter. number 
+
+8
+
+6
+
+4
+
+2
+
+0
+
+> logk
+
+Log-rates 
+
+koff 
+
+kon 
+
+k2
+
+k2
+
+> +
+
+0 5 10 15 20 25 
+
+iter. number 
+
+8
+
+6
+
+4
+
+2
+
+0
+
+> logk
+
+Log-rates 
+
+koff 
+
+kon 
+
+k2
+
+k2
+
+> +
+
+0 5 10 15 20 25 30 35 
+
+iter. number 
+
+8
+
+6
+
+4
+
+2
+
+0
+
+> logk
+
+Log-rates 
+
+koff 
+
+kon 
+
+k2
+
+k2
+
+> +
+
+2000 4000 6000 8000 
+
+t
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+> log_BASE(x)
+
+log_BASE(x) for phase a, SEED = 0 
+
+X0
+
+X1
+
+X2
+
+X0, inf. 
+
+X1, inf. 
+
+X2, inf. 
+
+2000 4000 6000 8000 
+
+t
+
+7
+
+6
+
+5
+
+4
+
+3
+
+2
+
+1
+
+0
+
+> log_BASE(x)
+
+log_BASE(x) for phase a, SEED = 2 
+
+X0
+
+X1
+
+X2
+
+X0, inf. 
+
+X1, inf. 
+
+X2, inf. 
+
+2000 4000 6000 8000 
+
+t
+
+7
+
+6
+
+5
+
+4
+
+3
+
+2
+
+1
+
+0
+
+> log_BASE(x)
+
+log_BASE(x) for phase a, SEED = 2 
+
+X0
+
+X1
+
+X2
+
+X0, inf. 
+
+X1, inf. 
+
+X2, inf. 
+
+2000 4000 6000 8000 
+
+t
+
+7
+
+6
+
+5
+
+4
+
+3
+
+2
+
+1
+
+0
+
+> log_BASE(x)
+
+log_BASE(x) for phase a, SEED = 2 
+
+X0
+
+X1
+
+X2
+
+X0, inf. 
+
+X1, inf. 
+
+X2, inf. 
+
+Figure 3: Inference results (1) At cut-off scale n(1) = nmin (just below the upper dashed line), the cycle 1 kmax 
+
+⇄
+
+kmin 
+
+2 defines a dominant SCC G1 = {1 ⇄ 2}
+
+with renormalized weight Z(0)G1 ∼ k+
+
+kmax ∼ b−12 and defi-ciency weight ¯ εG1 ∼ max (ε1, ε2) ∼ b−7 ≻ Z(0)G1 . Thus G1 is autocatalytic, and λG1 ∼ ¯εG1 kmin ∼ k+ ∼ b−12 , ZG1 ≡ Z(1)
+
+G1 ∼
+
+¯εG1 . The new effective graph has vertices {G1, ¯1, ¯2} and edges k¯1→G1 ∼ k¯1→1 ∼ b−16 , kG1→¯1 ∼ k+
+
+kmax kmin ∼ b−17 be-low the edges connecting ¯ 1, ¯2. The two cores are G1 and ¯2. Choosing σ0 = 1, 2, Gcut ,σ0 (1) = {1 ⇄ 2} has Lyapunov eigenvector components v(1)
+
+1 ∼ k−1max Z−1
+
+G1 ∼ kmin /(k+kmax ) ∼
+
+b7, v(1)
+
+2 ∼ k−1min Z−1
+
+G1 ∼ k−1
+
++ ∼ b12 ; dividing by b12 for normal-ization, v(1) ∼
+
+
+
+b−5
+
+100
+
+, while v†,(1) ∼
+
+
+
+1100
+
+.Hierarchical models for large chemical reaction networks 15 (2) At cut-off scale n(2) = ¯nmin (just below the lower dashed line), the cycle ¯ 1
+
+> ¯kmax
+
+⇄
+
+> ¯kmin
+
+¯2 defines a dominant SCC G2 = {¯1, ¯2}
+
+with renormalized weight Z(0)G2 ∼ k¯1→G1 
+
+> ¯kmax
+
+∼ b−14 and defi-ciency weight ¯ εG2 ∼ max (ε¯1, ε¯2) ∼ b−1 ≻ Z(0)G2 . Thus G2 is autocatalytic, and λG2 ∼ ¯εG2 ¯kmin ∼ ¯ν+,1
+
+> ¯kmax
+
+¯kmin ∼ b−7, ZG2 ∼ ¯εG2 .The new effective graph has vertices {G1, G2} and edges 
+
+kG1→G2 ∼ kG1→¯1, kG2→G1 ∼ k¯1→G1
+
+> k¯1
+
+¯kmin ∼ k−
+
+> ¯kmax
+
+¯kmin ∼ b−20 .Since λG2 ≻ λG1 , the new root is G2, and now ZG1 ≡ Z(2) 
+
+> G1
+
+∼
+
+Z(λG2 )G1 ∼ λG2 
+
+> kmin
+
+∼ b−2, w(λG2 )G2→G1 ∼ kG2→G1
+
+> λG2
+
+∼ k− 
+
+> ¯ν+,1
+
+∼
+
+b−13 . Then (using standard basis along 1 , 2, ¯1, ¯2) v(∞) ≡
+
+v(2) ∼ λG2
+
+
+
+k−1max w(λG2 )G2→G1 (Z(2) 
+
+> G1
+
+)−1
+
+k−1min w(λG2 )G2→G1 (Z(2) 
+
+> G1
+
+)−1
+
+¯k−1max Z−1
+
+> G2
+
+¯k−1min Z−1
+
+> G2
+
+ ∼
+
+
+
+b−18 
+
+b−13 
+
+b−4
+
+1
+
+, and 
+
+v†,(2) 
+
+> 1,2
+
+∼ w(λG2 )G1→G2 ∼ kG1→G2
+
+> λG2
+
+∼ b−10 and v†,(2) 
+
+> ¯1,¯2
+
+∼ 1. 
+
+Dynamics. The model predicts (using the match conditions) the following time-dependent composition. (0) For t ≺ 1/kmax ≃ 1 (compare with Ex. 1, Phase a), 
+
+Xi(t) = δi,2.(1) Let t := t(2) 
+
+> 2→1,2
+
+be defined as in (37) by eλG1 t ∼
+
+v†,(2) 
+
+> 2
+
+eλG2 t v(2) 
+
+> 2
+
+, or t ∼ 23 b7 ln (b) ≈ 5 × 10 4. For 1 /kmin ≺
+
+t ≺ t(2)
+
+> 2→1,2
+
+, log b(X1,2(t)) ∼ log b X(1) 
+
+> 1,2
+
+(t) ≡ log b(eλG1 t v(1)
+
+> 1,2
+
+) ∼ 
+
+> λG1
+> ln (b)
+
+t +
+
+ −50
+
+
+
+.(2) For t ≻ t(2)
+
+> 2→1,2
+
+, the fast increasing contribution is 
+
+X(2)(t) ∼ v†,(2) 
+
+> 2
+
+eλG2 t v(2); thus log b X(2)(t) ∼ λG2 
+
+> ln (b)
+
+t − 10 +
+
+log b(v(2)) ∼ λG2 
+
+> ln (b)
+
+t +
+
+
+
+−28 
+
+−23 
+
+−14 
+
+−10 
+
+.See Suppl. Mat. for agreement with simulations. 
+
+C. Example 3: a toy formose model 
+
+The formose reaction, observed long ago 29 – one of the few known examples of autocatalytic networks of prebiotic chemistry, easy to obtain in a laboratory at high pH – is a densely connected reaction network consisting of oses (sug-ars) with varying number of carbons, which can merge two by two through addition reactions called aldol reactions, or conversely, fragment into two pieces by retro-aldol reactions. Dismissing side reactions and possibly important isomer (dis-cussed in Suppl. Mat.) and diastereoisomer effects, leaves a toy model with only three reaction types coupling abstract molecules (Cn)n≥1 with n carbon atoms, – C1-additions (ald1) , C1 + Cnkon 
+
+→ Cn+1 (n ≥ 2), allowing chain polymerization, and the reverse C1 retroaldol reactions 
+
+(ald 1), Cn+1
+
+> koff
+
+→ C1 + Cn;– Cn, n ≥ 2 retroaldol reactions (ald ∗), Cn+m
+
+> ν+
+
+→ Cn + Cm,
+
+n, m ≥ 2. In experiments, C1 (formaldehyde) plays a special role be-cause the addition mechanism does not allow for C1 + C1 →
+
+C2. Here (as is often the case), C1 is in excess (abundant) and considered as an external species, so that C1-additions may be written as Cnkon 
+
+→ Cn+1 up to the substitution kon → [C1]kon . In practice one truncates at a given level nmax ≥ 4 by removing all reactions involving Cn, n > nmax as a reactant or a product. Here (see section on formose in Suppl. Mat. for generaliza-tions) we choose nmax = 5, and consider two regimes, I and II, depending on the ordering of scales non , no f f of kon , koff .Computations show that I, resp. II, splits into 3 phases Ia,b,c,resp. 2 phases II a,b. From now on, we simply denote Cn by its index, n. By definition, ε2 = ε3 = 0. For more readability, we represent dominant edges as dou-ble arrows (⇒) instead of boldface. The source σ of a domi-nant edge σ ⇒ σ ′ is drawn bold at scale nσ = nσ →σ ′ .
+
+Toy formose (Ia,b,c). kon ≻ koff ≻ ν+. Then ε4 ∼ ν+ 
+
+> kon
+
+, ε5 ∼ 
+
+> ν+
+> koff
+
+. The initial graph G(0) is 
+
+(kon ) 2 ⇒ 3 ⇒ 4 ⇒ 5
+
+− − − − − − − − − − − 
+
+(koff ) 5 ⇒ 4 → 3 → 2
+
+(ν+) 4 → 2 + 2, 5 → 2 + 3(0) At cut-off scale n(0) = non , 2 → 3 → 4 → 5 define a reverse tree rooted at 5. Thus v(0) ∝
+
+
+
+kon 
+
+kon 
+
+kon 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+0001
+
+ =
+
+
+
+000
+
+k−1off 
+
+. (1) At cut-off scale n(1) = no f f , the cycle 4 kon 
+
+⇄
+
+> koff
+
+5 de-fines a dominant SCC G1 = {4, 5} with renormalized weight 
+
+Z(0)G1 ∼ max ( k4→3 
+
+> k4→5
+
+, k4→2 
+
+> k4→5
+
+, k5→2 
+
+> k5→4
+
+, k5→3 
+
+> k5→4
+
+) ∼ max ( koff  
+
+> kon
+
+, ν+ 
+
+> koff
+
+).
+
+Ia phase ( ν+ ≻ ( koff  
+
+> kon
+
+)2kon ). Then ZG1 ∼ Z(0)G1 ∼ ν+ 
+
+> koff
+
+∼ ¯εG1 .In this transition regime we are unable to decide whether G1
+
+is autocatalytic or not; in the autocatalytic case, λ (1) ∼ ¯εG1 ×
+
+koff ∼ ν+. The new effective graph is 
+
+(kon ) 2 ⇒ 3 ⇒ G1
+
+(koff ) 3 → 2
+
+(kG1 ) G1 ⇒ 2, 3with kG1→2 ∼ kG1→3 ∼ kG1 ∼ k5→2,3 
+
+> k5
+
+× koff ∼ ν+. In both cases, ZG1 ∼ ν+ 
+
+> koff
+
+. In the autocatalytic case, w(λ (1))G1→2 ∼Hierarchical models for large chemical reaction networks 16 
+
+C2 kon C3 C4 C5
+
+• • • n(0)
+
+> 1
+
+•
+
+koff 
+
+n(0)
+
+> 2
+
+n(0)
+
+> 3
+
+ν+
+
+C2 koff C3 C4 C5
+
+• • • n(0)
+
+> 1
+
+n(0)
+
+> 3
+
+ν+
+
+•
+
+koff 
+
+n(0)
+
+> 2
+
+Figure 4: Toy formose I (left), II (right) model 
+
+w(λ (1))G1→3 ∼ 1, therefore v(∞) 
+
+> Ia
+
+= v(1) 
+
+> Ia
+
+∝
+
+
+
+kon 
+
+kon 
+
+kon 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+11
+
+Z−1
+
+> G1
+
+Z−1
+
+> G1
+
+ ∼ ν−1
+
+> +
+
+
+
+ν+/kon 
+
+ν+/kon 
+
+koff /kon 
+
+1
+
+.
+
+Ib phase ( ( koff  
+
+> kon
+
+)3kon ≺ ν+ ≺ ( koff  
+
+> kon
+
+)2kon ). Then ZG1 ∼
+
+Z(0)G1 ∼ koff  
+
+> kon
+
+. The new effective graph is 
+
+(kon ) 2 ⇒ 3 ⇒ G1
+
+(koff ) 3 → 2
+
+− − − − − − − − 
+
+(kG1 ) G1 ⇒ 3
+
+(kG1→2) G1 → 2with kG1 ∼ kG1→3 ∼ k4→3 
+
+> k4
+
+× koff ∼ k2off  
+
+> kon
+
+, kG1→2 ∼ k5→2 
+
+> k5
+
+×
+
+koff ∼ ν+ and εG1 ∼ ε5
+
+> ZG1
+
+∼ ν+kon 
+
+> k2off
+
+. Furthermore, wG1→2 ∼
+
+> kG1→2
+> kG1
+
+∼ ν+kon 
+
+> k2off
+
+. Thus v(1) 
+
+> Ib
+
+∝
+
+
+
+kon 
+
+kon 
+
+kon 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+wG1→2
+
+kG1→3/kG1
+
+Z−1
+
+> G1
+
+Z−1
+
+> G1
+
+ ∼
+
+kon /k2off 
+
+
+
+ν+/kon 
+
+(koff /kon )2
+
+koff /kon 
+
+1
+
+. (2) At cut-off scale n(2) = nG1 , the cycle 3 kon 
+
+⇄
+
+> kG1→3
+
+G1 defines a dominant SCC G2 = {G1, 3} with 
+
+Z(0)G2 ∼ max ( k3→2 
+
+> k3
+
+, kG1→3
+
+> kG1
+
+) ∼ max ( koff  
+
+> kon
+
+, ν+kon 
+
+> k2off
+
+) ∼ ν+kon 
+
+> k2off
+
+. This is ∼ ¯εG2 ∼ εG1 , hence once again we cannot decide whether it is autocatalytic. In the autocatalytic case, λ (2) ∼ ¯εG2 × kG1 ∼
+
+ν+. The new effective graph is 
+
+(kon ) 2 ⇒ G2
+
+(kG2 ) G2 ⇒ 2with kG2 ∼ kG2→2 ∼ max ( k3→2 
+
+> k3
+
+, kG1→2
+
+> kG1
+
+) × kG1 ∼
+
+max ( koff  
+
+> kon
+
+, ν+ kon 
+
+> k2off
+
+) × kG1 ∼ ν+. In both cases, ZG2 ∼ ν+kon 
+
+> k2off
+
+.In the autocatalytic case, w(λ (2))G2→2 ∼ 1. Thus 
+
+v(∞) 
+
+> Ib
+
+≡ v(2) 
+
+> Ib
+
+∝
+
+
+
+kon 
+
+kon 
+
+kon 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+1
+
+Z−1
+
+> G2
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+ ∼ v(∞) 
+
+> Ia
+
+.
+
+Ic phase ( (ν+ ≺ ( koff  
+
+> kon
+
+)3kon ). Differences with Ib phase start with step (2). Now, ZG2 ∼ Z(0)G2 ∼ koff  
+
+> kon
+
+≻ ¯εG2 , implying that G2 is not autocatalytic. The new effective graph is the same as in phase Ib, but now kG2 ∼ kG2→2 ∼ k3→2 
+
+> k3
+
+× kG1 ∼ k3off 
+
+> k2on
+
+and εG2 ∼ ¯εG2
+
+> Z(0)G2
+
+∼ ν+k2on 
+
+> k3off
+
+. (3) At cut-off scale n(3) = nG2 ,the cycle 2 kon 
+
+⇄
+
+> kG2→2
+
+G2 defines an autocatalytic dominant SCC 
+
+G3 = {G2, 2} with weight ZG3 ∼ ¯εG3 ∼ εG2 ∼ ν+k2on 
+
+> k3off
+
+, expo-nent λ (3) ∼ εG2 ×kG2 ∼ ν+ and Lyapunov vector v(∞) 
+
+> Ic
+
+≡ v(3) 
+
+> Ic
+
+∝
+
+
+
+kon 
+
+kon 
+
+kon 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+Z−1
+
+> G3
+
+Z−1 
+
+> G2
+
+Z−1
+
+> G3
+
+Z−1 
+
+> G1
+
+Z−1 
+
+> G2
+
+Z−1
+
+> G3
+
+Z−1 
+
+> G1
+
+Z−1 
+
+> G2
+
+Z−1
+
+> G3
+
+ ∼ ν−1
+
+> +
+
+
+
+( koff  
+
+> kon
+
+)3
+
+( koff  
+
+> kon
+
+)2
+
+> koff
+> kon
+
+1
+
+.
+
+Toy formose (IIa). koff ≻ ν+ ≻ kon . Then ε4, ε5 ∼ ν+ 
+
+> koff
+
+. The initial graph G(0) is 
+
+(koff ) 5 ⇒ 4 ⇒ 3 ⇒ 2
+
+− − − − − − − − − − − − 
+
+(kon ) 2 ⇒ 3 → 4 → 5
+
+(ν+) 4 → 2 + 2, 5 → 2 + 3(0) At cut-off scale no f f , 5 → 4 → 3 → 2 define a reverse tree rooted at 2. Thus v(0) 
+
+> IIa
+
+∝
+
+
+
+kon 
+
+koff 
+
+koff 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+1000
+
+ ∼ k−1on 
+
+
+
+1000
+
+.(1) At cut-off scale n(1) = non , the cycle 3 koff 
+
+⇄
+
+> kon
+
+2 defines a non-autocatalytic dominant SCC G1 = {2, 3} with renormalized Hierarchical models for large chemical reaction networks 17 weight ZG1 ∼ k3→4 
+
+> k3→2
+
+∼ kon  
+
+> koff
+
+. The new effective graph is 
+
+(koff ) 5 ⇒ 4 ⇒ G1
+
+(kon ) 4 → 5
+
+(kG1 ) G1 ⇒ 4with kG1 ∼ kG1→4 ∼ k2on  
+
+> koff
+
+, and εG1 = 0. Thus v(1) 
+
+> IIa
+
+∝
+
+
+
+kon 
+
+koff 
+
+koff 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+Z−1
+
+> G1
+
+Z−1
+
+> G1
+
+kG1→4/kG1
+
+> kG1→4
+> kG1
+
+· k4→5
+
+> k4
+
+ ∼ koff 
+
+> k2on
+
+
+
+1
+
+> kon
+> koff
+
+( kon  
+
+> koff
+
+)2
+
+( kon  
+
+> koff
+
+)3
+
+. (2) At cut-off scale n(2) = nG1 , the cycle 4 koff 
+
+⇄
+
+> kG1→4
+
+G1 defines a domi-nant SCC G2 = {G1, 4}, which is autocatalytic since Z(0)G2 ∼ 
+
+> kon
+> koff
+
+≺ ε4. Thus ZG2 ∼ ¯εG2 ∼ ε4 ∼ ν+ 
+
+> koff
+
+and λG2 ∼ ε4kG1→4 ∼
+
+( kon  
+
+> koff
+
+)2ν+. The new effective graph G(2) is 
+
+(koff ) 5 → G2
+
+(kG2 ) G2 → 5with kG2 ∼ kG2→5 ∼ k3
+
+> on
+> k2
+> o f f
+
+, and w(λG2 )G2→5 ∼ kG2→5
+
+> λG2
+
+∼ kon  
+
+> ν+
+
+.Thus v(∞) 
+
+> IIa
+
+≡ v(2) 
+
+> IIa
+
+∝
+
+
+
+kon 
+
+koff 
+
+koff 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+Z−1 
+
+> G1
+
+Z−1
+
+> G2
+
+Z−1
+
+> G2
+
+w(λG2 )G2→5
+
+ ∼ koff  
+
+> ν+
+
+v(1)
+
+> IIa
+
+.Hierarchical graphs are as follows (see Sec. III B 3 for color conventions, with cores drawn in red). To the right or at the bottom of each dominant SCC Gi, the couple (weight, auto-catalytic exponent) = ( Z−1 
+
+> Gi
+
+, λGi ) if autocatalytic (in red), or simply Z−1 
+
+> Gi
+
+if not (in black). 
+
+Toy formose (IIb). koff ≻ kon ≻ ν+. Steps (0), (1) are iden-tical. (2) G2 is not autocatalytic, ZG2 := Z(0)G2 and εG2 ∼
+
+> ¯εG2
+> ZG2
+
+∼ ν+ 
+
+> kon
+
+. (3) At cut-off scale n(3) = nG3 , the cycle 5 koff 
+
+⇄
+
+> kG2→5
+
+G2
+
+defines an auto-catalytic dominant SCC G3 = {G2, 5} with 
+
+ZG3 ∼ εG3 ∼ max (ε5, εG2 ) ∼ ν+ 
+
+> kon
+
+, and λG3 ∼ εG3 
+
+> kG2→5
+
+∼ ( kon  
+
+> koff
+
+)2ν+.Thus v(∞) 
+
+> IIb
+
+≡ v(3) 
+
+> IIb
+
+∝
+
+
+
+kon 
+
+koff 
+
+koff 
+
+koff 
+
+
+
+> −1
+
+×
+
+
+
+Z−1 
+
+> G1
+
+Z−1 
+
+> G2
+
+Z−1
+
+> G3
+
+Z−1 
+
+> G1
+
+Z−1 
+
+> G2
+
+Z−1
+
+> G3
+
+(Z2Z3)−1
+
+Z−13
+
+ ∼ kon  
+
+> ν+
+
+v(1)
+
+> IIa
+
+.Hierarchical graphs are as follows. step 2, k(2) ∼ k2on 
+
+> koff
+
+2 3• •
+
+G1
+
+4• •
+
+> koff
+> ν+
+
+5G2
+
+kon /ν+
+
+step 3, k(3) ∼ k3
+
+> on
+> k2
+> o f f
+
+2 3• •
+
+G1
+
+4• •
+
+G2
+
+5• •
+
+( kon  
+
+> ν+
+
+, ( kon  
+
+> koff
+
+)2ν+)G3
+
+Concluding: step ≥ 1 (in particular, final step) Lyapunov eigenvectors of phases IIa , IIb are to leading order propor-tional to the equilibrium measure, and λ ∗ 
+
+> IIa ,IIb
+
+∼ ( kon  
+
+> koff
+
+)2ν+.The two phases, however, behave differently in case of fluxes or non-uniform degradation. For instance, consider a selective degradation reaction 5 β5
+
+→ /0. In phase IIa, the network remains autocatalytic however large is β5, since 5 is not in the support of the first autocatalytic subgraph met in the algorithm, G2.In phase IIb, however, the edge 5 → /0 becomes dominant at step 2 when β5 ≻ kG2 . Thus the autocatalytic threshold (the maximum value of β5 for which the network is autocatalytic) is β5 ∼ kG2 .A prototype implementation of the algorithm described in Sec. III B 3 was developed in Python to explore the behaviour of the reduction on example networks. A lightweight inter-face was developed to visualize the reduction process and the resulting graphs. The program takes as input two files: a text file in which each line represents a reaction of the network together with the name of the corresponding parameter, and a tabular file listing all the parameters used in the network, together with their scale and logarithmic base. These data are first converted into a graph representation where nodes correspond to species and edges correspond to reactions labelled by their parameters’ scale. The reduction rules are then applied iteratively until no further reduction is possible, or autocatalytic graphs are found. The program out-puts the final reduced graph together with additional structural information, including these graphs. In this example based on the Formose IIa model (see Fig. 5), with parameters chosen as kon = 10 −5, koff = 1, and 
+
+ν = 10 −2, the program performs the reduction from the full network representation to the corresponding reduced graph. In addition, a coalescence graph is produced to help identify which species are grouped together during the reduction pro-cess. The program then detects an autocatalytic graph G2,1
+
+combining the species C2,C3,C4. For the chosen parameters, the associated autocatalytic exponent corresponds to a loga-rithmic scale of −12. The algorithm also outputs the sym-bolic expression of the corresponding autocatalytic exponent, here ν+k2on 
+
+> k2off
+
+, which coincides with the theoretical value of λG2
+
+obtained in the detailed analytical example. Hierarchical models for large chemical reaction networks 18 Hierarchical models for large chemical reaction networks 18 
+
+> (a) Initial graph
+> (b) Reduced graph
+> (c) Coalesced graph
+
+Figure 5: Graph reduction and coalescence procedure returned by the program for the Formose IIa model. The initial graph (a) is progressively simplified to obtain the reduced representation (b), followed by a coalesced graph (c) describing the induced dynamics on the aggregated state space.  
+
+> V. DISCUSSION
+
+We discuss here a few important points that have been left out in the Methods section. 
+
+Kinetic scales (see Sec. III B 2). It can be shown that er-rors due to scale truncation, the ‘sum-max’ substitution rule and the perturbative approach underlying the hierarchical al-gorithm do not accumulate as a result of successive approxi-mations, provided b is large enough, which is the essence of the scale separation hypothesis. How large depends in a com-plicated way on the size (number of species) of the maximal dominant SCCs; formal mathematical statements 28 rely on the limit b ! • for a fixed network and are therefore not very useful for real-world applications. However, extended sim-ulations on small- to average-sized networks (the Extended Toy Formose models discussed in Suppl. Mat. contain up to 22 species and 55 reactions) tend to suggest that truncation errors do not invalidate our estimates as soon as b > 2 or even less. 
+
+Phases (see Sec. III B 4). It is possible to rep-resent the rewiring steps by matrices M (1) , . . . , M (imax ) .Choosing any orderings of the rates k (0) , . . . , k (i max ) , for-mulas (21) for renormalized rates may be rewritten as log b (k (i) 
+
+> p
+
+) = Âq M (i) 
+
+> pq
+
+log b (k (i 1) 
+
+> q
+
+). Iterating, log b (k imax  
+
+> p
+
+) = 
+
+M (imax ) · · · M (1) log b (k (0) ) expresses the last step renormal-ized rates in terms of the bare ones. Exploring the various cases described in the algorithm through a decision tree yields a possibly large (the outcomes of the max rules in the formu-las typically vary according to some subset of rate permuta-tions), but finite number of phases. The boundaries of each phase are known and defined by linear inequalities, so that the geometrical domain of a phase is a linear cone. This al-lows an automated search for phases using linear program-ming tools. Exhaustive search, however, may be prohibitively time-consuming for large networks. 
+
+Kinetic inference (see Sec. III C). The artificial inference example presented here is a far cry from inference in real ex-perimental conditions. High-resolution GC-MS 2 or LC-MS 2mass spectroscopy allows a reliable determination of a large list of tabulated species present even in small concentrations in a complex mixture. The signal amplitude allows a determi-nation of the concentrations, up to an unknown multiplicative activation ratio depending on the binding of the species with the gel, and measurement noise. Finally, in large mixtures there appear untabulated, and by and large unknown, reac-tion intermediates, whose raw formulas can however be deter-mined with certainty. These serious caveats may all be cate-gorized as missing data issues, which are in principle within reach of HMM (hidden Markov models) techniques, provided the number of observations is sufficiently increased.  
+
+> VI. PERSPECTIVES
+
+Autocatalysis has usually been discussed in relation to sto-ichiometry alone. The traditional definition 26 states that a set of reactions is collectively autocatalytic if there is some com-bination whose stoichiometric balance is > 0 for all species. It completely bypasses kinetics. The interest of the approach developed in this work is that it does not require the knowl-edge of kinetic rates, which remains frustratingly scarce and elusive for reactions in a polar solvent despite the tremendous progress in computational methods. This is also the case of other approaches, that we now review briefly. Parametrizing the dynamics by fluxes instead of concentrations, as in flux-balance analysis 30 , allows various rate-independent bounds on the sensibility of stationary states on parameters 31,32 or on proxy growth rates 33 . The stoichiometric approach has also motivated the search for minimal autocatalytic motifs, which have been classified 26,34 ; algorithms have been developed to 
+
+Figure 5: Graph reduction and coalescence procedure returned by the program for the Formose IIa model. The initial graph (a) is progressively simplified to obtain the reduced representation (b), followed by a coalesced graph (c) describing the induced dynamics on the aggregated state space.  
+
+> V. DISCUSSION
+
+We discuss here a few important points that have been left out in the Methods section. 
+
+Kinetic scales (see Sec. III B 2). It can be shown that er-rors due to scale truncation, the ‘sum-max’ substitution rule and the perturbative approach underlying the hierarchical al-gorithm do not accumulate as a result of successive approxi-mations, provided b is large enough, which is the essence of the scale separation hypothesis. How large depends in a com-plicated way on the size (number of species) of the maximal dominant SCCs; formal mathematical statements 28 rely on the limit b → ∞ for a fixed network and are therefore not very useful for real-world applications. However, extended sim-ulations on small- to average-sized networks (the Extended Toy Formose models discussed in Suppl. Mat. contain up to 22 species and 55 reactions) tend to suggest that truncation errors do not invalidate our estimates as soon as b > 2 or even less. 
+
+Phases (see Sec. III B 4). It is possible to rep-resent the rewiring steps by matrices M (1), . . . , M (imax ).Choosing any orderings of the rates k(0), . . . , k(imax ), for-mulas (21) for renormalized rates may be rewritten as log b(k(i) 
+
+> p
+
+) = ∑q M (i) 
+
+> pq
+
+log b(k(i−1) 
+
+> q
+
+). Iterating, log b(kimax  
+
+> p
+
+) = 
+
+M (imax ) · · · M (1) log b(k(0)) expresses the last step renormal-ized rates in terms of the bare ones. Exploring the various cases described in the algorithm through a decision tree yields a possibly large (the outcomes of the max rules in the formu-las typically vary according to some subset of rate permuta-tions), but finite number of phases. The boundaries of each phase are known and defined by linear inequalities, so that the geometrical domain of a phase is a linear cone. This al-lows an automated search for phases using linear program-ming tools. Exhaustive search, however, may be prohibitively time-consuming for large networks. 
+
+Kinetic inference (see Sec. III C). The artificial inference example presented here is a far cry from inference in real ex-perimental conditions. High-resolution GC-MS 2 or LC-MS 2
+
+mass spectroscopy allows a reliable determination of a large list of tabulated species present even in small concentrations in a complex mixture. The signal amplitude allows a determi-nation of the concentrations, up to an unknown multiplicative activation ratio depending on the binding of the species with the gel, and measurement noise. Finally, in large mixtures there appear untabulated, and by and large unknown, reac-tion intermediates, whose raw formulas can however be deter-mined with certainty. These serious caveats may all be cate-gorized as missing data issues, which are in principle within reach of HMM (hidden Markov models) techniques, provided the number of observations is sufficiently increased.  
+
+> VI. PERSPECTIVES
+
+Autocatalysis has usually been discussed in relation to sto-ichiometry alone. The traditional definition 26 states that a set of reactions is collectively autocatalytic if there is some com-bination whose stoichiometric balance is > 0 for all species. It completely bypasses kinetics. The interest of the approach developed in this work is that it does not require the knowl-edge of kinetic rates, which remains frustratingly scarce and elusive for reactions in a polar solvent despite the tremendous progress in computational methods. This is also the case of other approaches, that we now review briefly. Parametrizing the dynamics by fluxes instead of concentrations, as in flux-balance analysis 30 , allows various rate-independent bounds on the sensibility of stationary states on parameters 31,32 or on proxy growth rates 33 . The stoichiometric approach has also motivated the search for minimal autocatalytic motifs, which have been classified 26,34 ; algorithms have been developed to Hierarchical models for large chemical reaction networks 19 find them automatically 35,36 . Generally speaking, bioinfor-matics draws on all these developments to produce an auto-mated search of synthesis pathways 37 . Recent work tends to incorporate thermodynamic constraints to eliminate pathways including reactions with positive Gibbs energy as non viable. The common drawback of such approaches is precisely that they avoid considering kinetics. Having applications in mind to prebiotic chemistry, this is however at odds with the fact that most relevant phenomena are out-of-equilibrium, due to fluxes, chemical gradients, dry-wet cycles, etc., all conjectural but physically natural conditions to leave equilibrium in quest for possible chemical evolution towards complexity. Putting kinetics back at the heart of the matter as we do here suggests very different directions for research. We summarize our findings, which are for now limited to dilute regimes, but should remain generally valid (though considerably more in-volved) without this much simplifying assumption. First, the reaction graph is not a static object. Much in the way that the laws of physics depend on the observation scale, we have proved that the effective reaction graph depends on the kinetic scale. Though Perron-Frobenius matrices are way simpler ob-jects than e.g. particle physics Lagrangians, applying our al-gorithm to a large battery of examples has taught us how un-predictably our renormalization rules iteratively transform the ‘bare’ network G(0) ≡ G. Let us consider a large, very con-nected network and discuss extreme cases. If only one scale is present, then it is safe to presume that the spectrum of the gen-erator will look like that of a random matrix. Probability con-servation in absence of irreversible one-to-many and degrada-tion reactions forces the Lyapunov exponent to be zero, but in general, the average Lyapunov exponent will essentially de-pend on the number of the latter. Our approach has nothing to say about this case, and becomes useful only if rates are split over several scales. The Toy Formose/Extended Toy For-mose models involve only three scales, but these are enough to define a large number of phases with different asymptotic compositions, including n − 2 phases I for networks contain-ing carbon chains up to n carbons if n ≥ 4. For ν+ (k−) large enough (phase Ia), the maximal dominant SCC G1 appearing at step 1 is already autocatalytic, and it is protected from any degradation acting on external species, i.e. it remains auto-catalytic for all values of βσ , σ̸ ∈ G1. This may be seen as a primitive sort of compartmentalization of G1 inside the net-work. As ν+ (k−) decreases, exploring successive steps leads to larger autocatalytic hierarchical subgraphs which are more complex, i.e. contain a larger number of organization levels materialized by the nested structure. This self-organization certainly leads to a low composition entropy level, since it re-duces the number of effective vertices. Such subgraphs have a lower growth rate, but are more robust, in the sense that there is a larger number of ‘bare’ wiring possibilities leading to the same hierarchical graph after the successive rewirings. By contrast, minimal single-scale autocatalytic graphs, i.e. cy-cles, acquire robustness only by adding bypasses or shunts when available. Phases II are simpler; they apparently do not depend so much in the cut-off in terms of number of carbon atoms, involve only 2 or 3 steps, and the asymptotic compo-sition is a perturbation of the power-law equilibrium measure typical of step-growth polymerization 38 .Obviously, linear models can only have a limited complex-ity if the latter is intended as measuring the unpredictability of time trajectories, since ultimately the ‘fittest’ wins, i.e. the subgraph with largest growth rate becomes the only core if the network is connected, precluding any multistability. There is however a path to go beyond this limitation: given a gen-eral reaction network with non-linear mass-action dynamics, locate the stationary composition scales, which are ‘fat’ sta-tionary points; linearize the equations of motion around these; determine the (complex-valued, in general) Lyapunov data of the linearized generators; and predict trajectories away from them. This program – a far cry from the hopeless topo-logical classification of dynamical systems –, which deliber-ately shies away from chaotic regimes, is under way, but how generic and applicable to complex, real-life chemical systems it will be remains to be determined. Finally, this program must be coupled with a reverse net-work inference method to make the bridge with actual chem-istry. We conjecture that varying fluxes makes it possible in theory to determine completely the hierarchical structure and characteristic elements. Starting from there, we have de-signed a finely tuned statistical inference procedure that must be tested and coupled with an experiment design scheme. Let us just mention that it will allow, in the case of large exper-imental networks, not to explore systematically all phases, whose number grows a priori exponentially with the number of reactions. Also, the Bayesian framework will produce a statistical superposition of neighboring hierarchical networks instead of a single one, thus allowing a good fit in spite of the precision cut-offs inherent in the definition of the scales. 
+
+> ACKNOWLEDGMENTS
+
+J.U. thanks Philippe Nghe for his kind help in the prepa-ration of this manuscript through numerous discussions and suggestions for improvement. 
+
+> DATA AVAILABILITY STATEMENT
+
+An implementation of the scale-splitting renormalization algorithm in Python, along with examples and a graphi-cal user interface, are available at https://github.com/ Unterberger/ChemNetInference .Data sharing is not applicable to this article as no new data were created or analyzed in this study. 
+
+> Appendix A: Main notation
+
+We discuss here in more detail the notations, Markov chain and graph-theoretic concepts used in Sec. III B. 
+
+Open reaction networks (Sec. III A). See e.g. 25. An open chemical reaction network is specified by (i) a set of exter-nal species, Σext ; (ii) a set of (internal) species, Σ; a stoi-Hierarchical models for large chemical reaction networks 20 chiometry matrix S = ( Sσ ,ρ )σ ∈Σ∪Σext ,ρ∈R with integer coeffi-cients. Decompose S as a difference S+ − S− by letting S+  
+
+> i,j
+
+=
+
+max (0, Si, j), S−  
+
+> i,j
+
+= max (0, −Si, j). Then each column j of S is interpreted as a reaction ρ j : ∑i∈Σ S− 
+
+> i,j
+
+σi → ∑i∈Σ S+ 
+
+> i,j
+
+σi involv-ing species in the set (σi)i ≃ Σ ∪ Σext , while (ρ j) j ≃ R. (Inter-nal) species σ ∈ Σ such that S−  
+
+> σ,ρ
+
+> 0 are called (internal) reac-tants of ρ. We generally assume the reaction rates to be mass-action rates, that is, we consider the associated ODE system for the species concentrations, dX σ /dt = ∑ρ∈R Sσ ,ρ J ρ (X),where J ρ (X) = kρ ∏σ ∈Σ∪Σext XS−  
+
+> σ,ρ
+> σ
+
+are the fluxes of the sys-tem. The constants (kρ ) are the kinetic rates. 
+
+Deficiency rate. The order p (ρ) of a uni-molecular reaction is by definition the number of its products. Let 
+
+κσ := ∑    
+
+> ρ|p(ρ)= 2,ρ:Xσ→···
+
+kρ (A1) be the sum of the kinetic rates of all 1 → 2 reactions ρ with reactant σ . If κσ > 0, we add to G the self-edge σ κσ
+
+→ σ (then edges σ → σ ′̸ = σ are called non-trivial ). By construction, 
+
+∑σ ′ Aσ ′,σ = κσ . If there are no 1 → 2 reactions, then κσ = 0, and ∑σ ′ Aσ ′,σ = 0 expresses Markov chain probability conser-vation. 
+
+Associated Markov chain. We let ˜ A = ( ˜Aσ ′,σ )σ ′,σ ∈Σ be the matrix with off-diagonal coefficients ˜ Aσ ′,σ = Aσ ′,σ (σ̸ = σ ′)
+
+and negative diagonal coefficients ˜Aσ ,σ = − ∑  
+
+> σ′̸=σ
+
+Aσ ′,σ = Aσ ,σ − κσ = −kσ . (A2) 
+
+Overall degradation rate. Let α ≥ 0 be a constant. Then 
+
+A(α) := A − αId has same off-diagonal coefficients as A, and diagonal coefficients |A(α)σ ,σ | = |Aσ ,σ | + α
+
+REFERENCES 
+
+> 1
+
+S. N. Semenov, L. J. Kraft, A. Ainla, M. Zhao, M. Baghbanzadeh, V. E. Campbell, K. Kang, J. M. Fox, and G. M. Whitesides, Nature 537 , 656 (2016). 
+
+> 2
+
+K. B. Muchowska, S. J. Varma, and J. Moran, Nature 569 , 104 (2019). 
+
+> 3
+
+W. E. Robinson, E. Daines, P. Van Duppen, T. De Jong, and W. T. S. Huck, Nature Chemistry 14 , 623 (2022). 
+
+> 4
+
+T. Grassi, F. Nauman, J. P. Ramsey, S. Bovino, G. Picogna, and B. Ercolano, Astronomy & Astrophysics 668 , A139 (2022). 
+
+> 5
+
+C. H. Lee and H. G. Othmer, Journal of Mathematical Biology 60 , 387 (2010). 
+
+> 6
+
+X. Kan, C. H. Lee, and H. G. Othmer, Journal of Mathematical Biology 73 ,1081 (2016). 
+
+> 7
+
+W. E, D. Liu, and E. Vanden-Eijnden, Journal of Computational Physics 
+
+221 , 158 (2007). 
+
+> 8
+
+N. A. Sinitsyn, N. Hengartner, and I. Nemenman, Proceedings of the Na-tional Academy of Sciences 106 , 10546 (2009). 
+
+> 9
+
+O. Sinanoglu, Journal of the American Chemical Society 97 , 2309 (1975). 
+
+> 10
+
+Y. Hirono, T. Okada, H. Miyazaki, and Y. Hidaka, Physical Review Re-search 3, 043123 (2021). 
+
+> 11
+
+M. A. Katsoulakis and P. Vilanova, Journal of Computational Physics 401 ,108997 (2020). 
+
+> 12
+
+A. Gabrielli, D. Garlaschelli, S. P. Patil, and M. Á. Serrano, Nature Reviews Physics 7, 203 (2025). 
+
+> 13
+
+P. Villegas, T. Gili, G. Caldarelli, and A. Gabrielli, Nature Physics 19 , 445 (2023). 
+
+> 14
+
+P. Villegas, A. Gabrielli, A. Poggialini, and T. Gili, Physical Review Re-search 7, 013065 (2025). 
+
+> 15
+
+R. Henze, C. Mu, M. Puljiz, N. Kamaleson, J. Huwald, J. Haslegrave, P. S. Di Fenizio, D. Parker, C. Good, J. E. Rowe, B. Ibrahim, and P. Dittrich, Scientific Reports 9, 3902 (2019). 
+
+> 16
+
+Z. Peng, J. Linderoth, and D. A. Baum, PLOS Computational Biology 18 ,e1010498 (2022). 
+
+> 17
+
+W. J. Anderson, Continuous-time Markov chains: An applications-oriented approach , Springer Series in Statistics (Springer New York, New York, NY, 1991). 
+
+> 18
+
+J. Unterberger and P. Nghe, Journal of Mathematical Biology 85 , 26 (2022). 
+
+> 19
+
+M. Eigen, J. McCaskill, and P. Schuster, The Journal of Physical Chemistry 
+
+92 , 6881 (1988). 
+
+> 20
+
+A. Pross and R. Pascal, Life 13 , 2171 (2023). 
+
+> 21
+
+K. G. Wilson, Reviews of Modern Physics 55 , 583 (1983). 
+
+> 22
+
+V. Mastropietro, Non-perturbative renormalization (WORLD SCIEN-TIFIC, 2008). 
+
+> 23
+
+J. Unterberger, Confluentes Mathematici 4, 10.1142/S179374421240004X (2012). 
+
+> 24
+
+B. Li, Y. Shen, and B. Li, The Journal of Physical Chemistry A 112 , 2311 (2008). 
+
+> 25
+
+R. Rao and M. Esposito, Physical Review X 6, 041064 (2016). 
+
+> 26
+
+A. Blokhuis, D. Lacoste, and P. Nghe, Proceedings of the National Academy of Sciences 117 , 25230 (2020). 
+
+> 27
+
+J. R. Norris, Markov chains , 1st ed. (Cambridge University Press, 1997). 
+
+> 28
+
+J. Unterberger, General multi-scale estimates for Lyapunov data of Perron-Frobenius matrices. The case of diluted autocatalytic chemical reaction net-works (2025). 
+
+> 29
+
+A. Butlerow, Justus Liebigs Annalen der Chemie 120 , 295 (1861). 
+
+> 30
+
+B. Ø. Palsson, Systems biology: Properties of reconstructed networks , 1st ed. (Cambridge University Press, 2006). 
+
+> 31
+
+H. Kacser and J. A. Burns, Symposia of the Society for Experimental Biol-ogy 27 , 65 (1973). 
+
+> 32
+
+R. Heinrich and T. A. Rapoport, European Journal of Biochemistry 42 , 89 (1974). 
+
+> 33
+
+V. Blanco, G. González, and P. Gagrani, Identifying self-amplifying hyper-graph structures through mathematical optimization (2024). 
+
+> 34
+
+P. Nandan, P. Nghe, and J. Unterberger, Autocatalytic cores in the diluted regime: classification and properties (2025). 
+
+> 35
+
+P. Gagrani, V. Blanco, E. Smith, and D. Baum, Journal of Mathematical Chemistry 62 , 1012 (2024). 
+
+> 36
+
+T. Kosc, D. Kuperberg, E. Rajon, and S. Charlat, Proceedings of the Na-tional Academy of Sciences 122 , e2421274122 (2025). 
+
+> 37
+
+J. L. Andersen, C. Flamm, D. Merkle, and P. F. Stadler, IEEE/ACM Trans-actions on Computational Biology and Bioinformatics 16 , 510 (2019). 
+
+> 38
+
+Y. Gnanou and M. Fontanille, Organic and physical chemistry of polymers ,1st ed. (Wiley, 2008).

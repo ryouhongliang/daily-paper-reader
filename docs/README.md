@@ -6,26 +6,41 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-30
-- 运行时间：2026-06-30 23:48:05 UTC
+- 最新运行日期：2026-07-01
+- 运行时间：2026-07-01 23:41:12 UTC
 - 运行状态：成功
-- 本次总论文数：1
-- 精读区：0
-- 速读区：1
+- 本次总论文数：6
+- 精读区：3
+- 速读区：3
 
 ### 今日简报（AI）
-今日速读一篇AI辅助对接揭示黄原胶糖基转移酶GumK供体选择性的机制研究。  
-最值得关注：AI对接显示黄原胶合成酶GumK的供体选择性取决于酶构象变化，为理解多糖组装逻辑提供新视角。  
-对合成生物学感兴趣可读原文，看AI如何加速糖基转移酶底物设计。
-- 详情：[/202606/30/README](/202606/30/README)
+- 今日共生成 6 篇推荐（精读 3 篇，速读 3 篇）
+- 精读：《Interpretable Inverse Design of Metal-Organic Frameworks with Large Language Model Agents》（9.0/10）, 《ReactionAtlas: Ab origine exploration of chemical reaction networks with machine learning》（9.0/10）
+- 速读：《Hierarchical models for large chemical reaction networks》（7.0/10）, 《Towards Generalizable and Evidential Nuclear Magnetic Resonance-Based Molecular Structure Elucidation via Large Language Model Agent》（7.0/10）, 《ElemeNet: Multiscale Molecular Machine Learning with Uncertainty Quantification Across the Periodic Table》（6.0/10）
+- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+- 详情：[/202607/01/README](/202607/01/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Interpretable Inverse Design of Metal-Organic Frameworks with Large Language Model Agents](/202607/01/2606.29459v1-interpretable-inverse-design-of-metal-organic-frameworks-with-large-language-model-agents)  
+   标签：评分：9.0/10、query:caos-poly
+   evidence：大语言模型智能体推理并设计MOF，通过模拟测试候选结构，实现催化剂骨架高效筛选
+2. [ReactionAtlas: Ab origine exploration of chemical reaction networks with machine learning](/202607/01/2606.30778v1-reactionatlas-ab-origine-exploration-of-chemical-reaction-networks-with-machine-learning)  
+   标签：评分：9.0/10、query:caos-poly
+   evidence：机器学习生成模型用于化学反应网络探索
+3. [Prebiotic Chemistry Assemblies of L-Cysteine on Defect-Free Pyrite Terraces](/202607/01/2606.30929v1-prebiotic-chemistry-assemblies-of-l-cysteine-on-defect-free-pyrite-terraces)  
+   标签：评分：8.0/10、query:caos-poly
+   evidence：DFT结合STM/STS解释L-半胱氨酸在黄铁矿上的超分子组装
 
 ### 速读区论文标签
-1. [Conformation-Dependent Donor Selectivity in the Xanthan Gum Glycosyltransferase GumK Revealed by AI-Based Docking](/202606/30/biorxiv-10-64898-2026-04-10-717502-v2-conformation-dependent-donor-selectivity-in-the-xanthan-gum-glycosyltransferase-gumk-revealed-by-ai-based-docking)  
+1. [Hierarchical models for large chemical reaction networks](/202607/01/2606.24246v1-hierarchical-models-for-large-chemical-reaction-networks)  
    标签：评分：7.0/10、query:caos-poly
-   evidence：基于AI的虚拟筛选用于多糖合成酶的供体底物
+   evidence：用于大型反应网络的尺度分割算法计算工具
+2. [Towards Generalizable and Evidential Nuclear Magnetic Resonance-Based Molecular Structure Elucidation via Large Language Model Agent](/202607/01/2606.29776v1-towards-generalizable-and-evidential-nuclear-magnetic-resonance-based-molecular-structure-elucidation-via-large-language-model-agent)  
+   标签：评分：7.0/10、query:caos-poly
+   evidence：LLM智能体用于NMR结构解析，辅助有机合成表征
+3. [ElemeNet: Multiscale Molecular Machine Learning with Uncertainty Quantification Across the Periodic Table](/202607/01/2606.30961v1-elemenet-multiscale-molecular-machine-learning-with-uncertainty-quantification-across-the-periodic-table)  
+   标签：评分：6.0/10、query:caos-poly
+   evidence：支持多种化学体系的分子机器学习软件，可用于合成相关性质预测
 
 
 <div class="dpr-home-promo-card">
